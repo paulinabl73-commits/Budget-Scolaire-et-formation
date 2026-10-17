@@ -10,7 +10,7 @@ RUN pip install --no-cache-dir .
 COPY alembic.ini ./
 COPY alembic ./alembic
 
-RUN useradd --system --uid 1001 auditlab
+RUN useradd --system --uid 1001 auditlab && mkdir -p /data/datasets && chown auditlab /data/datasets
 USER auditlab
 
 EXPOSE 8000

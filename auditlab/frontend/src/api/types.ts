@@ -408,3 +408,45 @@ export interface AppNotification {
   lue_le: string | null;
   created_at: string | null;
 }
+
+export type ColumnType = "texte" | "entier" | "decimal" | "date" | "booleen" | "date_heure";
+
+export interface Dataset {
+  id: string;
+  engagement_id: string;
+  nom: string;
+  description: string | null;
+  kind: "import" | "vue" | "analyse";
+  statut: "en_cours" | "pret" | "erreur";
+  erreur: string | null;
+  parent_dataset_id: string | null;
+  source_nom: string | null;
+  source_format: string | null;
+  source_sha256: string | null;
+  source_taille: number | null;
+  nb_lignes: number | null;
+  nb_colonnes: number | null;
+  schema: { nom: string; type: ColumnType; dtype: string }[];
+  totaux_controle: Record<string, string | number>;
+  definition: Record<string, unknown>;
+  options: Record<string, unknown>;
+  duree_ms: number | null;
+  created_at: string | null;
+  lecture_seule: boolean;
+}
+
+export interface UploadInfo {
+  id: string;
+  nom_fichier: string;
+  format: string;
+  taille: number;
+  sha256: string;
+}
+
+export interface DataSourceInfo {
+  id: string;
+  nom: string;
+  description: string | null;
+  actif: boolean;
+  dialecte: string;
+}

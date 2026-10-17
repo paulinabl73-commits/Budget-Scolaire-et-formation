@@ -1,6 +1,6 @@
 from app.models.audit_log import AuditLog
 from app.models.base import Base, TrackedMixin
-from app.models.data import Dataset, DatasetKind, DatasetStatus
+from app.models.data import Dataset, DatasetKind, DatasetStatus, DataSource, Upload
 from app.models.engagement import (
     STATUS_ORDER,
     Engagement,
@@ -55,6 +55,7 @@ __all__ = [
     "ControlNature",
     "ControlType",
     "Cycle",
+    "DataSource",
     "Dataset",
     "DatasetKind",
     "DatasetStatus",
@@ -91,6 +92,7 @@ __all__ = [
     "TimeEntry",
     "TrackedMixin",
     "User",
+    "Upload",
     "UserSession",
     "user_teams",
     "Workpaper",

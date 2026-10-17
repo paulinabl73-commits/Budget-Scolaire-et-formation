@@ -4,7 +4,7 @@ import uuid
 from enum import StrEnum
 from typing import Any
 
-from sqlalchemy import BigInteger, ForeignKey, Integer, String, Text
+from sqlalchemy import BigInteger, Boolean, ForeignKey, Integer, String, Text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -51,3 +51,33 @@ class Dataset(TrackedMixin, Base):
     # Vue : définition des champs calculés (DAT-06).
     definition: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
     duree_ms: Mapped[int | None] = mapped_column(Integer, nullable=True)
+
+
+class Upload(TrackedMixin, Base):
+    """Fichier source déposé pour un import, conservé tel quel comme preuve (DAT-04)."""
+
+    __tablename__ = "uploads"
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    nom_fichier: Mapped[str] = mapped_column(String(255))
+    format: Mapped[str] = mapped_column(String(20))
+    taille: Mapped[int] = mapped_column(BigInteger)
+    sha256: Mapped[str] = mapped_column(String(64))
+    storage_key: Mapped[str] = mapped_column(String(300), unique=True)
+
+
+class DataSource(TrackedMixin, Base):
+    """Base de données source (SQL ou ODBC), déclarée par l'administrateur (DAT-01).
+
+    Les utilisateurs choisissent une source déclarée et saisissent une requête de lecture ;
+    ils ne saisissent jamais d'adresse de connexion (pas de rebond vers le réseau interne).
+    """
+
+    __tablename__ = "data_sources"
+    __audit_masked__ = ("url",)
+
+    nom: Mapped[str] = mapped_column(String(200), unique=True)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # Adresse SQLAlchemy, ex. postgresql+psycopg://lecteur:…@hote/base, mssql+pyodbc://…
+    url: Mapped[str] = mapped_column(Text)
+    actif: Mapped[bool] = mapped_column(Boolean, default=True)

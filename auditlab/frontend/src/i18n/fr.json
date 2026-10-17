@@ -676,5 +676,37 @@
     "aucune": "Aucune notification.",
     "toutLu": "Tout marquer comme lu",
     "ouvrir": "Ouvrir"
+  },
+  "donnees": {
+    "titre": "Données de la mission",
+    "aucune": "Aucune table. Importez un fichier ou interrogez une source.",
+    "importer": "Importer des données",
+    "fichier": "Fichier source",
+    "fichierAide": "CSV, TXT, Excel, JSON, Parquet ou PDF.",
+    "nom": "Nom de la table",
+    "lancer": "Importer",
+    "envoi": "Dépôt du fichier…",
+    "lance": "Import lancé.",
+    "colNom": "Table",
+    "colSource": "Source",
+    "colLignes": "Lignes",
+    "colColonnes": "Colonnes",
+    "colStatut": "Statut",
+    "colDate": "Créée le",
+    "statuts": {
+      "en_cours": "En cours",
+      "pret": "Prête",
+      "erreur": "Erreur"
+    },
+    "kinds": {
+      "import": "Import",
+      "vue": "Vue",
+      "analyse": "Analyse"
+    },
+    "depuisSource": "Depuis une base de données",
+    "source": "Source déclarée",
+    "requete": "Requête de lecture (SELECT)",
+    "aucuneSource": "Aucune source déclarée par l'administrateur.",
+    "ouvrir": "Ouvrir"
   }
 }

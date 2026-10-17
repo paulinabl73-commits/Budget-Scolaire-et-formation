@@ -14,6 +14,7 @@ from app.api import (
     datasets,
     engagement_status,
     engagements,
+    imports,
     library,
     meta,
     notifications,
@@ -98,5 +99,6 @@ for router in (
     review_notes.router,
     notifications.router,
     datasets.router,
+    imports.router,
 ):
     app.include_router(router, prefix="/api")

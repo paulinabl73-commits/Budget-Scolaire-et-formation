@@ -5,6 +5,7 @@ import { Link, useLocation, useParams, useSearchParams } from "react-router-dom"
 import { api } from "../api/client";
 import type { Engagement } from "../api/types";
 import Alert from "../components/Alert";
+import DataTab from "../components/mission/DataTab";
 import ProgramTab from "../components/mission/ProgramTab";
 import StatusBar from "../components/mission/StatusBar";
 import StatusHistory from "../components/mission/StatusHistory";
@@ -15,7 +16,7 @@ import { formatDate, formatDateHeure } from "../lib/format";
 import { STATUS_BADGE } from "../lib/mission";
 
 /** Onglets de la fiche mission ; chaque lot ajoute les siens. */
-export const MISSION_TABS = ["synthese", "programme", "papiers", "temps"] as const;
+export const MISSION_TABS = ["synthese", "programme", "papiers", "donnees", "temps"] as const;
 type Tab = (typeof MISSION_TABS)[number];
 
 export default function MissionPage() {
@@ -87,6 +88,7 @@ export default function MissionPage() {
       )}
       {tab === "programme" && <ProgramTab mission={mission} />}
       {tab === "papiers" && <WorkpapersTab mission={mission} />}
+      {tab === "donnees" && <DataTab mission={mission} />}
       {tab === "temps" && <TimeTab mission={mission} onChange={() => void load()} />}
     </div>
   );

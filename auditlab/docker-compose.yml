@@ -33,6 +33,16 @@ services:
       retries: 20
     restart: unless-stopped
 
+  # File de tâches des imports et analyses longues (Celery).
+  redis:
+    image: redis:7.4-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
   backend:
     build: ./backend
     environment:
@@ -43,16 +53,43 @@ services:
       AUDITLAB_S3_ENDPOINT: http://minio:9000
       AUDITLAB_S3_ACCESS_KEY: ${MINIO_ROOT_USER:-auditlab}
       AUDITLAB_S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-auditlab-minio}
+      AUDITLAB_REDIS_URL: redis://redis:6379/0
+      AUDITLAB_TASKS_EAGER: "false"
+      AUDITLAB_DATA_DIR: /data/datasets
+    volumes:
+      - datasets:/data/datasets
     depends_on:
       db:
         condition: service_healthy
       minio:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
       interval: 10s
       timeout: 5s
       retries: 10
+    restart: unless-stopped
+
+  # Exécute les imports et analyses longues ; partage le volume des tables Parquet.
+  worker:
+    build: ./backend
+    command: celery -A app.tasks worker --loglevel=INFO --concurrency=2
+    environment:
+      AUDITLAB_DATABASE_URL: postgresql+psycopg://auditlab:${POSTGRES_PASSWORD:-auditlab}@db:5432/auditlab
+      AUDITLAB_STORAGE_BACKEND: s3
+      AUDITLAB_S3_ENDPOINT: http://minio:9000
+      AUDITLAB_S3_ACCESS_KEY: ${MINIO_ROOT_USER:-auditlab}
+      AUDITLAB_S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-auditlab-minio}
+      AUDITLAB_REDIS_URL: redis://redis:6379/0
+      AUDITLAB_TASKS_EAGER: "false"
+      AUDITLAB_DATA_DIR: /data/datasets
+    volumes:
+      - datasets:/data/datasets
+    depends_on:
+      backend:
+        condition: service_healthy
     restart: unless-stopped
 
   frontend:
@@ -67,3 +104,4 @@ services:
 volumes:
   pgdata:
   files:
+  datasets:
