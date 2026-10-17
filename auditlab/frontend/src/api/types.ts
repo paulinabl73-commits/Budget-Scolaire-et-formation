@@ -327,3 +327,15 @@ export interface Workpaper extends WorkpaperSummary {
   conclusion: string | null;
   peut_modifier: boolean;
 }
+
+export interface Attachment {
+  id: string;
+  workpaper_id: string;
+  nom_fichier: string;
+  content_type: string;
+  taille: number;
+  sha256: string;
+  version: number;
+  created_at: string | null;
+  url: string;
+}

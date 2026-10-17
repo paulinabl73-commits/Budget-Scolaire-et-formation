@@ -50,3 +50,17 @@ class WorkpaperOut(WorkpaperSummary):
     travaux: dict[str, Any]
     conclusion: str | None
     peut_modifier: bool = False
+
+
+class AttachmentOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    workpaper_id: uuid.UUID
+    nom_fichier: str
+    content_type: str
+    taille: int
+    sha256: str
+    version: int
+    created_at: datetime | None = None
+    url: str = ""

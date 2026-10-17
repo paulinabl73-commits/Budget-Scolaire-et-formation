@@ -31,3 +31,10 @@ export function formatDate(iso: string | null | undefined): string {
   const d = new Date(`${iso.slice(0, 10)}T00:00:00Z`);
   return Number.isNaN(d.getTime()) ? "" : dateCourte.format(d);
 }
+
+/** Taille de fichier lisible (Ko, Mo). */
+export function formatTaille(octets: number): string {
+  if (octets < 1024) return `${octets} o`;
+  if (octets < 1024 * 1024) return `${formatNombre(Math.round(octets / 102.4) / 10)} Ko`;
+  return `${formatNombre(Math.round(octets / (1024 * 102.4)) / 10)} Mo`;
+}

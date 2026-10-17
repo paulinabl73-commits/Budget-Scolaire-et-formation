@@ -64,3 +64,8 @@ def require(*perms: Perm) -> Callable[..., User]:
         return user
 
     return checker
+
+
+def user_from_request(request: Request, db: Session) -> User:
+    """Authentifie une requête hors du mécanisme de dépendances (routes à double accès)."""
+    return current_user(current_session(_session(request, db)))

@@ -20,6 +20,16 @@ class Settings(BaseSettings):
     # Conversion des heures saisies en jours-homme (AUD-08).
     heures_par_jour: float = 8.0
     cors_origins: list[str] = ["http://localhost:5173"]
+    # Clé de signature des liens de téléchargement ; à fixer en production (32 octets aléatoires).
+    secret_key: str = "dev-change-me-" + "0" * 32
+    # Stockage des fichiers (AUD-15) : "local" (disque) ou "s3" (MinIO ou compatible S3).
+    storage_backend: str = "local"
+    storage_dir: str = "/tmp/auditlab-files"  # noqa: S108
+    s3_endpoint: str | None = None
+    s3_access_key: str | None = None
+    s3_secret_key: str | None = None
+    s3_bucket: str = "auditlab"
+    max_upload_mb: int = 100
     log_level: str = "INFO"
 
 

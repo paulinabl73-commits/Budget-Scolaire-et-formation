@@ -4,8 +4,9 @@ import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 
 import { api, patch } from "../api/client";
-import type { ControlAssessment, Workpaper } from "../api/types";
+import type { Attachment, ControlAssessment, Workpaper } from "../api/types";
 import Alert from "../components/Alert";
+import AttachmentsPanel from "../components/workpaper/AttachmentsPanel";
 import { fromPlainText, toPlainText } from "../lib/richtext";
 
 const EVALS: ControlAssessment[] = ["efficace", "partiellement_efficace", "inefficace"];
@@ -14,6 +15,7 @@ export default function WorkpaperPage() {
   const { t } = useTranslation();
   const { id, wpId } = useParams();
   const [wp, setWp] = useState<Workpaper | null>(null);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [f, setF] = useState({ titre: "", objectif: "", travaux: "", conclusion: "", evaluation: "" });
   const [message, setMessage] = useState<{ kind: "erreur" | "succes"; text: string } | null>(null);
 
@@ -28,7 +30,14 @@ export default function WorkpaperPage() {
     });
   };
 
-  const load = useCallback(async () => apply(await api<Workpaper>(`/workpapers/${wpId}`)), [wpId]);
+  const loadAttachments = useCallback(
+    async () => setAttachments(await api<Attachment[]>(`/workpapers/${wpId}/attachments`)),
+    [wpId],
+  );
+  const load = useCallback(async () => {
+    apply(await api<Workpaper>(`/workpapers/${wpId}`));
+    await loadAttachments();
+  }, [wpId, loadAttachments]);
   useEffect(() => {
     load().catch((e: Error) => setMessage({ kind: "erreur", text: e.message }));
   }, [load]);
@@ -91,6 +100,7 @@ export default function WorkpaperPage() {
         </div>
         {!ro && <button type="submit" className="btn-primaire">{t("commun.enregistrer")}</button>}
       </form>
+      <AttachmentsPanel workpaperId={wp.id} attachments={attachments} editable={!ro} onChange={() => void loadAttachments()} />
     </div>
   );
 }

@@ -547,5 +547,17 @@
     "supprime": "Papier de travail supprimé.",
     "maj": "Modifié le {{date}}",
     "modifie": "Dernière modification"
+  },
+  "pieces": {
+    "titre": "Pièces jointes",
+    "deposer": "Déposer un fichier",
+    "aide": "PDF, Excel, Word, CSV, texte ou image, 100 Mo au plus.",
+    "aucune": "Aucune pièce jointe.",
+    "deposee": "Pièce jointe déposée.",
+    "supprimee": "Pièce jointe supprimée.",
+    "envoi": "Envoi en cours…",
+    "empreinte": "Empreinte SHA-256",
+    "version": "v{{version}}",
+    "confirmerSuppression": "Retirer « {{nom}} » du papier ? Le fichier reste conservé dans l'historique."
   }
 }
