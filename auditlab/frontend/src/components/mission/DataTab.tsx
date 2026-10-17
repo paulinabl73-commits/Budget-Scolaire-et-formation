@@ -10,6 +10,7 @@ import { formatDateHeure, formatNombre } from "../../lib/format";
 import { can } from "../../lib/permissions";
 import Alert from "../Alert";
 import ImportWizard from "../data/ImportWizard";
+import MacroPanel from "../data/MacroPanel";
 import type { Preview, WizardOptions } from "../data/ImportWizard";
 
 export const DS_BADGE: Record<string, string> = {
@@ -43,6 +44,7 @@ export default function DataTab({ mission }: { mission: Engagement }) {
       {message && <Alert kind={message.kind}>{message.text}</Alert>}
       {canImport && <ImportPanel missionId={mission.id} onImported={(text) => { setMessage({ kind: "succes", text }); void load(); }}
         onError={(text) => setMessage({ kind: "erreur", text })} />}
+      {canImport && <MacroPanel tables={rows} onDone={(text, ok) => { setMessage({ kind: ok ? "succes" : "erreur", text }); void load(); }} />}
       <div className="carte overflow-x-auto p-0">
         {rows.length === 0 ? (
           <p className="p-6 text-sm text-slate-600">{t("donnees.aucune")}</p>

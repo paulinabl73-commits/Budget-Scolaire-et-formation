@@ -1118,5 +1118,17 @@
     "rejeuEnCours": "Rejeu en cours…",
     "identique": "Rejeu conforme : les {{n}} étapes recalculées depuis le fichier source redonnent les mêmes empreintes.",
     "different": "Écart au rejeu : l'empreinte recalculée diffère pour {{tables}}."
+  },
+  "macros": {
+    "titre": "Exécuter une macro",
+    "macro": "Macro",
+    "entree": "Table pour « {{nom}} »",
+    "suffixe": "Suffixe des noms (ex. 2027)",
+    "etapes": "Étapes",
+    "executer": "Exécuter",
+    "lancee": "Macro lancée : {{n}} table(s) en cours de calcul.",
+    "nomMacro": "Enregistrer cet historique comme macro",
+    "enregistrer": "Enregistrer la macro",
+    "enregistree": "Macro « {{nom}} » enregistrée : elle peut être rejouée sur un nouveau fichier de même structure."
   }
 }

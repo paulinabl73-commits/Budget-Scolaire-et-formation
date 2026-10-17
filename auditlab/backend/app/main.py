@@ -17,6 +17,7 @@ from app.api import (
     engagements,
     imports,
     library,
+    macros,
     meta,
     notifications,
     plans,
@@ -106,5 +107,6 @@ for router in (
     views.router,
     analyses.router,
     sampling.router,
+    macros.router,
 ):
     app.include_router(router, prefix="/api")

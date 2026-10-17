@@ -6,6 +6,7 @@ from app.models.data import (
     DatasetKind,
     DatasetStatus,
     DataSource,
+    Macro,
     SampleEvaluation,
     Upload,
 )
@@ -57,6 +58,7 @@ __all__ = [
     "SampleEvaluation",
     "AuditLog",
     "AuditPlan",
+    "Macro",
     "AuditableEntity",
     "Axis",
     "Base",

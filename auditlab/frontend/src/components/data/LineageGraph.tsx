@@ -6,6 +6,7 @@ import { api, post } from "../../api/client";
 import type { Dataset } from "../../api/types";
 import { formatDateHeure, formatNombre } from "../../lib/format";
 import Alert from "../Alert";
+import { SaveMacro } from "./MacroPanel";
 
 interface Node {
   id: string;
@@ -36,7 +37,7 @@ const GX = 70;
 const GY = 24;
 
 /** Graphe de lignée (DAT-24) et rejeu depuis la source (NF-04). */
-export default function LineageGraph({ ds }: { ds: Dataset }) {
+export default function LineageGraph({ ds, canEdit = false }: { ds: Dataset; canEdit?: boolean }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [graph, setGraph] = useState<Graph | null>(null);
@@ -118,6 +119,7 @@ export default function LineageGraph({ ds }: { ds: Dataset }) {
           })}
         </svg>
       </div>
+      {canEdit && ds.kind !== "import" && <SaveMacro ds={ds} />}
     </section>
   );
 }

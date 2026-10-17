@@ -115,3 +115,21 @@ class AnalysisOperation(TrackedMixin, Base):
     statut: Mapped[str] = mapped_column(String(20))
     duree_ms: Mapped[int | None] = mapped_column(Integer, nullable=True)
     empreinte: Mapped[str | None] = mapped_column(String(64), nullable=True)
+
+
+class Macro(TrackedMixin, Base):
+    """Historique converti en traitement réutilisable (DAT-25).
+
+    `entrees` décrit les tables sources attendues (colonnes et types) ; `etapes` rejoue les
+    opérations dans l'ordre, chaque étape désignant ses entrées par « source:i » ou « etape:j ».
+    """
+
+    __tablename__ = "macros"
+
+    nom: Mapped[str] = mapped_column(String(200))
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    entrees: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
+    etapes: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
+    origine_dataset_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("datasets.id"), nullable=True
+    )
