@@ -3,7 +3,7 @@
 | Lot | Contenu | État |
 |-----|---------|------|
 | 1 | Socle : dépôt, PostgreSQL, Alembic, authentification, rôles, AuditLog chaîné (NF-01, NF-02), CI | **Livré** |
-| 2 | Univers et plan : AUD-01 à AUD-05 | À faire |
+| 2 | Univers et plan : AUD-01 à AUD-05 | **Livré** |
 | 3 | Missions et programme : AUD-06 à AUD-12 | À faire |
 | 4 | Papiers de travail et revue : AUD-13 à AUD-22 | À faire |
 | 5 | Import de données : DAT-01 à DAT-08 | À faire |
@@ -16,6 +16,34 @@
 | 8d | Inventaire, fiscalité et livrables : RCO-11 à RCO-27 | À faire |
 | 9 | Scripts et automatisation : DAT-26 à DAT-29 | À faire |
 | 10 | Reporting et finitions : REP-01 à REP-08, NF-09 à NF-11 | À faire |
+
+## Lot 2 — détail
+
+**Livré** (un commit par exigence)
+- **AUD-01** : univers d'audit en arborescence (direction, filiale, processus, système) ; un
+  déplacement qui créerait un cycle est refusé, la suppression est logique.
+- **AUD-02** : critères paramétrables (axe, mode, poids, activation), avec cinq critères par
+  défaut. Le score sur 100 est calculé automatiquement, la note d'ancienneté est déduite de la
+  date du dernier audit, et l'historique des évaluations est conservé.
+- **AUD-03** : carte des risques 5 × 5 cliquable, avec la liste des entités non évaluées.
+- **AUD-04** : plan annuel construit en choisissant des entités (proposées par score
+  décroissant), avec budget en jours-homme, période dans l'année et charge comparée à la
+  capacité.
+- **AUD-05** : validation par le Directeur (le plan est alors figé), nouvelles versions,
+  consultation et comparaison des versions.
+- Tests : 109 tests backend (couverture de 99 %, droits testés pour chaque rôle) et 18 tests
+  frontend. Le scénario de recette, étape 1 (« le Directeur crée l'entité Achats, l'évalue et
+  l'inscrit au plan 2027 »), a été rejoué dans un navigateur.
+
+**Choix faits en l'absence de réponse aux questions ouvertes** (modifiables)
+- Référentiel IIA ; échelle de notes de 1 à 5 ; niveaux de la carte selon impact × probabilité :
+  faible < 4, modéré < 8, élevé < 15, critique ≥ 15.
+- Le Chef de mission consulte l'univers et le plan. L'Auditeur et le Data analyst n'y ont pas
+  accès : ils ne voient que leurs missions.
+
+**Reste ouvert**
+- La date du dernier audit est saisie à la main ; elle sera mise à jour automatiquement à la
+  clôture des missions (lot 4, AUD-22).
 
 ## Lot 1 — détail
 
