@@ -48,6 +48,7 @@ from app.models.program import (
 )
 from app.models.revision import (
     AccountingFramework,
+    AuditFile,
     FrameworkAccount,
     NormativeFramework,
     RegulatoryParameter,
@@ -73,6 +74,7 @@ from app.models.workpaper import (
 
 __all__ = [
     "AccountingFramework",
+    "AuditFile",
     "ActionPlan",
     "AnalysisOperation",
     "Attachment",

@@ -347,7 +347,8 @@
       "papiers": "Papiers de travail",
       "donnees": "Données",
       "constats": "Constats",
-      "rapport": "Rapport"
+      "rapport": "Rapport",
+      "revision": "Révision des comptes"
     },
     "statuts": {
       "planifiee": "Planifiée",
@@ -1369,5 +1370,40 @@
     "cadreLibelle": "Libellé",
     "cadreDescription": "Description",
     "ajouterCadre": "Ajouter"
+  },
+  "revision": {
+    "aucun": "Aucun dossier de révision pour cette mission.",
+    "nouveau": "Nouveau dossier de révision",
+    "creer": "Créer le dossier",
+    "col": {
+      "exercice": "Exercice",
+      "entite": "Entité",
+      "referentiel": "Référentiel",
+      "devise": "Devise",
+      "cadre": "Cadre normatif",
+      "statut": "Statut"
+    },
+    "statuts": {
+      "ouvert": "Ouvert",
+      "clos": "Clos"
+    },
+    "debut": "Début de l'exercice",
+    "fin": "Fin de l'exercice",
+    "principal": "Référentiel principal",
+    "ifrs": "Restitution IFRS (option)",
+    "sansIfrs": "Sans restitution IFRS",
+    "sansEntite": "La mission n'est rattachée à aucune entité de l'univers : rattachez-la avant d'ouvrir un dossier.",
+    "retour": "← Dossiers de révision",
+    "titreDossier": "{{entite}} — exercice {{exercice}}",
+    "restitution": "restitution",
+    "precedent": "exercice précédent {{exercice}}"
+  },
+  "devises": {
+    "XOF": "XOF – franc CFA (UEMOA)",
+    "XAF": "XAF – franc CFA (CEMAC)",
+    "EUR": "EUR – euro",
+    "USD": "USD – dollar",
+    "GNF": "GNF – franc guinéen",
+    "CDF": "CDF – franc congolais"
   }
 }

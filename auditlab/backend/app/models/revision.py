@@ -111,3 +111,42 @@ class NormativeFramework(TrackedMixin, Base):
     libelle: Mapped[str] = mapped_column(String(300))
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     actif: Mapped[bool] = mapped_column(Boolean, default=True)
+
+
+class AuditFile(TrackedMixin, Base):
+    """Dossier de révision d'une entité pour un exercice (REV-02, REV-03, REV-04)."""
+
+    __tablename__ = "audit_files"
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    entity_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("auditable_entities.id"), index=True)
+    exercice: Mapped[int] = mapped_column(Integer)
+    date_debut: Mapped[dt.date] = mapped_column(Date)
+    date_fin: Mapped[dt.date] = mapped_column(Date)
+    # REV-02 : référentiel principal (SYSCOHADA ou CIPRES) et, en option, restitution IFRS.
+    framework_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("accounting_frameworks.id"))
+    ifrs_framework_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("accounting_frameworks.id"), nullable=True
+    )
+    # REV-03 : cadre normatif de la mission.
+    normative_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("normative_frameworks.id"), nullable=True
+    )
+    devise: Mapped[str] = mapped_column(String(3), default="XOF")
+    # REV-04 : dossier de l'exercice précédent, d'où l'exercice N-1 est reporté.
+    precedent_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("audit_files.id"), nullable=True
+    )
+    statut: Mapped[str] = mapped_column(String(20), default="ouvert")
+    # REV-11 : seuils de signification.
+    base_seuil: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    montant_base: Mapped[Decimal | None] = mapped_column(MONEY, nullable=True)
+    pct_seuil: Mapped[Decimal | None] = mapped_column(Numeric(7, 4), nullable=True)
+    seuil_signification: Mapped[Decimal | None] = mapped_column(MONEY, nullable=True)
+    pct_planification: Mapped[Decimal | None] = mapped_column(Numeric(7, 4), nullable=True)
+    seuil_planification: Mapped[Decimal | None] = mapped_column(MONEY, nullable=True)
+    pct_insignifiant: Mapped[Decimal | None] = mapped_column(Numeric(7, 4), nullable=True)
+    seuil_insignifiant: Mapped[Decimal | None] = mapped_column(MONEY, nullable=True)
+    justification_seuil: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # REV-12 : variation relative au-delà de laquelle une justification est demandée.
+    seuil_variation_pct: Mapped[Decimal] = mapped_column(Numeric(7, 4), default=Decimal("10"))

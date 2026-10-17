@@ -11,6 +11,7 @@ from app.api import (
     action_plans,
     analyses,
     attachments,
+    audit_files,
     audit_log,
     auth,
     contradictory,
@@ -122,5 +123,6 @@ for router in (
     contradictory.router,
     portal.router,
     frameworks.router,
+    audit_files.router,
 ):
     app.include_router(router, prefix="/api")

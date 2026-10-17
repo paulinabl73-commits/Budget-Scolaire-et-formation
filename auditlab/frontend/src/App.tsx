@@ -24,6 +24,7 @@ const WorkpaperPage = lazy(() => import("./pages/WorkpaperPage"));
 const TickmarksPage = lazy(() => import("./pages/TickmarksPage"));
 const DatasetPage = lazy(() => import("./pages/DatasetPage"));
 const FrameworksPage = lazy(() => import("./pages/FrameworksPage"));
+const AuditFilePage = lazy(() => import("./pages/AuditFilePage"));
 const FindingPage = lazy(() => import("./pages/FindingPage"));
 const PortalFindingPage = lazy(() => import("./pages/portal/PortalFindingPage"));
 
@@ -110,6 +111,14 @@ export default function App() {
           element={
             <RequireAuth permission={[PERM.MISSIONS_READ_ALL, PERM.MISSIONS_READ_OWN]}>
               <WorkpaperPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="missions/:id/revision/:fid"
+          element={
+            <RequireAuth permission="revision:read">
+              <AuditFilePage />
             </RequireAuth>
           }
         />

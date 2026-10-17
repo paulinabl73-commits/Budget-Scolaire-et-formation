@@ -532,3 +532,44 @@ export interface Auditee {
   nom: string;
   email: string;
 }
+
+export interface AuditFile {
+  id: string;
+  engagement_id: string;
+  entity_id: string;
+  exercice: number;
+  date_debut: string;
+  date_fin: string;
+  framework_id: string;
+  ifrs_framework_id: string | null;
+  normative_id: string | null;
+  devise: string;
+  precedent_id: string | null;
+  statut: string;
+  base_seuil: string | null;
+  montant_base: string | null;
+  pct_seuil: string | null;
+  seuil_signification: string | null;
+  pct_planification: string | null;
+  seuil_planification: string | null;
+  pct_insignifiant: string | null;
+  seuil_insignifiant: string | null;
+  justification_seuil: string | null;
+  seuil_variation_pct: string;
+  entite: string | null;
+  referentiel: string | null;
+  referentiel_ifrs: string | null;
+  cadre_normatif: string | null;
+  precedent_exercice: number | null;
+  peut_travailler: boolean;
+  peut_gerer: boolean;
+}
+
+export interface FrameworkSummary {
+  id: string;
+  code: string;
+  version: string;
+  libelle: string;
+  pays: string;
+  actif: boolean;
+}
