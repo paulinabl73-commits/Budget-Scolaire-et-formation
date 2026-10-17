@@ -3,7 +3,7 @@ import { AgGridReact } from "ag-grid-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { post } from "../../api/client";
+import { download, post } from "../../api/client";
 import type { Dataset } from "../../api/types";
 import { formatDate, formatDateHeure, formatNombre } from "../../lib/format";
 import { AG_GRID_FR } from "../../lib/grid";
@@ -63,6 +63,27 @@ export default function DataGrid({ ds, onColumnFocus, onQuery }: {
   const [search, setSearch] = useState("");
   const [total, setTotal] = useState<number | null>(null);
   const searchRef = useRef("");
+  const [exportError, setExportError] = useState<string | null>(null);
+
+  const exportAs = async (format: "csv" | "xlsx") => {
+    setExportError(null);
+    const api = apiRef.current;
+    const tri = (api?.getColumnState() ?? [])
+      .filter((c) => c.sort)
+      .sort((a, b) => (a.sortIndex ?? 0) - (b.sortIndex ?? 0))
+      .map((c) => ({ colonne: c.colId, sens: c.sort }));
+    try {
+      await download(`/datasets/${ds.id}/export`, {
+        format,
+        tri,
+        filtres: api?.getFilterModel() ?? {},
+        recherche: searchRef.current || null,
+        colonnes: ds.schema.filter((c) => !hidden.includes(c.nom)).map((c) => c.nom),
+      }, `${ds.nom}.${format}`);
+    } catch (e) {
+      setExportError((e as Error).message);
+    }
+  };
 
   const visible = ds.schema.filter((c) => !hidden.includes(c.nom));
 
@@ -166,8 +187,11 @@ export default function DataGrid({ ds, onColumnFocus, onQuery }: {
           <button type="button" className="btn-secondaire" onClick={() => apiRef.current?.setFilterModel(null)}>
             {t("grille.effacerFiltres")}
           </button>
+          <button type="button" className="btn-secondaire" onClick={() => exportAs("xlsx")}>{t("grille.exporterExcel")}</button>
+          <button type="button" className="btn-secondaire" onClick={() => exportAs("csv")}>{t("grille.exporterCsv")}</button>
         </div>
       </div>
+      {exportError && <p role="alert" className="text-sm text-red-700">{exportError}</p>}
       <div className="ag-theme-quartz" style={{ height: 560 }}>
         <AgGridReact<Row>
           key={hidden.join("|")}

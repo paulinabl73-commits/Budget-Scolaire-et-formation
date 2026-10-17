@@ -226,3 +226,53 @@ def column_stats(
         return field_stats(rel, body.colonne, body.filtres, body.recherche)
     except (GridError, RelationError) as exc:
         raise _invalid(str(exc)) from exc
+
+
+class ExportIn(BaseModel):
+    format: str = Field(pattern="^(csv|xlsx)$")
+    tri: list[SortIn] = Field(default=[], max_length=5)
+    filtres: dict[str, dict[str, Any]] = Field(default={})
+    recherche: str | None = Field(default=None, max_length=200)
+    colonnes: list[str] | None = None
+
+
+@router.post("/datasets/{dataset_id}/export")
+def export(dataset_id: uuid.UUID, body: ExportIn, user: CurrentUser, db: DbSession):  # noqa: ANN201
+    """DAT-32 : export CSV ou Excel de la table (ou de la sélection filtrée), journalisé."""
+    import re
+    import shutil
+
+    from fastapi.responses import FileResponse
+    from starlette.background import BackgroundTask
+
+    from app.analytics.export import ExportError, export_info, to_csv, to_excel
+    from app.analytics.grid import GridError
+    from app.audit.listeners import record_event
+
+    ds, _ = get_dataset(db, dataset_id, user)
+    rel = _view_base(db, ds)
+    args = (body.colonnes, body.filtres, body.recherche, [s.model_dump() for s in body.tri])
+    try:
+        if body.format == "csv":
+            path, count = to_csv(rel, *args)
+            media = "text/csv; charset=utf-8"
+        else:
+            path, count = to_excel(rel, *args, export_info(ds, user, body.filtres, body.recherche))
+            media = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    except (ExportError, GridError, RelationError) as exc:
+        raise _invalid(str(exc)) from exc
+    record_event(
+        db,
+        "dataset_exported",
+        object_type="Dataset",
+        object_id=ds.id,
+        details={"format": body.format, "lignes": count, "filtres": body.filtres},
+    )
+    db.commit()
+    name = re.sub(r"[^\w\-]+", "_", ds.nom).strip("_")[:80] or "table"
+    return FileResponse(
+        path,
+        media_type=media,
+        filename=f"{name}.{body.format}",
+        background=BackgroundTask(shutil.rmtree, path.parent, ignore_errors=True),
+    )

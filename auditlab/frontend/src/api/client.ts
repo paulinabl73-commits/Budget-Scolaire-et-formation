@@ -60,3 +60,22 @@ export const upload = <T>(path: string, file: File, field = "file") => {
   return api<T>(path, { method: "POST", body: form });
 };
 export const del = (path: string) => api<void>(path, { method: "DELETE" });
+
+/** Téléchargement d'un fichier produit par une requête POST (exports). */
+export async function download(path: string, data: unknown, fallbackName: string): Promise<void> {
+  const headers = new Headers({ "Content-Type": "application/json" });
+  const token = tokenStore.get();
+  if (token) headers.set("Authorization", `Bearer ${token}`);
+  const resp = await fetch(`/api${path}`, { method: "POST", headers, body: JSON.stringify(data) });
+  if (!resp.ok) {
+    const body = await resp.json().catch(() => null);
+    throw new ApiError(resp.status, detail(body, resp.statusText));
+  }
+  const name = /filename="([^"]+)"/.exec(resp.headers.get("content-disposition") ?? "")?.[1] ?? fallbackName;
+  const url = URL.createObjectURL(await resp.blob());
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(url);
+}

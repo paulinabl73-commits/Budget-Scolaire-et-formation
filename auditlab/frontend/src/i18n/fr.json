@@ -803,7 +803,9 @@
     "recherche": "Rechercher dans toutes les colonnes",
     "colonnes": "Colonnes ({{visibles}}/{{total}})",
     "masquer": "Colonnes affichées",
-    "effacerFiltres": "Effacer les filtres"
+    "effacerFiltres": "Effacer les filtres",
+    "exporterExcel": "Exporter en Excel",
+    "exporterCsv": "Exporter en CSV"
   },
   "stats": {
     "titre": "Statistiques de champ",
