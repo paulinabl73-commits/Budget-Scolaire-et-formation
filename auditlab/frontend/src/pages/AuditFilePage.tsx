@@ -16,10 +16,11 @@ import type { Mapping } from "../components/revision/MappingPanel";
 import RatiosPanel from "../components/revision/RatiosPanel";
 import RiskMatrixPanel from "../components/revision/RiskMatrixPanel";
 import StatementsPreview from "../components/revision/StatementsPreview";
+import ThirdPartiesPanel from "../components/revision/ThirdPartiesPanel";
 import UnadjustedPanel from "../components/revision/UnadjustedPanel";
 import { formatDate } from "../lib/format";
 
-const VIEWS = ["donnees", "affectation", "planification", "analytique", "ratios", "risques", "ajustements", "cycles", "etats"] as const;
+const VIEWS = ["donnees", "affectation", "planification", "analytique", "ratios", "risques", "ajustements", "cycles", "etats", "tiers"] as const;
 type View = (typeof VIEWS)[number];
 
 /** Dossier de révision (Module 5) : balances, affectation, seuils, revue analytique. */
@@ -92,6 +93,7 @@ export default function AuditFilePage() {
         </>
       )}
       {view === "cycles" && <LeadSchedulesPanel file={file} />}
+      {view === "tiers" && <ThirdPartiesPanel file={file} />}
       {view === "etats" && (unmapped > 0 ? <Alert kind="info">{t("affectation.bloque")}</Alert> : <FinancialStatementsPanel file={file} />)}
     </div>
   );

@@ -34,6 +34,15 @@ class Settings(BaseSettings):
     # (signification de travail) et seuil des anomalies manifestement insignifiantes.
     pct_planification_defaut: float = 75.0
     pct_insignifiant_defaut: float = 5.0
+    # Comptes de tiers lettrés et justifiés (REV-18), grille de dépréciation par défaut des
+    # créances (ancienneté minimale en jours → taux en %), comptes de dotation et de reprise.
+    racines_tiers: list[str] = ["40", "41"]
+    racines_clients: list[str] = ["41"]
+    racine_depreciation_clients: str = "491"
+    grille_depreciation_defaut: list[list[float]] = [[0, 0], [181, 25], [366, 50], [731, 100]]
+    compte_dotation_creances: str = "691000"
+    compte_reprise_creances: str = "791000"
+    compte_depreciation_clients: str = "491000"
     # Classes exclues des états financiers (comptabilité analytique, engagements hors bilan).
     classes_hors_etats: str = "9"
     cors_origins: list[str] = ["http://localhost:5173"]

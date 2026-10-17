@@ -158,6 +158,10 @@ class AuditFile(TrackedMixin, Base):
     justification_seuil: Mapped[str | None] = mapped_column(Text, nullable=True)
     # REV-12 : variation relative au-delà de laquelle une justification est demandée.
     seuil_variation_pct: Mapped[Decimal] = mapped_column(Numeric(7, 4), default=Decimal("10"))
+    # REV-18 : grille de dépréciation des créances par ancienneté ([{jours_min, taux}]) et taux
+    # de TVA à retirer des créances TTC pour obtenir la base HT ; vides = valeurs par défaut.
+    grille_depreciation: Mapped[list[dict[str, Any]] | None] = mapped_column(JSONB, nullable=True)
+    tva_depreciation: Mapped[Decimal | None] = mapped_column(Numeric(7, 4), nullable=True)
 
 
 class TrialBalance(TrackedMixin, Base):

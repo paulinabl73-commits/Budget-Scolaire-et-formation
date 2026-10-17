@@ -46,6 +46,7 @@ from app.api import (
     statements,
     teams,
     templates,
+    third_parties,
     tickmarks,
     timesheets,
     trial_balances,
@@ -146,5 +147,6 @@ for router in (
     lead_schedules.router,
     statements.router,
     programs.router,
+    third_parties.router,
 ):
     app.include_router(router, prefix="/api")

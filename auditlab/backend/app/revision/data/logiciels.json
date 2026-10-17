@@ -205,6 +205,8 @@
   ],
   "tiers": [
    "tiers",
+   "code tiers",
+   "nom tiers",
    "compte tiers",
    "compte auxiliaire",
    "auxiliaire"

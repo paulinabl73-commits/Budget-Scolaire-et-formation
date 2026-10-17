@@ -1549,7 +1549,8 @@
       "risques": "Matrice des risques",
       "ajustements": "Ajustements",
       "cycles": "Feuilles maîtresses",
-      "etats": "États financiers"
+      "etats": "États financiers",
+      "tiers": "Tiers"
     },
     "navigation": "Sections du dossier"
   },
@@ -1740,5 +1741,32 @@
     "ajouter": "Ajouter au programme {{ref}}",
     "appliquer": "Reprendre le programme type dans la mission",
     "applique": "{{n}} procédure(s) ajoutée(s) au programme de la mission."
+  },
+  "tiers": {
+    "titre": "Lettrage et justification des comptes de tiers",
+    "col": {
+      "compte": "Compte",
+      "lettrage": "Lettrage",
+      "lettrees": "Lignes lettrées",
+      "ouvertes": "Lignes ouvertes",
+      "balance": "Solde balance",
+      "ouvert": "Solde non lettré",
+      "ecart": "Justifié",
+      "tiers": "Tiers",
+      "depreciation": "Dépréciation requise"
+    },
+    "modes": {
+      "fourni": "Lettrage du logiciel",
+      "automatique": "Lettrage automatique"
+    },
+    "lignesOuvertes": "Lignes non lettrées du compte {{compte}}",
+    "balanceAgee": "Balance âgée des créances et dépréciation",
+    "total": "Total",
+    "comparaison": "Dépréciation requise : {{requise}} ; comptabilisée (solde révisé) : {{comptabilisee}} ; écart : {{ecart}}.",
+    "proposer": "Proposer l'écriture de dépréciation",
+    "proposee": "Écriture AJE {{numero}} proposée pour {{montant}}.",
+    "grille": "Grille (jours:taux %, séparés par « ; »)",
+    "tva": "TVA à retirer (%)",
+    "appliquerGrille": "Appliquer la grille"
   }
 }
