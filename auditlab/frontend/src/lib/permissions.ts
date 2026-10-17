@@ -8,6 +8,10 @@ export const PERM = {
   MISSIONS_MANAGE: "missions:manage",
   MISSIONS_READ_ALL: "missions:read_all",
   MISSIONS_READ_OWN: "missions:read_own",
+  FRAMEWORKS_MANAGE: "frameworks:manage",
+  REVISION_READ: "revision:read",
+  REVISION_WORK: "revision:work",
+  REVISION_MANAGE: "revision:manage",
 } as const;
 
 export type Role =

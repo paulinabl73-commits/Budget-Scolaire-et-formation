@@ -1,0 +1,2457 @@
+{
+ "code": "SYSCOHADA",
+ "version": "2017",
+ "libelle": "SYSCOHADA révisé – Système normal",
+ "pays": "OHADA",
+ "date_effet": "2018-01-01",
+ "source": "Acte uniforme relatif au droit comptable et à l'information financière du 26 janvier 2017 (plan de comptes par racines, modèles du Système normal). Modèle de départ à contrôler et compléter par import du plan détaillé de l'entité.",
+ "comptes": [
+  {
+   "numero": "1",
+   "libelle": "Comptes de ressources durables",
+   "classe": 1
+  },
+  {
+   "numero": "10",
+   "libelle": "Capital",
+   "classe": 1
+  },
+  {
+   "numero": "11",
+   "libelle": "Réserves",
+   "classe": 1
+  },
+  {
+   "numero": "12",
+   "libelle": "Report à nouveau",
+   "classe": 1
+  },
+  {
+   "numero": "13",
+   "libelle": "Résultat net de l'exercice",
+   "classe": 1
+  },
+  {
+   "numero": "14",
+   "libelle": "Subventions d'investissement",
+   "classe": 1
+  },
+  {
+   "numero": "15",
+   "libelle": "Provisions réglementées et fonds assimilés",
+   "classe": 1
+  },
+  {
+   "numero": "16",
+   "libelle": "Emprunts et dettes assimilées",
+   "classe": 1
+  },
+  {
+   "numero": "17",
+   "libelle": "Dettes de location-acquisition",
+   "classe": 1
+  },
+  {
+   "numero": "18",
+   "libelle": "Dettes liées à des participations et comptes de liaison",
+   "classe": 1
+  },
+  {
+   "numero": "19",
+   "libelle": "Provisions financières pour risques et charges",
+   "classe": 1
+  },
+  {
+   "numero": "101",
+   "libelle": "Capital social",
+   "classe": 1
+  },
+  {
+   "numero": "102",
+   "libelle": "Capital par dotation",
+   "classe": 1
+  },
+  {
+   "numero": "103",
+   "libelle": "Capital personnel",
+   "classe": 1
+  },
+  {
+   "numero": "104",
+   "libelle": "Compte de l'exploitant",
+   "classe": 1
+  },
+  {
+   "numero": "105",
+   "libelle": "Primes liées au capital social",
+   "classe": 1
+  },
+  {
+   "numero": "106",
+   "libelle": "Écarts de réévaluation",
+   "classe": 1
+  },
+  {
+   "numero": "109",
+   "libelle": "Apporteurs, capital souscrit non appelé",
+   "classe": 1
+  },
+  {
+   "numero": "111",
+   "libelle": "Réserve légale",
+   "classe": 1
+  },
+  {
+   "numero": "112",
+   "libelle": "Réserves statutaires ou contractuelles",
+   "classe": 1
+  },
+  {
+   "numero": "113",
+   "libelle": "Réserves réglementées",
+   "classe": 1
+  },
+  {
+   "numero": "118",
+   "libelle": "Autres réserves",
+   "classe": 1
+  },
+  {
+   "numero": "2",
+   "libelle": "Comptes d'actif immobilisé",
+   "classe": 2
+  },
+  {
+   "numero": "21",
+   "libelle": "Immobilisations incorporelles",
+   "classe": 2
+  },
+  {
+   "numero": "22",
+   "libelle": "Terrains",
+   "classe": 2
+  },
+  {
+   "numero": "23",
+   "libelle": "Bâtiments, installations techniques et agencements",
+   "classe": 2
+  },
+  {
+   "numero": "24",
+   "libelle": "Matériel, mobilier et actifs biologiques",
+   "classe": 2
+  },
+  {
+   "numero": "245",
+   "libelle": "Matériel de transport",
+   "classe": 2
+  },
+  {
+   "numero": "25",
+   "libelle": "Avances et acomptes versés sur immobilisations",
+   "classe": 2
+  },
+  {
+   "numero": "26",
+   "libelle": "Titres de participation",
+   "classe": 2
+  },
+  {
+   "numero": "27",
+   "libelle": "Autres immobilisations financières",
+   "classe": 2
+  },
+  {
+   "numero": "28",
+   "libelle": "Amortissements",
+   "classe": 2
+  },
+  {
+   "numero": "281",
+   "libelle": "Amortissements des immobilisations incorporelles",
+   "classe": 2
+  },
+  {
+   "numero": "282",
+   "libelle": "Amortissements des terrains",
+   "classe": 2
+  },
+  {
+   "numero": "283",
+   "libelle": "Amortissements des bâtiments, installations et agencements",
+   "classe": 2
+  },
+  {
+   "numero": "284",
+   "libelle": "Amortissements du matériel",
+   "classe": 2
+  },
+  {
+   "numero": "2845",
+   "libelle": "Amortissements du matériel de transport",
+   "classe": 2
+  },
+  {
+   "numero": "29",
+   "libelle": "Dépréciations des immobilisations",
+   "classe": 2
+  },
+  {
+   "numero": "291",
+   "libelle": "Dépréciations des immobilisations incorporelles",
+   "classe": 2
+  },
+  {
+   "numero": "292",
+   "libelle": "Dépréciations des terrains",
+   "classe": 2
+  },
+  {
+   "numero": "293",
+   "libelle": "Dépréciations des bâtiments",
+   "classe": 2
+  },
+  {
+   "numero": "294",
+   "libelle": "Dépréciations du matériel",
+   "classe": 2
+  },
+  {
+   "numero": "295",
+   "libelle": "Dépréciations des avances et acomptes sur immobilisations",
+   "classe": 2
+  },
+  {
+   "numero": "296",
+   "libelle": "Dépréciations des titres de participation",
+   "classe": 2
+  },
+  {
+   "numero": "297",
+   "libelle": "Dépréciations des autres immobilisations financières",
+   "classe": 2
+  },
+  {
+   "numero": "3",
+   "libelle": "Comptes de stocks",
+   "classe": 3
+  },
+  {
+   "numero": "31",
+   "libelle": "Marchandises",
+   "classe": 3
+  },
+  {
+   "numero": "32",
+   "libelle": "Matières premières et fournitures liées",
+   "classe": 3
+  },
+  {
+   "numero": "33",
+   "libelle": "Autres approvisionnements",
+   "classe": 3
+  },
+  {
+   "numero": "34",
+   "libelle": "Produits en cours",
+   "classe": 3
+  },
+  {
+   "numero": "35",
+   "libelle": "Services en cours",
+   "classe": 3
+  },
+  {
+   "numero": "36",
+   "libelle": "Produits finis",
+   "classe": 3
+  },
+  {
+   "numero": "37",
+   "libelle": "Produits intermédiaires et résiduels",
+   "classe": 3
+  },
+  {
+   "numero": "38",
+   "libelle": "Stocks en cours de route, en consignation ou en dépôt",
+   "classe": 3
+  },
+  {
+   "numero": "39",
+   "libelle": "Dépréciations des stocks et encours de production",
+   "classe": 3
+  },
+  {
+   "numero": "4",
+   "libelle": "Comptes de tiers",
+   "classe": 4
+  },
+  {
+   "numero": "40",
+   "libelle": "Fournisseurs et comptes rattachés",
+   "classe": 4
+  },
+  {
+   "numero": "401",
+   "libelle": "Fournisseurs, dettes en compte",
+   "classe": 4
+  },
+  {
+   "numero": "409",
+   "libelle": "Fournisseurs débiteurs",
+   "classe": 4
+  },
+  {
+   "numero": "41",
+   "libelle": "Clients et comptes rattachés",
+   "classe": 4
+  },
+  {
+   "numero": "411",
+   "libelle": "Clients",
+   "classe": 4
+  },
+  {
+   "numero": "419",
+   "libelle": "Clients créditeurs",
+   "classe": 4
+  },
+  {
+   "numero": "42",
+   "libelle": "Personnel",
+   "classe": 4
+  },
+  {
+   "numero": "43",
+   "libelle": "Organismes sociaux",
+   "classe": 4
+  },
+  {
+   "numero": "44",
+   "libelle": "État et collectivités publiques",
+   "classe": 4
+  },
+  {
+   "numero": "45",
+   "libelle": "Organismes internationaux",
+   "classe": 4
+  },
+  {
+   "numero": "46",
+   "libelle": "Apporteurs, associés et groupe",
+   "classe": 4
+  },
+  {
+   "numero": "47",
+   "libelle": "Débiteurs et créditeurs divers",
+   "classe": 4
+  },
+  {
+   "numero": "478",
+   "libelle": "Écarts de conversion – actif",
+   "classe": 4
+  },
+  {
+   "numero": "479",
+   "libelle": "Écarts de conversion – passif",
+   "classe": 4
+  },
+  {
+   "numero": "48",
+   "libelle": "Créances et dettes hors activités ordinaires",
+   "classe": 4
+  },
+  {
+   "numero": "481",
+   "libelle": "Fournisseurs d'investissements",
+   "classe": 4
+  },
+  {
+   "numero": "482",
+   "libelle": "Fournisseurs d'investissements, effets à payer",
+   "classe": 4
+  },
+  {
+   "numero": "484",
+   "libelle": "Autres dettes HAO",
+   "classe": 4
+  },
+  {
+   "numero": "485",
+   "libelle": "Créances sur cessions d'immobilisations",
+   "classe": 4
+  },
+  {
+   "numero": "488",
+   "libelle": "Autres créances HAO",
+   "classe": 4
+  },
+  {
+   "numero": "49",
+   "libelle": "Dépréciations et provisions pour risques à court terme (tiers)",
+   "classe": 4
+  },
+  {
+   "numero": "491",
+   "libelle": "Dépréciations des comptes clients",
+   "classe": 4
+  },
+  {
+   "numero": "499",
+   "libelle": "Provisions pour risques à court terme",
+   "classe": 4
+  },
+  {
+   "numero": "5",
+   "libelle": "Comptes de trésorerie",
+   "classe": 5
+  },
+  {
+   "numero": "50",
+   "libelle": "Titres de placement",
+   "classe": 5
+  },
+  {
+   "numero": "51",
+   "libelle": "Valeurs à encaisser",
+   "classe": 5
+  },
+  {
+   "numero": "52",
+   "libelle": "Banques",
+   "classe": 5
+  },
+  {
+   "numero": "53",
+   "libelle": "Établissements financiers et assimilés",
+   "classe": 5
+  },
+  {
+   "numero": "54",
+   "libelle": "Instruments de trésorerie",
+   "classe": 5
+  },
+  {
+   "numero": "55",
+   "libelle": "Instruments de monnaie électronique",
+   "classe": 5
+  },
+  {
+   "numero": "56",
+   "libelle": "Banques, crédits de trésorerie et d'escompte",
+   "classe": 5
+  },
+  {
+   "numero": "564",
+   "libelle": "Escompte de crédits de campagne",
+   "classe": 5
+  },
+  {
+   "numero": "565",
+   "libelle": "Escompte de crédits ordinaires",
+   "classe": 5
+  },
+  {
+   "numero": "57",
+   "libelle": "Caisse",
+   "classe": 5
+  },
+  {
+   "numero": "58",
+   "libelle": "Régies d'avances, accréditifs et virements internes",
+   "classe": 5
+  },
+  {
+   "numero": "59",
+   "libelle": "Dépréciations et provisions pour risques à court terme (trésorerie)",
+   "classe": 5
+  },
+  {
+   "numero": "590",
+   "libelle": "Dépréciations des titres de placement",
+   "classe": 5
+  },
+  {
+   "numero": "599",
+   "libelle": "Provisions pour risques à court terme à caractère financier",
+   "classe": 5
+  },
+  {
+   "numero": "6",
+   "libelle": "Comptes de charges des activités ordinaires",
+   "classe": 6
+  },
+  {
+   "numero": "60",
+   "libelle": "Achats et variations de stocks",
+   "classe": 6
+  },
+  {
+   "numero": "601",
+   "libelle": "Achats de marchandises",
+   "classe": 6
+  },
+  {
+   "numero": "602",
+   "libelle": "Achats de matières premières et fournitures liées",
+   "classe": 6
+  },
+  {
+   "numero": "603",
+   "libelle": "Variations des stocks de biens achetés",
+   "classe": 6
+  },
+  {
+   "numero": "6031",
+   "libelle": "Variations des stocks de marchandises",
+   "classe": 6
+  },
+  {
+   "numero": "6032",
+   "libelle": "Variations des stocks de matières premières",
+   "classe": 6
+  },
+  {
+   "numero": "6033",
+   "libelle": "Variations des stocks d'autres approvisionnements",
+   "classe": 6
+  },
+  {
+   "numero": "604",
+   "libelle": "Achats stockés de matières et fournitures consommables",
+   "classe": 6
+  },
+  {
+   "numero": "605",
+   "libelle": "Autres achats",
+   "classe": 6
+  },
+  {
+   "numero": "608",
+   "libelle": "Achats d'emballages",
+   "classe": 6
+  },
+  {
+   "numero": "61",
+   "libelle": "Transports",
+   "classe": 6
+  },
+  {
+   "numero": "62",
+   "libelle": "Services extérieurs A",
+   "classe": 6
+  },
+  {
+   "numero": "63",
+   "libelle": "Services extérieurs B",
+   "classe": 6
+  },
+  {
+   "numero": "64",
+   "libelle": "Impôts et taxes",
+   "classe": 6
+  },
+  {
+   "numero": "65",
+   "libelle": "Autres charges",
+   "classe": 6
+  },
+  {
+   "numero": "66",
+   "libelle": "Charges de personnel",
+   "classe": 6
+  },
+  {
+   "numero": "67",
+   "libelle": "Frais financiers et charges assimilées",
+   "classe": 6
+  },
+  {
+   "numero": "68",
+   "libelle": "Dotations aux amortissements",
+   "classe": 6
+  },
+  {
+   "numero": "681",
+   "libelle": "Dotations aux amortissements d'exploitation",
+   "classe": 6
+  },
+  {
+   "numero": "69",
+   "libelle": "Dotations aux provisions et aux dépréciations",
+   "classe": 6
+  },
+  {
+   "numero": "691",
+   "libelle": "Dotations aux provisions et dépréciations d'exploitation",
+   "classe": 6
+  },
+  {
+   "numero": "697",
+   "libelle": "Dotations aux provisions et dépréciations financières",
+   "classe": 6
+  },
+  {
+   "numero": "7",
+   "libelle": "Comptes de produits des activités ordinaires",
+   "classe": 7
+  },
+  {
+   "numero": "70",
+   "libelle": "Ventes",
+   "classe": 7
+  },
+  {
+   "numero": "701",
+   "libelle": "Ventes de marchandises",
+   "classe": 7
+  },
+  {
+   "numero": "702",
+   "libelle": "Ventes de produits finis",
+   "classe": 7
+  },
+  {
+   "numero": "703",
+   "libelle": "Ventes de produits intermédiaires",
+   "classe": 7
+  },
+  {
+   "numero": "704",
+   "libelle": "Ventes de produits résiduels",
+   "classe": 7
+  },
+  {
+   "numero": "705",
+   "libelle": "Travaux facturés",
+   "classe": 7
+  },
+  {
+   "numero": "706",
+   "libelle": "Services vendus",
+   "classe": 7
+  },
+  {
+   "numero": "707",
+   "libelle": "Produits accessoires",
+   "classe": 7
+  },
+  {
+   "numero": "71",
+   "libelle": "Subventions d'exploitation",
+   "classe": 7
+  },
+  {
+   "numero": "72",
+   "libelle": "Production immobilisée",
+   "classe": 7
+  },
+  {
+   "numero": "73",
+   "libelle": "Variations des stocks de biens et de services produits",
+   "classe": 7
+  },
+  {
+   "numero": "75",
+   "libelle": "Autres produits",
+   "classe": 7
+  },
+  {
+   "numero": "77",
+   "libelle": "Revenus financiers et produits assimilés",
+   "classe": 7
+  },
+  {
+   "numero": "78",
+   "libelle": "Transferts de charges",
+   "classe": 7
+  },
+  {
+   "numero": "781",
+   "libelle": "Transferts de charges d'exploitation",
+   "classe": 7
+  },
+  {
+   "numero": "787",
+   "libelle": "Transferts de charges financières",
+   "classe": 7
+  },
+  {
+   "numero": "79",
+   "libelle": "Reprises de provisions, de dépréciations et autres",
+   "classe": 7
+  },
+  {
+   "numero": "791",
+   "libelle": "Reprises de provisions et dépréciations d'exploitation",
+   "classe": 7
+  },
+  {
+   "numero": "797",
+   "libelle": "Reprises de provisions et dépréciations financières",
+   "classe": 7
+  },
+  {
+   "numero": "798",
+   "libelle": "Reprises d'amortissements",
+   "classe": 7
+  },
+  {
+   "numero": "799",
+   "libelle": "Reprises de subventions d'investissement",
+   "classe": 7
+  },
+  {
+   "numero": "8",
+   "libelle": "Comptes des autres charges et des autres produits",
+   "classe": 8
+  },
+  {
+   "numero": "81",
+   "libelle": "Valeurs comptables des cessions d'immobilisations",
+   "classe": 8
+  },
+  {
+   "numero": "82",
+   "libelle": "Produits des cessions d'immobilisations",
+   "classe": 8
+  },
+  {
+   "numero": "83",
+   "libelle": "Charges hors activités ordinaires",
+   "classe": 8
+  },
+  {
+   "numero": "84",
+   "libelle": "Produits hors activités ordinaires",
+   "classe": 8
+  },
+  {
+   "numero": "85",
+   "libelle": "Dotations hors activités ordinaires",
+   "classe": 8
+  },
+  {
+   "numero": "86",
+   "libelle": "Reprises hors activités ordinaires",
+   "classe": 8
+  },
+  {
+   "numero": "87",
+   "libelle": "Participation des travailleurs",
+   "classe": 8
+  },
+  {
+   "numero": "88",
+   "libelle": "Subventions d'équilibre",
+   "classe": 8
+  },
+  {
+   "numero": "89",
+   "libelle": "Impôts sur le résultat",
+   "classe": 8
+  },
+  {
+   "numero": "9",
+   "libelle": "Comptes des engagements hors bilan et de la comptabilité analytique",
+   "classe": 9
+  },
+  {
+   "numero": "90",
+   "libelle": "Engagements obtenus et engagements accordés",
+   "classe": 9
+  },
+  {
+   "numero": "91",
+   "libelle": "Comptes réfléchis",
+   "classe": 9
+  },
+  {
+   "numero": "92",
+   "libelle": "Comptes de reclassements",
+   "classe": 9
+  },
+  {
+   "numero": "93",
+   "libelle": "Comptes de coûts",
+   "classe": 9
+  },
+  {
+   "numero": "94",
+   "libelle": "Comptes de stocks (analytique)",
+   "classe": 9
+  },
+  {
+   "numero": "95",
+   "libelle": "Comptes d'écarts sur coûts préétablis",
+   "classe": 9
+  },
+  {
+   "numero": "96",
+   "libelle": "Comptes de différences de traitement comptable",
+   "classe": 9
+  },
+  {
+   "numero": "97",
+   "libelle": "Comptes de résultats analytiques",
+   "classe": 9
+  },
+  {
+   "numero": "98",
+   "libelle": "Comptes de liaisons internes",
+   "classe": 9
+  },
+  {
+   "numero": "99",
+   "libelle": "Comptes de l'activité",
+   "classe": 9
+  }
+ ],
+ "postes": [
+  {
+   "etat": "bilan_actif",
+   "code": "AD",
+   "libelle": "Immobilisations incorporelles",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "21",
+     "sens": null
+    },
+    {
+     "racine": "281",
+     "sens": null
+    },
+    {
+     "racine": "291",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 1,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "AJ",
+   "libelle": "Terrains",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "22",
+     "sens": null
+    },
+    {
+     "racine": "282",
+     "sens": null
+    },
+    {
+     "racine": "292",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 2,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "AK",
+   "libelle": "Bâtiments, installations techniques et agencements",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "23",
+     "sens": null
+    },
+    {
+     "racine": "283",
+     "sens": null
+    },
+    {
+     "racine": "293",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 3,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "AM",
+   "libelle": "Matériel, mobilier et actifs biologiques",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "24",
+     "sens": null
+    },
+    {
+     "racine": "284",
+     "sens": null
+    },
+    {
+     "racine": "294",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 4,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "AN",
+   "libelle": "Matériel de transport",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "245",
+     "sens": null
+    },
+    {
+     "racine": "2845",
+     "sens": null
+    },
+    {
+     "racine": "2945",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 5,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "AP",
+   "libelle": "Avances et acomptes versés sur immobilisations",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "25",
+     "sens": null
+    },
+    {
+     "racine": "295",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 6,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "AR",
+   "libelle": "Titres de participation",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "26",
+     "sens": null
+    },
+    {
+     "racine": "296",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 7,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "AS",
+   "libelle": "Autres immobilisations financières",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "27",
+     "sens": null
+    },
+    {
+     "racine": "297",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 8,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "AZ",
+   "libelle": "TOTAL ACTIF IMMOBILISÉ",
+   "nature": "actif",
+   "racines": [],
+   "formule": "AD+AJ+AK+AM+AN+AP+AR+AS",
+   "ordre": 9,
+   "niveau": 0
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "BA",
+   "libelle": "Actif circulant HAO",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "485",
+     "sens": null
+    },
+    {
+     "racine": "488",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 10,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "BB",
+   "libelle": "Stocks et encours",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "3",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 11,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "BH",
+   "libelle": "Fournisseurs, avances versées",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "409",
+     "sens": null
+    },
+    {
+     "racine": "40",
+     "sens": "debit"
+    }
+   ],
+   "formule": null,
+   "ordre": 12,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "BI",
+   "libelle": "Clients",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "491",
+     "sens": null
+    },
+    {
+     "racine": "41",
+     "sens": "debit"
+    }
+   ],
+   "formule": null,
+   "ordre": 13,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "BJ",
+   "libelle": "Autres créances",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "42",
+     "sens": "debit"
+    },
+    {
+     "racine": "43",
+     "sens": "debit"
+    },
+    {
+     "racine": "44",
+     "sens": "debit"
+    },
+    {
+     "racine": "45",
+     "sens": "debit"
+    },
+    {
+     "racine": "46",
+     "sens": "debit"
+    },
+    {
+     "racine": "47",
+     "sens": "debit"
+    },
+    {
+     "racine": "48",
+     "sens": "debit"
+    }
+   ],
+   "formule": null,
+   "ordre": 14,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "BK",
+   "libelle": "TOTAL ACTIF CIRCULANT",
+   "nature": "actif",
+   "racines": [],
+   "formule": "BA+BB+BH+BI+BJ",
+   "ordre": 15,
+   "niveau": 0
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "BQ",
+   "libelle": "Titres de placement",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "50",
+     "sens": null
+    },
+    {
+     "racine": "590",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 16,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "BR",
+   "libelle": "Valeurs à encaisser",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "51",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 17,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "BS",
+   "libelle": "Banques, chèques postaux, caisse et assimilés",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "52",
+     "sens": "debit"
+    },
+    {
+     "racine": "53",
+     "sens": "debit"
+    },
+    {
+     "racine": "54",
+     "sens": "debit"
+    },
+    {
+     "racine": "55",
+     "sens": "debit"
+    },
+    {
+     "racine": "57",
+     "sens": "debit"
+    },
+    {
+     "racine": "58",
+     "sens": "debit"
+    }
+   ],
+   "formule": null,
+   "ordre": 18,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "BT",
+   "libelle": "TOTAL TRÉSORERIE-ACTIF",
+   "nature": "actif",
+   "racines": [],
+   "formule": "BQ+BR+BS",
+   "ordre": 19,
+   "niveau": 0
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "BU",
+   "libelle": "Écart de conversion-actif",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "478",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 20,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "BZ",
+   "libelle": "TOTAL GÉNÉRAL ACTIF",
+   "nature": "actif",
+   "racines": [],
+   "formule": "AZ+BK+BT+BU",
+   "ordre": 21,
+   "niveau": 0
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "CA",
+   "libelle": "Capital",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "101",
+     "sens": null
+    },
+    {
+     "racine": "102",
+     "sens": null
+    },
+    {
+     "racine": "103",
+     "sens": null
+    },
+    {
+     "racine": "104",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 22,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "CB",
+   "libelle": "Apporteurs capital non appelé (−)",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "109",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 23,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "CD",
+   "libelle": "Primes liées au capital social",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "105",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 24,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "CE",
+   "libelle": "Écarts de réévaluation",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "106",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 25,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "CF",
+   "libelle": "Réserves indisponibles",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "111",
+     "sens": null
+    },
+    {
+     "racine": "112",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 26,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "CG",
+   "libelle": "Réserves libres",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "113",
+     "sens": null
+    },
+    {
+     "racine": "118",
+     "sens": null
+    },
+    {
+     "racine": "11",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 27,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "CH",
+   "libelle": "Report à nouveau",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "12",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 28,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "CJ",
+   "libelle": "Résultat net de l'exercice",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "13",
+     "sens": null
+    }
+   ],
+   "formule": "XI",
+   "ordre": 29,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "CL",
+   "libelle": "Subventions d'investissement",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "14",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 30,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "CM",
+   "libelle": "Provisions réglementées",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "15",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 31,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "CP",
+   "libelle": "TOTAL CAPITAUX PROPRES ET RESSOURCES ASSIMILÉES",
+   "nature": "passif",
+   "racines": [],
+   "formule": "CA+CB+CD+CE+CF+CG+CH+CJ+CL+CM",
+   "ordre": 32,
+   "niveau": 0
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "DA",
+   "libelle": "Emprunts et dettes financières diverses",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "16",
+     "sens": null
+    },
+    {
+     "racine": "18",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 33,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "DB",
+   "libelle": "Dettes de location-acquisition",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "17",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 34,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "DC",
+   "libelle": "Provisions pour risques et charges",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "19",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 35,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "DD",
+   "libelle": "TOTAL DETTES FINANCIÈRES ET RESSOURCES ASSIMILÉES",
+   "nature": "passif",
+   "racines": [],
+   "formule": "DA+DB+DC",
+   "ordre": 36,
+   "niveau": 0
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "DF",
+   "libelle": "TOTAL RESSOURCES STABLES",
+   "nature": "passif",
+   "racines": [],
+   "formule": "CP+DD",
+   "ordre": 37,
+   "niveau": 0
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "DH",
+   "libelle": "Dettes circulantes HAO",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "481",
+     "sens": null
+    },
+    {
+     "racine": "482",
+     "sens": null
+    },
+    {
+     "racine": "484",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 38,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "DI",
+   "libelle": "Clients, avances reçues",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "419",
+     "sens": null
+    },
+    {
+     "racine": "41",
+     "sens": "credit"
+    }
+   ],
+   "formule": null,
+   "ordre": 39,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "DJ",
+   "libelle": "Fournisseurs d'exploitation",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "40",
+     "sens": "credit"
+    }
+   ],
+   "formule": null,
+   "ordre": 40,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "DK",
+   "libelle": "Dettes fiscales et sociales",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "42",
+     "sens": "credit"
+    },
+    {
+     "racine": "43",
+     "sens": "credit"
+    },
+    {
+     "racine": "44",
+     "sens": "credit"
+    }
+   ],
+   "formule": null,
+   "ordre": 41,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "DM",
+   "libelle": "Autres dettes",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "45",
+     "sens": "credit"
+    },
+    {
+     "racine": "46",
+     "sens": "credit"
+    },
+    {
+     "racine": "47",
+     "sens": "credit"
+    },
+    {
+     "racine": "48",
+     "sens": "credit"
+    }
+   ],
+   "formule": null,
+   "ordre": 42,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "DN",
+   "libelle": "Provisions pour risques à court terme",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "499",
+     "sens": null
+    },
+    {
+     "racine": "599",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 43,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "DP",
+   "libelle": "TOTAL PASSIF CIRCULANT",
+   "nature": "passif",
+   "racines": [],
+   "formule": "DH+DI+DJ+DK+DM+DN",
+   "ordre": 44,
+   "niveau": 0
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "DQ",
+   "libelle": "Banques, crédits d'escompte",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "564",
+     "sens": null
+    },
+    {
+     "racine": "565",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 45,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "DR",
+   "libelle": "Banques, établissements financiers et crédits de trésorerie",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "56",
+     "sens": null
+    },
+    {
+     "racine": "52",
+     "sens": "credit"
+    },
+    {
+     "racine": "53",
+     "sens": "credit"
+    },
+    {
+     "racine": "54",
+     "sens": "credit"
+    },
+    {
+     "racine": "55",
+     "sens": "credit"
+    },
+    {
+     "racine": "57",
+     "sens": "credit"
+    },
+    {
+     "racine": "58",
+     "sens": "credit"
+    }
+   ],
+   "formule": null,
+   "ordre": 46,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "DT",
+   "libelle": "TOTAL TRÉSORERIE-PASSIF",
+   "nature": "passif",
+   "racines": [],
+   "formule": "DQ+DR",
+   "ordre": 47,
+   "niveau": 0
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "DV",
+   "libelle": "Écart de conversion-passif",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "479",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 48,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "DZ",
+   "libelle": "TOTAL GÉNÉRAL PASSIF",
+   "nature": "passif",
+   "racines": [],
+   "formule": "DF+DP+DT+DV",
+   "ordre": 49,
+   "niveau": 0
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "TA",
+   "libelle": "Ventes de marchandises",
+   "nature": "produit",
+   "racines": [
+    {
+     "racine": "701",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 50,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "RA",
+   "libelle": "Achats de marchandises",
+   "nature": "charge",
+   "racines": [
+    {
+     "racine": "601",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 51,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "RB",
+   "libelle": "Variation de stocks de marchandises",
+   "nature": "charge",
+   "racines": [
+    {
+     "racine": "6031",
+     "sens": null
+    },
+    {
+     "racine": "603",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 52,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "XA",
+   "libelle": "MARGE COMMERCIALE",
+   "nature": "produit",
+   "racines": [],
+   "formule": "TA-RA-RB",
+   "ordre": 53,
+   "niveau": 0
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "TB",
+   "libelle": "Ventes de produits fabriqués",
+   "nature": "produit",
+   "racines": [
+    {
+     "racine": "702",
+     "sens": null
+    },
+    {
+     "racine": "703",
+     "sens": null
+    },
+    {
+     "racine": "704",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 54,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "TC",
+   "libelle": "Travaux, services vendus",
+   "nature": "produit",
+   "racines": [
+    {
+     "racine": "705",
+     "sens": null
+    },
+    {
+     "racine": "706",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 55,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "TD",
+   "libelle": "Produits accessoires",
+   "nature": "produit",
+   "racines": [
+    {
+     "racine": "707",
+     "sens": null
+    },
+    {
+     "racine": "70",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 56,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "XB",
+   "libelle": "CHIFFRE D'AFFAIRES",
+   "nature": "produit",
+   "racines": [],
+   "formule": "TA+TB+TC+TD",
+   "ordre": 57,
+   "niveau": 0
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "TE",
+   "libelle": "Production stockée (ou déstockage)",
+   "nature": "produit",
+   "racines": [
+    {
+     "racine": "73",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 58,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "TF",
+   "libelle": "Production immobilisée",
+   "nature": "produit",
+   "racines": [
+    {
+     "racine": "72",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 59,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "TG",
+   "libelle": "Subventions d'exploitation",
+   "nature": "produit",
+   "racines": [
+    {
+     "racine": "71",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 60,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "TH",
+   "libelle": "Autres produits",
+   "nature": "produit",
+   "racines": [
+    {
+     "racine": "75",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 61,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "TI",
+   "libelle": "Transferts de charges d'exploitation",
+   "nature": "produit",
+   "racines": [
+    {
+     "racine": "781",
+     "sens": null
+    },
+    {
+     "racine": "78",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 62,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "RC",
+   "libelle": "Achats de matières premières et fournitures liées",
+   "nature": "charge",
+   "racines": [
+    {
+     "racine": "602",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 63,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "RD",
+   "libelle": "Variation de stocks de matières premières",
+   "nature": "charge",
+   "racines": [
+    {
+     "racine": "6032",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 64,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "RE",
+   "libelle": "Autres achats",
+   "nature": "charge",
+   "racines": [
+    {
+     "racine": "604",
+     "sens": null
+    },
+    {
+     "racine": "605",
+     "sens": null
+    },
+    {
+     "racine": "608",
+     "sens": null
+    },
+    {
+     "racine": "60",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 65,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "RF",
+   "libelle": "Variation de stocks d'autres approvisionnements",
+   "nature": "charge",
+   "racines": [
+    {
+     "racine": "6033",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 66,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "RG",
+   "libelle": "Transports",
+   "nature": "charge",
+   "racines": [
+    {
+     "racine": "61",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 67,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "RH",
+   "libelle": "Services extérieurs",
+   "nature": "charge",
+   "racines": [
+    {
+     "racine": "62",
+     "sens": null
+    },
+    {
+     "racine": "63",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 68,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "RI",
+   "libelle": "Impôts et taxes",
+   "nature": "charge",
+   "racines": [
+    {
+     "racine": "64",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 69,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "RJ",
+   "libelle": "Autres charges",
+   "nature": "charge",
+   "racines": [
+    {
+     "racine": "65",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 70,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "XC",
+   "libelle": "VALEUR AJOUTÉE",
+   "nature": "produit",
+   "racines": [],
+   "formule": "XA+TB+TC+TD+TE+TF+TG+TH+TI-RC-RD-RE-RF-RG-RH-RI-RJ",
+   "ordre": 71,
+   "niveau": 0
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "RK",
+   "libelle": "Charges de personnel",
+   "nature": "charge",
+   "racines": [
+    {
+     "racine": "66",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 72,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "XD",
+   "libelle": "EXCÉDENT BRUT D'EXPLOITATION",
+   "nature": "produit",
+   "racines": [],
+   "formule": "XC-RK",
+   "ordre": 73,
+   "niveau": 0
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "TJ",
+   "libelle": "Reprises d'amortissements, provisions et dépréciations",
+   "nature": "produit",
+   "racines": [
+    {
+     "racine": "791",
+     "sens": null
+    },
+    {
+     "racine": "798",
+     "sens": null
+    },
+    {
+     "racine": "799",
+     "sens": null
+    },
+    {
+     "racine": "79",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 74,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "RL",
+   "libelle": "Dotations aux amortissements, provisions et dépréciations",
+   "nature": "charge",
+   "racines": [
+    {
+     "racine": "681",
+     "sens": null
+    },
+    {
+     "racine": "691",
+     "sens": null
+    },
+    {
+     "racine": "68",
+     "sens": null
+    },
+    {
+     "racine": "69",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 75,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "XE",
+   "libelle": "RÉSULTAT D'EXPLOITATION",
+   "nature": "produit",
+   "racines": [],
+   "formule": "XD+TJ-RL",
+   "ordre": 76,
+   "niveau": 0
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "TK",
+   "libelle": "Revenus financiers et assimilés",
+   "nature": "produit",
+   "racines": [
+    {
+     "racine": "77",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 77,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "TL",
+   "libelle": "Reprises de provisions et dépréciations financières",
+   "nature": "produit",
+   "racines": [
+    {
+     "racine": "797",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 78,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "TM",
+   "libelle": "Transferts de charges financières",
+   "nature": "produit",
+   "racines": [
+    {
+     "racine": "787",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 79,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "RM",
+   "libelle": "Frais financiers et charges assimilées",
+   "nature": "charge",
+   "racines": [
+    {
+     "racine": "67",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 80,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "RN",
+   "libelle": "Dotations aux provisions et dépréciations financières",
+   "nature": "charge",
+   "racines": [
+    {
+     "racine": "697",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 81,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "XF",
+   "libelle": "RÉSULTAT FINANCIER",
+   "nature": "produit",
+   "racines": [],
+   "formule": "TK+TL+TM-RM-RN",
+   "ordre": 82,
+   "niveau": 0
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "XG",
+   "libelle": "RÉSULTAT DES ACTIVITÉS ORDINAIRES",
+   "nature": "produit",
+   "racines": [],
+   "formule": "XE+XF",
+   "ordre": 83,
+   "niveau": 0
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "TN",
+   "libelle": "Produits des cessions d'immobilisations",
+   "nature": "produit",
+   "racines": [
+    {
+     "racine": "82",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 84,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "TO",
+   "libelle": "Autres produits HAO",
+   "nature": "produit",
+   "racines": [
+    {
+     "racine": "84",
+     "sens": null
+    },
+    {
+     "racine": "86",
+     "sens": null
+    },
+    {
+     "racine": "88",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 85,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "RO",
+   "libelle": "Valeurs comptables des cessions d'immobilisations",
+   "nature": "charge",
+   "racines": [
+    {
+     "racine": "81",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 86,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "RP",
+   "libelle": "Autres charges HAO",
+   "nature": "charge",
+   "racines": [
+    {
+     "racine": "83",
+     "sens": null
+    },
+    {
+     "racine": "85",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 87,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "XH",
+   "libelle": "RÉSULTAT HORS ACTIVITÉS ORDINAIRES",
+   "nature": "produit",
+   "racines": [],
+   "formule": "TN+TO-RO-RP",
+   "ordre": 88,
+   "niveau": 0
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "RQ",
+   "libelle": "Participation des travailleurs",
+   "nature": "charge",
+   "racines": [
+    {
+     "racine": "87",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 89,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "RS",
+   "libelle": "Impôts sur le résultat",
+   "nature": "charge",
+   "racines": [
+    {
+     "racine": "89",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 90,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "XI",
+   "libelle": "RÉSULTAT NET",
+   "nature": "produit",
+   "racines": [],
+   "formule": "XG+XH-RQ-RS",
+   "ordre": 91,
+   "niveau": 0
+  }
+ ],
+ "ratios": [
+  {
+   "code": "liquidite_generale",
+   "libelle": "Liquidité générale",
+   "formule": "(BK+BT)/(DP+DT)",
+   "unite": "ratio",
+   "famille": "liquidite"
+  },
+  {
+   "code": "liquidite_immediate",
+   "libelle": "Liquidité immédiate",
+   "formule": "BT/(DP+DT)",
+   "unite": "ratio",
+   "famille": "liquidite"
+  },
+  {
+   "code": "autonomie_financiere",
+   "libelle": "Autonomie financière (capitaux propres / total bilan)",
+   "formule": "CP/BZ",
+   "unite": "pourcentage",
+   "famille": "solvabilite"
+  },
+  {
+   "code": "endettement",
+   "libelle": "Endettement (dettes financières / capitaux propres)",
+   "formule": "DD/CP",
+   "unite": "ratio",
+   "famille": "solvabilite"
+  },
+  {
+   "code": "rentabilite_nette",
+   "libelle": "Rentabilité nette (résultat / chiffre d'affaires)",
+   "formule": "XI/XB",
+   "unite": "pourcentage",
+   "famille": "rentabilite"
+  },
+  {
+   "code": "rentabilite_capitaux",
+   "libelle": "Rentabilité des capitaux propres",
+   "formule": "XI/CP",
+   "unite": "pourcentage",
+   "famille": "rentabilite"
+  },
+  {
+   "code": "delai_clients",
+   "libelle": "Délai de recouvrement clients (jours)",
+   "formule": "BI/XB*360",
+   "unite": "jours",
+   "famille": "delais"
+  },
+  {
+   "code": "delai_fournisseurs",
+   "libelle": "Délai de paiement fournisseurs (jours)",
+   "formule": "DJ/(RA+RC+RE)*360",
+   "unite": "jours",
+   "famille": "delais"
+  }
+ ],
+ "bases_seuil": [
+  {
+   "code": "total_bilan",
+   "libelle": "Total du bilan",
+   "formule": "BZ"
+  },
+  {
+   "code": "chiffre_affaires",
+   "libelle": "Chiffre d'affaires",
+   "formule": "XB"
+  },
+  {
+   "code": "resultat",
+   "libelle": "Résultat net",
+   "formule": "XI"
+  },
+  {
+   "code": "capitaux_propres",
+   "libelle": "Capitaux propres",
+   "formule": "CP"
+  }
+ ],
+ "regles": [
+  {
+   "code": "bilan_equilibre",
+   "libelle": "Le bilan est équilibré (total actif = total passif)",
+   "gauche": "BZ",
+   "droite": "DZ"
+  },
+  {
+   "code": "resultat_concordant",
+   "libelle": "Le résultat du bilan est égal au résultat du compte de résultat",
+   "gauche": "CJ",
+   "droite": "XI"
+  }
+ ],
+ "parametres": []
+}

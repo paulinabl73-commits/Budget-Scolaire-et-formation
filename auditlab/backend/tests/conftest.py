@@ -157,3 +157,13 @@ def criteria(db: Session) -> list:
     db.add_all(rows)
     db.commit()
     return rows
+
+
+@pytest.fixture
+def syscohada(db: Session):
+    """Référentiel SYSCOHADA livré (la troncature des tests efface les données de départ)."""
+    from app.revision.frameworks import builtin, load_framework
+
+    fw = load_framework(db, builtin("syscohada_2017"))
+    db.commit()
+    return fw

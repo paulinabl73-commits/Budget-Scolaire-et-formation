@@ -17,7 +17,8 @@
     "plan": "Plan annuel",
     "missions": "Missions",
     "bibliotheque": "Bibliothèque",
-    "marques": "Marques de révision"
+    "marques": "Marques de révision",
+    "referentiels": "Référentiels"
   },
   "commun": {
     "enregistrer": "Enregistrer",
@@ -1321,5 +1322,52 @@
     "ajouterPlan": "Proposer un plan d'action",
     "envoyerReponse": "Envoyer ma réponse",
     "reponseEnvoyee": "Votre réponse"
+  },
+  "referentiels": {
+    "titre": "Référentiels comptables",
+    "intro": "Plans de comptes, postes des états, ratios, règles de contrôle et paramètres réglementaires, versionnés. Un dossier de révision garde la version avec laquelle il a été ouvert.",
+    "importer": "Importer une version (Excel)",
+    "aideImport": "Partez de l'export d'une version existante : modifiez le classeur, changez le numéro de version, puis importez-le.",
+    "importe": "Référentiel {{code}} version {{version}} importé.",
+    "exporter": "Exporter (Excel)",
+    "activer": "Activer",
+    "desactiver": "Désactiver",
+    "actif": "Proposé aux nouveaux dossiers",
+    "inactif": "Désactivé",
+    "col": {
+      "code": "Référentiel",
+      "version": "Version",
+      "pays": "Pays",
+      "effet": "Date d'effet",
+      "comptes": "Comptes",
+      "postes": "Postes",
+      "etat": "État",
+      "actions": "Actions"
+    },
+    "rubriques": "Rubriques du référentiel",
+    "onglets": {
+      "postes": "Postes des états",
+      "comptes": "Plan de comptes",
+      "parametres": "Paramètres",
+      "ratios": "Ratios"
+    },
+    "etats": {
+      "bilan_actif": "Bilan – actif",
+      "bilan_passif": "Bilan – passif",
+      "compte_resultat": "Compte de résultat",
+      "flux_tresorerie": "Flux de trésorerie",
+      "notes": "Notes",
+      "autre": "Autre"
+    },
+    "sens": {
+      "debit": "si débiteur",
+      "credit": "si créditeur"
+    },
+    "aucunParametre": "Aucun paramètre réglementaire : à importer avec le référentiel du pays.",
+    "cadres": "Cadres normatifs des missions",
+    "cadreCode": "Code",
+    "cadreLibelle": "Libellé",
+    "cadreDescription": "Description",
+    "ajouterCadre": "Ajouter"
   }
 }

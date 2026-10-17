@@ -58,6 +58,11 @@ class Perm(StrEnum):
     FINDINGS_VALIDATE = "findings:validate"
     REPORT_PUBLISH = "report:publish"
     FINDINGS_RESPOND = "findings:respond"
+    # Révision des comptes (Module 5)
+    FRAMEWORKS_MANAGE = "frameworks:manage"  # importer et publier les référentiels
+    REVISION_READ = "revision:read"
+    REVISION_WORK = "revision:work"  # importer les balances, affecter, justifier
+    REVISION_MANAGE = "revision:manage"  # ouvrir un dossier, fixer le seuil
 
 
 # Transcription de la matrice de la section 2.
@@ -72,6 +77,8 @@ ROLE_PERMISSIONS: dict[Role, frozenset[Perm]] = {
             Perm.WORKPAPERS_READ,
             Perm.DATA_READ,
             Perm.FINDINGS_READ,
+            Perm.FRAMEWORKS_MANAGE,
+            Perm.REVISION_READ,
         }
     ),
     Role.DIRECTEUR: frozenset(
@@ -89,6 +96,9 @@ ROLE_PERMISSIONS: dict[Role, frozenset[Perm]] = {
             Perm.FINDINGS_READ,
             Perm.FINDINGS_VALIDATE,
             Perm.REPORT_PUBLISH,
+            Perm.FRAMEWORKS_MANAGE,
+            Perm.REVISION_READ,
+            Perm.REVISION_MANAGE,
         }
     ),
     Role.CHEF_MISSION: frozenset(
@@ -103,6 +113,9 @@ ROLE_PERMISSIONS: dict[Role, frozenset[Perm]] = {
             Perm.FINDINGS_READ,
             Perm.FINDINGS_WRITE,
             Perm.FINDINGS_VALIDATE,
+            Perm.REVISION_READ,
+            Perm.REVISION_WORK,
+            Perm.REVISION_MANAGE,
         }
     ),
     Role.AUDITEUR: frozenset(
@@ -114,6 +127,8 @@ ROLE_PERMISSIONS: dict[Role, frozenset[Perm]] = {
             Perm.DATA_ANALYZE,
             Perm.FINDINGS_READ,
             Perm.FINDINGS_WRITE,
+            Perm.REVISION_READ,
+            Perm.REVISION_WORK,
         }
     ),
     Role.DATA_ANALYST: frozenset(
@@ -124,6 +139,7 @@ ROLE_PERMISSIONS: dict[Role, frozenset[Perm]] = {
             Perm.DATA_ANALYZE,
             Perm.DATA_PUBLISH_LIBRARY,
             Perm.FINDINGS_READ,
+            Perm.REVISION_READ,
         }
     ),
     Role.AUDITE: frozenset({Perm.FINDINGS_RESPOND}),

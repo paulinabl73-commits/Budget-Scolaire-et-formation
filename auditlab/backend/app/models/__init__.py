@@ -46,6 +46,13 @@ from app.models.program import (
     RiskControl,
     TestType,
 )
+from app.models.revision import (
+    AccountingFramework,
+    FrameworkAccount,
+    NormativeFramework,
+    RegulatoryParameter,
+    StatementLine,
+)
 from app.models.risk import Axis, CriterionMode, RiskAssessment, RiskCriterion
 from app.models.universe import AuditableEntity, EntityType
 from app.models.user import Team, User, UserSession, user_teams
@@ -65,6 +72,7 @@ from app.models.workpaper import (
 )
 
 __all__ = [
+    "AccountingFramework",
     "ActionPlan",
     "AnalysisOperation",
     "Attachment",
@@ -90,6 +98,10 @@ __all__ = [
     "Engagement",
     "EvidenceType",
     "Finding",
+    "FrameworkAccount",
+    "NormativeFramework",
+    "RegulatoryParameter",
+    "StatementLine",
     "PlanEvidence",
     "Postponement",
     "ActionPlanStatus",

@@ -20,6 +20,7 @@ from app.api import (
     engagements,
     evidence,
     findings,
+    frameworks,
     imports,
     library,
     macros,
@@ -120,5 +121,6 @@ for router in (
     action_plans.router,
     contradictory.router,
     portal.router,
+    frameworks.router,
 ):
     app.include_router(router, prefix="/api")

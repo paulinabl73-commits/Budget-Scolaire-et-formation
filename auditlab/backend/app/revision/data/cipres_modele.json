@@ -1,0 +1,282 @@
+{
+ "code": "CIPRES",
+ "version": "modele",
+ "libelle": "Plan comptable CIPRES – modèle de structure à compléter",
+ "pays": "CIPRES",
+ "date_effet": "2018-01-01",
+ "source": "Squelette par classes. Le plan comptable CIPRES en vigueur, les états de la CIPRES, les taux, plafonds et limites sont à obtenir auprès de la CIPRES puis à importer (classeur Excel).",
+ "branches": [
+  {
+   "code": "PF",
+   "libelle": "Prestations familiales"
+  },
+  {
+   "code": "RP",
+   "libelle": "Risques professionnels"
+  },
+  {
+   "code": "PV",
+   "libelle": "Pensions de vieillesse, d'invalidité et de décès"
+  },
+  {
+   "code": "AM",
+   "libelle": "Assurance maladie"
+  },
+  {
+   "code": "GA",
+   "libelle": "Gestion administrative"
+  }
+ ],
+ "comptes": [
+  {
+   "numero": "1",
+   "libelle": "Capitaux propres, réserves et ressources durables",
+   "classe": 1
+  },
+  {
+   "numero": "2",
+   "libelle": "Immobilisations",
+   "classe": 2
+  },
+  {
+   "numero": "3",
+   "libelle": "Stocks",
+   "classe": 3
+  },
+  {
+   "numero": "4",
+   "libelle": "Tiers (cotisants, allocataires, pensionnés)",
+   "classe": 4
+  },
+  {
+   "numero": "5",
+   "libelle": "Trésorerie et placements",
+   "classe": 5
+  },
+  {
+   "numero": "6",
+   "libelle": "Charges (prestations et gestion)",
+   "classe": 6
+  },
+  {
+   "numero": "7",
+   "libelle": "Produits (cotisations et autres)",
+   "classe": 7
+  },
+  {
+   "numero": "8",
+   "libelle": "Autres charges et produits",
+   "classe": 8
+  }
+ ],
+ "postes": [
+  {
+   "etat": "bilan_actif",
+   "code": "IM",
+   "libelle": "Immobilisations nettes",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "2",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 1,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "ST",
+   "libelle": "Stocks",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "3",
+     "sens": null
+    }
+   ],
+   "formule": null,
+   "ordre": 2,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "CR",
+   "libelle": "Créances (cotisants et autres)",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "4",
+     "sens": "debit"
+    }
+   ],
+   "formule": null,
+   "ordre": 3,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "TA",
+   "libelle": "Trésorerie et placements",
+   "nature": "actif",
+   "racines": [
+    {
+     "racine": "5",
+     "sens": "debit"
+    }
+   ],
+   "formule": null,
+   "ordre": 4,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_actif",
+   "code": "TAZ",
+   "libelle": "TOTAL ACTIF",
+   "nature": "actif",
+   "racines": [],
+   "formule": "IM+ST+CR+TA",
+   "ordre": 5,
+   "niveau": 0
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "RE",
+   "libelle": "Réserves et ressources durables",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "1",
+     "sens": null
+    }
+   ],
+   "formule": "RN",
+   "ordre": 6,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "DE",
+   "libelle": "Dettes (prestataires, allocataires et autres)",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "4",
+     "sens": "credit"
+    }
+   ],
+   "formule": null,
+   "ordre": 7,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "TP",
+   "libelle": "Trésorerie-passif",
+   "nature": "passif",
+   "racines": [
+    {
+     "racine": "5",
+     "sens": "credit"
+    }
+   ],
+   "formule": null,
+   "ordre": 8,
+   "niveau": 1
+  },
+  {
+   "etat": "bilan_passif",
+   "code": "TPZ",
+   "libelle": "TOTAL PASSIF",
+   "nature": "passif",
+   "racines": [],
+   "formule": "RE+DE+TP",
+   "ordre": 9,
+   "niveau": 0
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "PC",
+   "libelle": "Produits (cotisations et autres)",
+   "nature": "produit",
+   "racines": [
+    {
+     "racine": "7",
+     "sens": "credit"
+    },
+    {
+     "racine": "8",
+     "sens": "credit"
+    }
+   ],
+   "formule": null,
+   "ordre": 10,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "CH",
+   "libelle": "Charges (prestations, gestion et autres)",
+   "nature": "charge",
+   "racines": [
+    {
+     "racine": "6",
+     "sens": null
+    },
+    {
+     "racine": "8",
+     "sens": "debit"
+    }
+   ],
+   "formule": null,
+   "ordre": 11,
+   "niveau": 1
+  },
+  {
+   "etat": "compte_resultat",
+   "code": "RN",
+   "libelle": "RÉSULTAT NET",
+   "nature": "produit",
+   "racines": [],
+   "formule": "PC-CH",
+   "ordre": 12,
+   "niveau": 0
+  }
+ ],
+ "ratios": [
+  {
+   "code": "autonomie",
+   "libelle": "Réserves / total bilan",
+   "formule": "RE/TAZ",
+   "unite": "pourcentage",
+   "famille": "solvabilite"
+  }
+ ],
+ "bases_seuil": [
+  {
+   "code": "total_bilan",
+   "libelle": "Total du bilan",
+   "formule": "TAZ"
+  },
+  {
+   "code": "cotisations",
+   "libelle": "Cotisations (produits)",
+   "formule": "PC"
+  },
+  {
+   "code": "resultat",
+   "libelle": "Résultat net",
+   "formule": "RN"
+  }
+ ],
+ "regles": [
+  {
+   "code": "bilan_equilibre",
+   "libelle": "Le bilan est équilibré",
+   "gauche": "TAZ",
+   "droite": "TPZ"
+  }
+ ],
+ "parametres": []
+}

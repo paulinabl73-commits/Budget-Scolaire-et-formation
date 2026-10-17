@@ -6,7 +6,10 @@ from sqlalchemy import text
 from app.db import engine
 from tests.conftest import alembic_config
 
-SEEDED = ("risk_criteria", "risks", "controls", "risk_controls", "procedures", "tickmarks")
+SEEDED = (
+    "risk_criteria", "risks", "controls", "risk_controls", "procedures", "tickmarks",
+    "accounting_frameworks", "framework_accounts", "statement_lines", "normative_frameworks",
+)  # fmt: skip
 
 
 def test_migrations_aller_retour_et_donnees_de_depart():
@@ -25,4 +28,8 @@ def test_migrations_aller_retour_et_donnees_de_depart():
         "risk_controls": 15,
         "procedures": 16,
         "tickmarks": 6,
+        "accounting_frameworks": 2,  # SYSCOHADA révisé et modèle CIPRES
+        "framework_accounts": 168,
+        "statement_lines": 103,
+        "normative_frameworks": 3,
     }

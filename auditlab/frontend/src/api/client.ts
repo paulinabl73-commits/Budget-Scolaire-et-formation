@@ -63,10 +63,13 @@ export const del = (path: string) => api<void>(path, { method: "DELETE" });
 
 /** Téléchargement d'un fichier produit par une requête POST (exports). */
 export async function download(path: string, data: unknown, fallbackName: string): Promise<void> {
-  const headers = new Headers({ "Content-Type": "application/json" });
+  const headers = new Headers();
   const token = tokenStore.get();
   if (token) headers.set("Authorization", `Bearer ${token}`);
-  const resp = await fetch(`/api${path}`, { method: "POST", headers, body: JSON.stringify(data) });
+  // Sans données : GET ; avec données : POST (exports filtrés).
+  const init: RequestInit = data === undefined ? { headers } : { method: "POST", headers, body: JSON.stringify(data) };
+  if (data !== undefined) headers.set("Content-Type", "application/json");
+  const resp = await fetch(`/api${path}`, init);
   if (!resp.ok) {
     const body = await resp.json().catch(() => null);
     throw new ApiError(resp.status, detail(body, resp.statusText));

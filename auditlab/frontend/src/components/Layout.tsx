@@ -81,6 +81,11 @@ export default function Layout() {
               {t("nav.utilisateurs")}
             </NavLink>
           )}
+          {(can(user?.permissions, PERM.REVISION_READ) || can(user?.permissions, PERM.FRAMEWORKS_MANAGE)) && (
+            <NavLink to="/referentiels" className={lien}>
+              {t("nav.referentiels")}
+            </NavLink>
+          )}
           {can(user?.permissions, PERM.AUDIT_LOG_READ) && (
             <NavLink to="/journal" className={lien}>
               {t("nav.journal")}
