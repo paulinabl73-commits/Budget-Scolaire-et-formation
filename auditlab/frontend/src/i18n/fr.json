@@ -796,5 +796,13 @@
     "ajouter": "Ajouter le champ",
     "creerVue": "Créer la vue",
     "retirer": "Retirer {{nom}}"
+  },
+  "grille": {
+    "titre": "Lignes",
+    "lignes": "{{n}} lignes",
+    "recherche": "Rechercher dans toutes les colonnes",
+    "colonnes": "Colonnes ({{visibles}}/{{total}})",
+    "masquer": "Colonnes affichées",
+    "effacerFiltres": "Effacer les filtres"
   }
 }

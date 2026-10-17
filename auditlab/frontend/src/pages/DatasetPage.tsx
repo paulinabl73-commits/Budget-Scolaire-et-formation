@@ -7,6 +7,7 @@ import type { Dataset } from "../api/types";
 import Alert from "../components/Alert";
 import CalculatedFields from "../components/data/CalculatedFields";
 import ControlSheet from "../components/data/ControlSheet";
+import DataGrid from "../components/data/DataGrid";
 import { useAuth } from "../auth/AuthContext";
 import { can } from "../lib/permissions";
 
@@ -32,6 +33,7 @@ export default function DatasetPage() {
         {ds.description && <p className="text-slate-600">{ds.description}</p>}
       </header>
       {ds.kind !== "vue" && <ControlSheet ds={ds} />}
+      {ds.statut === "pret" && <DataGrid ds={ds} />}
       <CalculatedFields ds={ds} canEdit={can(user?.permissions, "data:analyze")} onChanged={setDs} />
     </div>
   );

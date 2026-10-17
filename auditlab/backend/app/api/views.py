@@ -155,3 +155,49 @@ def update_view(
     view.definition = {"champs": [c.model_dump() for c in body.champs], "valeurs_vides": vides}
     db.commit()
     return dataset_out(view)
+
+
+class SortIn(BaseModel):
+    colonne: str
+    sens: str = Field(default="asc", pattern="^(asc|desc)$")
+
+
+class GridQueryIn(BaseModel):
+    offset: int = Field(default=0, ge=0)
+    limit: int = Field(default=100, ge=1, le=1000)
+    tri: list[SortIn] = Field(default=[], max_length=5)
+    filtres: dict[str, dict[str, Any]] = Field(default={})
+    recherche: str | None = Field(default=None, max_length=200)
+    colonnes: list[str] | None = None
+    total: bool = True
+
+
+class GridPageOut(BaseModel):
+    colonnes: list[str]
+    lignes: list[list[Any]]
+    total: int | None
+
+
+@router.post("/datasets/{dataset_id}/rows", response_model=GridPageOut)
+def read_rows(
+    dataset_id: uuid.UUID, body: GridQueryIn, user: CurrentUser, db: DbSession
+) -> GridPageOut:
+    """DAT-07 : page de lignes pour la grille virtualisée (lecture seule)."""
+    from app.analytics.grid import GridError, read_page
+
+    ds, _ = get_dataset(db, dataset_id, user)
+    rel = _view_base(db, ds)
+    try:
+        page = read_page(
+            rel,
+            offset=body.offset,
+            limit=body.limit,
+            sort=[s.model_dump() for s in body.tri],
+            filters=body.filtres,
+            search=body.recherche,
+            columns=body.colonnes,
+            with_total=body.total,
+        )
+    except (GridError, RelationError) as exc:
+        raise _invalid(str(exc)) from exc
+    return GridPageOut(**page)
