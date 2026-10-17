@@ -1544,5 +1544,28 @@
     "pctVariation": "Variation signalée en revue analytique (%)",
     "justification": "Justification du choix (base et pourcentages)",
     "fixer": "Fixer le seuil"
+  },
+  "analytique": {
+    "titre": "Revue analytique N / N-1",
+    "regle": "Variation signalée au-delà du seuil de planification ({{plan}}), ou au-delà de {{pct}} % et du seuil d'insignifiance ({{insignifiant}}). Chaque variation signalée doit être justifiée.",
+    "bilan": "{{signales}} variation(s) signalée(s), {{restant}} restant à justifier.",
+    "niveau": "Niveau d'analyse",
+    "niveaux": {
+      "postes": "Par poste",
+      "comptes": "Par compte"
+    },
+    "seulementSignalees": "Variations signalées seulement",
+    "col": {
+      "ligne": "Poste ou compte",
+      "N": "N",
+      "N-1": "N-1",
+      "variation": "Variation",
+      "pct": "Variation %",
+      "justification": "Justification"
+    },
+    "nouveau": "nouveau",
+    "justifier": "Justification de la variation {{ligne}}",
+    "aJustifier": "À justifier",
+    "justifieLe": "Justifié le {{date}}"
   }
 }

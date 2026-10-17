@@ -33,7 +33,7 @@ class MappingIn(BaseModel):
     commentaire: str | None = Field(default=None, max_length=2000)
 
 
-def _assignable(line: StatementLine) -> bool:
+def assignable(line: StatementLine) -> bool:
     """Poste de détail (pas un total calculé) : il peut recevoir des comptes."""
     return bool(line.racines) or not line.formule
 
@@ -66,7 +66,7 @@ def read_mapping(file_id: uuid.UUID, user: CurrentUser, db: DbSession) -> dict[s
         "postes": [
             {"code": ln.code, "libelle": ln.libelle, "etat": ln.etat, "nature": ln.nature}
             for ln in lines
-            if _assignable(ln)
+            if assignable(ln)
         ],
     }
 
@@ -78,7 +78,7 @@ def set_mapping(
     file, engagement = get_file(db, file_id, user)
     require_work(file, engagement, user)
     compte = clean_account(compte)
-    codes = {ln.code for ln in postes(db, file.framework_id) if _assignable(ln)}
+    codes = {ln.code for ln in postes(db, file.framework_id) if assignable(ln)}
     for code in (body.poste, body.poste_crediteur):
         if code is not None and code not in codes:
             raise HTTPException(
@@ -131,7 +131,7 @@ def preview(file_id: uuid.UUID, user: CurrentUser, db: DbSession) -> dict[str, A
     for ln in lines:
         states.setdefault(ln.etat, []).append({
             "code": ln.code, "libelle": ln.libelle, "niveau": ln.niveau,
-            "total": not _assignable(ln),
+            "total": not assignable(ln),
             **{p: str(values[p].get(ln.code, Decimal(0))) for p in PERIODS},
         })  # fmt: skip
     checks = []

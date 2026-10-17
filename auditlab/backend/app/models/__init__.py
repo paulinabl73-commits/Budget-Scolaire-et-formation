@@ -49,6 +49,7 @@ from app.models.program import (
 from app.models.revision import (
     AccountingFramework,
     AccountMapping,
+    AnalyticalJustification,
     AuditFile,
     Currency,
     ExchangeRate,
@@ -78,6 +79,7 @@ from app.models.workpaper import (
 __all__ = [
     "AccountingFramework",
     "AccountMapping",
+    "AnalyticalJustification",
     "AuditFile",
     "Currency",
     "ExchangeRate",

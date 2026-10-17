@@ -10,6 +10,7 @@ import app.audit.listeners  # noqa: F401  (enregistre l'écouteur de journalisat
 from app.api import (
     action_plans,
     analyses,
+    analytical,
     attachments,
     audit_files,
     audit_log,
@@ -132,5 +133,6 @@ for router in (
     currencies.router,
     mapping.router,
     materiality.router,
+    analytical.router,
 ):
     app.include_router(router, prefix="/api")

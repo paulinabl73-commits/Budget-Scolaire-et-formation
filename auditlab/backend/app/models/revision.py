@@ -245,3 +245,19 @@ class AccountMapping(TrackedMixin, Base):
     poste: Mapped[str] = mapped_column(String(20))
     poste_crediteur: Mapped[str | None] = mapped_column(String(20), nullable=True)
     commentaire: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+
+class AnalyticalJustification(TrackedMixin, Base):
+    """Justification d'une variation N/N-1 signalée par la revue analytique (REV-12)."""
+
+    __tablename__ = "analytical_justifications"
+    __table_args__ = (
+        Index("uq_analytical_justifications_ligne", "audit_file_id", "niveau", "code",
+              unique=True, postgresql_where=text("deleted_at IS NULL")),
+    )  # fmt: skip
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
+    niveau: Mapped[str] = mapped_column(String(10))  # poste ou compte
+    code: Mapped[str] = mapped_column(String(30))
+    texte: Mapped[str] = mapped_column(Text)
