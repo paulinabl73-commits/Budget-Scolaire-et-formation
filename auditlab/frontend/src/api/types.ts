@@ -198,6 +198,7 @@ export interface Engagement extends EngagementSummary {
   membres: Member[];
   transitions: Transition[];
   peut_gerer: boolean;
+  cloturee_le: string | null;
 }
 
 export interface Transition {

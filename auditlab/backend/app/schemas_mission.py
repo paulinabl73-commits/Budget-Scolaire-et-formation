@@ -105,6 +105,7 @@ class EngagementOut(EngagementSummary):
     membres: list[MemberOut]
     transitions: list[TransitionOut] = []
     peut_gerer: bool = False
+    cloturee_le: datetime | None = None
     created_at: datetime | None = None
 
 

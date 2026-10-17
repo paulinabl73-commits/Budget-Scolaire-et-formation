@@ -137,6 +137,39 @@ def _audit_before_flush(session: Session, flush_context: Any, instances: Any) ->
             )
         )
 
+    _refuse_closed_engagements(session)
+
     pending = [o for o in session.new if isinstance(o, AuditLog) and o.hash is None]
     pending.sort(key=lambda e: e.horodatage)
     seal_pending(session, pending)
+
+
+def _refuse_closed_engagements(session: Session) -> None:
+    """AUD-22 : aucune écriture sur un objet rattaché à une mission clôturée.
+
+    Filet de sécurité commun à toutes les routes : la mission elle-même peut changer de statut
+    (c'est la clôture), mais rien de ce qui lui est rattaché ne peut plus être créé ou modifié.
+    """
+    ids = {
+        getattr(obj, "engagement_id", None)
+        for obj in list(session.new) + list(session.dirty)
+        if isinstance(obj, TrackedMixin) and session.is_modified(obj)
+    }
+    ids.discard(None)
+    if not ids:
+        return
+    from sqlalchemy import select
+
+    from app.models.engagement import Engagement
+
+    closed = (
+        session.execute(
+            select(Engagement.reference)
+            .where(Engagement.id.in_(ids), Engagement.statut == "cloturee")
+            .execution_options(autoflush=False)
+        )
+        .scalars()
+        .first()
+    )
+    if closed:
+        raise AuditIntegrityError(f"Mission {closed} clôturée : consultation uniquement")

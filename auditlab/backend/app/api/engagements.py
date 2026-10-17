@@ -68,6 +68,7 @@ def engagement_out(db: DbSession, e: Engagement, user: User) -> EngagementOut:
             "perimetre": e.perimetre,
             "objectifs": e.objectifs,
             "created_at": e.created_at,
+            "cloturee_le": e.cloturee_le,
             "membres": [
                 MemberOut(
                     user_id=m.user_id,

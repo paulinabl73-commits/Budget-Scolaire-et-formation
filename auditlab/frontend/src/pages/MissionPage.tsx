@@ -11,7 +11,7 @@ import StatusHistory from "../components/mission/StatusHistory";
 import SynthesisTab from "../components/mission/SynthesisTab";
 import TimeTab from "../components/mission/TimeTab";
 import WorkpapersTab from "../components/mission/WorkpapersTab";
-import { formatDate } from "../lib/format";
+import { formatDate, formatDateHeure } from "../lib/format";
 import { STATUS_BADGE } from "../lib/mission";
 
 /** Onglets de la fiche mission ; chaque lot ajoute les siens. */
@@ -60,6 +60,9 @@ export default function MissionPage() {
         </p>
         {!mission.peut_gerer && <p className="text-sm text-slate-600">{t("missions.lectureSeule")}</p>}
       </header>
+      {mission.cloturee_le && (
+        <Alert kind="info">{t("missions.clotureeLe", { date: formatDateHeure(mission.cloturee_le) })}</Alert>
+      )}
       <StatusBar mission={mission} onChange={setMission} />
       <nav aria-label={t("missions.titre")} className="flex gap-1 border-b border-slate-200">
         {MISSION_TABS.map((k) => (

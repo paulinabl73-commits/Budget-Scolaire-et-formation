@@ -366,3 +366,98 @@ def test_aud21_passage_en_rapport(client, team):
         ).status_code
         == 200
     )
+
+
+def _to_rapport(client, team):
+    for statut in ("preparation", "terrain", "revue", "rapport"):
+        assert (
+            client.post(
+                f"{team['url']}/status", json={"statut": statut}, headers=team["chef"].headers
+            ).status_code
+            == 200
+        )
+
+
+def test_aud22_cloture_et_verrouillage(client, team, db):
+    from app.models import Engagement
+
+    e = helpers.entity(client, team["sup"].headers, "Achats", date_dernier_audit="2023-01-31")
+    db.query(Engagement).filter_by(id=team["mission"]["id"]).update({"entity_id": e["id"]})
+    db.commit()
+    wp = ready_workpaper(client, team)
+    t_url = f"{team['url']}/time-entries"
+    client.post(
+        t_url,
+        json={"date": "2026-09-01", "heures": 4, "activite": "terrain"},
+        headers=team["aud"].headers,
+    )
+    _to_rapport(client, team)
+
+    # Clôture refusée tant que les papiers ne sont pas approuvés.
+    mission = client.get(team["url"], headers=team["chef"].headers).json()
+    blocked = next(t for t in mission["transitions"] if t["statut"] == "cloturee")
+    assert blocked["motif_blocage"] == "Papiers de travail non approuvés : A-1"
+    sign(client, wp, team["aud"], "prepare")
+    sign(client, wp, team["chef"], "revu")
+    sign(client, wp, team["chef"], "approuve")
+    resp = client.post(
+        f"{team['url']}/status", json={"statut": "cloturee"}, headers=team["chef"].headers
+    )
+    assert resp.status_code == 200 and resp.json()["cloturee_le"]
+    # La date du dernier audit de l'entité devient la fin de la mission.
+    assert (
+        client.get(f"/api/universe/entities/{e['id']}", headers=team["sup"].headers).json()[
+            "date_dernier_audit"
+        ]
+        == "2027-03-31"
+    )
+
+    # Plus aucune modification, quelle que soit la route.
+    h = team["aud"].headers
+    assert (
+        client.patch(f"/api/workpapers/{wp['id']}", json={"titre": "X"}, headers=h).status_code
+        == 409
+    )
+    assert (
+        client.post(
+            f"{team['url']}/workpapers", json={"reference": "Z-1", "titre": "x"}, headers=h
+        ).status_code
+        == 409
+    )
+    assert (
+        client.post(
+            t_url, json={"date": "2026-09-02", "heures": 1, "activite": "rapport"}, headers=h
+        ).status_code
+        == 409
+    )
+    assert note(client, wp, team["chef"]).status_code == 409
+    assert (
+        client.post(
+            f"{team['url']}/risks",
+            json={"libelle": "x", "cycle": "achats", "categorie": "fraude"},
+            headers=team["chef"].headers,
+        ).status_code
+        == 409
+    )
+    # Consultation toujours possible.
+    assert client.get(f"/api/workpapers/{wp['id']}", headers=h).status_code == 200
+    assert client.get(f"/api/workpapers/{wp['id']}/versions", headers=h).status_code == 200
+
+
+def test_aud22_verrou_au_niveau_des_donnees(client, team, db):
+    """Même une écriture qui contournerait l'API est refusée."""
+    from app.audit.listeners import AuditIntegrityError, set_actor
+    from app.models import Workpaper
+
+    wp = ready_workpaper(client, team)
+    sign(client, wp, team["aud"], "prepare")
+    sign(client, wp, team["chef"], "revu")
+    sign(client, wp, team["chef"], "approuve")
+    _to_rapport(client, team)
+    client.post(f"{team['url']}/status", json={"statut": "cloturee"}, headers=team["chef"].headers)
+    set_actor(db, team["chef"].user.id)
+    paper = db.get(Workpaper, wp["id"])
+    paper.titre = "Falsifié"
+    with pytest.raises(AuditIntegrityError, match="clôturée"):
+        db.flush()
+    db.rollback()

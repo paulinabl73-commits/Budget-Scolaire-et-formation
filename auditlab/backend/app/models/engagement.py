@@ -1,8 +1,8 @@
 import uuid
-from datetime import date
+from datetime import date, datetime
 from enum import StrEnum
 
-from sqlalchemy import Date, Float, ForeignKey, String, Text
+from sqlalchemy import Date, DateTime, Float, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, TrackedMixin
@@ -53,6 +53,9 @@ class Engagement(TrackedMixin, Base):
     plan_item_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("plan_items.id"), nullable=True, index=True
     )
+    # AUD-22 : horodatage et auteur de la clôture (mission alors figée).
+    cloturee_le: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    cloturee_par: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
 
     entity: Mapped[AuditableEntity | None] = relationship(viewonly=True)
     members: Mapped[list["EngagementMember"]] = relationship(

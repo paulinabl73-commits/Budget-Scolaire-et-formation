@@ -370,7 +370,8 @@
     "cycle": "Cycle de vie de la mission",
     "historique": "Historique des statuts",
     "aucunChangement": "Aucun changement de statut.",
-    "statutChange": "Statut mis à jour."
+    "statutChange": "Statut mis à jour.",
+    "clotureeLe": "Mission clôturée le {{date}} : consultation uniquement."
   },
   "temps": {
     "budget": "Budget et temps passé",

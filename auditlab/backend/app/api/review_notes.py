@@ -8,8 +8,8 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.api.deps import CurrentUser, DbSession
+from app.api.engagement_status import GUARDS, ON_ENTER
 from app.api.mission_access import ensure_open, get_engagement, mission_role, sees_all
-from app.api.engagement_status import GUARDS
 from app.api.signoffs import SIGNOFF_GUARDS
 from app.models.engagement import Engagement, EngagementStatus, MissionRole
 from app.models.user import User
@@ -217,3 +217,41 @@ def _mission_notes_closed(db: Session, engagement: Engagement) -> str | None:
 
 
 GUARDS[EngagementStatus.RAPPORT].append(_mission_notes_closed)
+
+
+def _ready_to_close(db: Session, engagement: Engagement) -> str | None:
+    """Dossier complet avant clôture : papiers approuvés et notes de revue clôturées."""
+    from app.api.signoffs import signoffs_by_workpaper, status_of
+
+    if reason := _mission_notes_closed(db, engagement):
+        return reason
+    papers = list(
+        db.scalars(
+            select(Workpaper).where(
+                Workpaper.engagement_id == engagement.id, Workpaper.deleted_at.is_(None)
+            )
+        )
+    )
+    active = signoffs_by_workpaper(db, [w.id for w in papers])
+    pending = [w.reference for w in papers if status_of(active[w.id]) != "approuve"]
+    if pending:
+        return "Papiers de travail non approuvés : " + ", ".join(sorted(pending))
+    return None
+
+
+def _lock(db: Session, engagement: Engagement, user: User) -> None:
+    """À la clôture : horodatage, auteur et date du dernier audit de l'entité (AUD-02)."""
+    from app.models.universe import AuditableEntity
+
+    engagement.cloturee_le = datetime.now(UTC)
+    engagement.cloturee_par = user.id
+    if engagement.entity_id:
+        entity = db.get(AuditableEntity, engagement.entity_id)
+        if entity and (
+            entity.date_dernier_audit is None or entity.date_dernier_audit < engagement.date_fin
+        ):
+            entity.date_dernier_audit = engagement.date_fin
+
+
+GUARDS[EngagementStatus.CLOTUREE].append(_ready_to_close)
+ON_ENTER[EngagementStatus.CLOTUREE].append(_lock)
