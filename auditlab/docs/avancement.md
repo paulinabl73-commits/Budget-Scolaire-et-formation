@@ -5,7 +5,7 @@
 | 1 | Socle : dépôt, PostgreSQL, Alembic, authentification, rôles, AuditLog chaîné (NF-01, NF-02), CI | **Livré** |
 | 2 | Univers et plan : AUD-01 à AUD-05 | **Livré** |
 | 3 | Missions et programme : AUD-06 à AUD-12 | **Livré** |
-| 4 | Papiers de travail et revue : AUD-13 à AUD-22 | À faire |
+| 4 | Papiers de travail et revue : AUD-13 à AUD-22 | **Livré** |
 | 5 | Import de données : DAT-01 à DAT-08 | À faire |
 | 6 | Analyses : DAT-09 à DAT-19 | À faire |
 | 7 | Échantillonnage et lignée : DAT-20 à DAT-25 | À faire |
@@ -16,6 +16,33 @@
 | 8d | Inventaire, fiscalité et livrables : RCO-11 à RCO-27 | À faire |
 | 9 | Scripts et automatisation : DAT-26 à DAT-29 | À faire |
 | 10 | Reporting et finitions : REP-01 à REP-08, NF-09 à NF-11 | À faire |
+
+## Lot 4 — détail
+
+**Livré** (un commit par exigence)
+- **AUD-13** : papiers de travail avec référence unique (B-2.3), objectif, travaux,
+  conclusion et évaluation du contrôle.
+- **AUD-14** : éditeur riche (titres, listes, tableaux, images jointes, liens vers les autres
+  papiers), avec validation serveur du contenu.
+- **AUD-15** : pièces jointes jusqu'à 100 Mo (stockage local ou MinIO, empreinte SHA-256,
+  versions par nom de fichier, liens signés). Le lien vers les résultats d'analyse viendra au
+  lot 8 (DAT-30).
+- **AUD-16** : marques de révision paramétrables, insérées dans le texte et les tableaux, avec
+  une légende.
+- **AUD-17** : une version inaltérable par enregistrement, comparaison mot à mot de deux
+  versions.
+- **AUD-18** : circuit Préparé, Revu, Approuvé, signatures horodatées et liées à l'empreinte,
+  séparation des tâches.
+- **AUD-19** : notes de revue ancrées sur un passage (Ouverte, Répondue, Clôturée), réponses de
+  l'équipe.
+- **AUD-20** : une modification après signature annule les signatures et notifie le réviseur
+  (dans l'application et par e-mail).
+- **AUD-21** : passage en Rapport refusé tant qu'une note de revue n'est pas clôturée.
+- **AUD-22** : clôture sur dossier complet, puis mission verrouillée jusque dans la couche
+  d'accès aux données.
+- Tests : 179 tests backend (couverture de 99 %) et 21 tests frontend. Le parcours rédaction,
+  image, marque, signatures, note de revue et modification après signature a été rejoué dans un
+  navigateur.
 
 ## Lot 3 — détail
 

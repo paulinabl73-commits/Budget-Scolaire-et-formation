@@ -14,17 +14,22 @@ auditlab/
                       universe.py, risk.py, plans.py = lot 2
                       engagements.py, engagement_status.py, timesheets.py, library.py,
                       program.py, templates.py, mission_access.py = lot 3
+                      workpapers.py, attachments.py, tickmarks.py, signoffs.py,
+                      review_notes.py, notifications.py = lot 4
       audit/          chain.py (chaînage par hash), listeners.py (journalisation automatique)
       models/         modèles SQLAlchemy ; base.py = TrackedMixin
       security/       passwords (Argon2), totp, sessions, roles (matrice des droits)
       risk_scoring.py calcul du score de risque (fonctions pures, testées seules)
-      schemas_plan.py schémas Pydantic du lot 2 ; schemas_mission.py ceux du lot 3
+      schemas_plan.py schémas Pydantic du lot 2 ; schemas_mission.py (lot 3) ; schemas_workpaper.py (lot 4)
+      richtext.py     documents riches (validation, texte brut) ; workpaper_versions.py (versions, diff)
+      storage.py      stockage des fichiers (local ou S3/MinIO) ; signing.py (liens signés)
+      notify.py       notifications et file d'e-mails
       cli.py          commandes d'exploitation
     alembic/versions/ migrations
     tests/            pytest (base PostgreSQL réelle)
   frontend/           React 18, TypeScript, Vite, Tailwind, AG Grid
     src/i18n/fr.json  TOUS les textes de l'interface (NF-13)
-  docker-compose.yml  db + backend + frontend (nginx, proxy /api)
+  docker-compose.yml  db + minio + backend + frontend (nginx, proxy /api)
 ```
 
 ## Commandes
@@ -141,3 +146,34 @@ docker compose up -d --build
   et la migration 0009 ses 16 procédures types. Les tests partent d'une base vide (troncature
   avant chaque test) ; `test_migrations.py` vérifie les données de départ.
 - **Tests** : `tests/helpers.py` fournit `entity`, `validated_plan` et `mission`.
+
+### Lot 4 — papiers de travail et revue
+
+- **Rédaction** : membres de la mission avec le rôle auditeur ou chef. Les autres membres, le
+  Directeur et l'Administrateur lisent.
+- **Contenu riche** :
+  - format ProseMirror/TipTap en JSON, validé par liste blanche (`richtext.validate_doc`) ;
+  - images uniquement sous la forme `attachment:<id>` d'une pièce jointe du même papier ;
+  - liens limités au web, aux e-mails et à `/missions/…` ;
+  - nœud `tickmark` pour les marques de révision.
+  Côté interface, `resolveImages` et `unresolveImages` passent de la référence au lien signé.
+- **TipTap** : tous les paquets `@tiptap/*` sont à la même version exacte. Mélanger les
+  versions casse le build Vite.
+- **Fichiers** : `storage.get_storage()` renvoie le disque local (développement, tests) ou un
+  stockage S3 (MinIO sous Docker, chiffrement SSE). Les clés ne sont jamais réutilisées.
+  `AUDITLAB_SECRET_KEY` signe les liens de téléchargement (valides 1 h).
+- **Versions** : `workpaper_versions` est en ajout seul (déclencheurs SQL). La version et son
+  empreinte servent aux signatures.
+- **Signatures** : Préparé → Revu → Approuvé, avec séparation des tâches. Des contrôles
+  supplémentaires s'ajoutent dans `SIGNOFF_GUARDS` ; l'approbation exige que les notes de revue
+  du papier soient clôturées. Toute modification du contenu ou des pièces jointes appelle
+  `signoffs.invalidate`, qui annule les signatures et notifie le réviseur.
+- **Notifications** : `notify.notify` crée la notification dans l'application et un e-mail en
+  file. `python -m app.cli send-emails` les envoie si SMTP est configuré (`AUDITLAB_SMTP_*`).
+- **Clôture** :
+  - le passage en Rapport exige toutes les notes de revue clôturées ;
+  - la clôture exige en plus tous les papiers approuvés ;
+  - à la clôture, la date du dernier audit de l'entité est mise à jour ;
+  - l'écouteur `_refuse_closed_engagements` refuse toute écriture sur un objet portant
+    l'`engagement_id` d'une mission clôturée. Toute nouvelle table rattachée à une mission doit
+    donc porter `engagement_id`.

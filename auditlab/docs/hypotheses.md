@@ -13,8 +13,33 @@ Le document de synthèse partageable reprend ce fichier.
   secrets masqués (NF-01, NF-02).
 - Suppression logique uniquement (NF-03).
 - Adresses e-mail : validation souple pour accepter les domaines internes (.local).
+- Fichiers stockés hors base, dans un stockage compatible S3 (MinIO) chiffré au repos.
+  Téléchargements journalisés ; liens signés valides une heure pour l'affichage des images.
 
 ## Module 1 — gestion des audits
+
+### Lot 4
+- Rédaction des papiers par les auditeurs et le chef de la mission ; le data analyst lit les
+  papiers (matrice de la section 2).
+- Référence de papier : majuscules et chiffres, puis un tiret et une numérotation à points
+  (B-2.3), unique dans la mission.
+- Signature de préparation subordonnée à une conclusion et à une évaluation du contrôle.
+- Revue par le chef de mission ou un superviseur ; approbation par le chef de mission ou le
+  Directeur ; le préparateur ne revoit ni n'approuve son papier (norme IIA 2340).
+- L'approbation exige que les notes de revue du papier soient clôturées ; la clôture de la
+  mission exige que tous les papiers soient approuvés.
+- Une modification du contenu ou des pièces jointes après signature annule toutes les
+  signatures. Le réviseur et le chef de mission sont prévenus, pas l'auteur de la modification.
+- Pièces jointes admises : PDF, Excel, Word, CSV, texte, images ; 100 Mo au plus ; contenu
+  vérifié par ses premiers octets ; jamais réécrites (un même nom crée une nouvelle version).
+- Images des travaux : uniquement des pièces jointes du papier (pas d'image externe).
+- Six marques de révision par défaut, modifiables ; une marque se désactive, elle ne se
+  supprime pas.
+- Versions et signatures inaltérables, protégées par des déclencheurs SQL.
+- À la clôture, la date du dernier audit de l'entité devient la date de fin de la mission. Elle
+  alimente la note d'ancienneté du risque.
+- E-mails envoyés par SMTP si un serveur est configuré ; sinon ils restent en file
+  d'attente.
 
 ### Lot 3
 - Les missions ne se créent depuis le plan que s'il est validé, et une ligne du plan ne lance
