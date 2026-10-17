@@ -141,3 +141,19 @@ class PlanEvidence(TrackedMixin, Base):
     sha256: Mapped[str] = mapped_column(String(64))
     storage_key: Mapped[str] = mapped_column(String(300), unique=True)
     commentaire: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+
+class Postponement(TrackedMixin, Base):
+    """Demande de report d'échéance d'un plan (CON-08), décidée par le chef de mission."""
+
+    __tablename__ = "plan_postponements"
+
+    action_plan_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("action_plans.id"), index=True)
+    ancienne_echeance: Mapped[dt.date] = mapped_column(Date)
+    nouvelle_echeance: Mapped[dt.date] = mapped_column(Date)
+    motif: Mapped[str] = mapped_column(Text)
+    statut: Mapped[str] = mapped_column(String(20), default="demande")  # accepte, refuse
+    decide_par: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    decide_le: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    commentaire_decision: Mapped[str | None] = mapped_column(Text, nullable=True)
+    relances_precedentes: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)

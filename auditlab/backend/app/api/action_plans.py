@@ -28,6 +28,7 @@ from app.models.finding import (
     Finding,
     FindingStatus,
     PlanEvidence,
+    Postponement,
 )
 from app.models.user import User
 from app.notify import notify
@@ -354,3 +355,128 @@ def _team_ids(engagement: Engagement, finding: Finding) -> set[uuid.UUID]:
 
     chefs = {m.user_id for m in engagement.members if m.role_mission == MissionRole.CHEF}
     return chefs | ({finding.created_by} if finding.created_by else set())
+
+
+# --- CON-08 : reports d'échéance -----------------------------------------------------------
+
+
+class PostponeIn(BaseModel):
+    nouvelle_echeance: dt.date
+    motif: str = Field(min_length=1, max_length=4000)
+
+
+class DecisionIn(BaseModel):
+    decision: str = Field(pattern="^(accepte|refuse)$")
+    commentaire: str | None = Field(default=None, max_length=4000)
+
+
+def postponement_out(db: Session, p: Postponement) -> dict:
+    requester = db.get(User, p.created_by) if p.created_by else None
+    decider = db.get(User, p.decide_par) if p.decide_par else None
+    return {
+        "id": str(p.id),
+        "action_plan_id": str(p.action_plan_id),
+        "ancienne_echeance": p.ancienne_echeance.isoformat(),
+        "nouvelle_echeance": p.nouvelle_echeance.isoformat(),
+        "motif": p.motif,
+        "statut": p.statut,
+        "demande_par": requester.nom if requester else None,
+        "demande_le": p.created_at.isoformat() if p.created_at else None,
+        "decide_par": decider.nom if decider else None,
+        "decide_le": p.decide_le.isoformat() if p.decide_le else None,
+        "commentaire_decision": p.commentaire_decision,
+    }
+
+
+@router.get("/action-plans/{plan_id}/postponements")
+def list_postponements(plan_id: uuid.UUID, user: CurrentUser, db: DbSession) -> list[dict]:
+    plan = get_plan(db, plan_id)
+    plan_context(db, plan, user)
+    rows = db.scalars(
+        select(Postponement)
+        .where(Postponement.action_plan_id == plan.id, Postponement.deleted_at.is_(None))
+        .order_by(Postponement.created_at)
+    )
+    return [postponement_out(db, p) for p in rows]
+
+
+@router.post("/action-plans/{plan_id}/postponements", status_code=status.HTTP_201_CREATED)
+def request_postponement(
+    plan_id: uuid.UUID, body: PostponeIn, user: CurrentUser, db: DbSession
+) -> dict:
+    plan = get_plan(db, plan_id)
+    finding, engagement = plan_context(db, plan, user)
+    if not (is_owner(plan, finding, user) or can_write(engagement, user)):
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "Droits insuffisants")
+    if plan.statut in CLOSED_PLAN_STATUSES:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Plan clos")
+    if body.nouvelle_echeance <= plan.echeance:
+        raise HTTPException(
+            status.HTTP_422_UNPROCESSABLE_CONTENT, "La nouvelle échéance doit suivre l'actuelle"
+        )
+    pending = db.scalar(
+        select(Postponement).where(
+            Postponement.action_plan_id == plan.id,
+            Postponement.statut == "demande",
+            Postponement.deleted_at.is_(None),
+        )
+    )
+    if pending is not None:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Une demande de report est déjà en attente")
+    request = Postponement(
+        action_plan_id=plan.id,
+        ancienne_echeance=plan.echeance,
+        nouvelle_echeance=body.nouvelle_echeance,
+        motif=body.motif,
+    )
+    db.add(request)
+    chefs = {m.user_id for m in engagement.members if m.role_mission == "chef_mission"}
+    notify(
+        db,
+        chefs,
+        "report_demande",
+        f"{finding.reference} : demande de report au {body.nouvelle_echeance:%d/%m/%Y}",
+        f"{user.nom} demande le report du plan « {plan.description[:200]} » "
+        f"(échéance du {plan.echeance:%d/%m/%Y}) : {body.motif}",
+        lien=f"/missions/{engagement.id}/constats/{finding.id}",
+    )
+    db.commit()
+    return postponement_out(db, request)
+
+
+@router.post("/postponements/{postponement_id}/decision")
+def decide(postponement_id: uuid.UUID, body: DecisionIn, user: CurrentUser, db: DbSession) -> dict:
+    """Décision du chef de mission (ou du Directeur) : le report accepté change l'échéance
+    et relance le calendrier des rappels."""
+    request = db.scalar(
+        select(Postponement).where(
+            Postponement.id == postponement_id, Postponement.deleted_at.is_(None)
+        )
+    )
+    if request is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Demande introuvable")
+    plan = get_plan(db, request.action_plan_id)
+    finding, engagement = plan_context(db, plan, user)
+    if not can_manage(engagement, user):
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "Décision réservée au chef de mission")
+    if request.statut != "demande":
+        raise HTTPException(status.HTTP_409_CONFLICT, "Demande déjà traitée")
+    request.statut = body.decision
+    request.decide_par, request.decide_le = user.id, dt.datetime.now(dt.UTC)
+    request.commentaire_decision = body.commentaire
+    verdict = "accepté" if body.decision == "accepte" else "refusé"
+    if body.decision == "accepte":
+        request.relances_precedentes = plan.relances
+        plan.echeance, plan.relances = request.nouvelle_echeance, []
+    notify(
+        db,
+        {u for u in (request.created_by, plan.responsable_id, finding.audite_id) if u},
+        f"report_{body.decision}",
+        f"{finding.reference} : report {verdict}",
+        f"La demande de report au {request.nouvelle_echeance:%d/%m/%Y} du plan "
+        f"« {plan.description[:200]} » est {verdict}e"
+        + (f" : {body.commentaire}" if body.commentaire else "."),
+        lien=f"/portail/constats/{finding.id}",
+    )
+    db.commit()
+    return postponement_out(db, request)

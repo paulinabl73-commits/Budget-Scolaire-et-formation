@@ -28,6 +28,7 @@ from app.models.finding import (
     FindingEvidence,
     FindingStatus,
     PlanEvidence,
+    Postponement,
 )
 from app.models.notification import EmailMessage, Notification
 from app.models.plan import AuditPlan, PlanItem, PlanStatus
@@ -90,6 +91,7 @@ __all__ = [
     "EvidenceType",
     "Finding",
     "PlanEvidence",
+    "Postponement",
     "ActionPlanStatus",
     "FindingEvidence",
     "FindingStatus",

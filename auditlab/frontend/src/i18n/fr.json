@@ -1270,5 +1270,20 @@
     "deposer": "Déposer un justificatif",
     "rejeter": "Rejeter la réalisation",
     "motifRejet": "Motif du rejet (transmis au responsable) :"
+  },
+  "reports": {
+    "ligne": "Report du {{de}} au {{a}} demandé par {{par}} le {{le}}",
+    "statuts": {
+      "demande": "en attente",
+      "accepte": "accepté",
+      "refuse": "refusé"
+    },
+    "accepter": "Accepter",
+    "refuser": "Refuser",
+    "motifRefus": "Motif du refus (facultatif) :",
+    "nouvelle": "Nouvelle échéance",
+    "motif": "Motif",
+    "demander": "Demander le report",
+    "ouvrir": "Demander un report d'échéance"
   }
 }
