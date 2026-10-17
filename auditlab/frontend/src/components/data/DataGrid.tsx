@@ -52,9 +52,10 @@ function format(type: string, dtype: string, oui: string, non: string) {
 }
 
 /** Grille virtualisée (DAT-07) : les lignes sont lues par blocs, triées et filtrées côté serveur. */
-export default function DataGrid({ ds, onColumnFocus, onQuery }: {
+export default function DataGrid({ ds, onColumnFocus, onQuery, onSelection }: {
   ds: Dataset;
   onColumnFocus?: (col: string) => void;
+  onSelection?: (rows: Row[]) => void;
   onQuery?: (q: { filtres: Record<string, unknown>; recherche: string | null }) => void;
 }) {
   const { t } = useTranslation();
@@ -89,7 +90,7 @@ export default function DataGrid({ ds, onColumnFocus, onQuery }: {
 
   const columnDefs = useMemo<ColDef<Row>[]>(
     () =>
-      ds.schema.map((c) => {
+      ds.schema.map((c, index) => {
         const numeric = c.type === "decimal" || c.type === "entier";
         const temporal = c.type === "date" || c.type === "date_heure";
         return {
@@ -104,9 +105,10 @@ export default function DataGrid({ ds, onColumnFocus, onQuery }: {
           valueFormatter: format(c.type, c.dtype, t("commun.oui"), t("commun.non")),
           cellClass: numeric ? "text-right font-mono" : undefined,
           type: numeric ? "rightAligned" : undefined,
+          checkboxSelection: !!onSelection && index === 0,
         };
       }),
-    [ds.schema, hidden, t],
+    [ds.schema, hidden, t, onSelection],
   );
 
   const datasource = useMemo<IDatasource>(
@@ -202,6 +204,8 @@ export default function DataGrid({ ds, onColumnFocus, onQuery }: {
           maxBlocksInCache={50}
           localeText={AG_GRID_FR}
           suppressFieldDotNotation
+          rowSelection={onSelection ? "multiple" : undefined}
+          onSelectionChanged={(e) => onSelection?.(e.api.getSelectedRows())}
           onGridReady={(e) => (apiRef.current = e.api)}
           onCellFocused={(e) => {
             const col = e.column && typeof e.column !== "string" ? e.column.getColId() : null;

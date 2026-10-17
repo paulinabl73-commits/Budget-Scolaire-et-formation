@@ -1205,5 +1205,14 @@
       "table": "Résultat d'analyse",
       "lignes": "Lignes d'anomalie"
     }
+  },
+  "lignesConstat": {
+    "aide": "Cochez des lignes d'anomalie dans la grille pour en faire un constat.",
+    "selection": "{{n}} ligne(s) sélectionnée(s)",
+    "cible": "Constat",
+    "nouveau": "Nouveau constat",
+    "titreDefaut": "Anomalies relevées dans « {{table}} »",
+    "creer": "Créer le constat avec ces lignes",
+    "ajouter": "Ajouter ces lignes en preuve"
   }
 }

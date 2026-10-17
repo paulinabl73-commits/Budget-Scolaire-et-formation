@@ -13,6 +13,7 @@ import ControlSheet from "../components/data/ControlSheet";
 import DataGrid from "../components/data/DataGrid";
 import FieldStats from "../components/data/FieldStats";
 import LineageGraph from "../components/data/LineageGraph";
+import LinesToFinding from "../components/data/LinesToFinding";
 import MusEvaluation from "../components/data/MusEvaluation";
 import type { GridQuery } from "../components/data/FieldStats";
 import { useAuth } from "../auth/AuthContext";
@@ -27,6 +28,7 @@ export default function DatasetPage() {
   const { user } = useAuth();
   const [column, setColumn] = useState<string | null>(null);
   const [query, setQuery] = useState<GridQuery>({ filtres: {}, recherche: null });
+  const [selected, setSelected] = useState<Record<string, unknown>[]>([]);
   const onQuery = useCallback((q: GridQuery) => {
     setQuery((old) => (JSON.stringify(old) === JSON.stringify(q) ? old : q));
   }, []);
@@ -65,7 +67,9 @@ export default function DatasetPage() {
       {ds.kind !== "vue" && ds.statut === "pret" && <ControlSheet ds={ds} />}
       {ds.statut === "pret" && (can(user?.permissions, "workpapers:prepare") || can(user?.permissions, "workpapers:review")) && <AttachToWorkpaper key={`j-${ds.id}`} ds={ds} />}
       {ds.statut === "pret" && <LineageGraph key={`l-${ds.id}`} ds={ds} canEdit={can(user?.permissions, "data:analyze")} />}
-      {ds.statut === "pret" && <DataGrid key={ds.id} ds={ds} onColumnFocus={setColumn} onQuery={onQuery} />}
+      {ds.statut === "pret" && <DataGrid key={ds.id} ds={ds} onColumnFocus={setColumn} onQuery={onQuery}
+        onSelection={can(user?.permissions, "findings:write") ? setSelected : undefined} />}
+      {ds.statut === "pret" && can(user?.permissions, "findings:write") && <LinesToFinding ds={ds} rows={selected} />}
       {ds.statut === "pret" && ds.schema.length > 0 && (
         <FieldStats ds={ds} column={column ?? ds.schema[0].nom} query={query} onColumn={setColumn} />
       )}
