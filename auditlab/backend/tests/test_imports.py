@@ -309,3 +309,77 @@ def test_dat02_encodage_et_separateur():
     assert detect_separator(["a,b;c", "1,2;3", "4,5;6"]) in (",", ";")
     assert detect_separator(["a|b|c", "1|2|3"]) == "|"
     assert detect_separator(["une seule colonne"]) == ";"
+
+
+def test_dat03_pdf_tableaux(client, ctx):  # noqa: F811
+    up = upload(client, ctx, "releve.pdf", data_files.pdf_statement())
+    assert up["format"] == "pdf"
+    det = client.post(f"/api/uploads/{up['id']}/detect", headers=ctx["aud"].headers).json()
+    assert det["options"]["mode_pdf"] == "tableaux"
+    assert det["apercu"]["colonnes"] == [
+        {"nom": "Date", "type": "texte"},
+        {"nom": "Libelle", "type": "texte"},
+        {"nom": "Montant", "type": "texte"},
+    ]
+    # L'en-tête répété en page 2 est retiré.
+    assert [r[1] for r in det["apercu"]["lignes"]] == [
+        "Virement SOGECI",
+        "Frais tenue compte",
+        "Remise cheque",
+    ]
+    opts = {
+        **det["options"],
+        "colonnes": [{"nom": "Date", "type": "date"}, {"nom": "Montant", "type": "decimal"}],
+    }
+    ds = run_import(client, ctx, up, opts, "Relevé janvier")
+    assert ds["statut"] == "pret" and ds["nb_lignes"] == 3
+    assert [str(v) for v in rows(ds["id"])["Montant"].to_list()] == ["1250.00", "-12.50", "300.00"]
+    only_p2 = client.post(
+        f"/api/uploads/{up['id']}/preview",
+        json={**det["options"], "pages": "2"},
+        headers=ctx["aud"].headers,
+    ).json()
+    assert len(only_p2["lignes"]) == 1
+
+
+def test_dat03_pdf_colonnes(client, ctx):  # noqa: F811
+    up = upload(client, ctx, "releve.pdf", data_files.pdf_statement())
+    base = {"format": "pdf", "mode_pdf": "colonnes", "entete": True}
+    raw = client.post(f"/api/uploads/{up['id']}/preview", json=base, headers=ctx["aud"].headers)
+    lines = [r[0] for r in raw.json()["lignes_brutes"]]
+    assert any("Virement SOGECI" in line for line in lines)
+    header = next(line for line in lines if "Libelle" in line)
+    d, lib, mt = header.index("Date"), header.index("Libelle"), header.index("Montant")
+    cols = [
+        {"nom": "date", "debut": d + 1, "fin": lib - 1},
+        {"nom": "libelle", "debut": lib + 1, "fin": mt - 1},
+        {"nom": "montant", "debut": mt + 1, "fin": mt + 20, "type": "decimal"},
+    ]
+    resp = client.post(
+        f"/api/uploads/{up['id']}/preview",
+        json={**base, "colonnes": cols},
+        headers=ctx["aud"].headers,
+    ).json()
+    assert [r[1] for r in resp["lignes"]] == [
+        "Virement SOGECI",
+        "Frais tenue compte",
+        "Remise cheque",
+    ]
+    assert resp["lignes"][1][2] == "-12.50"
+
+
+def test_dat03_pdf_illisible_et_pages():
+    from pathlib import Path
+
+    from app.analytics.formats import ReadOptions
+    from app.analytics.pdf import parse_pages, read_pdf
+
+    assert parse_pages("1-3,5,2", 4) == [0, 1, 2]
+    assert parse_pages(None, 2) == [0, 1]
+    import tempfile
+
+    with tempfile.NamedTemporaryFile(suffix=".pdf") as f:
+        f.write(b"%PDF-1.4 corrompu")
+        f.flush()
+        with pytest.raises(ImportFailure, match="PDF illisible"):
+            read_pdf(Path(f.name), ReadOptions(format="pdf"))

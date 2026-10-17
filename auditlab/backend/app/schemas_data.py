@@ -55,9 +55,8 @@ class ReadOptionsIn(BaseModel):
     feuille: str | int | None = None
     colonnes: list[ColumnSpecIn] = []
     # PDF (DAT-03)
-    pages: str | None = None
+    pages: str | None = Field(default=None, pattern=r"^[0-9 ,\-]*$")
     mode_pdf: str = Field(default="tableaux", pattern="^(tableaux|colonnes)$")
-    limites_colonnes: list[float] = []
 
 
 class UploadOut(BaseModel):

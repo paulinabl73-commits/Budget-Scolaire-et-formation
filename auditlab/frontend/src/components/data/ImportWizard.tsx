@@ -47,7 +47,8 @@ export default function ImportWizard({ upload, initial, initialPreview, onImport
   const [error, setError] = useState<string | null>(null);
   const set = (patch: Partial<WizardOptions>) => setOpts((o) => ({ ...o, ...patch }));
   const textual = ["csv", "txt"].includes(opts.format);
-  const fixed = opts.format === "txt_fixe";
+  const pdf = opts.format === "pdf";
+  const fixed = opts.format === "txt_fixe" || (pdf && opts.mode_pdf === "colonnes");
   const excel = ["xlsx", "xls"].includes(opts.format);
 
   // Colonnes connues : celles des options, sinon celles de l'aperçu (Excel, JSON, Parquet).
@@ -71,7 +72,7 @@ export default function ImportWizard({ upload, initial, initialPreview, onImport
       <h3 className="font-semibold">{t("assistant.titre", { fichier: upload.nom_fichier })}</h3>
       {error && <Alert kind="erreur">{error}</Alert>}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        {(textual || fixed) && (
+        {(textual || opts.format === "txt_fixe") && (
           <Field id="w-enc" label={t("assistant.encodage")}>
             <select id="w-enc" className="champ" value={opts.encodage} onChange={(e) => set({ encodage: e.target.value })}>
               {["utf-8", "cp1252", "latin-1"].map((v) => <option key={v} value={v}>{v}</option>)}
@@ -85,7 +86,7 @@ export default function ImportWizard({ upload, initial, initialPreview, onImport
             </select>
           </Field>
         )}
-        {(textual || fixed) && (
+        {(textual || fixed || pdf) && (
           <>
             <Field id="w-dec" label={t("assistant.decimal")}>
               <select id="w-dec" className="champ" value={opts.decimal ?? ","} onChange={(e) => set({ decimal: e.target.value })}>
@@ -113,6 +114,19 @@ export default function ImportWizard({ upload, initial, initialPreview, onImport
             </Field>
           </>
         )}
+        {pdf && (
+          <>
+            <Field id="w-pdf" label={t("assistant.modePdf")}>
+              <select id="w-pdf" className="champ" value={String(opts.mode_pdf ?? "tableaux")}
+                onChange={(e) => set({ mode_pdf: e.target.value, colonnes: [] })}>
+                {["tableaux", "colonnes"].map((m) => <option key={m} value={m}>{t(`assistant.modes.${m}`)}</option>)}
+              </select>
+            </Field>
+            <Field id="w-pages" label={t("assistant.pages")}>
+              <input id="w-pages" className="champ" value={String(opts.pages ?? "")} onChange={(e) => set({ pages: e.target.value || null })} />
+            </Field>
+          </>
+        )}
         {excel && (
           <Field id="w-sheet" label={t("assistant.feuille")}>
             <select id="w-sheet" className="champ" value={String(opts.feuille ?? "")}
@@ -121,7 +135,7 @@ export default function ImportWizard({ upload, initial, initialPreview, onImport
             </select>
           </Field>
         )}
-        {(textual || excel || fixed) && (
+        {(textual || excel || fixed || pdf) && (
           <label className="col-span-2 flex items-center gap-2 text-sm">
             <input type="checkbox" checked={opts.entete ?? true} onChange={(e) => set({ entete: e.target.checked })} />
             {t("assistant.entete")}

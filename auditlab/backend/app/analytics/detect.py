@@ -110,6 +110,10 @@ def suggest(path: Path, fmt: str) -> dict[str, Any]:
         reader = fastexcel.read_excel(str(path))
         opts["feuilles"] = reader.sheet_names
         opts["feuille"] = reader.sheet_names[0] if reader.sheet_names else None
+    elif fmt == "pdf":
+        opts.update(
+            mode_pdf="tableaux", entete=True, decimal=",", milliers=" ", format_date="%d/%m/%Y"
+        )
     elif fmt == "txt_fixe":
         opts.update(encodage=detect_encoding(path.open("rb").read(SAMPLE_BYTES)), colonnes=[])
     return opts
@@ -118,11 +122,28 @@ def suggest(path: Path, fmt: str) -> dict[str, Any]:
 def preview(path: Path, options: dict[str, Any]) -> dict[str, Any]:
     """Aperçu des 100 premières lignes converties, schéma et avertissements."""
     opts = ReadOptions.from_dict({**options, "limite": PREVIEW_ROWS})
+    if (
+        opts.format == "pdf"
+        and opts.mode_pdf == "colonnes"
+        and not any(c.debut and c.fin for c in opts.colonnes)
+    ):
+        from app.analytics.pdf import layout_lines
+
+        return {
+            "colonnes": [],
+            "lignes": [],
+            "avertissements": {},
+            "lignes_brutes": [[line] for line in layout_lines(path, opts.pages, 30)[:30]],
+        }
     if opts.format == "txt_fixe" and not any(c.debut and c.fin for c in opts.colonnes):
         # Pas encore de colonnes : lignes brutes pour repérer les positions.
         text = path.open("rb").read(SAMPLE_BYTES).decode(opts.encodage, errors="replace")
-        return {"colonnes": [], "lignes": [], "avertissements": {},
-                "lignes_brutes": [[line] for line in text.splitlines()[:20]]}
+        return {
+            "colonnes": [],
+            "lignes": [],
+            "avertissements": {},
+            "lignes_brutes": [[line] for line in text.splitlines()[:20]],
+        }
     raw = read_source(path, opts)
     types = {c.nom: c.type for c in opts.colonnes if c.type}
     converted = apply_types(raw, types, opts)

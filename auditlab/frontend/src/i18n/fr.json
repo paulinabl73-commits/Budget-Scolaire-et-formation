@@ -751,6 +751,12 @@
       "date": "Date",
       "booleen": "Oui / non",
       "date_heure": "Date et heure"
+    },
+    "modePdf": "Lecture du PDF",
+    "pages": "Pages (ex. 1-3,5)",
+    "modes": {
+      "tableaux": "Tableaux détectés",
+      "colonnes": "Colonnes positionnées"
     }
   }
 }

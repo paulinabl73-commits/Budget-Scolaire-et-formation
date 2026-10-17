@@ -65,6 +65,9 @@ class ReadOptions:
     feuille: str | int | None = None
     colonnes: list[ColumnSpec] = field(default_factory=list)
     limite: int | None = None  # lecture partielle (aperçu)
+    # PDF (DAT-03)
+    pages: str | None = None
+    mode_pdf: str = "tableaux"
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "ReadOptions":
