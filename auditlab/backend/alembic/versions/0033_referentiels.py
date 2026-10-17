@@ -134,23 +134,29 @@ def _seed() -> None:
     data = Path(__file__).resolve().parents[2] / "app" / "revision" / "data"
     cols = ("id", "code", "version", "libelle", "pays", "date_effet", "actif", "source",
             "ratios", "bases_seuil", "regles", "branches")
-    fw = sa.table("accounting_frameworks", *(sa.column(c) for c in cols))
+    jsonb = postgresql.JSONB
+    typed = {"ratios", "bases_seuil", "regles", "branches", "racines"}
+
+    def col(c: str) -> sa.ColumnClause:
+        # Colonnes JSONB typées : la valeur Python est sérialisée une seule fois.
+        return sa.column(c, jsonb) if c in typed else sa.column(c)
+
+    fw = sa.table("accounting_frameworks", *(col(c) for c in cols))
     acc = sa.table("framework_accounts",
                    *(sa.column(c) for c in ("id", "framework_id", "numero", "libelle", "classe")))
     lcols = ("id", "framework_id", "etat", "code", "libelle", "nature", "racines", "formule",
              "ordre", "niveau")
-    lines = sa.table("statement_lines", *(sa.column(c) for c in lcols))
-    jsonb = postgresql.JSONB
+    lines = sa.table("statement_lines", *(col(c) for c in lcols))
     for name in ("syscohada_2017", "cipres_modele"):
         doc = json.loads((data / f"{name}.json").read_text(encoding="utf-8"))
         fid = uuid.uuid4()
         op.execute(fw.insert().values(
             id=fid, code=doc["code"], version=doc["version"], libelle=doc["libelle"],
             pays=doc["pays"], date_effet=sa.cast(doc["date_effet"], sa.Date), actif=True,
-            source=doc["source"], ratios=sa.cast(json.dumps(doc["ratios"]), jsonb),
-            bases_seuil=sa.cast(json.dumps(doc["bases_seuil"]), jsonb),
-            regles=sa.cast(json.dumps(doc["regles"]), jsonb),
-            branches=sa.cast(json.dumps(doc.get("branches", [])), jsonb),
+            source=doc["source"], ratios=doc["ratios"],
+            bases_seuil=doc["bases_seuil"],
+            regles=doc["regles"],
+            branches=doc.get("branches", []),
         ))
         op.bulk_insert(acc, [
             {"id": uuid.uuid4(), "framework_id": fid, "numero": a["numero"],
@@ -160,7 +166,7 @@ def _seed() -> None:
             op.execute(lines.insert().values(
                 id=uuid.uuid4(), framework_id=fid, etat=p["etat"], code=p["code"],
                 libelle=p["libelle"], nature=p["nature"],
-                racines=sa.cast(json.dumps(p["racines"]), jsonb), formule=p["formule"],
+                racines=p["racines"], formule=p["formule"],
                 ordre=p["ordre"], niveau=p["niveau"],
             ))
     nf = sa.table("normative_frameworks",
