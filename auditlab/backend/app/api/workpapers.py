@@ -85,15 +85,23 @@ def _procedure_refs(db: Session, ids: list[uuid.UUID]) -> dict[uuid.UUID, str | 
     )
 
 
-def summary(wp: Workpaper, refs: dict[uuid.UUID, str | None]) -> dict:
+def summary(wp: Workpaper, refs: dict[uuid.UUID, str | None], active: list) -> dict:
+    from app.api.signoffs import signoff_out, status_of
+
     return {
         **{k: getattr(wp, k) for k in WorkpaperSummary.model_fields if hasattr(wp, k)},
         "procedure_reference": refs.get(wp.procedure_id) if wp.procedure_id else None,
+        "statut_signature": status_of(active),
+        "signatures": [signoff_out(s) for s in active],
     }
 
 
 def workpaper_out(db: Session, wp: Workpaper, engagement: Engagement, user: User) -> WorkpaperOut:
-    data = summary(wp, _procedure_refs(db, [wp.procedure_id] if wp.procedure_id else []))
+    from app.api.signoffs import possible, signoffs_by_workpaper
+
+    active = signoffs_by_workpaper(db, [wp.id])[wp.id]
+    data = summary(wp, _procedure_refs(db, [wp.procedure_id] if wp.procedure_id else []), active)
+    allowed, reasons = possible(db, wp, engagement, user, active)
     return WorkpaperOut.model_validate(
         {
             **data,
@@ -101,6 +109,8 @@ def workpaper_out(db: Session, wp: Workpaper, engagement: Engagement, user: User
             "travaux": wp.travaux,
             "conclusion": wp.conclusion,
             "peut_modifier": engagement.statut != "cloturee" and can_prepare(engagement, user),
+            "signatures_possibles": allowed,
+            "motifs_refus": reasons,
         }
     )
 
@@ -142,8 +152,11 @@ def list_workpapers(engagement_id: uuid.UUID, user: CurrentUser, db: DbSession) 
             .order_by(Workpaper.reference)
         )
     )
+    from app.api.signoffs import signoffs_by_workpaper
+
     refs = _procedure_refs(db, [w.procedure_id for w in rows if w.procedure_id])
-    return [summary(w, refs) for w in rows]
+    active = signoffs_by_workpaper(db, [w.id for w in rows])
+    return [summary(w, refs, active[w.id]) for w in rows]
 
 
 @router.post(

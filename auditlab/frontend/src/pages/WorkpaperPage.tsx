@@ -8,6 +8,7 @@ import type { Attachment, ControlAssessment, RichDoc, Tickmark, Workpaper, Workp
 import Alert from "../components/Alert";
 import AttachmentsPanel from "../components/workpaper/AttachmentsPanel";
 import RichEditor from "../components/workpaper/RichEditor";
+import SignoffsPanel from "../components/workpaper/SignoffsPanel";
 import { TickmarkNode } from "../components/workpaper/tickmark";
 import VersionsPanel from "../components/workpaper/VersionsPanel";
 import { tickmarkIds } from "../lib/richtext";
@@ -85,6 +86,7 @@ export default function WorkpaperPage() {
         <h1 className="text-2xl font-semibold">{wp.titre}</h1>
       </header>
       {message && <Alert kind={message.kind}>{message.text}</Alert>}
+      <SignoffsPanel wp={wp} onSigned={() => void load()} />
       <form onSubmit={save} className="carte space-y-4">
         <div>
           <label htmlFor="w-titre" className="etiquette">{t("papiers.intitule")}</label>

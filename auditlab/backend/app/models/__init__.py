@@ -28,8 +28,11 @@ from app.models.risk import Axis, CriterionMode, RiskAssessment, RiskCriterion
 from app.models.universe import AuditableEntity, EntityType
 from app.models.user import Team, User, UserSession, user_teams
 from app.models.workpaper import (
+    SIGNOFF_ORDER,
     Attachment,
     ControlAssessment,
+    Signoff,
+    SignoffType,
     Tickmark,
     Workpaper,
     WorkpaperVersion,
@@ -59,7 +62,10 @@ __all__ = [
     "Procedure",
     "ProcedureStatus",
     "PlanStatus",
+    "SIGNOFF_ORDER",
     "STATUS_ORDER",
+    "Signoff",
+    "SignoffType",
     "Risk",
     "RiskAssessment",
     "RiskCategory",

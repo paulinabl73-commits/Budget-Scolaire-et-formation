@@ -8,6 +8,13 @@ import type { Engagement, Matrix, Workpaper, WorkpaperSummary } from "../../api/
 import { formatDateHeure } from "../../lib/format";
 import Alert from "../Alert";
 
+export const SIGN_BADGE: Record<string, string> = {
+  brouillon: "bg-slate-100 text-slate-700",
+  prepare: "bg-sky-100 text-sky-900",
+  revu: "bg-indigo-100 text-indigo-900",
+  approuve: "bg-green-100 text-green-900",
+};
+
 export const EVAL_BADGE: Record<string, string> = {
   efficace: "bg-green-100 text-green-900",
   partiellement_efficace: "bg-amber-100 text-amber-900",
@@ -94,6 +101,7 @@ export default function WorkpapersTab({ mission }: { mission: Engagement }) {
                 <th scope="col" className="px-4">{t("papiers.intitule")}</th>
                 <th scope="col" className="px-4">{t("papiers.procedure")}</th>
                 <th scope="col" className="px-4">{t("papiers.evaluation")}</th>
+                <th scope="col" className="px-4">{t("signatures.titre")}</th>
                 <th scope="col" className="px-4">{t("papiers.modifie")}</th>
               </tr>
             </thead>
@@ -111,6 +119,11 @@ export default function WorkpapersTab({ mission }: { mission: Engagement }) {
                         {t(`papiers.evaluations.${w.evaluation}`)}
                       </span>
                     )}
+                  </td>
+                  <td className="px-4">
+                    <span className={`rounded px-2 py-0.5 text-xs font-medium ${SIGN_BADGE[w.statut_signature]}`}>
+                      {t(`signatures.statuts.${w.statut_signature}`)}
+                    </span>
                   </td>
                   <td className="px-4 text-xs text-slate-600">{formatDateHeure(w.updated_at)}</td>
                 </tr>

@@ -613,5 +613,31 @@
     "inchange": "inchangé",
     "par": "par {{auteur}}",
     "version": "Version {{version}}"
+  },
+  "signatures": {
+    "titre": "Circuit de revue",
+    "etapes": {
+      "prepare": "Préparé par",
+      "revu": "Revu par",
+      "approuve": "Approuvé par"
+    },
+    "signer": {
+      "prepare": "Signer comme préparateur",
+      "revu": "Signer la revue",
+      "approuve": "Approuver"
+    },
+    "enAttente": "En attente",
+    "le": "le {{date}}",
+    "signe": "Signature enregistrée.",
+    "statuts": {
+      "brouillon": "Brouillon",
+      "prepare": "Préparé",
+      "revu": "Revu",
+      "approuve": "Approuvé"
+    },
+    "confirmer": "Confirmer la signature « {{etape}} » de la version {{version}} ?",
+    "empreinte": "Empreinte de la version signée",
+    "historique": "Historique des signatures",
+    "annulee": "annulée le {{date}} : {{motif}}"
   }
 }

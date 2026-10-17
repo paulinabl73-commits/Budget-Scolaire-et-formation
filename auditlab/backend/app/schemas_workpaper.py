@@ -6,7 +6,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.models.workpaper import ControlAssessment
+from app.models.workpaper import ControlAssessment, SignoffType
 
 REFERENCE_PATTERN = r"^[A-Z0-9]{1,6}(-[A-Z0-9]+(\.[0-9]+)*)?$"
 
@@ -31,6 +31,22 @@ class WorkpaperUpdate(BaseModel):
     evaluation: ControlAssessment | None = None
 
 
+class SignoffOut(BaseModel):
+    id: uuid.UUID
+    type: SignoffType
+    user_id: uuid.UUID
+    user_nom: str
+    signed_at: datetime
+    version: int
+    hash_contenu: str
+    annule_le: datetime | None = None
+    motif_annulation: str | None = None
+
+
+class SignoffIn(BaseModel):
+    type: SignoffType
+
+
 class WorkpaperSummary(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -43,6 +59,9 @@ class WorkpaperSummary(BaseModel):
     evaluation: ControlAssessment | None
     version: int
     updated_at: datetime | None = None
+    # Dernière étape signée et valide : brouillon, prepare, revu ou approuve (AUD-18).
+    statut_signature: str = "brouillon"
+    signatures: list[SignoffOut] = []
 
 
 class WorkpaperOut(WorkpaperSummary):
@@ -50,6 +69,8 @@ class WorkpaperOut(WorkpaperSummary):
     travaux: dict[str, Any]
     conclusion: str | None
     peut_modifier: bool = False
+    signatures_possibles: list[SignoffType] = []
+    motifs_refus: dict[str, str] = {}
 
 
 class AttachmentOut(BaseModel):

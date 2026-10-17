@@ -17,9 +17,10 @@ from sqlalchemy import (
     func,
 )
 from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, TrackedMixin
+from app.models.user import User
 
 
 class ControlAssessment(StrEnum):
@@ -89,3 +90,31 @@ class WorkpaperVersion(Base):
     hash_contenu: Mapped[str] = mapped_column(String(64))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     created_by: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+
+
+class SignoffType(StrEnum):
+    PREPARE = "prepare"
+    REVU = "revu"
+    APPROUVE = "approuve"
+
+
+SIGNOFF_ORDER = [SignoffType.PREPARE, SignoffType.REVU, SignoffType.APPROUVE]
+
+
+class Signoff(TrackedMixin, Base):
+    """Signature horodatée d'un papier (AUD-18), liée à l'empreinte de la version signée."""
+
+    __tablename__ = "signoffs"
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    workpaper_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("workpapers.id"), index=True)
+    type: Mapped[str] = mapped_column(String(20))
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
+    signed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    version: Mapped[int] = mapped_column(Integer)
+    hash_contenu: Mapped[str] = mapped_column(String(64))
+    # AUD-20 : une modification après signature annule la signature (jamais supprimée).
+    annule_le: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    motif_annulation: Mapped[str | None] = mapped_column(String(300), nullable=True)
+
+    user: Mapped[User] = relationship(foreign_keys=[user_id], viewonly=True)

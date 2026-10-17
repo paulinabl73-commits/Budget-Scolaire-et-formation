@@ -18,6 +18,7 @@ from app.api import (
     plans,
     program,
     risk,
+    signoffs,
     teams,
     templates,
     tickmarks,
@@ -90,5 +91,6 @@ for router in (
     workpapers.router,
     attachments.router,
     tickmarks.router,
+    signoffs.router,
 ):
     app.include_router(router, prefix="/api")

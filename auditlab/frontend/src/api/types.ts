@@ -319,6 +319,23 @@ export interface WorkpaperSummary {
   evaluation: ControlAssessment | null;
   version: number;
   updated_at: string | null;
+  statut_signature: SignoffStatus;
+  signatures: Signoff[];
+}
+
+export type SignoffType = "prepare" | "revu" | "approuve";
+export type SignoffStatus = "brouillon" | SignoffType;
+
+export interface Signoff {
+  id: string;
+  type: SignoffType;
+  user_id: string;
+  user_nom: string;
+  signed_at: string;
+  version: number;
+  hash_contenu: string;
+  annule_le: string | null;
+  motif_annulation: string | null;
 }
 
 export interface Workpaper extends WorkpaperSummary {
@@ -326,6 +343,8 @@ export interface Workpaper extends WorkpaperSummary {
   travaux: RichDoc;
   conclusion: string | null;
   peut_modifier: boolean;
+  signatures_possibles: SignoffType[];
+  motifs_refus: Record<string, string>;
 }
 
 export interface Attachment {
