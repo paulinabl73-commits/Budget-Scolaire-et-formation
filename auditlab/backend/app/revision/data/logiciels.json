@@ -1,0 +1,213 @@
+{
+ "_commentaire": "Intitulés de colonnes reconnus à l'import des balances et du grand livre (REV-05), après mise en minuscules, retrait des accents et de la ponctuation. Ajoutez ici les intitulés d'un logiciel ou d'une version.",
+ "logiciels": {
+  "generique": "Export générique",
+  "sage": "Sage (100, 1000, Saari)",
+  "odoo": "Odoo",
+  "perfecto": "Perfecto",
+  "saari": "SAARI"
+ },
+ "balance": {
+  "compte": [
+   "compte",
+   "n compte",
+   "no compte",
+   "n de compte",
+   "numero compte",
+   "numero de compte",
+   "num compte",
+   "compte general",
+   "code compte",
+   "account",
+   "code",
+   "compte n",
+   "code tiers",
+   "tiers",
+   "compte tiers",
+   "n tiers",
+   "code client",
+   "code fournisseur",
+   "compte auxiliaire",
+   "code auxiliaire",
+   "matricule",
+   "code cotisant",
+   "numero employeur",
+   "n employeur",
+   "code allocataire",
+   "numero allocataire"
+  ],
+  "libelle": [
+   "libelle",
+   "intitule",
+   "intitule compte",
+   "intitule du compte",
+   "designation",
+   "nom",
+   "libelle compte",
+   "name",
+   "libelle du compte",
+   "nom tiers",
+   "raison sociale",
+   "nom du tiers"
+  ],
+  "ouverture_debit": [
+   "solde ouverture debit",
+   "ouverture debit",
+   "a nouveau debit",
+   "a nouveaux debit",
+   "an debit",
+   "report debit",
+   "solde initial debit",
+   "solde debut debit",
+   "debit ouverture",
+   "solde anterieur debit",
+   "anterieur debit",
+   "solde debut de periode debit"
+  ],
+  "ouverture_credit": [
+   "solde ouverture credit",
+   "ouverture credit",
+   "a nouveau credit",
+   "a nouveaux credit",
+   "an credit",
+   "report credit",
+   "solde initial credit",
+   "solde debut credit",
+   "credit ouverture",
+   "solde anterieur credit",
+   "anterieur credit",
+   "solde debut de periode credit"
+  ],
+  "ouverture": [
+   "solde initial",
+   "solde ouverture",
+   "a nouveau",
+   "a nouveaux",
+   "solde anterieur",
+   "report a nouveau",
+   "solde d ouverture"
+  ],
+  "mouvement_debit": [
+   "mouvement debit",
+   "mouvements debit",
+   "debit",
+   "total debit",
+   "debit periode",
+   "mvt debit",
+   "mouvements de la periode debit",
+   "debit de la periode"
+  ],
+  "mouvement_credit": [
+   "mouvement credit",
+   "mouvements credit",
+   "credit",
+   "total credit",
+   "credit periode",
+   "mvt credit",
+   "mouvements de la periode credit",
+   "credit de la periode"
+  ],
+  "solde_debit": [
+   "solde debit",
+   "solde debiteur",
+   "solde final debit",
+   "solde cloture debit",
+   "solde fin debit",
+   "solde fin de periode debit",
+   "soldes debit"
+  ],
+  "solde_credit": [
+   "solde credit",
+   "solde crediteur",
+   "solde final credit",
+   "solde cloture credit",
+   "solde fin credit",
+   "solde fin de periode credit",
+   "soldes credit"
+  ],
+  "solde": [
+   "solde",
+   "solde final",
+   "solde cloture",
+   "balance",
+   "solde fin",
+   "solde fin de periode"
+  ]
+ },
+ "grand_livre": {
+  "date": [
+   "date",
+   "date ecriture",
+   "date piece",
+   "date comptable",
+   "date operation"
+  ],
+  "journal": [
+   "journal",
+   "code journal",
+   "jnl",
+   "jl"
+  ],
+  "piece": [
+   "piece",
+   "n piece",
+   "no piece",
+   "numero piece",
+   "reference",
+   "ref piece",
+   "n ecriture",
+   "ecriture",
+   "numero ecriture"
+  ],
+  "compte": [
+   "compte",
+   "n compte",
+   "numero compte",
+   "compte general",
+   "code compte",
+   "account"
+  ],
+  "libelle": [
+   "libelle",
+   "libelle ecriture",
+   "libelle operation",
+   "intitule",
+   "designation",
+   "label"
+  ],
+  "debit": [
+   "debit",
+   "montant debit"
+  ],
+  "credit": [
+   "credit",
+   "montant credit"
+  ],
+  "utilisateur": [
+   "utilisateur",
+   "saisi par",
+   "user",
+   "auteur",
+   "createur",
+   "operateur"
+  ],
+  "date_saisie": [
+   "date saisie",
+   "date de saisie",
+   "date creation",
+   "cree le",
+   "date systeme"
+  ],
+  "lettrage": [
+   "lettrage",
+   "code lettrage",
+   "let"
+  ],
+  "tiers": [
+   "tiers",
+   "compte tiers",
+   "compte auxiliaire",
+   "auxiliaire"
+  ]
+ }
+}

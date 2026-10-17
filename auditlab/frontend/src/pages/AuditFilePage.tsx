@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import { api } from "../api/client";
 import type { AuditFile } from "../api/types";
 import Alert from "../components/Alert";
+import ImportsPanel from "../components/revision/ImportsPanel";
 import { formatDate } from "../lib/format";
 
 /** Dossier de révision (Module 5) : balances, affectation, seuils, revue analytique. */
@@ -31,6 +32,7 @@ export default function AuditFilePage() {
           {file.precedent_exercice && ` · ${t("revision.precedent", { exercice: file.precedent_exercice })}`}
         </p>
       </header>
+      <ImportsPanel file={file} onChange={() => void load()} />
     </div>
   );
 }

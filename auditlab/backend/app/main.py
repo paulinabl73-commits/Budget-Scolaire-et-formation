@@ -38,6 +38,7 @@ from app.api import (
     templates,
     tickmarks,
     timesheets,
+    trial_balances,
     universe,
     users,
     views,
@@ -124,5 +125,6 @@ for router in (
     portal.router,
     frameworks.router,
     audit_files.router,
+    trial_balances.router,
 ):
     app.include_router(router, prefix="/api")

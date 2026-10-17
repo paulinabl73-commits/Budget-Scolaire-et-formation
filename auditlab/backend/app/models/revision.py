@@ -150,3 +150,72 @@ class AuditFile(TrackedMixin, Base):
     justification_seuil: Mapped[str | None] = mapped_column(Text, nullable=True)
     # REV-12 : variation relative au-delà de laquelle une justification est demandée.
     seuil_variation_pct: Mapped[Decimal] = mapped_column(Numeric(7, 4), default=Decimal("10"))
+
+
+class TrialBalance(TrackedMixin, Base):
+    """Balance générale, balance auxiliaire ou grand livre importé (REV-05).
+
+    Statut « accepte » seulement si tous les contrôles bloquants passent (REV-06) ; le fichier
+    source est conservé avec son empreinte. Un nouvel import remplace le précédent (suppression
+    logique), l'historique reste consultable.
+    """
+
+    __tablename__ = "trial_balances"
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
+    periode: Mapped[str] = mapped_column(String(5))  # N ou N-1
+    type: Mapped[str] = mapped_column(String(30))  # balance, grand_livre, aux_clients…
+    logiciel: Mapped[str] = mapped_column(String(20), default="generique")
+    nom_fichier: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    sha256: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    storage_key: Mapped[str | None] = mapped_column(String(300), nullable=True)
+    statut: Mapped[str] = mapped_column(String(20))  # accepte, rejete
+    anomalies: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
+    avertissements: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
+    totaux: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
+    nb_lignes: Mapped[int] = mapped_column(Integer, default=0)
+    dataset_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("datasets.id"), nullable=True)
+    devise_source: Mapped[str | None] = mapped_column(String(3), nullable=True)
+    cours: Mapped[Decimal | None] = mapped_column(Numeric(20, 10), nullable=True)
+    compte_collectif: Mapped[str | None] = mapped_column(String(20), nullable=True)
+
+
+class TrialBalanceLine(Base):
+    """Ligne de balance : non modifiable une fois importée (pas d'audit ligne à ligne)."""
+
+    __tablename__ = "trial_balance_lines"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    trial_balance_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("trial_balances.id"), index=True)
+    compte: Mapped[str] = mapped_column(String(40))
+    libelle: Mapped[str | None] = mapped_column(String(300), nullable=True)
+    ouverture_debit: Mapped[Decimal] = mapped_column(MONEY, default=Decimal(0))
+    ouverture_credit: Mapped[Decimal] = mapped_column(MONEY, default=Decimal(0))
+    mouvement_debit: Mapped[Decimal] = mapped_column(MONEY, default=Decimal(0))
+    mouvement_credit: Mapped[Decimal] = mapped_column(MONEY, default=Decimal(0))
+    solde_debit: Mapped[Decimal] = mapped_column(MONEY, default=Decimal(0))
+    solde_credit: Mapped[Decimal] = mapped_column(MONEY, default=Decimal(0))
+
+
+class Currency(TrackedMixin, Base):
+    """Devise et nombre de décimales (REV-07) : 0 pour le franc CFA."""
+
+    __tablename__ = "currencies"
+
+    code: Mapped[str] = mapped_column(String(3), unique=True)
+    libelle: Mapped[str] = mapped_column(String(100))
+    decimales: Mapped[int] = mapped_column(Integer, default=2)
+
+
+class ExchangeRate(TrackedMixin, Base):
+    """Cours de conversion à une date : 1 unité de devise_source = taux unités de devise_cible."""
+
+    __tablename__ = "exchange_rates"
+    __table_args__ = (UniqueConstraint("devise_source", "devise_cible", "date"),)
+
+    devise_source: Mapped[str] = mapped_column(String(3))
+    devise_cible: Mapped[str] = mapped_column(String(3))
+    date: Mapped[dt.date] = mapped_column(Date)
+    taux: Mapped[Decimal] = mapped_column(Numeric(20, 10))
+    source: Mapped[str | None] = mapped_column(String(200), nullable=True)

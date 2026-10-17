@@ -1405,5 +1405,54 @@
     "USD": "USD – dollar",
     "GNF": "GNF – franc guinéen",
     "CDF": "CDF – franc congolais"
+  },
+  "balances": {
+    "titre": "Données comptables",
+    "periode": "Exercice",
+    "periodes": {
+      "N": "N ({{exercice}})",
+      "N-1": "N-1 ({{exercice}})"
+    },
+    "type": "Données",
+    "types": {
+      "balance": "Balance générale",
+      "grand_livre": "Grand livre",
+      "aux_clients": "Balance clients",
+      "aux_fournisseurs": "Balance fournisseurs",
+      "aux_cotisants": "Balance cotisants",
+      "aux_allocataires": "Balance allocataires"
+    },
+    "logiciel": "Logiciel d'origine",
+    "logiciels": {
+      "generique": "Export générique",
+      "sage": "Sage",
+      "odoo": "Odoo",
+      "perfecto": "Perfecto",
+      "saari": "SAARI"
+    },
+    "collectif": "Compte collectif",
+    "deviseSource": "Devise du fichier (si autre que {{devise}})",
+    "dateCours": "Date du cours de conversion",
+    "choisir": "Choisir le fichier et importer",
+    "enCours": "Import et contrôles en cours…",
+    "accepte": "Import accepté : {{n}} lignes, contrôles bloquants satisfaits.",
+    "rejete": "Import rejeté : les contrôles bloquants ont relevé les anomalies suivantes.",
+    "autres": "… et {{n}} autre(s) anomalie(s).",
+    "col": {
+      "donnee": "Données",
+      "fichier": "Fichier",
+      "lignes": "Lignes",
+      "totaux": "Totaux débit / crédit",
+      "statut": "Statut",
+      "date": "Importé le"
+    },
+    "statuts": {
+      "accepte": "Accepté",
+      "rejete": "Rejeté"
+    },
+    "remplace": "Remplacé",
+    "nbAnomalies": "{{n}} anomalie(s)",
+    "nbAvertissements": "{{n}} avertissement(s)",
+    "historique": "Afficher l'historique (imports rejetés et remplacés)"
   }
 }
