@@ -1662,5 +1662,24 @@
     "renvois": "Renvois aux papiers de travail",
     "aucunPapier": "Aucun papier de travail dans la mission.",
     "viaAjustement": "cité par une écriture d'ajustement"
+  },
+  "nonCorrigees": {
+    "titre": "Anomalies non corrigées",
+    "col": {
+      "ecriture": "Écriture",
+      "nature": "Nature",
+      "statut": "Statut",
+      "resultat": "Effet sur le résultat",
+      "montant": "Montant",
+      "appreciation": "Appréciation"
+    },
+    "significatif": "Significative à elle seule",
+    "insignifiant": "Manifestement insignifiante (non cumulée)",
+    "cumul": "Cumul (hors anomalies insignifiantes)",
+    "conclusions": {
+      "non_significatif": "Cumul des anomalies non corrigées sur le résultat : {{cumul}}, inférieur au seuil de planification ({{plan}}).",
+      "vigilance": "Cumul des anomalies non corrigées : {{cumul}}, au-delà du seuil de planification ({{plan}}) mais sous le seuil de signification ({{seuil}}) : risque que des anomalies non détectées le portent au-delà.",
+      "significatif": "Anomalies non corrigées significatives (cumul {{cumul}} ; seuil {{seuil}}) : à corriger par l'entité, sinon incidence sur l'opinion."
+    }
   }
 }

@@ -15,6 +15,7 @@ import type { Mapping } from "../components/revision/MappingPanel";
 import RatiosPanel from "../components/revision/RatiosPanel";
 import RiskMatrixPanel from "../components/revision/RiskMatrixPanel";
 import StatementsPreview from "../components/revision/StatementsPreview";
+import UnadjustedPanel from "../components/revision/UnadjustedPanel";
 import { formatDate } from "../lib/format";
 
 const VIEWS = ["donnees", "affectation", "planification", "analytique", "ratios", "risques", "ajustements", "cycles"] as const;
@@ -29,6 +30,7 @@ export default function AuditFilePage() {
   const [file, setFile] = useState<AuditFile | null>(null);
   const [mapping, setMapping] = useState<Mapping | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [version, setVersion] = useState(0);
   const load = useCallback(async () => {
     setFile(await api<AuditFile>(`/audit-files/${fid}`));
     setMapping(await api<Mapping>(`/audit-files/${fid}/mapping`));
@@ -82,7 +84,12 @@ export default function AuditFilePage() {
       {view === "analytique" && <AnalyticalPanel file={file} />}
       {view === "ratios" && <RatiosPanel file={file} />}
       {view === "risques" && <RiskMatrixPanel file={file} />}
-      {view === "ajustements" && <AdjustmentsPanel file={file} />}
+      {view === "ajustements" && (
+        <>
+          <AdjustmentsPanel file={file} onChange={() => setVersion((v) => v + 1)} />
+          {file.seuil_signification && <UnadjustedPanel file={file} version={version} />}
+        </>
+      )}
       {view === "cycles" && <LeadSchedulesPanel file={file} />}
     </div>
   );

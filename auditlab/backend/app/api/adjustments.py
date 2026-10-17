@@ -200,3 +200,54 @@ def delete_adjustment(adjustment_id: uuid.UUID, user: CurrentUser, db: DbSession
         raise HTTPException(status.HTTP_409_CONFLICT, "Écriture déjà décidée : conservée")
     adj.deleted_at, adj.deleted_by = dt.datetime.now(dt.UTC), user.id
     db.commit()
+
+
+# --- Anomalies non corrigées (REV-22) -----------------------------------------------------------
+
+
+@router.get("/audit-files/{file_id}/unadjusted")
+def unadjusted(file_id: uuid.UUID, user: CurrentUser, db: DbSession) -> dict[str, Any]:
+    """Tableau des anomalies non corrigées (ISA 450) : écritures proposées ou refusées.
+
+    Les anomalies inférieures au seuil d'insignifiance sont listées mais non cumulées ; le
+    cumul des effets sur le résultat est comparé au seuil de planification et au seuil de
+    signification ; les reclassements sont cumulés à part (présentation).
+    """
+    file, _ = get_file(db, file_id, user)
+    if file.seuil_signification is None:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Fixez d'abord le seuil de signification")
+    items = [a for a in file_adjustments(db, file.id) if a.statut != "acceptee"]
+    lines = lines_of(db, [a.id for a in items])
+    rows, total_result, total_reclass = [], ZERO, ZERO
+    for a in items:
+        effect = result_effect(lines[a.id])
+        amount = sum((ln.debit for ln in lines[a.id]), ZERO)
+        weight = abs(effect) if a.type == "correction" else amount
+        trivial = weight <= file.seuil_insignifiant
+        if not trivial:
+            if a.type == "correction":
+                total_result += effect
+            else:
+                total_reclass += amount
+        rows.append({
+            "numero": a.numero, "libelle": a.libelle, "type": a.type, "statut": a.statut,
+            "effet_resultat": str(effect.quantize(Decimal("0.01"))), "montant": str(amount),
+            "insignifiant": trivial,
+            "individuellement_significatif": weight >= file.seuil_signification,
+        })  # fmt: skip
+    cumul = abs(total_result)
+    if cumul >= file.seuil_signification or any(r["individuellement_significatif"] for r in rows):
+        conclusion = "significatif"
+    elif cumul >= file.seuil_planification:
+        conclusion = "vigilance"
+    else:
+        conclusion = "non_significatif"
+    return {
+        "seuils": {"signification": str(file.seuil_signification),
+                   "planification": str(file.seuil_planification),
+                   "insignifiant": str(file.seuil_insignifiant)},
+        "anomalies": rows,
+        "cumul_resultat": str(total_result.quantize(Decimal("0.01"))),
+        "cumul_reclassements": str(total_reclass),
+        "conclusion": conclusion,
+    }  # fmt: skip
