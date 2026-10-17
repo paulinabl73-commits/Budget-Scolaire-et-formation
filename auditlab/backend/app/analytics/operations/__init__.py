@@ -5,6 +5,8 @@ from app.analytics.operations import (  # noqa: F401
     benford,
     doublons,
     extraction,
+    jointure,
+    rapprochement,
     sequence,
     stratification,
     synthese,
