@@ -51,8 +51,10 @@ def parquet() -> bytes:
     return buf.getvalue()
 
 
-PAGE = (b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] "
-        b"/Resources << /Font << /F1 5 0 R >> >> /Contents %d 0 R >>")
+PAGE = (
+    b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] "
+    b"/Resources << /Font << /F1 5 0 R >> >> /Contents %d 0 R >>"
+)
 
 
 def pdf_statement() -> bytes:

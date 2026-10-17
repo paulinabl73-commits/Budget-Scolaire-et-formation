@@ -48,6 +48,8 @@ class Dataset(TrackedMixin, Base):
     nb_colonnes: Mapped[int | None] = mapped_column(Integer, nullable=True)
     schema: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
     totaux_controle: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
+    # Empreinte du fichier Parquet produit : preuve que la table n'a pas changé (DAT-04).
+    parquet_sha256: Mapped[str | None] = mapped_column(String(64), nullable=True)
     # Vue : définition des champs calculés (DAT-06).
     definition: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
     duree_ms: Mapped[int | None] = mapped_column(Integer, nullable=True)

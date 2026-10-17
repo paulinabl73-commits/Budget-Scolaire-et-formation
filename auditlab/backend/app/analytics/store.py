@@ -114,3 +114,45 @@ def parquet_ref(relative: str) -> str:
     """Référence SQL d'un fichier Parquet (chemin résolu dans le répertoire des données)."""
     path = str(absolute(relative)).replace("'", "''")
     return f"read_parquet('{path}')"
+
+
+def file_sha256(relative: str) -> str:
+    import hashlib
+
+    digest = hashlib.sha256()
+    with absolute(relative).open("rb") as f:
+        while chunk := f.read(1024 * 1024):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def control_totals(relative: str, schema: list[dict[str, Any]]) -> dict[str, Any]:
+    """Totaux de contrôle (DAT-04) : somme exacte et nombre de valeurs de chaque colonne
+    numérique, minimum et maximum des dates."""
+    numeric = [c["nom"] for c in schema if c["type"] in ("entier", "decimal")]
+    dates = [c["nom"] for c in schema if c["type"] in ("date", "date_heure")]
+    if not numeric and not dates:
+        return {}
+    exprs = []
+    for name in numeric:
+        q = quote_ident(name)
+        exprs += [f"sum({q})", f"count({q})"]
+    for name in dates:
+        q = quote_ident(name)
+        exprs += [f"min({q})", f"max({q})"]
+    with connect() as con:
+        row = con.execute(f"SELECT {', '.join(exprs)} FROM {parquet_ref(relative)}").fetchone()  # noqa: S608
+    totals: dict[str, Any] = {}
+    values = iter(row)
+    for name in numeric:
+        total, count = next(values), next(values)
+        totals[name] = {"somme": str(total if total is not None else 0), "valeurs": count}
+    for name in dates:
+        low, high = next(values), next(values)
+        totals[name] = {"min": str(low) if low else None, "max": str(high) if high else None}
+    return totals
+
+
+def quote_ident(name: str) -> str:
+    """Identifiant SQL entre guillemets (noms de colonnes issus des fichiers importés)."""
+    return '"' + name.replace('"', '""') + '"'

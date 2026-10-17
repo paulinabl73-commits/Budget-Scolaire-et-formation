@@ -22,6 +22,7 @@ const MissionPage = lazy(() => import("./pages/MissionPage"));
 const LibraryPage = lazy(() => import("./pages/LibraryPage"));
 const WorkpaperPage = lazy(() => import("./pages/WorkpaperPage"));
 const TickmarksPage = lazy(() => import("./pages/TickmarksPage"));
+const DatasetPage = lazy(() => import("./pages/DatasetPage"));
 
 export default function App() {
   const { t } = useTranslation();
@@ -106,6 +107,14 @@ export default function App() {
           element={
             <RequireAuth permission={[PERM.MISSIONS_READ_ALL, PERM.MISSIONS_READ_OWN]}>
               <WorkpaperPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="missions/:id/donnees/:dsId"
+          element={
+            <RequireAuth permission="data:read">
+              <DatasetPage />
             </RequireAuth>
           }
         />

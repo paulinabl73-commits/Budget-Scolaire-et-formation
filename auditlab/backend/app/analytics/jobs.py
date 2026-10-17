@@ -6,7 +6,7 @@ import uuid
 from pathlib import Path
 
 from app.analytics.formats import ImportFailure, ReadOptions, apply_types, read_source
-from app.analytics.store import write_table
+from app.analytics.store import control_totals, file_sha256, write_table
 from app.audit.listeners import set_actor
 from app.db import SessionLocal
 from app.models.data import Dataset, DatasetStatus, DataSource, Upload
@@ -54,6 +54,8 @@ def import_dataset(dataset_id: str) -> str:
             ds.nb_lignes, ds.nb_colonnes = written.nb_lignes, written.nb_colonnes
             ds.schema = written.schema
             ds.options = {**ds.options, "avertissements": warnings}
+            ds.totaux_controle = control_totals(written.chemin, written.schema)
+            ds.parquet_sha256 = file_sha256(written.chemin)
             ds.statut, ds.erreur = DatasetStatus.PRET.value, None
         ds.duree_ms = int((time.perf_counter() - start) * 1000)
         db.commit()

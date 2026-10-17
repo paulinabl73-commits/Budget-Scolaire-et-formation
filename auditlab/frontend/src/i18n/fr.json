@@ -758,5 +758,26 @@
       "tableaux": "Tableaux détectés",
       "colonnes": "Colonnes positionnées"
     }
+  },
+  "table": {
+    "retour": "← Données de la mission",
+    "empreinte": "Empreinte de contrôle",
+    "source": "Fichier source",
+    "sha": "SHA-256 de la source",
+    "shaTable": "SHA-256 de la table",
+    "lignes": "{{n}} lignes",
+    "colonnes": "{{n}} colonnes",
+    "totaux": "Totaux de contrôle",
+    "colonne": "Colonne",
+    "somme": "Somme",
+    "valeurs": "Valeurs",
+    "min": "Première date",
+    "max": "Dernière date",
+    "verifier": "Vérifier l'intégrité",
+    "intacte": "Source et table intactes : empreintes identiques à l'import.",
+    "alteree": "Altération détectée : l'empreinte ne correspond plus à celle de l'import.",
+    "lectureSeule": "Table en lecture seule",
+    "avertissements": "Valeurs non converties à l'import",
+    "duree": "Import en {{s}} s"
   }
 }

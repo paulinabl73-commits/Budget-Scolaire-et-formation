@@ -383,3 +383,40 @@ def test_dat03_pdf_illisible_et_pages():
         f.flush()
         with pytest.raises(ImportFailure, match="PDF illisible"):
             read_pdf(Path(f.name), ReadOptions(format="pdf"))
+
+
+def test_dat04_empreinte_et_totaux(client, ctx):  # noqa: F811
+    import hashlib
+
+    up = upload(client, ctx, "factures.csv", data_files.CSV_FR)
+    assert up["sha256"] == hashlib.sha256(data_files.CSV_FR).hexdigest()
+    ds = run_import(client, ctx, up, CSV_OPTIONS)
+    assert ds["source_sha256"] == up["sha256"] and ds["source_taille"] == len(data_files.CSV_FR)
+    assert ds["nb_lignes"] == 3
+    # 1 250 000,50 + 300,00 − 45,25 = 1 250 255,25 (somme exacte, sans arrondi binaire).
+    assert ds["totaux_controle"]["Montant TTC"] == {"somme": "1250255.25", "valeurs": 3}
+    assert ds["totaux_controle"]["Date"] == {"min": "2026-01-31", "max": "2026-02-28"}
+    assert len(ds["parquet_sha256"]) == 64
+
+    check = client.get(f"/api/datasets/{ds['id']}/integrity", headers=ctx["da"].headers).json()
+    assert check["source_intacte"] is True and check["table_intacte"] is True
+
+    # Une altération du fichier Parquet est détectée.
+    import os
+
+    from app.analytics.store import absolute
+    from app.db import SessionLocal
+    from app.models import Dataset
+
+    with SessionLocal() as db:
+        path = absolute(db.get(Dataset, ds["id"]).chemin_parquet)
+    os.chmod(path, 0o644)
+    with open(path, "ab") as f:
+        f.write(b"x")
+    check = client.get(f"/api/datasets/{ds['id']}/integrity", headers=ctx["da"].headers).json()
+    assert check["table_intacte"] is False
+
+
+def test_dat04_sans_colonne_numerique(client, ctx):  # noqa: F811
+    ds = run_import(client, ctx, upload(client, ctx, "a.csv", b"nom\nA\nB\n"))
+    assert ds["totaux_controle"] == {} and ds["nb_lignes"] == 2

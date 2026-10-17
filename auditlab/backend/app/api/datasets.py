@@ -12,7 +12,7 @@ from app.api.mission_access import ensure_open, get_engagement, mission_role, se
 from app.models.data import Dataset
 from app.models.engagement import Engagement
 from app.models.user import User
-from app.schemas_data import DatasetOut
+from app.schemas_data import DatasetOut, IntegrityOut
 from app.security.roles import Perm, has_permission
 
 router = APIRouter(tags=["Données"])
@@ -66,3 +66,37 @@ def list_datasets(engagement_id: uuid.UUID, user: CurrentUser, db: DbSession) ->
 def read_dataset(dataset_id: uuid.UUID, user: CurrentUser, db: DbSession) -> DatasetOut:
     ds, _ = get_dataset(db, dataset_id, user)
     return dataset_out(ds)
+
+
+@router.get("/datasets/{dataset_id}/integrity", response_model=IntegrityOut)
+def verify_integrity(dataset_id: uuid.UUID, user: CurrentUser, db: DbSession) -> IntegrityOut:
+    """DAT-04 : recalcule les empreintes du fichier source conservé et de la table."""
+    import hashlib
+
+    from app.analytics.store import file_sha256
+    from app.audit.listeners import record_event
+    from app.storage import get_storage
+
+    ds, _ = get_dataset(db, dataset_id, user)
+    source_ok = table_ok = None
+    if ds.source_storage_key and ds.source_sha256:
+        digest = hashlib.sha256()
+        for chunk in get_storage().open(ds.source_storage_key):
+            digest.update(chunk)
+        source_ok = digest.hexdigest() == ds.source_sha256
+    if ds.chemin_parquet and ds.parquet_sha256:
+        table_ok = file_sha256(ds.chemin_parquet) == ds.parquet_sha256
+    record_event(
+        db,
+        "dataset_integrity_checked",
+        object_type="Dataset",
+        object_id=ds.id,
+        details={"source_intacte": source_ok, "table_intacte": table_ok},
+    )
+    db.commit()
+    return IntegrityOut(
+        source_intacte=source_ok,
+        table_intacte=table_ok,
+        source_sha256=ds.source_sha256,
+        parquet_sha256=ds.parquet_sha256,
+    )

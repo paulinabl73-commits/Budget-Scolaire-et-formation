@@ -427,7 +427,8 @@ export interface Dataset {
   nb_lignes: number | null;
   nb_colonnes: number | null;
   schema: { nom: string; type: ColumnType; dtype: string }[];
-  totaux_controle: Record<string, string | number>;
+  totaux_controle: Record<string, { somme?: string; valeurs?: number; min?: string | null; max?: string | null }>;
+  parquet_sha256: string | null;
   definition: Record<string, unknown>;
   options: Record<string, unknown>;
   duree_ms: number | null;

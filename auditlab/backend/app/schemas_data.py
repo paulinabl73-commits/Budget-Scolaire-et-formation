@@ -28,6 +28,7 @@ class DatasetOut(BaseModel):
     nb_colonnes: int | None
     schema: list[dict[str, Any]]
     totaux_controle: dict[str, Any]
+    parquet_sha256: str | None = None
     definition: dict[str, Any]
     options: dict[str, Any]
     duree_ms: int | None
@@ -93,3 +94,10 @@ class DataSourceOut(BaseModel):
     description: str | None
     actif: bool
     dialecte: str = ""
+
+
+class IntegrityOut(BaseModel):
+    source_intacte: bool | None
+    table_intacte: bool | None
+    source_sha256: str | None
+    parquet_sha256: str | None
