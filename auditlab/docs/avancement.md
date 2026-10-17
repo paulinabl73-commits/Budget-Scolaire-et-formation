@@ -8,7 +8,7 @@
 | 4 | Papiers de travail et revue : AUD-13 à AUD-22 | **Livré** |
 | 5 | Import de données : DAT-01 à DAT-08 | **Livré** |
 | 6 | Analyses : DAT-09 à DAT-19 | **Livré** |
-| 7 | Échantillonnage et lignée : DAT-20 à DAT-25 | À faire |
+| 7 | Échantillonnage et lignée : DAT-20 à DAT-25 | **Livré** |
 | 8 | Liaison audit et analyse, constats : DAT-30 à DAT-32, CON-01 à CON-09 | À faire |
 | 8a | Référentiels et balance : REV-01 à REV-14 | À faire |
 | 8b | Révision et états : REV-15 à REV-28, CIP-01 à CIP-09, IFR-01 à IFR-04 | À faire |
@@ -16,6 +16,24 @@
 | 8d | Inventaire, fiscalité et livrables : RCO-11 à RCO-27 | À faire |
 | 9 | Scripts et automatisation : DAT-26 à DAT-29 | À faire |
 | 10 | Reporting et finitions : REP-01 à REP-08, NF-09 à NF-11 | À faire |
+
+## Lot 7 — détail
+
+**Livré** (un commit par exigence)
+- **DAT-20** : échantillons aléatoire simple, systématique, stratifié (par champ ou par
+  tranches de montant, allocation proportionnelle) et en unités monétaires.
+- **DAT-21** : taille d'échantillon pour les tests de contrôles (binomiale) et pour le MUS
+  (facteurs de Poisson, facteurs d'expansion AICPA), reprise dans le formulaire.
+- **DAT-22** : graine tirée et enregistrée (paramètres, synthèse, journal) ; même graine, même
+  empreinte.
+- **DAT-23** : évaluation MUS (erreur projetée, précision de base, provision d'élargissement,
+  limite supérieure, conclusion au regard de l'erreur tolérable).
+- **DAT-24** : entité AnalysisOperation, graphe de lignée, rejeu depuis la source avec
+  comparaison des empreintes (NF-04).
+- **DAT-25** : macros tirées de l'historique, rejouées sur des tables de même structure.
+- CI : MinIO remplacé par SeaweedFS (l'image MinIO n'est plus publiée).
+- Tests : 334 tests backend (couverture de 98 %) ; parcours échantillon MUS, évaluation, rejeu et macro
+  rejoué dans un navigateur.
 
 ## Lot 6 — détail
 

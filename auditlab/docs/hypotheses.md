@@ -71,6 +71,29 @@ Le document de synthèse partageable reprend ce fichier.
 - Recherche floue : formes juridiques usuelles retirées des noms (SARL, SA, SUARL, ETS, GIE…),
   seuil 0,85 ; comparaison limitée à 50 millions de paires.
 
+### Lot 7
+- Références : ISA 530 et guide AICPA « Audit Sampling ». Les facteurs de confiance sont
+  calculés par la loi de Poisson (3,00 à 95 %, 2,31 à 90 %) ; les facteurs d'expansion de
+  l'erreur attendue sont ceux de la table AICPA (1,6 à 95 %).
+- Tests de contrôles : taille par la loi binomiale, avec ⌈n × taux attendu⌉ écarts admis.
+- MUS : population = montants positifs ; montants nuls ou négatifs exclus et comptés à part
+  (à traiter par un autre test). Une ligne supérieure à l'intervalle peut être tirée
+  plusieurs fois ; elle figure une fois avec son nombre de sélections.
+- Échantillon stratifié : allocation proportionnelle à l'effectif des strates (plus forts
+  restes), au moins une ligne par strate non vide.
+- Graine : tirée au hasard et enregistrée si l'utilisateur ne la fixe pas (ISA 230 : le
+  dossier doit permettre de refaire le tirage).
+- Évaluation MUS : méthode de la cellule (AICPA). Surévaluations et sous-évaluations évaluées
+  séparément ; taux d'erreur plafonné à 100 % ; la conclusion compare la limite supérieure des
+  surévaluations à l'erreur tolérable.
+- Lignée : une table est l'aboutissement d'opérations enregistrées ; le rejeu recalcule depuis
+  les fichiers sources conservés (pour une source SQL, la requête est rejouée sur la base, dont
+  le contenu a pu changer).
+- Macros : partagées entre missions ; « même structure » = colonnes attendues présentes avec le
+  même type, colonnes supplémentaires admises.
+- Stockage S3 sous Docker : SeaweedFS, objets chiffrés (SSE-S3) avec une clé fournie à
+  l'installation.
+
 ## Module 1 — gestion des audits
 
 ### Lot 4

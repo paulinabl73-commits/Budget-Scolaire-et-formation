@@ -16,11 +16,13 @@ auditlab/
                       program.py, templates.py, mission_access.py = lot 3
                       workpapers.py, attachments.py, tickmarks.py, signoffs.py,
                       review_notes.py, notifications.py = lot 4
-                      datasets.py, imports.py, views.py = lot 5 ; analyses.py = lot 6
+                      datasets.py, imports.py, views.py = lot 5 ; analyses.py = lot 6 ;
+                      sampling.py, macros.py = lot 7
       analytics/      Module 2 : store.py (Parquet, DuckDB), formats.py, detect.py, pdf.py,
                       sql_source.py, jobs.py (tâches Celery), expr.py (expressions),
                       relation.py (relation SQL d'une table ou d'une vue), grid.py,
-                      statistics.py, operations/ (une analyse par module, lot 6)
+                      statistics.py, operations/ (une analyse par module, lot 6),
+                      sampling.py, lineage.py, macros.py (lot 7)
       audit/          chain.py (chaînage par hash), listeners.py (journalisation automatique)
       models/         modèles SQLAlchemy ; base.py = TrackedMixin
       security/       passwords (Argon2), totp, sessions, roles (matrice des droits)
@@ -232,3 +234,25 @@ docker compose up -d --build
   est désactivée : identifiants toujours cités par `quote_ident`, valeurs toujours en `?`.
 - **Tests** : `tests/analysis_helpers.analyse(...)` lance une analyse ; `result_df(db, res)` lit
   sa table. Une analyse refusée à l'exécution renvoie 202 avec `statut="erreur"`.
+
+### Lot 7 — échantillonnage et lignée
+
+- **Échantillonnage** : `analytics/sampling.py` regroupe les fonctions pures (tirages, tailles,
+  évaluation MUS). L'échantillon est une analyse comme les autres (`operations/echantillon.py`).
+  Le paramètre de type `graine` est tiré par `secrets` s'il est vide, puis stocké dans
+  `definition.parametres` : relancer avec la même graine redonne la même empreinte.
+- **Facteurs** : facteurs de confiance calculés par la loi de Poisson (`poisson_factor`),
+  facteurs d'expansion AICPA dans `EXPANSION_FACTORS`. Ce sont des constantes statistiques, pas
+  des valeurs réglementaires.
+- **Évaluation MUS** : `SampleEvaluation` (une ligne par évaluation, conservée). Seul le montant
+  audité est saisi ; le montant comptable est relu dans l'échantillon (colonne `ligne` = rang
+  dans la population, première colonne de l'échantillon).
+- **Lignée** : `AnalysisOperation` (entité du modèle de données) est écrite par
+  `lineage.record_operation` à chaque import, vue (création et modification) et analyse. Toute
+  nouvelle façon de produire une table (scripts du lot 9) doit l'appeler. `lineage.lineage`
+  construit le graphe ; `lineage.replay` recalcule la chaîne dans `data_dir/_rejeu/…` puis
+  supprime ces fichiers. Écriture Parquet déterministe : `store.write_frame`.
+- **Macros** : `Macro.entrees` (colonnes et types attendus) et `Macro.etapes` (références
+  `source:i` et `etape:j`). `plan_run` crée les tables en cours, la tâche `auditlab.run_macro`
+  les calcule dans l'ordre (`jobs.execute_analysis`, `macros.build_view`). Les macros ne sont
+  pas rattachées à une mission : toute personne ayant `data:read` les voit.
