@@ -116,3 +116,98 @@ def test_aud18_auditeur_ne_revoit_pas(client, team):
     sign(client, wp, team["aud"], "prepare")
     assert sign(client, wp, team["aud2"], "revu").status_code == 403
     assert sign(client, wp, team["aud2"], "approuve").status_code == 409
+
+
+def note(client, wp, acc, texte="Préciser la taille de l'échantillon", **ancre):
+    return client.post(
+        f"/api/workpapers/{wp['id']}/review-notes",
+        json={"texte": texte, "ancre": ancre or {"champ": "travaux", "citation": "Tests"}},
+        headers=acc.headers,
+    )
+
+
+def test_aud19_notes_de_revue(client, team):
+    wp = ready_workpaper(client, team)
+    resp = note(client, wp, team["chef"])
+    assert resp.status_code == 201
+    n = resp.json()
+    assert n["statut"] == "ouverte" and n["ancre"] == {"champ": "travaux", "citation": "Tests"}
+    assert n["auteur"] == team["chef"].user.nom and n["workpaper_reference"] == "A-1"
+
+    # L'auditrice répond : la note passe à « Répondue ».
+    resp = client.post(
+        f"/api/review-notes/{n['id']}/replies",
+        json={"texte": "Échantillon de 25 sur 312 créations"},
+        headers=team["aud"].headers,
+    )
+    assert resp.json()["statut"] == "repondue"
+    assert resp.json()["reponses"][0]["auteur"] == team["aud"].user.nom
+    # Une relance du réviseur ne change pas le statut.
+    resp = client.post(
+        f"/api/review-notes/{n['id']}/replies",
+        json={"texte": "Merci"},
+        headers=team["chef"].headers,
+    )
+    assert resp.json()["statut"] == "repondue" and len(resp.json()["reponses"]) == 2
+
+    # Seul un réviseur clôture ; une note clôturée n'accepte plus de réponse.
+    assert (
+        client.post(f"/api/review-notes/{n['id']}/close", headers=team["aud"].headers).status_code
+        == 403
+    )
+    resp = client.post(f"/api/review-notes/{n['id']}/close", headers=team["chef"].headers)
+    assert resp.json()["statut"] == "cloturee" and resp.json()["cloturee_le"]
+    assert (
+        client.post(
+            f"/api/review-notes/{n['id']}/replies", json={"texte": "x"}, headers=team["aud"].headers
+        ).status_code
+        == 409
+    )
+    resp = client.post(f"/api/review-notes/{n['id']}/reopen", headers=team["chef"].headers)
+    assert resp.json()["statut"] == "ouverte"
+
+    listed = client.get(f"{team['url']}/review-notes?statut=ouverte", headers=team["aud"].headers)
+    assert [x["id"] for x in listed.json()] == [n["id"]]
+    assert (
+        len(
+            client.get(
+                f"/api/workpapers/{wp['id']}/review-notes", headers=team["aud"].headers
+            ).json()
+        )
+        == 1
+    )
+
+
+def test_aud19_droits_et_ancre(client, team, account):
+    wp = ready_workpaper(client, team)
+    assert note(client, wp, team["aud"]).status_code == 403  # un auditeur ne crée pas de note
+    assert note(client, wp, team["sup"]).status_code == 201  # le superviseur oui
+    assert note(client, wp, team["chef"], champ="inconnu").status_code == 422
+    assert note(client, wp, team["chef"], champ="conclusion").status_code == 201
+    import uuid
+
+    assert (
+        client.post(
+            f"/api/review-notes/{uuid.uuid4()}/close", headers=team["chef"].headers
+        ).status_code
+        == 404
+    )
+    outsider = account(Role.AUDITEUR)
+    n = note(client, wp, team["chef"]).json()
+    assert (
+        client.post(
+            f"/api/review-notes/{n['id']}/replies", json={"texte": "x"}, headers=outsider.headers
+        ).status_code
+        == 404
+    )
+
+
+def test_aud19_approbation_bloquee_par_les_notes(client, team):
+    wp = ready_workpaper(client, team)
+    sign(client, wp, team["aud"], "prepare")
+    sign(client, wp, team["chef"], "revu")
+    n = note(client, wp, team["chef"]).json()
+    r = sign(client, wp, team["chef"], "approuve")
+    assert r.status_code == 409 and "note(s) de revue" in r.json()["detail"]
+    client.post(f"/api/review-notes/{n['id']}/close", headers=team["chef"].headers)
+    assert sign(client, wp, team["chef"], "approuve").status_code == 201

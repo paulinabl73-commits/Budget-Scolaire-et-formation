@@ -639,5 +639,34 @@
     "empreinte": "Empreinte de la version signée",
     "historique": "Historique des signatures",
     "annulee": "annulée le {{date}} : {{motif}}"
+  },
+  "notes": {
+    "titre": "Notes de revue",
+    "nouvelle": "Nouvelle note de revue",
+    "texte": "Note",
+    "champ": "Porte sur",
+    "citation": "Passage cité",
+    "citationAide": "Sélectionnez un passage dans les travaux pour le citer.",
+    "ajouter": "Ajouter la note",
+    "repondre": "Répondre",
+    "reponse": "Votre réponse",
+    "cloturer": "Clôturer",
+    "rouvrir": "Rouvrir",
+    "aucune": "Aucune note de revue.",
+    "enregistree": "Note de revue enregistrée.",
+    "statuts": {
+      "ouverte": "Ouverte",
+      "repondue": "Répondue",
+      "cloturee": "Clôturée"
+    },
+    "champs": {
+      "titre": "Intitulé",
+      "objectif": "Objectif",
+      "travaux": "Travaux réalisés",
+      "conclusion": "Conclusion",
+      "evaluation": "Évaluation",
+      "general": "Le papier en général"
+    },
+    "ouvertes": "{{count}} note(s) non clôturée(s)"
   }
 }

@@ -48,9 +48,11 @@ interface Props {
   missionId: string;
   extraExtensions?: Extensions;
   extraTools?: (editor: NonNullable<ReturnType<typeof useEditor>>) => ReactNode;
+  /** Passage sélectionné, pour citer un extrait dans une note de revue. */
+  onSelectionText?: (text: string) => void;
 }
 
-export default function RichEditor({ value, editable, onChange, images, workpapers, missionId, extraExtensions = [], extraTools }: Props) {
+export default function RichEditor({ value, editable, onChange, images, workpapers, missionId, extraExtensions = [], extraTools, onSelectionText }: Props) {
   const { t } = useTranslation();
   const [panel, setPanel] = useState<"none" | "image" | "link" | "paper">("none");
   const [href, setHref] = useState("https://");
@@ -59,6 +61,10 @@ export default function RichEditor({ value, editable, onChange, images, workpape
     content: value as JSONContent,
     editable,
     onUpdate: ({ editor: e }) => onChange(e.getJSON() as RichDoc),
+    onSelectionUpdate: ({ editor: e }) => {
+      const { from, to } = e.state.selection;
+      onSelectionText?.(e.state.doc.textBetween(from, to, " ").slice(0, 2000));
+    },
     editorProps: {
       attributes: {
         class: "prose-travaux min-h-48 rounded-b-md border border-slate-400 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-marque-600",

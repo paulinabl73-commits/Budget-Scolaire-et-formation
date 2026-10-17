@@ -6,7 +6,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.models.workpaper import ControlAssessment, SignoffType
+from app.models.workpaper import ControlAssessment, ReviewNoteStatus, SignoffType
 
 REFERENCE_PATTERN = r"^[A-Z0-9]{1,6}(-[A-Z0-9]+(\.[0-9]+)*)?$"
 
@@ -139,3 +139,41 @@ class CompareOut(BaseModel):
     de: int
     a: int
     champs: list[FieldDiff]
+
+
+ANCHOR_FIELDS = ("titre", "objectif", "travaux", "conclusion", "evaluation", "general")
+
+
+class Anchor(BaseModel):
+    champ: str = Field(default="travaux", pattern="^(" + "|".join(ANCHOR_FIELDS) + ")$")
+    citation: str | None = Field(default=None, max_length=2000)
+
+
+class ReviewNoteIn(BaseModel):
+    texte: str = Field(min_length=1, max_length=5000)
+    ancre: Anchor = Anchor()
+
+
+class ReplyIn(BaseModel):
+    texte: str = Field(min_length=1, max_length=5000)
+
+
+class ReplyOut(BaseModel):
+    id: uuid.UUID
+    texte: str
+    auteur: str | None
+    created_at: datetime | None
+
+
+class ReviewNoteOut(BaseModel):
+    id: uuid.UUID
+    workpaper_id: uuid.UUID
+    workpaper_reference: str | None = None
+    texte: str
+    ancre: dict[str, Any]
+    statut: ReviewNoteStatus
+    auteur: str | None
+    created_by: uuid.UUID | None
+    created_at: datetime | None
+    cloturee_le: datetime | None
+    reponses: list[ReplyOut] = []

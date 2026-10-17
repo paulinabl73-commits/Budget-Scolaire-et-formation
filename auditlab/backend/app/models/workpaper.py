@@ -118,3 +118,32 @@ class Signoff(TrackedMixin, Base):
     motif_annulation: Mapped[str | None] = mapped_column(String(300), nullable=True)
 
     user: Mapped[User] = relationship(foreign_keys=[user_id], viewonly=True)
+
+
+class ReviewNoteStatus(StrEnum):
+    OUVERTE = "ouverte"
+    REPONDUE = "repondue"
+    CLOTUREE = "cloturee"
+
+
+class ReviewNote(TrackedMixin, Base):
+    """Note de revue ancrée sur un passage d'un papier (AUD-19)."""
+
+    __tablename__ = "review_notes"
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    workpaper_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("workpapers.id"), index=True)
+    texte: Mapped[str] = mapped_column(Text)
+    # Ancre : champ concerné et passage cité, ex. {"champ": "travaux", "citation": "…"}.
+    ancre: Mapped[dict[str, Any]] = mapped_column(JSONB)
+    statut: Mapped[str] = mapped_column(String(20), default=ReviewNoteStatus.OUVERTE.value)
+    cloturee_par: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    cloturee_le: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class ReviewNoteReply(TrackedMixin, Base):
+    __tablename__ = "review_note_replies"
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    note_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("review_notes.id"), index=True)
+    texte: Mapped[str] = mapped_column(Text)

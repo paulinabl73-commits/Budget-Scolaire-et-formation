@@ -381,3 +381,19 @@ export interface FieldDiff {
   modifie: boolean;
   segments: { type: "egal" | "ajoute" | "supprime"; texte: string }[];
 }
+
+export type ReviewNoteStatus = "ouverte" | "repondue" | "cloturee";
+
+export interface ReviewNote {
+  id: string;
+  workpaper_id: string;
+  workpaper_reference: string | null;
+  texte: string;
+  ancre: { champ: string; citation: string | null };
+  statut: ReviewNoteStatus;
+  auteur: string | null;
+  created_by: string | null;
+  created_at: string | null;
+  cloturee_le: string | null;
+  reponses: { id: string; texte: string; auteur: string | null; created_at: string | null }[];
+}

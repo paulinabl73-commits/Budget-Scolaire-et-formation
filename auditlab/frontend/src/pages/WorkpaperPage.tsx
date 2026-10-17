@@ -4,10 +4,13 @@ import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 
 import { api, patch } from "../api/client";
-import type { Attachment, ControlAssessment, RichDoc, Tickmark, Workpaper, WorkpaperSummary } from "../api/types";
+import type { Attachment, ControlAssessment, Engagement, RichDoc, Tickmark, Workpaper, WorkpaperSummary } from "../api/types";
+import { useAuth } from "../auth/AuthContext";
+import { can, PERM } from "../lib/permissions";
 import Alert from "../components/Alert";
 import AttachmentsPanel from "../components/workpaper/AttachmentsPanel";
 import RichEditor from "../components/workpaper/RichEditor";
+import ReviewNotesPanel from "../components/workpaper/ReviewNotesPanel";
 import SignoffsPanel from "../components/workpaper/SignoffsPanel";
 import { TickmarkNode } from "../components/workpaper/tickmark";
 import VersionsPanel from "../components/workpaper/VersionsPanel";
@@ -25,6 +28,9 @@ export default function WorkpaperPage() {
   const [travaux, setTravaux] = useState<RichDoc>({ type: "doc", content: [] });
   const [siblings, setSiblings] = useState<WorkpaperSummary[]>([]);
   const [tickmarks, setTickmarks] = useState<Tickmark[]>([]);
+  const [selection, setSelection] = useState("");
+  const [mission, setMission] = useState<Engagement | null>(null);
+  const { user } = useAuth();
   const [message, setMessage] = useState<{ kind: "erreur" | "succes"; text: string } | null>(null);
 
   const apply = (w: Workpaper, files: Attachment[]) => {
@@ -48,6 +54,7 @@ export default function WorkpaperPage() {
     apply(w, files);
     setSiblings((await api<WorkpaperSummary[]>(`/engagements/${w.engagement_id}/workpapers`)).filter((x) => x.id !== w.id));
     setTickmarks(await api<Tickmark[]>("/tickmarks"));
+    setMission(await api<Engagement>(`/engagements/${w.engagement_id}`));
   }, [wpId, loadAttachments]);
   useEffect(() => {
     load().catch((e: Error) => setMessage({ kind: "erreur", text: e.message }));
@@ -99,7 +106,7 @@ export default function WorkpaperPage() {
         <div>
           <p className="etiquette mb-1">{t("papiers.travaux")}</p>
           <RichEditor value={travaux} editable={!ro} onChange={setTravaux} images={attachments}
-            workpapers={siblings} missionId={wp.engagement_id} extraExtensions={[TickmarkNode]}
+            workpapers={siblings} missionId={wp.engagement_id} extraExtensions={[TickmarkNode]} onSelectionText={setSelection}
             extraTools={(editor) => (
               <select aria-label={t("marques.inserer")} className="rounded border border-slate-300 px-1 py-1 text-sm" value=""
                 onChange={(e) => {
@@ -125,6 +132,12 @@ export default function WorkpaperPage() {
         </div>
         {!ro && <button type="submit" className="btn-primaire">{t("commun.enregistrer")}</button>}
       </form>
+      {mission && (
+        <ReviewNotesPanel workpaperId={wp.id} selection={selection} onChange={() => void load()}
+          isMember={mission.mon_role !== null}
+          isReviewer={mission.statut !== "cloturee" && (mission.mon_role === "chef_mission" || mission.mon_role === "superviseur" ||
+            (can(user?.permissions, PERM.MISSIONS_READ_ALL) && can(user?.permissions, "workpapers:approve_final")))} />
+      )}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <AttachmentsPanel workpaperId={wp.id} attachments={attachments} editable={!ro} onChange={() => void loadAttachments()} />
         <VersionsPanel workpaperId={wp.id} current={wp.version} />
