@@ -1287,7 +1287,7 @@
     "ouvrir": "Demander un report d'échéance"
   },
   "portail": {
-    "titre": "Bonjour {{nom}}",
+    "titre": "Bienvenue, {{nom}}",
     "intro": "Vous trouverez ici les constats d'audit qui vous sont adressés et vos plans d'action.",
     "aRepondre": "{{n}} constat(s) attend(ent) votre réponse.",
     "mesConstats": "Mes constats",

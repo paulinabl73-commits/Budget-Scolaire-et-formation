@@ -126,7 +126,7 @@ export default function PortalFindingPage() {
       ) : f.reponse_position && (
         <section className="carte text-sm">
           <h2 className="etiquette">{t("portail.reponseEnvoyee")}</h2>
-          <p className="font-medium">{t(`contradictoire.positions.${f.reponse_position}`)}</p>
+          <p className="font-medium">{t(`portail.positions.${f.reponse_position}`, { defaultValue: t(`contradictoire.positions.${f.reponse_position}`) })}</p>
           {f.reponse_commentaire && <p className="whitespace-pre-line">{f.reponse_commentaire}</p>}
         </section>
       )}

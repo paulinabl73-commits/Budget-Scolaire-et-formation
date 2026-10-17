@@ -9,13 +9,35 @@
 | 5 | Import de données : DAT-01 à DAT-08 | **Livré** |
 | 6 | Analyses : DAT-09 à DAT-19 | **Livré** |
 | 7 | Échantillonnage et lignée : DAT-20 à DAT-25 | **Livré** |
-| 8 | Liaison audit et analyse, constats : DAT-30 à DAT-32, CON-01 à CON-09 | À faire |
+| 8 | Liaison audit et analyse, constats : DAT-30 à DAT-32, CON-01 à CON-09 | **Livré** |
 | 8a | Référentiels et balance : REV-01 à REV-14 | À faire |
 | 8b | Révision et états : REV-15 à REV-28, CIP-01 à CIP-09, IFR-01 à IFR-04 | À faire |
 | 8c | Portefeuille et contrôles : RCO-01 à RCO-10 | À faire |
 | 8d | Inventaire, fiscalité et livrables : RCO-11 à RCO-27 | À faire |
 | 9 | Scripts et automatisation : DAT-26 à DAT-29 | À faire |
 | 10 | Reporting et finitions : REP-01 à REP-08, NF-09 à NF-11 | À faire |
+
+## Lot 8 — détail
+
+**Livré** (un commit par exigence ; CON-01 et CON-02 ensemble, même modèle et même écran)
+- **DAT-30** : table de résultat, historique et graphique joints au papier de travail.
+- **DAT-31** : lignes d'anomalie cochées dans la grille → constat, avec les lignes en preuve
+  (chaque ligne vérifiée dans la table).
+- **DAT-32** : export Excel et CSV de la table ou de la sélection, journalisé.
+- **CON-01 / CON-02** : fiche constat en cinq volets, criticité sur quatre niveaux,
+  rattachement au risque, au contrôle et aux papiers sources.
+- **CON-03** : preuves (papiers, pièces jointes, résultats d'analyse) avec empreinte figée.
+- **CON-04** : phase contradictoire (envoi, réponse motivée et plan proposé, validation).
+- **CON-05** : plans d'action et leurs statuts.
+- **CON-06** : relances à J-15, à l'échéance, puis toutes les deux semaines.
+- **CON-07** : justificatifs déposés par l'audité, vérification ou rejet motivé.
+- **CON-08** : reports d'échéance validés par le chef de mission, avec historique.
+- **CON-09** : portail audité limité à ses constats et plans d'action.
+- Changements signalés d'exigences livrées : passage en « Rapport » conditionné à la
+  validation de tous les constats (AUD-07, AUD-21) ; liste des missions refusée (403) aux
+  rôles sans droit de lecture des missions (AUD-06).
+- Tests : 361 tests backend. Parcours lignes → constat → envoi → réponse de l'audité depuis
+  son portail → validation par le chef rejoué dans un navigateur.
 
 ## Lot 7 — détail
 

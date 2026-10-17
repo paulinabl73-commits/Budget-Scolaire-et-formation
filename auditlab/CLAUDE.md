@@ -17,7 +17,9 @@ auditlab/
                       workpapers.py, attachments.py, tickmarks.py, signoffs.py,
                       review_notes.py, notifications.py = lot 4
                       datasets.py, imports.py, views.py = lot 5 ; analyses.py = lot 6 ;
-                      sampling.py, macros.py = lot 7
+                      sampling.py, macros.py = lot 7 ;
+                      data_links.py, findings.py, evidence.py, contradictory.py,
+                      action_plans.py, portal.py = lot 8
       analytics/      Module 2 : store.py (Parquet, DuckDB), formats.py, detect.py, pdf.py,
                       sql_source.py, jobs.py (tâches Celery), expr.py (expressions),
                       relation.py (relation SQL d'une table ou d'une vue), grid.py,
@@ -30,7 +32,7 @@ auditlab/
       schemas_plan.py schémas Pydantic du lot 2 ; schemas_mission.py (lot 3) ; schemas_workpaper.py (lot 4)
       richtext.py     documents riches (validation, texte brut) ; workpaper_versions.py (versions, diff)
       storage.py      stockage des fichiers (local ou S3) ; signing.py (liens signés)
-      notify.py       notifications et file d'e-mails
+      notify.py       notifications et file d'e-mails ; followup.py (relances des plans, lot 8)
       cli.py          commandes d'exploitation
     alembic/versions/ migrations
     tests/            pytest (base PostgreSQL réelle)
@@ -256,3 +258,26 @@ docker compose up -d --build
   `source:i` et `etape:j`). `plan_run` crée les tables en cours, la tâche `auditlab.run_macro`
   les calcule dans l'ordre (`jobs.execute_analysis`, `macros.build_view`). Les macros ne sont
   pas rattachées à une mission : toute personne ayant `data:read` les voit.
+
+### Lot 8 — liaison audit et analyse, constats
+
+- **Données jointes** (`WorkpaperDataLink`) : lignée et graphique figés au moment du lien ;
+  joindre ou retirer appelle `signoffs.invalidate`.
+- **Export** (`analytics/export.py`) : CSV écrit par DuckDB (virgule décimale obtenue en
+  convertissant les nombres en texte), Excel par openpyxl avec feuille « Informations ».
+- **Constats** (`models/finding.py`) : `Finding` (statuts brouillon → envoye → repondu →
+  valide), `FindingEvidence` (papier, pièce jointe, table, lignes), `ActionPlan`,
+  `PlanEvidence`, `Postponement`. Écriture : membres auditeur ou chef de la mission
+  (`findings.require_writer`). Texte modifiable en brouillon et après réponse seulement.
+- **Plans d'action** : pas d'`engagement_id`, pour que le suivi continue après la clôture ;
+  droits vérifiés par `action_plans.plan_context` (équipe de la mission, ou audité
+  responsable / destinataire). Transitions : `action_plans.transitions`.
+- **Garde ajoutée** : `GUARDS[RAPPORT]` exige tous les constats validés (`contradictory.py`).
+- **Relances** : `followup.send_reminders`, appelé chaque jour par `python -m app.cli
+  send-reminders` ou par la tâche planifiée `auditlab.daily_followup` (worker lancé avec
+  `--beat`). Délais dans `config.py`.
+- **Portail audité** (`api/portal.py`, `pages/portal/`) : l'accueil d'un utilisateur de rôle
+  « audite » est son portail. Ne jamais exposer à l'audité une route qui ne vérifie pas qu'il
+  est destinataire ou responsable.
+- **Tests** : `tests/finding_helpers.py` (fixture `team` avec risque, contrôle, papier et
+  audité ; `create_finding`).

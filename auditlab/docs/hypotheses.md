@@ -16,6 +16,31 @@ Le document de synthèse partageable reprend ce fichier.
 - Fichiers stockés hors base, dans un stockage compatible S3 (SeaweedFS ; MinIO n'étant plus distribué en image publique) chiffré au repos.
   Téléchargements journalisés ; liens signés valides une heure pour l'affichage des images.
 
+## Module 3 — constats et suivi
+
+### Lot 8
+- Constat en cinq volets (critère, constat, cause, conséquence, recommandation), norme IIA
+  2410 ; criticité sur quatre niveaux ; constats triés par criticité décroissante (ordre du
+  rapport).
+- Phase contradictoire : délai de réponse de 15 jours calendaires par défaut (paramétrable) ;
+  désaccord, même partiel, obligatoirement motivé ; sans réponse dans le délai, le chef de
+  mission peut valider et le rapport mentionnera l'absence de réponse.
+- Le texte du constat est figé pendant l'attente de la réponse ; l'équipe peut l'ajuster après
+  la réponse, avant validation ; après validation, constat et preuves sont figés.
+- La mission ne passe en « Rapport » que si tous ses constats sont validés.
+- Plans d'action : le responsable (ou l'audité) les fait avancer jusqu'à « Réalisé » ; seul
+  l'audit les vérifie (IIA 2500) ; seul le chef de mission ou le Directeur enregistre une
+  acceptation de risque, avec justification. Le suivi continue après la clôture de la mission.
+- Relances : J-15, échéance, puis tous les 14 jours de retard ; le chef de mission est en copie
+  des retards ; un report accepté relance le calendrier.
+- Report d'échéance : une demande à la fois, décidée par le chef de mission ou le Directeur.
+- Portail audité : l'audité ne voit que les constats qui lui sont adressés ou dont il porte un
+  plan, jamais les brouillons, ni papiers, ni données, ni preuves internes.
+- Lignes d'anomalie en preuve : 200 lignes au plus par preuve ; chaque ligne est recherchée
+  dans la table pour garantir qu'elle n'a pas été fabriquée.
+- Export Excel limité à 1 048 575 lignes (limite d'Excel) ; au-delà, CSV. Chaque export est
+  journalisé.
+
 ## Module 2 — analyse de données
 
 ### Lot 5
