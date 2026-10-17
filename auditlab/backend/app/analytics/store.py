@@ -65,13 +65,19 @@ def schema_of(df: pl.DataFrame) -> list[dict[str, Any]]:
 def write_table(df: pl.DataFrame, engagement_id: uuid.UUID) -> Written:
     """Écrit une table neuve et la rend non modifiable."""
     relative = f"{engagement_id}/{uuid.uuid4()}.parquet"
+    path = write_frame(df, relative)
+    os.chmod(path, 0o444)
+    return Written(relative, df.height, df.width, schema_of(df))
+
+
+def write_frame(df: pl.DataFrame, relative: str) -> Path:
+    """Écriture Parquet déterministe : mêmes données, mêmes octets (NF-04)."""
     path = absolute(relative)
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".tmp")
     df.write_parquet(tmp, compression="zstd", statistics=True)
     tmp.rename(path)
-    os.chmod(path, 0o444)
-    return Written(relative, df.height, df.width, schema_of(df))
+    return path
 
 
 def write_duckdb_query(

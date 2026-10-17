@@ -99,3 +99,19 @@ class SampleEvaluation(TrackedMixin, Base):
     erreur_tolerable: Mapped[str | None] = mapped_column(String(40), nullable=True)
     erreurs: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
     resultat: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
+
+
+class AnalysisOperation(TrackedMixin, Base):
+    """Opération qui a produit une table (import, vue, analyse, script) : forme la lignée
+    (DAT-24). Une ligne par exécution ; la plus récente d'une table fait foi."""
+
+    __tablename__ = "analysis_operations"
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    type: Mapped[str] = mapped_column(String(40))  # import, vue, ou code d'analyse
+    parametres: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
+    entrees: Mapped[list[str]] = mapped_column(JSONB, default=list)  # ids des tables d'entrée
+    sortie_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("datasets.id"), index=True)
+    statut: Mapped[str] = mapped_column(String(20))
+    duree_ms: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    empreinte: Mapped[str | None] = mapped_column(String(64), nullable=True)

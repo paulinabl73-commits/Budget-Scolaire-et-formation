@@ -7,6 +7,7 @@ from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, Field
 
 from app.analytics.expr import FUNCTION_NAMES, ExprError, compile_expression
+from app.analytics.lineage import record_operation
 from app.analytics.relation import Relation, RelationError, evaluate, extend, relation
 from app.analytics.store import quote_ident
 from app.api.datasets import dataset_out, get_dataset, require_analyst
@@ -131,6 +132,8 @@ def create_view(
         definition={"champs": [c.model_dump() for c in body.champs], "valeurs_vides": vides},
     )
     db.add(view)
+    db.flush()
+    record_operation(db, view, "vue", {"champs": view.definition["champs"]}, [str(parent.id)])
     db.commit()
     return dataset_out(view)
 
@@ -153,6 +156,7 @@ def update_view(
     view.schema = rel.schema
     view.nb_colonnes = len(rel.schema)
     view.definition = {"champs": [c.model_dump() for c in body.champs], "valeurs_vides": vides}
+    record_operation(db, view, "vue", {"champs": view.definition["champs"]}, [str(parent.id)])
     db.commit()
     return dataset_out(view)
 

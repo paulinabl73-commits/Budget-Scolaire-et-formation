@@ -6,6 +6,7 @@ import uuid
 from pathlib import Path
 
 from app.analytics.formats import ImportFailure, ReadOptions, apply_types, read_source
+from app.analytics.lineage import record_operation
 from app.analytics.store import control_totals, file_sha256, write_table
 from app.audit.listeners import set_actor
 from app.db import SessionLocal
@@ -58,6 +59,7 @@ def import_dataset(dataset_id: str) -> str:
             ds.parquet_sha256 = file_sha256(written.chemin)
             ds.statut, ds.erreur = DatasetStatus.PRET.value, None
         ds.duree_ms = int((time.perf_counter() - start) * 1000)
+        record_operation(db, ds, "import", ds.options, [], ds.duree_ms)
         db.commit()
         return ds.statut
 
@@ -96,5 +98,8 @@ def run_analysis(dataset_id: str) -> str:
             ds.parquet_sha256 = file_sha256(written.chemin)
             ds.statut, ds.erreur = DatasetStatus.PRET.value, None
         ds.duree_ms = int((time.perf_counter() - start) * 1000)
+        record_operation(
+            db, ds, ds.operation, ds.definition["parametres"], ds.definition["entrees"], ds.duree_ms
+        )
         db.commit()
         return ds.statut

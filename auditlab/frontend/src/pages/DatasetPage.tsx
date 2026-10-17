@@ -11,6 +11,7 @@ import CalculatedFields from "../components/data/CalculatedFields";
 import ControlSheet from "../components/data/ControlSheet";
 import DataGrid from "../components/data/DataGrid";
 import FieldStats from "../components/data/FieldStats";
+import LineageGraph from "../components/data/LineageGraph";
 import MusEvaluation from "../components/data/MusEvaluation";
 import type { GridQuery } from "../components/data/FieldStats";
 import { useAuth } from "../auth/AuthContext";
@@ -61,6 +62,7 @@ export default function DatasetPage() {
       {ds.statut === "en_cours" && <Alert kind="succes">{t("analyses.enCours")}</Alert>}
       {ds.statut === "erreur" && <Alert kind="erreur">{ds.erreur}</Alert>}
       {ds.kind !== "vue" && ds.statut === "pret" && <ControlSheet ds={ds} />}
+      {ds.statut === "pret" && <LineageGraph key={`l-${ds.id}`} ds={ds} />}
       {ds.statut === "pret" && <DataGrid key={ds.id} ds={ds} onColumnFocus={setColumn} onQuery={onQuery} />}
       {ds.statut === "pret" && ds.schema.length > 0 && (
         <FieldStats ds={ds} column={column ?? ds.schema[0].nom} query={query} onColumn={setColumn} />

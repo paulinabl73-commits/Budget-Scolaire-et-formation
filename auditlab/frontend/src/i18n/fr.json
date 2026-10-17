@@ -1110,5 +1110,13 @@
       "acceptable": "La limite supérieure d'erreur ({{limite}}) ne dépasse pas l'erreur tolérable ({{tolerable}}) : la population peut être acceptée.",
       "non_acceptable": "La limite supérieure d'erreur ({{limite}}) dépasse l'erreur tolérable ({{tolerable}}) : la population ne peut pas être acceptée en l'état."
     }
+  },
+  "lignee": {
+    "titre": "Lignée de la table",
+    "graphe": "Graphe des opérations depuis la source",
+    "rejouer": "Rejouer depuis la source",
+    "rejeuEnCours": "Rejeu en cours…",
+    "identique": "Rejeu conforme : les {{n}} étapes recalculées depuis le fichier source redonnent les mêmes empreintes.",
+    "different": "Écart au rejeu : l'empreinte recalculée diffère pour {{tables}}."
   }
 }

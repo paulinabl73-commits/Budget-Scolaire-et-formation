@@ -1,6 +1,7 @@
 from app.models.audit_log import AuditLog
 from app.models.base import Base, TrackedMixin
 from app.models.data import (
+    AnalysisOperation,
     Dataset,
     DatasetKind,
     DatasetStatus,
@@ -51,6 +52,7 @@ from app.models.workpaper import (
 )
 
 __all__ = [
+    "AnalysisOperation",
     "Attachment",
     "SampleEvaluation",
     "AuditLog",

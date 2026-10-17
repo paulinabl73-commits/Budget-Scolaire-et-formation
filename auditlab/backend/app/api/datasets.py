@@ -100,3 +100,37 @@ def verify_integrity(dataset_id: uuid.UUID, user: CurrentUser, db: DbSession) ->
         source_sha256=ds.source_sha256,
         parquet_sha256=ds.parquet_sha256,
     )
+
+
+@router.get("/datasets/{dataset_id}/lineage")
+def read_lineage(dataset_id: uuid.UUID, user: CurrentUser, db: DbSession) -> dict:
+    """DAT-24 : chaîne complète des opérations depuis la ou les sources."""
+    from app.analytics.lineage import lineage
+
+    ds, _ = get_dataset(db, dataset_id, user)
+    return lineage(db, ds)
+
+
+@router.post("/datasets/{dataset_id}/replay")
+def replay_lineage(dataset_id: uuid.UUID, user: CurrentUser, db: DbSession) -> dict:
+    """NF-04 : rejoue la lignée depuis les sources et compare les empreintes."""
+    from app.analytics.lineage import replay
+    from app.analytics.relation import RelationError
+    from app.audit.listeners import record_event
+
+    ds, _ = get_dataset(db, dataset_id, user)
+    if ds.statut != "pret":
+        raise HTTPException(status.HTTP_409_CONFLICT, "La table n'est pas prête")
+    try:
+        result = replay(db, ds)
+    except (RelationError, ValueError) as exc:
+        result = {"identique": False, "etapes": [], "erreur": str(exc)}
+    record_event(
+        db,
+        "dataset_replayed",
+        object_type="Dataset",
+        object_id=ds.id,
+        details={"identique": result["identique"]},
+    )
+    db.commit()
+    return result
