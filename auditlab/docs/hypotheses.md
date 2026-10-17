@@ -13,7 +13,7 @@ Le document de synthèse partageable reprend ce fichier.
   secrets masqués (NF-01, NF-02).
 - Suppression logique uniquement (NF-03).
 - Adresses e-mail : validation souple pour accepter les domaines internes (.local).
-- Fichiers stockés hors base, dans un stockage compatible S3 (MinIO) chiffré au repos.
+- Fichiers stockés hors base, dans un stockage compatible S3 (SeaweedFS ; MinIO n'étant plus distribué en image publique) chiffré au repos.
   Téléchargements journalisés ; liens signés valides une heure pour l'affichage des images.
 
 ## Module 2 — analyse de données

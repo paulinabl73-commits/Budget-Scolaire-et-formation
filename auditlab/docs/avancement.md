@@ -60,7 +60,7 @@
   conclusion et évaluation du contrôle.
 - **AUD-14** : éditeur riche (titres, listes, tableaux, images jointes, liens vers les autres
   papiers), avec validation serveur du contenu.
-- **AUD-15** : pièces jointes jusqu'à 100 Mo (stockage local ou MinIO, empreinte SHA-256,
+- **AUD-15** : pièces jointes jusqu'à 100 Mo (stockage local ou S3, empreinte SHA-256,
   versions par nom de fichier, liens signés). Le lien vers les résultats d'analyse viendra au
   lot 8 (DAT-30).
 - **AUD-16** : marques de révision paramétrables, insérées dans le texte et les tableaux, avec
@@ -155,7 +155,7 @@
 
 **Reste ouvert**
 - SSO OIDC (Azure AD, Keycloak), optionnel, pas encore branché.
-- Redis, Celery et MinIO : à ajouter au Compose à partir des lots 5 et 9, quand ils servent.
+- Redis, Celery et le stockage S3 sont dans le Compose depuis les lots 4 et 5.
 - Les changements d'appartenance aux équipes (table d'association) ne sont pas encore
   journalisés champ à champ.
 - Tests de bout en bout Playwright : à écrire au fil des lots, pour le scénario de la section 13.

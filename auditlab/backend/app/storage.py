@@ -1,4 +1,4 @@
-"""Stockage des fichiers : disque local ou service compatible S3 (MinIO).
+"""Stockage des fichiers : disque local ou service compatible S3 (SeaweedFS sous Docker).
 
 Les objets ne sont jamais réécrits : chaque dépôt reçoit une clé neuve (pièces jointes et
 rapports versionnés). L'empreinte SHA-256 et la taille sont calculées pendant la copie.

@@ -27,14 +27,14 @@ auditlab/
       risk_scoring.py calcul du score de risque (fonctions pures, testées seules)
       schemas_plan.py schémas Pydantic du lot 2 ; schemas_mission.py (lot 3) ; schemas_workpaper.py (lot 4)
       richtext.py     documents riches (validation, texte brut) ; workpaper_versions.py (versions, diff)
-      storage.py      stockage des fichiers (local ou S3/MinIO) ; signing.py (liens signés)
+      storage.py      stockage des fichiers (local ou S3) ; signing.py (liens signés)
       notify.py       notifications et file d'e-mails
       cli.py          commandes d'exploitation
     alembic/versions/ migrations
     tests/            pytest (base PostgreSQL réelle)
   frontend/           React 18, TypeScript, Vite, Tailwind, AG Grid
     src/i18n/fr.json  TOUS les textes de l'interface (NF-13)
-  docker-compose.yml  db + minio + redis + backend + worker (Celery) + frontend (nginx, proxy /api)
+  docker-compose.yml  db + stockage (SeaweedFS, S3) + redis + backend + worker (Celery) + frontend (nginx, proxy /api)
 ```
 
 ## Commandes
@@ -165,7 +165,7 @@ docker compose up -d --build
 - **TipTap** : tous les paquets `@tiptap/*` sont à la même version exacte. Mélanger les
   versions casse le build Vite.
 - **Fichiers** : `storage.get_storage()` renvoie le disque local (développement, tests) ou un
-  stockage S3 (MinIO sous Docker, chiffrement SSE). Les clés ne sont jamais réutilisées.
+  stockage S3 (SeaweedFS sous Docker, chiffrement SSE-S3). Les clés ne sont jamais réutilisées.
   `AUDITLAB_SECRET_KEY` signe les liens de téléchargement (valides 1 h).
 - **Versions** : `workpaper_versions` est en ajout seul (déclencheurs SQL). La version et son
   empreinte servent aux signatures.

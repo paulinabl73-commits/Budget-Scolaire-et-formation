@@ -17,20 +17,29 @@ services:
     restart: unless-stopped
 
   # Stockage compatible S3 des pièces jointes et rapports, chiffré au repos (SSE, NF-06).
-  minio:
-    image: minio/minio:RELEASE.2024-12-18T13-15-44Z
-    command: server /data --console-address ":9001"
+  # Stockage des fichiers compatible S3 (SeaweedFS) : chiffrement des objets (SSE-S3, clé KEK)
+  # et des volumes ; un seul compte d'accès, celui de l'application.
+  stockage:
+    image: chrislusf/seaweedfs:4.48
+    entrypoint: ["sh", "-c"]
+    command:
+      - >-
+        printf '{"identities":[{"name":"auditlab","credentials":[{"accessKey":"%s","secretKey":"%s"}],"actions":["Admin","Read","Write","List","Tagging"]}]}'
+        "$$S3_ACCESS_KEY" "$$S3_SECRET_KEY" > /tmp/s3.json &&
+        exec weed server -dir=/data -s3 -s3.config=/tmp/s3.json -filer.encryptVolumeData -volume.max=0
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-auditlab}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-auditlab-minio}
-      MINIO_KMS_SECRET_KEY: ${MINIO_KMS_SECRET_KEY:-auditlab-key:IyqsU3kMFloCNup4BsZtf/rmfHVcTgznO2F25CkEH1g=}
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY:-auditlab}
+      S3_SECRET_KEY: ${S3_SECRET_KEY:-auditlab-stockage}
+      # Clé de chiffrement des clés d'objets : 32 octets en hexadécimal (openssl rand -hex 32).
+      WEED_S3_SSE_KEK: ${S3_SSE_KEK:-5f1d9c0a7b3e4d2f8a6c1e0b9d7f3a2c4e6b8d0f1a3c5e7b9d2f4a6c8e0b1d3f}
+      WEED_JWT_FILER_SIGNING_KEY: ${S3_SIGNING_KEY:-auditlab-signature-a-changer}
     volumes:
       - files:/data
     healthcheck:
-      test: ["CMD", "mc", "ready", "local"]
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8333/healthz"]
       interval: 5s
       timeout: 3s
-      retries: 20
+      retries: 30
     restart: unless-stopped
 
   # File de tâches des imports et analyses longues (Celery).
@@ -50,9 +59,9 @@ services:
       AUDITLAB_CORS_ORIGINS: '["http://localhost:8080"]'
       AUDITLAB_SECRET_KEY: ${AUDITLAB_SECRET_KEY:-dev-change-me-00000000000000000000000000000000}
       AUDITLAB_STORAGE_BACKEND: s3
-      AUDITLAB_S3_ENDPOINT: http://minio:9000
-      AUDITLAB_S3_ACCESS_KEY: ${MINIO_ROOT_USER:-auditlab}
-      AUDITLAB_S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-auditlab-minio}
+      AUDITLAB_S3_ENDPOINT: http://stockage:8333
+      AUDITLAB_S3_ACCESS_KEY: ${S3_ACCESS_KEY:-auditlab}
+      AUDITLAB_S3_SECRET_KEY: ${S3_SECRET_KEY:-auditlab-stockage}
       AUDITLAB_REDIS_URL: redis://redis:6379/0
       AUDITLAB_TASKS_EAGER: "false"
       AUDITLAB_DATA_DIR: /data/datasets
@@ -61,7 +70,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      minio:
+      stockage:
         condition: service_healthy
       redis:
         condition: service_healthy
@@ -79,9 +88,9 @@ services:
     environment:
       AUDITLAB_DATABASE_URL: postgresql+psycopg://auditlab:${POSTGRES_PASSWORD:-auditlab}@db:5432/auditlab
       AUDITLAB_STORAGE_BACKEND: s3
-      AUDITLAB_S3_ENDPOINT: http://minio:9000
-      AUDITLAB_S3_ACCESS_KEY: ${MINIO_ROOT_USER:-auditlab}
-      AUDITLAB_S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-auditlab-minio}
+      AUDITLAB_S3_ENDPOINT: http://stockage:8333
+      AUDITLAB_S3_ACCESS_KEY: ${S3_ACCESS_KEY:-auditlab}
+      AUDITLAB_S3_SECRET_KEY: ${S3_SECRET_KEY:-auditlab-stockage}
       AUDITLAB_REDIS_URL: redis://redis:6379/0
       AUDITLAB_TASKS_EAGER: "false"
       AUDITLAB_DATA_DIR: /data/datasets

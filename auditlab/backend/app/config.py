@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     cors_origins: list[str] = ["http://localhost:5173"]
     # Clé de signature des liens de téléchargement ; à fixer en production (32 octets aléatoires).
     secret_key: str = "dev-change-me-" + "0" * 32
-    # Stockage des fichiers (AUD-15) : "local" (disque) ou "s3" (MinIO ou compatible S3).
+    # Stockage des fichiers (AUD-15) : "local" (disque) ou "s3" (SeaweedFS ou autre service compatible S3).
     storage_backend: str = "local"
     storage_dir: str = "/tmp/auditlab-files"  # noqa: S108
     s3_endpoint: str | None = None
