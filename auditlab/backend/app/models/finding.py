@@ -89,3 +89,41 @@ class FindingEvidence(TrackedMixin, Base):
     empreinte: Mapped[str | None] = mapped_column(String(64), nullable=True)
     extrait: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
     commentaire: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+
+class ActionPlanStatus(StrEnum):
+    """CON-05 : statuts d'un plan d'action."""
+
+    A_LANCER = "a_lancer"
+    EN_COURS = "en_cours"
+    REALISE = "realise"  # déclaré réalisé par le responsable, à vérifier
+    VERIFIE = "verifie"  # vérifié par l'audit (CON-07)
+    RISQUE_ACCEPTE = "risque_accepte"
+
+
+CLOSED_PLAN_STATUSES = (ActionPlanStatus.VERIFIE.value, ActionPlanStatus.RISQUE_ACCEPTE.value)
+
+
+class ActionPlan(TrackedMixin, Base):
+    """Plan d'action d'un constat (CON-05).
+
+    Pas de colonne engagement_id : le suivi des plans se poursuit après la clôture de la
+    mission (norme IIA 2500), alors que la mission clôturée est verrouillée.
+    """
+
+    __tablename__ = "action_plans"
+
+    finding_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("findings.id"), index=True)
+    description: Mapped[str] = mapped_column(Text)
+    responsable_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("users.id"), nullable=True, index=True
+    )
+    responsable_nom: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    echeance: Mapped[dt.date] = mapped_column(Date)
+    statut: Mapped[str] = mapped_column(String(20), default=ActionPlanStatus.A_LANCER.value)
+    propose_par_audite: Mapped[bool] = mapped_column(default=False)
+    commentaire: Mapped[str | None] = mapped_column(Text, nullable=True)
+    verifie_le: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    verifie_par: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    # CON-06 : relances envoyées ({"type": "j15" | "echeance" | "retard", "date": …}).
+    relances: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)

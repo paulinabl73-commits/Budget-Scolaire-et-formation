@@ -173,3 +173,18 @@ def delete_finding(finding_id: uuid.UUID, user: CurrentUser, db: DbSession) -> N
         raise HTTPException(status.HTTP_409_CONFLICT, "Seul un constat en brouillon se supprime")
     finding.deleted_at, finding.deleted_by = datetime.now(UTC), user.id
     db.commit()
+
+
+@router.get("/auditees")
+def list_auditees(user: CurrentUser, db: DbSession) -> list[dict]:
+    """Audités actifs, pour désigner le destinataire d'un constat ou le responsable d'un plan."""
+    if not has_permission(user.role, Perm.FINDINGS_WRITE) and not has_permission(
+        user.role, Perm.FINDINGS_VALIDATE
+    ):
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "Droits insuffisants")
+    from app.security.roles import Role
+
+    rows = db.scalars(
+        select(User).where(User.role == Role.AUDITE.value, User.actif.is_(True)).order_by(User.nom)
+    )
+    return [{"id": str(u.id), "nom": u.nom, "email": u.email} for u in rows]

@@ -505,3 +505,30 @@ export interface Finding {
   audite_nom: string | null;
   peut_modifier: boolean;
 }
+
+export interface ActionPlan {
+  id: string;
+  finding_id: string;
+  description: string;
+  responsable_id: string | null;
+  responsable_nom: string | null;
+  echeance: string;
+  statut: "a_lancer" | "en_cours" | "realise" | "verifie" | "risque_accepte";
+  propose_par_audite: boolean;
+  commentaire: string | null;
+  verifie_le: string | null;
+  relances: { type: string; date: string }[];
+  created_at: string | null;
+  responsable: string | null;
+  en_retard: boolean;
+  constat_reference: string | null;
+  constat_titre: string | null;
+  mission_id: string | null;
+  transitions: string[];
+}
+
+export interface Auditee {
+  id: string;
+  nom: string;
+  email: string;
+}

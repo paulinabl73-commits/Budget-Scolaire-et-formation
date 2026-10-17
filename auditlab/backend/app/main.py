@@ -8,6 +8,7 @@ from fastapi.responses import JSONResponse
 
 import app.audit.listeners  # noqa: F401  (enregistre l'écouteur de journalisation)
 from app.api import (
+    action_plans,
     analyses,
     attachments,
     audit_log,
@@ -114,5 +115,6 @@ for router in (
     data_links.router,
     findings.router,
     evidence.router,
+    action_plans.router,
 ):
     app.include_router(router, prefix="/api")

@@ -4,9 +4,12 @@ import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 
 import { api, patch } from "../api/client";
+import { useAuth } from "../auth/AuthContext";
+import { can } from "../lib/permissions";
 import type { Criticality, Finding, Matrix, WorkpaperSummary } from "../api/types";
 import Alert from "../components/Alert";
 import CriticalityBadge from "../components/finding/CriticalityBadge";
+import ActionPlansPanel from "../components/finding/ActionPlansPanel";
 import EvidencePanel from "../components/finding/EvidencePanel";
 import { CRITICITES } from "../components/mission/FindingsTab";
 
@@ -16,6 +19,7 @@ const VOLETS = ["critere", "constat", "cause", "consequence", "recommandation"] 
 export default function FindingPage() {
   const { t } = useTranslation();
   const { id, fid } = useParams();
+  const { user } = useAuth();
   const [finding, setFinding] = useState<Finding | null>(null);
   const [form, setForm] = useState<Partial<Finding>>({});
   const [matrix, setMatrix] = useState<Matrix | null>(null);
@@ -117,6 +121,7 @@ export default function FindingPage() {
       </form>
       <EvidencePanel findingId={finding.id} missionId={finding.engagement_id} papers={papers}
         editable={finding.peut_modifier} />
+      <ActionPlansPanel findingId={finding.id} canCreate={finding.peut_modifier || (finding.statut === "valide" && can(user?.permissions, "findings:write"))} />
     </div>
   );
 }

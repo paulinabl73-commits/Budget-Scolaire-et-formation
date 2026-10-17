@@ -92,3 +92,46 @@ class EvidenceOut(BaseModel):
     created_at: dt.datetime | None = None
     libelle: str | None = None
     empreinte_actuelle: str | None = None
+
+
+class PlanIn(BaseModel):
+    description: str = Field(min_length=1, max_length=10000)
+    responsable_id: uuid.UUID | None = None
+    responsable_nom: str | None = Field(default=None, max_length=200)
+    echeance: dt.date
+
+
+class PlanUpdate(BaseModel):
+    description: str | None = Field(default=None, min_length=1, max_length=10000)
+    responsable_id: uuid.UUID | None = None
+    responsable_nom: str | None = Field(default=None, max_length=200)
+    echeance: dt.date | None = None
+
+
+class PlanStatusIn(BaseModel):
+    statut: str = Field(pattern="^(a_lancer|en_cours|realise|verifie|risque_accepte)$")
+    commentaire: str | None = Field(default=None, max_length=4000)
+
+
+class PlanOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    finding_id: uuid.UUID
+    description: str
+    responsable_id: uuid.UUID | None
+    responsable_nom: str | None
+    echeance: dt.date
+    statut: str
+    propose_par_audite: bool
+    commentaire: str | None
+    verifie_le: dt.datetime | None
+    relances: list[dict[str, Any]]
+    created_at: dt.datetime | None = None
+    # Calculés
+    responsable: str | None = None
+    en_retard: bool = False
+    constat_reference: str | None = None
+    constat_titre: str | None = None
+    mission_id: uuid.UUID | None = None
+    transitions: list[str] = []

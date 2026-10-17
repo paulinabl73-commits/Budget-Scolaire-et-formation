@@ -1214,5 +1214,32 @@
     "titreDefaut": "Anomalies relevées dans « {{table}} »",
     "creer": "Créer le constat avec ces lignes",
     "ajouter": "Ajouter ces lignes en preuve"
+  },
+  "plans": {
+    "titre": "Plans d'action",
+    "aucun": "Aucun plan d'action.",
+    "responsable": "Responsable",
+    "responsableNom": "ou nom du responsable (hors application)",
+    "echeance": "Échéance",
+    "description": "Description",
+    "ajouter": "Ajouter le plan",
+    "retard": "En retard",
+    "proposeAudite": "proposé par l'audité",
+    "justification": "Justification de l'acceptation du risque :",
+    "commentaireRealise": "Commentaire (facultatif) :",
+    "statuts": {
+      "a_lancer": "À lancer",
+      "en_cours": "En cours",
+      "realise": "Réalisé",
+      "verifie": "Vérifié par l'audit",
+      "risque_accepte": "Risque accepté"
+    },
+    "actions": {
+      "a_lancer": "Remettre à lancer",
+      "en_cours": "Passer en cours",
+      "realise": "Déclarer réalisé",
+      "verifie": "Vérifier et clôturer",
+      "risque_accepte": "Accepter le risque"
+    }
   }
 }
