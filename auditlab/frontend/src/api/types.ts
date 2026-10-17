@@ -69,4 +69,43 @@ export interface AuditableEntity {
   responsable: string | null;
   date_dernier_audit: string | null;
   score_risque: number | null;
+  impact: number | null;
+  probabilite: number | null;
+  date_evaluation: string | null;
+}
+
+export type Axis = "impact" | "probabilite" | "autre";
+export type CriterionMode = "note" | "anciennete";
+
+export interface RiskCriterion {
+  id: string;
+  code: string;
+  libelle: string;
+  description: string | null;
+  axe: Axis;
+  mode: CriterionMode;
+  poids: number;
+  ordre: number;
+  actif: boolean;
+}
+
+export interface AssessedCriterion {
+  code: string;
+  libelle: string;
+  axe: Axis;
+  mode: CriterionMode;
+  poids: number;
+  note: number;
+}
+
+export interface RiskAssessment {
+  id: string;
+  entity_id: string;
+  date_evaluation: string;
+  criteres: AssessedCriterion[];
+  score: number;
+  impact: number | null;
+  probabilite: number | null;
+  commentaire: string | null;
+  created_at: string | null;
 }

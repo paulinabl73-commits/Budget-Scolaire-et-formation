@@ -27,3 +27,14 @@ describe("arborescence de l'univers", () => {
     expect(formatDate(null)).toBe("");
   });
 });
+
+describe("évaluation des risques", () => {
+  it("calcule la note d'ancienneté comme le serveur", async () => {
+    const { seniorityNote } = await import("../lib/risk");
+    expect(seniorityNote(null, "2027-01-01")).toBe(5);
+    expect(seniorityNote("2026-06-01", "2027-01-01")).toBe(1);
+    expect(seniorityNote("2025-01-02", "2027-01-01")).toBe(2);
+    expect(seniorityNote("2025-01-01", "2027-01-01")).toBe(3);
+    expect(seniorityNote("2010-01-01", "2027-01-01")).toBe(5);
+  });
+});

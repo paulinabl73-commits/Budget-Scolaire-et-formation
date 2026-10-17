@@ -114,3 +114,26 @@ def account(client: TestClient, make_user: Callable[..., User]) -> Callable[...,
         )
 
     return _account
+
+
+DEFAULT_CRITERIA = [
+    ("IMPACT_FIN", "Impact financier", "impact", "note", 3.0),
+    ("IMPACT_REG", "Impact réglementaire", "impact", "note", 2.0),
+    ("PROBA", "Probabilité", "probabilite", "note", 3.0),
+    ("CTRL_INT", "Contrôle interne", "probabilite", "note", 2.0),
+    ("ANCIENNETE", "Ancienneté", "autre", "anciennete", 1.0),
+]
+
+
+@pytest.fixture
+def criteria(db: Session) -> list:
+    """Critères par défaut (ceux que la migration 0003 installe)."""
+    from app.models import RiskCriterion
+
+    rows = [
+        RiskCriterion(code=c, libelle=lib, axe=axe, mode=mode, poids=poids, ordre=i, actif=True)
+        for i, (c, lib, axe, mode, poids) in enumerate(DEFAULT_CRITERIA)
+    ]
+    db.add_all(rows)
+    db.commit()
+    return rows

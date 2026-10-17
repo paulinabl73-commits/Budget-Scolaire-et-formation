@@ -10,7 +10,8 @@ export default function RequireAuth({
   permission,
 }: {
   children: ReactNode;
-  permission?: string;
+  /** Un droit, ou une liste dont au moins un suffit. */
+  permission?: string | string[];
 }) {
   const { t } = useTranslation();
   const { user, loading } = useAuth();
@@ -22,7 +23,8 @@ export default function RequireAuth({
   if (user.mfa_required && !user.mfa_enabled && location.pathname !== "/double-authentification") {
     return <Navigate to="/double-authentification" replace />;
   }
-  if (permission && !can(user.permissions, permission)) {
+  const required = permission === undefined ? [] : [permission].flat();
+  if (required.length && !required.some((p) => can(user.permissions, p))) {
     return (
       <p role="alert" className="alerte-erreur">
         {t("erreurs.403")}

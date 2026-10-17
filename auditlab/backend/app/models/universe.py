@@ -28,5 +28,9 @@ class AuditableEntity(TrackedMixin, Base):
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     responsable: Mapped[str | None] = mapped_column(String(200), nullable=True)
     date_dernier_audit: Mapped[date | None] = mapped_column(Date, nullable=True)
-    # Score du dernier RiskAssessment (AUD-02), recopié pour trier et filtrer sans jointure.
+    # Résultats du dernier RiskAssessment (AUD-02), recopiés pour trier, filtrer et alimenter
+    # la carte des risques (AUD-03) sans jointure.
     score_risque: Mapped[float | None] = mapped_column(Float, nullable=True)
+    impact: Mapped[float | None] = mapped_column(Float, nullable=True)
+    probabilite: Mapped[float | None] = mapped_column(Float, nullable=True)
+    date_evaluation: Mapped[date | None] = mapped_column(Date, nullable=True)

@@ -11,7 +11,8 @@
     "profil": "Mon profil",
     "deconnexion": "Se déconnecter",
     "principale": "Navigation principale",
-    "univers": "Univers d'audit"
+    "univers": "Univers d'audit",
+    "criteres": "Critères de risque"
   },
   "commun": {
     "enregistrer": "Enregistrer",
@@ -163,5 +164,55 @@
       "processus": "Processus",
       "systeme": "Système"
     }
+  },
+  "evaluation": {
+    "titre": "Évaluation des risques",
+    "nouvelle": "Nouvelle évaluation",
+    "date": "Date d'évaluation",
+    "commentaire": "Commentaire",
+    "evaluer": "Calculer et enregistrer",
+    "enregistree": "Évaluation enregistrée.",
+    "historique": "Historique des évaluations",
+    "aucune": "Aucune évaluation pour cette entité.",
+    "score": "Score",
+    "impact": "Impact",
+    "probabilite": "Probabilité",
+    "auto": "calculée : {{note}}",
+    "autoAide": "Note déduite de la date du dernier audit",
+    "echelle": "Notes de 1 (faible) à 5 (très élevé). Score sur 100.",
+    "detail": "Détail",
+    "notes": {
+      "1": "1 — Faible",
+      "2": "2 — Modéré",
+      "3": "3 — Significatif",
+      "4": "4 — Élevé",
+      "5": "5 — Très élevé"
+    }
+  },
+  "criteres": {
+    "titre": "Critères de risque",
+    "intro": "Critères utilisés pour évaluer les entités de l'univers d'audit. Une modification ne change pas les évaluations déjà enregistrées.",
+    "code": "Code",
+    "libelle": "Libellé",
+    "axe": "Axe",
+    "mode": "Mode",
+    "poids": "Poids",
+    "ordre": "Ordre",
+    "actif": "Actif",
+    "nouveau": "Nouveau critère",
+    "ajouter": "Ajouter le critère",
+    "enregistre": "Critère enregistré.",
+    "desactiver": "Désactiver",
+    "activer": "Activer",
+    "axes": {
+      "impact": "Impact",
+      "probabilite": "Probabilité",
+      "autre": "Autre"
+    },
+    "modes": {
+      "note": "Note saisie",
+      "anciennete": "Ancienneté du dernier audit"
+    },
+    "codeAide": "Majuscules, chiffres et _ uniquement."
   }
 }

@@ -14,6 +14,7 @@ import ProfilePage from "./pages/ProfilePage";
 const AuditLogPage = lazy(() => import("./pages/AuditLogPage"));
 const UsersPage = lazy(() => import("./pages/UsersPage"));
 const UniversePage = lazy(() => import("./pages/UniversePage"));
+const CriteriaPage = lazy(() => import("./pages/CriteriaPage"));
 
 export default function App() {
   const { t } = useTranslation();
@@ -58,6 +59,14 @@ export default function App() {
           element={
             <RequireAuth permission={PERM.PLAN_READ}>
               <UniversePage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="criteres"
+          element={
+            <RequireAuth permission={[PERM.SETTINGS_MANAGE, PERM.PLAN_MANAGE]}>
+              <CriteriaPage />
             </RequireAuth>
           }
         />

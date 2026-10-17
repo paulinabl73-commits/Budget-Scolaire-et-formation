@@ -5,6 +5,7 @@ import { api, del, patch, post } from "../api/client";
 import type { AuditableEntity } from "../api/types";
 import { useAuth } from "../auth/AuthContext";
 import Alert from "../components/Alert";
+import AssessmentPanel from "../components/AssessmentPanel";
 import EntityForm, { draftToPayload, toDraft } from "../components/EntityForm";
 import type { EntityDraft } from "../components/EntityForm";
 import EntityTree from "../components/EntityTree";
@@ -122,7 +123,9 @@ export default function UniversePage() {
                     {selected.date_dernier_audit ? formatDate(selected.date_dernier_audit) : t("univers.jamaisAudite")}
                     {" · "}
                     {t("univers.score")} :{" "}
-                    {selected.score_risque !== null ? Math.round(selected.score_risque) : t("univers.nonEvalue")}
+                    {selected.score_risque !== null
+                      ? selected.score_risque.toLocaleString("fr-FR")
+                      : t("univers.nonEvalue")}
                   </p>
                 </div>
                 {canManage && (
@@ -138,6 +141,7 @@ export default function UniversePage() {
                 )}
               </div>
               <EntityForm initial={draft} parents={parentsFor} readOnly={!canManage} onSubmit={onSubmit} />
+              <AssessmentPanel entity={selected} canManage={canManage} onSaved={() => void load()} />
             </>
           ) : (
             <p className="text-sm text-slate-600">{t("univers.selectionner")}</p>

@@ -55,9 +55,11 @@ def current_user(sess: Annotated[UserSession, Depends(current_session)]) -> User
 CurrentUser = Annotated[User, Depends(current_user)]
 
 
-def require(perm: Perm) -> Callable[..., User]:
+def require(*perms: Perm) -> Callable[..., User]:
+    """Exige au moins l'un des droits indiqués."""
+
     def checker(user: CurrentUser) -> User:
-        if not has_permission(user.role, perm):
+        if not any(has_permission(user.role, p) for p in perms):
             raise HTTPException(status.HTTP_403_FORBIDDEN, "Droits insuffisants")
         return user
 
