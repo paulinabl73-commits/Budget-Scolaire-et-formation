@@ -16,10 +16,11 @@ auditlab/
                       program.py, templates.py, mission_access.py = lot 3
                       workpapers.py, attachments.py, tickmarks.py, signoffs.py,
                       review_notes.py, notifications.py = lot 4
-                      datasets.py, imports.py, views.py = lot 5
+                      datasets.py, imports.py, views.py = lot 5 ; analyses.py = lot 6
       analytics/      Module 2 : store.py (Parquet, DuckDB), formats.py, detect.py, pdf.py,
                       sql_source.py, jobs.py (tâches Celery), expr.py (expressions),
-                      relation.py (relation SQL d'une table ou d'une vue), grid.py
+                      relation.py (relation SQL d'une table ou d'une vue), grid.py,
+                      statistics.py, operations/ (une analyse par module, lot 6)
       audit/          chain.py (chaînage par hash), listeners.py (journalisation automatique)
       models/         modèles SQLAlchemy ; base.py = TrackedMixin
       security/       passwords (Argon2), totp, sessions, roles (matrice des droits)
@@ -210,3 +211,24 @@ docker compose up -d --build
   (`grid.where_clause`) ; `POST /datasets/{id}/stats` réutilise la même sélection.
 - **Tests** : `tests/data_helpers.make_dataset(db, mission_id, polars_df)` crée une table de
   référence sans passer par l'import ; `tests/data_files.py` contient les fichiers d'exemple.
+
+### Lot 6 — analyses
+
+- **Ajouter une analyse** : un module dans `app/analytics/operations/` qui appelle
+  `register(Operation(code, exigence, entrees, params, run))`, importé dans `__init__.py`.
+  `run(relations, parametres) -> OpResult(df, resultat)`. Les paramètres sont déclarés par
+  `Param(nom, type, …)` et contrôlés par `base.validate` avant le lancement (422 immédiat) :
+  colonnes existantes et de bon type, nombres bornés, listes croissantes.
+- **Interface générique** : `AnalysisPanel.tsx` construit le formulaire depuis `GET /analyses`.
+  Les libellés sont dans `fr.json` (`analyses.<code>.titre`, `.description`, `.params.<nom>`,
+  `analyses.choix.<valeur>`, `resultats.<clé>`). Une nouvelle analyse demande donc ses textes.
+- **Exécution** : `POST /datasets/{id}/analyses` crée une table `kind="analyse"` en cours, puis
+  la tâche `auditlab.run_analysis` écrit le Parquet et `resultat`. `definition` garde
+  `operation`, `parametres` et `entrees` (ids) : c'est la base de la lignée (DAT-24).
+- **Reproductibilité (NF-04)** : chaque opération trie sa sortie (`ORDER BY ALL` ou clés
+  explicites). Le test `test_dat09_reproductible` vérifie l'égalité des empreintes.
+- **SQL** : `relation.evaluate_many({"a": rel1, "b": rel2}, sql, params)` pour deux tables. Une
+  requête qui commence par `WITH` prolonge les tables nommées. Dans `operations/`, la règle S608
+  est désactivée : identifiants toujours cités par `quote_ident`, valeurs toujours en `?`.
+- **Tests** : `tests/analysis_helpers.analyse(...)` lance une analyse ; `result_df(db, res)` lit
+  sa table. Une analyse refusée à l'exécution renvoie 202 avec `statut="erreur"`.

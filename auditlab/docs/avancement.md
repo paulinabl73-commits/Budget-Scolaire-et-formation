@@ -7,7 +7,7 @@
 | 3 | Missions et programme : AUD-06 à AUD-12 | **Livré** |
 | 4 | Papiers de travail et revue : AUD-13 à AUD-22 | **Livré** |
 | 5 | Import de données : DAT-01 à DAT-08 | **Livré** |
-| 6 | Analyses : DAT-09 à DAT-19 | À faire |
+| 6 | Analyses : DAT-09 à DAT-19 | **Livré** |
 | 7 | Échantillonnage et lignée : DAT-20 à DAT-25 | À faire |
 | 8 | Liaison audit et analyse, constats : DAT-30 à DAT-32, CON-01 à CON-09 | À faire |
 | 8a | Référentiels et balance : REV-01 à REV-14 | À faire |
@@ -16,6 +16,20 @@
 | 8d | Inventaire, fiscalité et livrables : RCO-11 à RCO-27 | À faire |
 | 9 | Scripts et automatisation : DAT-26 à DAT-29 | À faire |
 | 10 | Reporting et finitions : REP-01 à REP-08, NF-09 à NF-11 | À faire |
+
+## Lot 6 — détail
+
+**Livré** (un commit par exigence)
+- Cadre commun : catalogue, contrôle des paramètres, tâche de fond, table de résultat Parquet
+  avec empreinte et totaux, synthèse ; même entrée → même empreinte (NF-04).
+- **DAT-09** extraction (constructeur visuel ou expression), **DAT-10** doublons exacts et
+  approchés (1 million de lignes en moins de 10 s, NF-10), **DAT-11** ruptures de séquence,
+  **DAT-12** stratification, **DAT-13** synthèse, **DAT-14** ancienneté, **DAT-15** Benford
+  (khi-deux, MAD, z, lignes suspectes, graphique), **DAT-16** jointure, **DAT-17**
+  rapprochement, **DAT-18** valeurs aberrantes (z, IQR), **DAT-19** recherche floue.
+- Tests : 313 tests backend (couverture de 98 %) sur des jeux de référence calculés à la main
+  ou à valeurs connues (tables du khi-deux, loi de Benford). Extraction, Benford et synthèse
+  rejouées dans un navigateur.
 
 ## Lot 5 — détail
 

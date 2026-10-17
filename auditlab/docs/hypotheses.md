@@ -47,6 +47,30 @@ Le document de synthèse partageable reprend ce fichier.
 - Droits : lecture des données par les rôles ayant `data:read` ; import, vues et analyses par
   les membres de la mission ayant `data:analyze` (auditeur, chef de mission, data analyst).
 
+### Lot 6
+- Chaque analyse produit une nouvelle table, jamais une modification ; ses paramètres et ses
+  tables d'entrée sont conservés (piste d'audit, ISA 230).
+- Extraction : le « mode SQL » est la syntaxe d'expressions (proche du SQL, en français) ; aucune
+  requête SQL libre n'est acceptée (NF-05). Une condition indéterminée (valeur vide) ne retient
+  pas la ligne.
+- Doublons : une valeur vide est traitée comme une valeur (deux clés vides sont en double).
+  Mode approché : textes normalisés, Jaro-Winkler ≥ 0,9 par défaut sur chaque champ texte,
+  égalité stricte sur les autres champs, regroupement transitif.
+- Ruptures de séquence : sur un champ texte, le numéro est le groupe de chiffres final
+  (« FAC-2026-0042 » → 42).
+- Stratification : tranches fermées à gauche [a ; b[, plus deux tranches ouvertes ; toutes les
+  tranches figurent, même vides.
+- Ancienneté : tranches par défaut 30, 60, 90, 180 et 365 jours (usage des balances âgées
+  clients et fournisseurs) ; « non échu » si la date est postérieure à la référence.
+- Benford : méthode de Nigrini (montants ≥ 10 en valeur absolue, z avec correction de
+  continuité, seuils MAD propres à chaque test) ; seuil de significativité 5 % (z > 1,96).
+  Les lignes suspectes sont celles dont les chiffres sont en excès significatif.
+- Jointure et rapprochement : une clé vide n'apparie jamais ; deux clés de types différents sont
+  comparées comme du texte. Rapprochement : montants cumulés par clé, tolérance 0 par défaut.
+- Valeurs aberrantes : |z| > 3 (score z) ou méthode de Tukey avec k = 1,5 (IQR).
+- Recherche floue : formes juridiques usuelles retirées des noms (SARL, SA, SUARL, ETS, GIE…),
+  seuil 0,85 ; comparaison limitée à 50 millions de paires.
+
 ## Module 1 — gestion des audits
 
 ### Lot 4

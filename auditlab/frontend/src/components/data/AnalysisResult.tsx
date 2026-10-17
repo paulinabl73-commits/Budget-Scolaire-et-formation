@@ -19,6 +19,20 @@ export default function AnalysisResult({ ds }: { ds: Dataset }) {
   const { t } = useTranslation();
   const code = ds.operation ?? "";
   const params = (ds.definition.parametres as Record<string, unknown>) ?? {};
+  const describe = (v: unknown): string => {
+    if (Array.isArray(v) && v.every((x) => x && typeof x === "object")) {
+      return v
+        .map((x) => {
+          const o = x as Record<string, string>;
+          if ("fonction" in o) return t("analyses.agregatDe", { fonction: t(`analyses.choix.${o.fonction}`), champ: o.champ });
+          if ("gauche" in o) return `${o.gauche} = ${o.droite}`;
+          return show(o);
+        })
+        .join(" ; ");
+    }
+    if (typeof v === "string" && !/^-?\d+(\.\d+)?$/.test(v)) return t(`analyses.choix.${v}`, { defaultValue: v });
+    return show(v);
+  };
   const { chiffres, ...scalars } = ds.resultat as { chiffres?: BenfordDigit[] } & Record<string, unknown>;
   return (
     <section className="carte space-y-3" aria-labelledby="resultat-titre">
@@ -29,7 +43,7 @@ export default function AnalysisResult({ ds }: { ds: Dataset }) {
         {Object.entries(params).map(([k, v]) => (
           <div key={k} className="contents">
             <dt className="text-slate-600">{t(`analyses.${code}.params.${k}`, { defaultValue: k })}</dt>
-            <dd>{typeof v === "string" && !/^-?\d+(\.\d+)?$/.test(v) ? t(`analyses.choix.${v}`, { defaultValue: v }) : show(v)}</dd>
+            <dd>{describe(v)}</dd>
           </div>
         ))}
       </dl>

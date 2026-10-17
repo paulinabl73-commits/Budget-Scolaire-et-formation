@@ -778,7 +778,7 @@
     "alteree": "Altération détectée : l'empreinte ne correspond plus à celle de l'import.",
     "lectureSeule": "Table en lecture seule",
     "avertissements": "Valeurs non converties à l'import",
-    "duree": "Import en {{s}} s"
+    "duree": "Calcul en {{s}} s"
   },
   "calcul": {
     "titre": "Champs calculés",
@@ -954,7 +954,8 @@
         "champ_droite": "Nom dans la seconde table",
         "seuil": "Seuil de similarité (0 à 1)"
       }
-    }
+    },
+    "agregatDe": "{{fonction}} de {{champ}}"
   },
   "constructeur": {
     "titre": "Constructeur de condition",
