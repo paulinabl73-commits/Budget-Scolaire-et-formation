@@ -5,6 +5,7 @@ from app.analytics.operations import (  # noqa: F401
     extraction,
     sequence,
     stratification,
+    synthese,
 )
 from app.analytics.operations.base import REGISTRY, AnalysisError, Operation, validate
 
