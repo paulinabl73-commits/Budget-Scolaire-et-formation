@@ -1,5 +1,6 @@
 from app.models.audit_log import AuditLog
 from app.models.base import Base, TrackedMixin
+from app.models.data import Dataset, DatasetKind, DatasetStatus
 from app.models.engagement import (
     STATUS_ORDER,
     Engagement,
@@ -54,6 +55,9 @@ __all__ = [
     "ControlNature",
     "ControlType",
     "Cycle",
+    "Dataset",
+    "DatasetKind",
+    "DatasetStatus",
     "CriterionMode",
     "EmailMessage",
     "Engagement",

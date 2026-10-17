@@ -11,6 +11,8 @@ os.environ["AUDITLAB_ARGON2_PARALLELISM"] = "1"
 import tempfile  # noqa: E402
 
 os.environ["AUDITLAB_STORAGE_DIR"] = tempfile.mkdtemp(prefix="auditlab-tests-")
+os.environ["AUDITLAB_DATA_DIR"] = tempfile.mkdtemp(prefix="auditlab-data-")
+os.environ["AUDITLAB_TASKS_EAGER"] = "true"
 
 from collections.abc import Callable, Iterator  # noqa: E402
 from dataclasses import dataclass  # noqa: E402

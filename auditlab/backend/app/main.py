@@ -11,6 +11,7 @@ from app.api import (
     attachments,
     audit_log,
     auth,
+    datasets,
     engagement_status,
     engagements,
     library,
@@ -96,5 +97,6 @@ for router in (
     signoffs.router,
     review_notes.router,
     notifications.router,
+    datasets.router,
 ):
     app.include_router(router, prefix="/api")

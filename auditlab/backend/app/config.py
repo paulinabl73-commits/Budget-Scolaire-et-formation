@@ -30,6 +30,14 @@ class Settings(BaseSettings):
     s3_secret_key: str | None = None
     s3_bucket: str = "auditlab"
     max_upload_mb: int = 100
+    # Module 2 : fichiers Parquet (disque local rapide), taille maximale des imports,
+    # file de tâches (Redis) ; en mode « eager », les tâches s'exécutent dans la requête.
+    data_dir: str = "/tmp/auditlab-data"  # noqa: S108
+    max_import_mb: int = 2048
+    redis_url: str = "redis://localhost:6379/0"
+    tasks_eager: bool = True
+    duckdb_memory_limit: str = "2GB"
+    duckdb_threads: int = 4
     # Envoi des e-mails : sans serveur SMTP, les messages restent en file (journalisés).
     smtp_host: str | None = None
     smtp_port: int = 587
