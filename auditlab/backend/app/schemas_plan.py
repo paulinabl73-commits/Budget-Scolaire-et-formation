@@ -187,6 +187,10 @@ class PlanSummary(BaseModel):
     commentaire: str | None
     nb_missions: int
     total_jours: float
+    valide_par: uuid.UUID | None = None
+    valide_par_nom: str | None = None
+    valide_le: datetime | None = None
+    version_precedente_id: uuid.UUID | None = None
     created_at: datetime | None = None
 
 

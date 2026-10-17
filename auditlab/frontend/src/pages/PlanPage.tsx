@@ -6,9 +6,10 @@ import { api, del, patch, post } from "../api/client";
 import type { AuditableEntity, Plan, PlanItem, PlanSummary } from "../api/types";
 import { useAuth } from "../auth/AuthContext";
 import Alert from "../components/Alert";
+import PlanComparison from "../components/PlanComparison";
 import PlanItemForm from "../components/PlanItemForm";
 import type { ItemDraft } from "../components/PlanItemForm";
-import { formatDate, formatNombre } from "../lib/format";
+import { formatDate, formatDateHeure, formatNombre } from "../lib/format";
 import { can, PERM } from "../lib/permissions";
 import { scoreClass } from "../lib/risk";
 
@@ -24,12 +25,14 @@ export default function PlanPage() {
   const { t } = useTranslation();
   const { user } = useAuth();
   const canManage = can(user?.permissions, PERM.PLAN_MANAGE);
+  const canValidate = can(user?.permissions, PERM.PLAN_VALIDATE);
   const [plans, setPlans] = useState<PlanSummary[]>([]);
   const [planId, setPlanId] = useState<string | null>(null);
   const [plan, setPlan] = useState<Plan | null>(null);
   const [entities, setEntities] = useState<AuditableEntity[]>([]);
   const [newYear, setNewYear] = useState(new Date().getFullYear() + 1);
   const [itemMode, setItemMode] = useState<ItemMode>({ kind: "none" });
+  const [previous, setPrevious] = useState<Plan | null>(null);
   const [message, setMessage] = useState<{ kind: "erreur" | "succes"; text: string } | null>(
     null,
   );
@@ -52,6 +55,7 @@ export default function PlanPage() {
 
   useEffect(() => {
     setItemMode({ kind: "none" });
+    setPrevious(null);
     if (planId) loadPlan(planId).catch((e: Error) => setMessage({ kind: "erreur", text: e.message }));
     else setPlan(null);
   }, [planId, loadPlan]);
@@ -112,6 +116,35 @@ export default function PlanPage() {
   };
 
   const years = [...new Set(plans.map((p) => p.annee))];
+  const versions = plan ? plans.filter((p) => p.annee === plan.annee) : [];
+  const isLatest = !!plan && versions[0]?.id === plan.id;
+
+  const onValidate = () => {
+    if (plan && window.confirm(t("plan.confirmerValidation", { version: plan.version, annee: plan.annee }))) {
+      void run(() => post(`/plans/${plan.id}/validate`), t("plan.valide"));
+    }
+  };
+
+  const onNewVersion = async () => {
+    if (!plan) return;
+    setMessage(null);
+    try {
+      const created = await post<Plan>(`/plans/${plan.id}/new-version`);
+      await loadPlans();
+      setPlanId(created.id);
+      setMessage({
+        kind: "succes",
+        text: t("plan.versionCreee", { version: created.version, precedente: plan.version }),
+      });
+    } catch (e) {
+      setMessage({ kind: "erreur", text: (e as Error).message });
+    }
+  };
+
+  const toggleComparison = async () => {
+    if (previous) return setPrevious(null);
+    if (plan?.version_precedente_id) setPrevious(await api<Plan>(`/plans/${plan.version_precedente_id}`));
+  };
 
   return (
     <div className="space-y-6">
@@ -162,8 +195,47 @@ export default function PlanPage() {
                 </span>
               </h2>
               {plan.commentaire && <p className="mt-1 text-sm text-slate-600">{plan.commentaire}</p>}
+              {plan.valide_le && (
+                <p className="mt-1 text-sm text-slate-600">
+                  {t("plan.validePar", { nom: plan.valide_par_nom ?? "", date: formatDateHeure(plan.valide_le) })}
+                </p>
+              )}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {canValidate && plan.statut === "brouillon" && (
+                <button type="button" className="btn-primaire" onClick={onValidate}
+                  disabled={plan.items.length === 0}>
+                  {t("plan.valider")}
+                </button>
+              )}
+              {canManage && isLatest && plan.statut !== "brouillon" && (
+                <button type="button" className="btn-secondaire" onClick={onNewVersion}>
+                  {t("plan.nouvelleVersion")}
+                </button>
+              )}
+              {plan.version_precedente_id && (
+                <button type="button" className="btn-secondaire" onClick={() => void toggleComparison()}
+                  aria-pressed={!!previous}>
+                  {previous ? t("plan.masquerComparaison") : t("plan.comparer", { version: plan.version - 1 })}
+                </button>
+              )}
             </div>
           </div>
+
+          {versions.length > 1 && (
+            <nav aria-label={t("plan.versions")} className="flex flex-wrap items-center gap-2 text-sm">
+              <span className="text-slate-600">{t("plan.versions")} :</span>
+              {versions.map((v) => (
+                <button key={v.id} type="button" aria-current={v.id === plan.id ? "page" : undefined}
+                  onClick={() => setPlanId(v.id)}
+                  className={`rounded-full px-3 py-1 ${v.id === plan.id ? "bg-marque-600 text-white" : STATUS_CLASSES[v.statut]}`}>
+                  v{v.version} · {t(`plan.statuts.${v.statut}`)}
+                </button>
+              ))}
+            </nav>
+          )}
+
+          {previous && <PlanComparison previous={previous} current={plan} />}
 
           <Charge plan={plan} editable={editable}
             onCapacity={(v) => run(() => patch(`/plans/${plan.id}`, { capacite_jours: v }))} />

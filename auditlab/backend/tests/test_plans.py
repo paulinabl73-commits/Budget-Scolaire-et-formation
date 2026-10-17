@@ -147,3 +147,97 @@ def test_aud04_lecture_seule(client, account, directeur, entites, role):
 @pytest.mark.parametrize("role", [Role.AUDITEUR, Role.DATA_ANALYST, Role.AUDITE])
 def test_aud04_acces_refuse(client, account, role):
     assert client.get("/api/plans", headers=account(role).headers).status_code == 403
+
+
+def _filled_plan(client, h, entites):
+    plan = _plan(client, h, capacite_jours=100)
+    for nom in ("Achats", "Paie"):
+        client.post(f"/api/plans/{plan['id']}/items", json=_item(entites[nom]), headers=h)
+    return plan
+
+
+def test_aud05_validation_par_le_directeur(client, directeur, entites, db):
+    h = directeur.headers
+    empty = _plan(client, h, annee=2030)
+    resp = client.post(f"/api/plans/{empty['id']}/validate", headers=h)
+    assert resp.status_code == 422
+
+    plan = _filled_plan(client, h, entites)
+    resp = client.post(f"/api/plans/{plan['id']}/validate", headers=h)
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["statut"] == "valide" and body["valide_par_nom"] == directeur.user.nom
+    assert body["valide_le"] is not None
+
+    # Un plan validé est figé.
+    url = f"/api/plans/{plan['id']}"
+    assert client.patch(url, json={"capacite_jours": 1}, headers=h).status_code == 409
+    item_id = body["items"][0]["id"]
+    assert (
+        client.patch(f"{url}/items/{item_id}", json={"budget_jours": 1}, headers=h).status_code
+        == 409
+    )
+    assert client.delete(f"{url}/items/{item_id}", headers=h).status_code == 409
+    assert (
+        client.post(f"{url}/items", json=_item(entites["Trésorerie"]), headers=h).status_code == 409
+    )
+    assert client.post(f"{url}/validate", headers=h).status_code == 409
+
+    log = db.scalar(
+        select(AuditLog).where(AuditLog.object_id == plan["id"], AuditLog.action == "update")
+    )
+    assert log.avant["statut"] == "brouillon" and log.apres["statut"] == "valide"
+
+
+def test_aud05_versions_successives(client, directeur, entites):
+    h = directeur.headers
+    v1 = _filled_plan(client, h, entites)
+    # Un brouillon ne se versionne pas : on le modifie.
+    assert client.post(f"/api/plans/{v1['id']}/new-version", headers=h).status_code == 409
+    client.post(f"/api/plans/{v1['id']}/validate", headers=h)
+
+    v2 = client.post(f"/api/plans/{v1['id']}/new-version", headers=h)
+    assert v2.status_code == 201
+    v2 = v2.json()
+    assert (v2["version"], v2["statut"], v2["version_precedente_id"]) == (2, "brouillon", v1["id"])
+    assert [i["entity_nom"] for i in v2["items"]] == ["Achats", "Paie"]
+    assert v2["capacite_jours"] == 100
+
+    # La version 2 évolue sans toucher la version 1.
+    paie = next(i for i in v2["items"] if i["entity_nom"] == "Paie")
+    client.delete(f"/api/plans/{v2['id']}/items/{paie['id']}", headers=h)
+    client.post(f"/api/plans/{v2['id']}/items", json=_item(entites["Trésorerie"]), headers=h)
+    v1_now = client.get(f"/api/plans/{v1['id']}", headers=h).json()
+    assert [i["entity_nom"] for i in v1_now["items"]] == ["Achats", "Paie"]
+
+    # Seule la dernière version sert de base.
+    assert client.post(f"/api/plans/{v1['id']}/new-version", headers=h).status_code == 409
+
+    client.post(f"/api/plans/{v2['id']}/validate", headers=h)
+    versions = client.get("/api/plans?annee=2027", headers=h).json()
+    assert [(p["version"], p["statut"]) for p in versions] == [(2, "valide"), (1, "remplace")]
+
+    v3 = client.post(f"/api/plans/{v2['id']}/new-version", headers=h).json()
+    assert v3["version"] == 3
+    assert client.post(f"/api/plans/{v1['id']}/new-version", headers=h).status_code == 409
+
+
+@pytest.mark.parametrize("role", [Role.ADMIN, Role.CHEF_MISSION, Role.AUDITEUR])
+def test_aud05_validation_reservee_au_directeur(client, account, directeur, entites, role):
+    plan = _filled_plan(client, directeur.headers, entites)
+    h = account(role).headers
+    assert client.post(f"/api/plans/{plan['id']}/validate", headers=h).status_code == 403
+    assert client.post(f"/api/plans/{plan['id']}/new-version", headers=h).status_code == 403
+
+
+def test_aud05_entite_planifiee_non_supprimable(client, directeur, entites):
+    h = directeur.headers
+    _filled_plan(client, h, entites)
+    resp = client.delete(f"/api/universe/entities/{entites['Achats']['id']}", headers=h)
+    assert resp.status_code == 409 and "plan" in resp.json()["detail"]
+    assert (
+        client.delete(
+            f"/api/universe/entities/{entites['Trésorerie']['id']}", headers=h
+        ).status_code
+        == 204
+    )

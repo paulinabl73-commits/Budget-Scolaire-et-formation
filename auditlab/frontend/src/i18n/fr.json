@@ -276,6 +276,26 @@
     "retirer": "Retirer",
     "confirmerRetrait": "Retirer « {{titre}} » du plan ?",
     "enregistre": "Plan enregistré.",
-    "lectureSeule": "Ce plan n'est plus modifiable. Pour le faire évoluer, créez une nouvelle version."
+    "lectureSeule": "Ce plan n'est plus modifiable. Pour le faire évoluer, créez une nouvelle version.",
+    "valider": "Valider le plan",
+    "confirmerValidation": "Valider la version {{version}} du plan {{annee}} ? Elle ne sera plus modifiable.",
+    "valide": "Plan validé.",
+    "validePar": "Validé par {{nom}} le {{date}}",
+    "nouvelleVersion": "Créer une nouvelle version",
+    "versionCreee": "Version {{version}} créée en brouillon à partir de la version {{precedente}}.",
+    "versions": "Versions",
+    "comparer": "Comparer avec la version {{version}}",
+    "masquerComparaison": "Masquer la comparaison",
+    "comparaison": "Évolution par rapport à la version {{version}}",
+    "aucuneDifference": "Aucune différence avec la version précédente.",
+    "ajoutee": "Ajoutée",
+    "retiree": "Retirée",
+    "modifiee": "Modifiée",
+    "champs": {
+      "titre": "intitulé",
+      "budget_jours": "budget",
+      "periode_debut": "début",
+      "periode_fin": "fin"
+    }
   }
 }

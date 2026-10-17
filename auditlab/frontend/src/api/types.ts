@@ -148,6 +148,10 @@ export interface PlanSummary {
   commentaire: string | null;
   nb_missions: number;
   total_jours: number;
+  valide_par: string | null;
+  valide_par_nom: string | null;
+  valide_le: string | null;
+  version_precedente_id: string | null;
   created_at: string | null;
 }
 

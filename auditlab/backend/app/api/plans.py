@@ -26,13 +26,17 @@ from app.security.roles import Perm
 router = APIRouter(prefix="/plans", tags=["Plan annuel"])
 Reader = Annotated[User, Depends(require(Perm.PLAN_READ))]
 Manager = Annotated[User, Depends(require(Perm.PLAN_MANAGE))]
+Validator = Annotated[User, Depends(require(Perm.PLAN_VALIDATE))]
 
 
 def get_plan(db: DbSession, plan_id: uuid.UUID) -> AuditPlan:
     plan = db.scalar(
         select(AuditPlan)
         .where(AuditPlan.id == plan_id, AuditPlan.deleted_at.is_(None))
-        .options(selectinload(AuditPlan.items).selectinload(PlanItem.entity))
+        .options(
+            selectinload(AuditPlan.items).selectinload(PlanItem.entity),
+            selectinload(AuditPlan.validator),
+        )
         .execution_options(populate_existing=True)
     )
     if plan is None:
@@ -55,6 +59,7 @@ def summary(plan: AuditPlan) -> dict:
         **{k: getattr(plan, k) for k in PlanSummary.model_fields if hasattr(plan, k)},
         "nb_missions": len(plan.items),
         "total_jours": round(sum(i.budget_jours for i in plan.items), 2),
+        "valide_par_nom": plan.validator.nom if plan.validator else None,
     }
 
 
@@ -87,7 +92,7 @@ def list_plans(_: Reader, db: DbSession, annee: int | None = None) -> list[dict]
     query = (
         select(AuditPlan)
         .where(AuditPlan.deleted_at.is_(None))
-        .options(selectinload(AuditPlan.items))
+        .options(selectinload(AuditPlan.items), selectinload(AuditPlan.validator))
         .order_by(AuditPlan.annee.desc(), AuditPlan.version.desc())
     )
     if annee is not None:
@@ -178,3 +183,75 @@ def remove_item(plan_id: uuid.UUID, item_id: uuid.UUID, user: Manager, db: DbSes
     item.deleted_at = datetime.now(UTC)
     item.deleted_by = user.id
     db.commit()
+
+
+def _latest_version(db: DbSession, annee: int) -> AuditPlan:
+    return db.scalars(
+        select(AuditPlan)
+        .where(AuditPlan.annee == annee, AuditPlan.deleted_at.is_(None))
+        .order_by(AuditPlan.version.desc())
+        .limit(1)
+    ).one()
+
+
+@router.post("/{plan_id}/validate", response_model=PlanOut)
+def validate_plan(plan_id: uuid.UUID, user: Validator, db: DbSession) -> PlanOut:
+    """AUD-05 : le Directeur valide le brouillon ; la version validée précédente est remplacée."""
+    plan = editable_plan(db, plan_id)
+    if not plan.items:
+        raise HTTPException(422, "Un plan sans mission ne peut pas être validé")
+    for previous in db.scalars(
+        select(AuditPlan).where(
+            AuditPlan.annee == plan.annee,
+            AuditPlan.statut == PlanStatus.VALIDE.value,
+            AuditPlan.id != plan.id,
+        )
+    ):
+        previous.statut = PlanStatus.REMPLACE.value
+    plan.statut = PlanStatus.VALIDE.value
+    plan.valide_par = user.id
+    plan.valide_le = datetime.now(UTC)
+    db.commit()
+    return plan_out(get_plan(db, plan.id))
+
+
+@router.post("/{plan_id}/new-version", response_model=PlanOut, status_code=201)
+def new_version(plan_id: uuid.UUID, _: Manager, db: DbSession) -> PlanOut:
+    """AUD-05 : ouvre une nouvelle version en brouillon, copie de la dernière version.
+
+    Les versions antérieures restent intactes et consultables.
+    """
+    source = get_plan(db, plan_id)
+    latest = _latest_version(db, source.annee)
+    if latest.id != source.id:
+        raise HTTPException(
+            status.HTTP_409_CONFLICT, "Seule la dernière version peut servir de base"
+        )
+    if source.statut == PlanStatus.BROUILLON:
+        raise HTTPException(
+            status.HTTP_409_CONFLICT, "Cette version est encore en brouillon : modifiez-la"
+        )
+    copy = AuditPlan(
+        annee=source.annee,
+        version=source.version + 1,
+        statut=PlanStatus.BROUILLON.value,
+        capacite_jours=source.capacite_jours,
+        commentaire=source.commentaire,
+        version_precedente_id=source.id,
+    )
+    db.add(copy)
+    db.flush()
+    for item in source.items:
+        db.add(
+            PlanItem(
+                plan_id=copy.id,
+                entity_id=item.entity_id,
+                titre=item.titre,
+                budget_jours=item.budget_jours,
+                periode_debut=item.periode_debut,
+                periode_fin=item.periode_fin,
+                justification=item.justification,
+            )
+        )
+    db.commit()
+    return plan_out(get_plan(db, copy.id))

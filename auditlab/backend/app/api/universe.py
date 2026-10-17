@@ -8,6 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import Select, select
 
 from app.api.deps import DbSession, require
+from app.models.plan import AuditPlan, PlanItem, PlanStatus
 from app.models.universe import AuditableEntity
 from app.models.user import User
 from app.schemas_plan import EntityIn, EntityOut, EntityUpdate
@@ -84,6 +85,20 @@ def delete_entity(entity_id: uuid.UUID, user: Manager, db: DbSession) -> None:
     if db.scalar(active_entities().where(AuditableEntity.parent_id == entity.id).limit(1)):
         raise HTTPException(
             status.HTTP_409_CONFLICT, "Supprimez ou déplacez d'abord les entités rattachées"
+        )
+    planned = db.scalar(
+        select(AuditPlan.annee)
+        .join(PlanItem, PlanItem.plan_id == AuditPlan.id)
+        .where(
+            PlanItem.entity_id == entity.id,
+            PlanItem.deleted_at.is_(None),
+            AuditPlan.statut != PlanStatus.REMPLACE.value,
+        )
+        .limit(1)
+    )
+    if planned:
+        raise HTTPException(
+            status.HTTP_409_CONFLICT, f"Entité inscrite au plan {planned} : retirez-la d'abord"
         )
     entity.deleted_at = datetime.now(UTC)
     entity.deleted_by = user.id

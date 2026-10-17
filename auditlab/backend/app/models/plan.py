@@ -1,12 +1,13 @@
 import uuid
-from datetime import date
+from datetime import date, datetime
 from enum import StrEnum
 
-from sqlalchemy import Date, Float, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import Date, DateTime, Float, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, TrackedMixin
 from app.models.universe import AuditableEntity
+from app.models.user import User
 
 
 class PlanStatus(StrEnum):
@@ -26,6 +27,12 @@ class AuditPlan(TrackedMixin, Base):
     statut: Mapped[str] = mapped_column(String(20), default=PlanStatus.BROUILLON.value)
     capacite_jours: Mapped[float | None] = mapped_column(Float, nullable=True)
     commentaire: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # AUD-05 : validation par le Directeur d'audit et filiation des versions.
+    valide_par: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    valide_le: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    version_precedente_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("audit_plans.id"), nullable=True
+    )
 
     items: Mapped[list["PlanItem"]] = relationship(
         back_populates="plan",
@@ -33,6 +40,7 @@ class AuditPlan(TrackedMixin, Base):
         order_by="PlanItem.periode_debut",
         viewonly=True,
     )
+    validator: Mapped[User | None] = relationship(foreign_keys=[valide_par], viewonly=True)
 
 
 class PlanItem(TrackedMixin, Base):

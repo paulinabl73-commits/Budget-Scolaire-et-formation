@@ -71,7 +71,9 @@ function Node({
             </span>
           </span>
           {item.score_risque !== null && (
-            <span className="ml-2 text-xs font-semibold">{Math.round(item.score_risque)}</span>
+            <span className="ml-2 text-xs font-semibold">
+              {item.score_risque.toLocaleString("fr-FR")}
+            </span>
           )}
         </button>
       </div>
