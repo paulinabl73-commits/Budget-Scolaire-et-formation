@@ -519,5 +519,33 @@
     "choisir": "Modèle de mission (facultatif)",
     "aucunModele": "— Aucun —",
     "confirmerSuppression": "Supprimer le modèle « {{nom}} » ? Les missions déjà créées ne changent pas."
+  },
+  "papiers": {
+    "titre": "Papiers de travail",
+    "nouveau": "Nouveau papier de travail",
+    "aucun": "Aucun papier de travail.",
+    "reference": "Référence",
+    "referenceAide": "Exemple : B-2.3 (majuscules, chiffres, tiret et points).",
+    "intitule": "Intitulé",
+    "procedure": "Procédure",
+    "aucuneProcedure": "— Aucune —",
+    "objectif": "Objectif",
+    "travaux": "Travaux réalisés",
+    "conclusion": "Conclusion",
+    "evaluation": "Évaluation du contrôle",
+    "nonEvalue": "— Non évalué —",
+    "version": "Version {{version}}",
+    "creer": "Créer",
+    "enregistre": "Papier de travail enregistré.",
+    "retour": "← Papiers de travail de la mission",
+    "evaluations": {
+      "efficace": "Efficace",
+      "partiellement_efficace": "Partiellement efficace",
+      "inefficace": "Inefficace"
+    },
+    "confirmerSuppression": "Supprimer le papier {{reference}} ?",
+    "supprime": "Papier de travail supprimé.",
+    "maj": "Modifié le {{date}}",
+    "modifie": "Dernière modification"
   }
 }

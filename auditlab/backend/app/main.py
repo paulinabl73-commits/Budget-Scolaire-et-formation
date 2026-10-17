@@ -22,6 +22,7 @@ from app.api import (
     timesheets,
     universe,
     users,
+    workpapers,
 )
 from app.audit.listeners import AuditIntegrityError
 from app.config import get_settings
@@ -84,5 +85,6 @@ for router in (
     program.router,
     program.my_router,
     templates.router,
+    workpapers.router,
 ):
     app.include_router(router, prefix="/api")

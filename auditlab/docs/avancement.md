@@ -35,7 +35,7 @@
   procédures de test typées.
 - **AUD-12** : affectation des procédures à un membre de l'équipe, avec échéance et
   avancement ; liste « Mes procédures » sur la page d'accueil.
-- Tests : 152 tests backend (couverture de 99 %). Le scénario de recette, étape 2 (le chef
+- Tests : 147 tests backend (couverture de 99 %). Le scénario de recette, étape 2 (le chef
   ouvre la mission, construit la matrice et affecte les procédures), a été rejoué dans un
   navigateur.
 

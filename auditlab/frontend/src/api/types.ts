@@ -305,3 +305,25 @@ export interface EngagementTemplate {
   nb_controles: number;
   nb_procedures: number;
 }
+
+export type ControlAssessment = "efficace" | "partiellement_efficace" | "inefficace";
+export type RichDoc = { type: "doc"; content?: unknown[] } & Record<string, unknown>;
+
+export interface WorkpaperSummary {
+  id: string;
+  engagement_id: string;
+  reference: string;
+  titre: string;
+  procedure_id: string | null;
+  procedure_reference: string | null;
+  evaluation: ControlAssessment | null;
+  version: number;
+  updated_at: string | null;
+}
+
+export interface Workpaper extends WorkpaperSummary {
+  objectif: string | null;
+  travaux: RichDoc;
+  conclusion: string | null;
+  peut_modifier: boolean;
+}

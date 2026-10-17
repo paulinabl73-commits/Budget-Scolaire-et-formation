@@ -27,6 +27,7 @@ from app.models.program import (
 from app.models.risk import Axis, CriterionMode, RiskAssessment, RiskCriterion
 from app.models.universe import AuditableEntity, EntityType
 from app.models.user import Team, User, UserSession, user_teams
+from app.models.workpaper import ControlAssessment, Workpaper
 
 __all__ = [
     "AuditLog",
@@ -35,6 +36,7 @@ __all__ = [
     "Axis",
     "Base",
     "Control",
+    "ControlAssessment",
     "ControlNature",
     "ControlType",
     "Cycle",
@@ -64,4 +66,5 @@ __all__ = [
     "User",
     "UserSession",
     "user_teams",
+    "Workpaper",
 ]
