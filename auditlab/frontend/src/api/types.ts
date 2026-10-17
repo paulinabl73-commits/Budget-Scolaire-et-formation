@@ -472,3 +472,36 @@ export interface DataSourceInfo {
   actif: boolean;
   dialecte: string;
 }
+
+export type Criticality = "faible" | "moyenne" | "elevee" | "critique";
+
+export interface Finding {
+  id: string;
+  engagement_id: string;
+  reference: string;
+  titre: string;
+  critere: string | null;
+  constat: string | null;
+  cause: string | null;
+  consequence: string | null;
+  recommandation: string | null;
+  criticite: Criticality;
+  risk_id: string | null;
+  control_id: string | null;
+  workpaper_ids: string[];
+  statut: "brouillon" | "envoye" | "repondu" | "valide";
+  audite_id: string | null;
+  envoye_le: string | null;
+  date_limite_reponse: string | null;
+  reponse_position: string | null;
+  reponse_commentaire: string | null;
+  repondu_le: string | null;
+  valide_le: string | null;
+  commentaire_validation: string | null;
+  created_at: string | null;
+  risque: string | null;
+  controle: string | null;
+  papiers: { id: string; reference: string; titre: string }[];
+  audite_nom: string | null;
+  peut_modifier: boolean;
+}

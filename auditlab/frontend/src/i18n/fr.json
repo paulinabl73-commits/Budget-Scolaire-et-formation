@@ -1148,5 +1148,49 @@
     "commentaire": "Commentaire",
     "joint": "Table jointe au papier de travail : ses signatures éventuelles sont à refaire.",
     "voirPapier": "Voir le papier"
+  },
+  "constats": {
+    "nouveau": "Nouveau constat (titre)",
+    "criticite": "Criticité",
+    "creer": "Créer",
+    "aucun": "Aucun constat pour cette mission.",
+    "col": {
+      "reference": "Réf.",
+      "titre": "Titre",
+      "criticite": "Criticité",
+      "statut": "Statut",
+      "risque": "Risque"
+    },
+    "criticites": {
+      "faible": "Faible",
+      "moyenne": "Moyenne",
+      "elevee": "Élevée",
+      "critique": "Critique"
+    },
+    "statuts": {
+      "brouillon": "Brouillon",
+      "envoye": "Envoyé à l'audité",
+      "repondu": "Réponse reçue",
+      "valide": "Validé"
+    },
+    "volets": {
+      "critere": "Critère",
+      "constat": "Constat",
+      "cause": "Cause",
+      "consequence": "Conséquence",
+      "recommandation": "Recommandation"
+    },
+    "aides": {
+      "critere": "La règle attendue : loi, procédure, bonne pratique.",
+      "constat": "Les faits observés, chiffrés et vérifiables.",
+      "cause": "Pourquoi l'écart existe.",
+      "consequence": "Le risque ou l'impact pour l'organisation.",
+      "recommandation": "Ce que l'audité devrait faire."
+    },
+    "risque": "Risque",
+    "controle": "Contrôle",
+    "papiersSources": "Papiers de travail sources",
+    "enregistre": "Constat enregistré.",
+    "retour": "← Constats de la mission"
   }
 }

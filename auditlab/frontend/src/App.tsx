@@ -23,6 +23,7 @@ const LibraryPage = lazy(() => import("./pages/LibraryPage"));
 const WorkpaperPage = lazy(() => import("./pages/WorkpaperPage"));
 const TickmarksPage = lazy(() => import("./pages/TickmarksPage"));
 const DatasetPage = lazy(() => import("./pages/DatasetPage"));
+const FindingPage = lazy(() => import("./pages/FindingPage"));
 
 export default function App() {
   const { t } = useTranslation();
@@ -107,6 +108,14 @@ export default function App() {
           element={
             <RequireAuth permission={[PERM.MISSIONS_READ_ALL, PERM.MISSIONS_READ_OWN]}>
               <WorkpaperPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="missions/:id/constats/:fid"
+          element={
+            <RequireAuth permission="findings:read">
+              <FindingPage />
             </RequireAuth>
           }
         />
