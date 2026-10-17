@@ -10,6 +10,16 @@ from app.models.engagement import (
     TimeEntry,
 )
 from app.models.plan import AuditPlan, PlanItem, PlanStatus
+from app.models.program import (
+    Control,
+    ControlNature,
+    ControlType,
+    Cycle,
+    Frequency,
+    Risk,
+    RiskCategory,
+    RiskControl,
+)
 from app.models.risk import Axis, CriterionMode, RiskAssessment, RiskCriterion
 from app.models.universe import AuditableEntity, EntityType
 from app.models.user import Team, User, UserSession, user_teams
@@ -20,16 +30,24 @@ __all__ = [
     "AuditableEntity",
     "Axis",
     "Base",
+    "Control",
+    "ControlNature",
+    "ControlType",
+    "Cycle",
     "CriterionMode",
     "Engagement",
     "EngagementMember",
     "EngagementStatus",
     "EntityType",
+    "Frequency",
     "MissionRole",
     "PlanItem",
     "PlanStatus",
     "STATUS_ORDER",
+    "Risk",
     "RiskAssessment",
+    "RiskCategory",
+    "RiskControl",
     "RiskCriterion",
     "Team",
     "TimeActivity",

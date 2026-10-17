@@ -8,6 +8,7 @@ from typing import Self
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from app.models.engagement import EngagementStatus, MissionRole, TimeActivity
+from app.models.program import ControlNature, ControlType, Cycle, Frequency, RiskCategory
 
 
 class MemberIn(BaseModel):
@@ -138,3 +139,64 @@ class TimeSummary(BaseModel):
     heures_par_jour: float
     par_personne: list[TimeLine]
     par_activite: list[TimeLine]
+
+
+class RiskIn(BaseModel):
+    libelle: str = Field(min_length=1, max_length=300)
+    description: str | None = None
+    cycle: Cycle
+    categorie: RiskCategory
+
+
+class RiskUpdate(BaseModel):
+    libelle: str | None = Field(default=None, min_length=1, max_length=300)
+    description: str | None = None
+    cycle: Cycle | None = None
+    categorie: RiskCategory | None = None
+
+
+class ControlIn(BaseModel):
+    libelle: str = Field(min_length=1, max_length=300)
+    description: str | None = None
+    cycle: Cycle
+    type_controle: ControlType
+    nature: ControlNature
+    frequence: Frequency
+
+
+class ControlUpdate(BaseModel):
+    libelle: str | None = Field(default=None, min_length=1, max_length=300)
+    description: str | None = None
+    cycle: Cycle | None = None
+    type_controle: ControlType | None = None
+    nature: ControlNature | None = None
+    frequence: Frequency | None = None
+
+
+class ControlOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    libelle: str
+    description: str | None
+    cycle: Cycle
+    type_controle: ControlType
+    nature: ControlNature
+    frequence: Frequency
+    source_id: uuid.UUID | None = None
+
+
+class RiskOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    libelle: str
+    description: str | None
+    cycle: Cycle
+    categorie: RiskCategory
+    source_id: uuid.UUID | None = None
+    controles: list[ControlOut] = []
+
+
+class LinkIn(BaseModel):
+    control_ids: list[uuid.UUID]

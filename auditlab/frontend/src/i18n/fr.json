@@ -15,7 +15,8 @@
     "criteres": "Critères de risque",
     "carte": "Carte des risques",
     "plan": "Plan annuel",
-    "missions": "Missions"
+    "missions": "Missions",
+    "bibliotheque": "Bibliothèque"
   },
   "commun": {
     "enregistrer": "Enregistrer",
@@ -396,5 +397,65 @@
       "autre": "Autre"
     },
     "confirmerSuppression": "Supprimer cette saisie ?"
+  },
+  "bibliotheque": {
+    "titre": "Bibliothèque de risques et de contrôles",
+    "intro": "Risques et contrôles réutilisables d'une mission à l'autre. Les copies faites dans une mission évoluent ensuite indépendamment.",
+    "risques": "Risques",
+    "controles": "Contrôles",
+    "nouveauRisque": "Nouveau risque",
+    "nouveauControle": "Nouveau contrôle",
+    "libelle": "Libellé",
+    "description": "Description",
+    "cycle": "Cycle",
+    "categorie": "Catégorie",
+    "type": "Type",
+    "nature": "Nature",
+    "frequence": "Fréquence",
+    "controlesLies": "Contrôles couvrant ce risque",
+    "aucunControle": "Aucun contrôle rattaché.",
+    "modifierLiens": "Modifier les contrôles rattachés",
+    "enregistrerLiens": "Enregistrer les liens",
+    "tousCycles": "Tous les cycles",
+    "enregistre": "Bibliothèque mise à jour.",
+    "confirmerSuppression": "Retirer « {{libelle}} » de la bibliothèque ? Les missions qui l'utilisent gardent leur copie.",
+    "ajouter": "Ajouter",
+    "cycles": {
+      "achats": "Achats",
+      "ventes": "Ventes",
+      "paie": "Paie",
+      "tresorerie": "Trésorerie",
+      "immobilisations": "Immobilisations",
+      "stocks": "Stocks",
+      "notes_de_frais": "Notes de frais",
+      "systemes_information": "Systèmes d'information",
+      "gouvernance": "Gouvernance",
+      "conformite": "Conformité",
+      "autre": "Autre"
+    },
+    "categories": {
+      "operationnel": "Opérationnel",
+      "reporting": "Information financière",
+      "conformite": "Conformité",
+      "strategique": "Stratégique",
+      "fraude": "Fraude"
+    },
+    "types": {
+      "preventif": "Préventif",
+      "detectif": "Détectif"
+    },
+    "natures": {
+      "manuel": "Manuel",
+      "automatique": "Automatique",
+      "semi_automatique": "Semi-automatique"
+    },
+    "frequences": {
+      "ponctuel": "Ponctuel",
+      "quotidien": "Quotidien",
+      "hebdomadaire": "Hebdomadaire",
+      "mensuel": "Mensuel",
+      "trimestriel": "Trimestriel",
+      "annuel": "Annuel"
+    }
   }
 }

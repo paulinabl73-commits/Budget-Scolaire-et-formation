@@ -12,6 +12,7 @@ from app.api import (
     auth,
     engagement_status,
     engagements,
+    library,
     meta,
     plans,
     risk,
@@ -77,5 +78,6 @@ for router in (
     engagements.staff_router,
     engagement_status.router,
     timesheets.router,
+    library.router,
 ):
     app.include_router(router, prefix="/api")

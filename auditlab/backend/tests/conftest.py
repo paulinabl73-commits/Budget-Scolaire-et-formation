@@ -15,12 +15,12 @@ from pathlib import Path  # noqa: E402
 
 import pyotp  # noqa: E402
 import pytest  # noqa: E402
+from alembic import command  # noqa: E402
 from alembic.config import Config  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
 from sqlalchemy import text  # noqa: E402
 from sqlalchemy.orm import Session  # noqa: E402
 
-from alembic import command  # noqa: E402
 from app.audit.listeners import set_actor  # noqa: E402
 from app.db import SessionLocal, engine  # noqa: E402
 from app.main import app  # noqa: E402
@@ -33,24 +33,33 @@ PASSWORD = "MotDePasse-Solide-2026"
 BACKEND = Path(__file__).resolve().parents[1]
 
 
+def alembic_config() -> Config:
+    cfg = Config(str(BACKEND / "alembic.ini"))
+    cfg.set_main_option("script_location", str(BACKEND / "alembic"))
+    return cfg
+
+
 @pytest.fixture(scope="session", autouse=True)
 def _schema() -> Iterator[None]:
     with engine.begin() as conn:
         conn.execute(text("DROP SCHEMA public CASCADE; CREATE SCHEMA public"))
-    cfg = Config(str(BACKEND / "alembic.ini"))
-    cfg.set_main_option("script_location", str(BACKEND / "alembic"))
-    command.upgrade(cfg, "head")
+    command.upgrade(alembic_config(), "head")
     yield
 
 
-@pytest.fixture(autouse=True)
-def _clean() -> Iterator[None]:
-    yield
+def _truncate_all() -> None:
     with engine.begin() as conn:
         # Le mode « replica » neutralise le déclencheur d'ajout seul, pour les tests uniquement.
         conn.execute(text("SET LOCAL session_replication_role = replica"))
         tables = ", ".join(t.name for t in Base.metadata.sorted_tables)
         conn.execute(text(f"TRUNCATE {tables} CASCADE"))
+
+
+@pytest.fixture(autouse=True)
+def _clean() -> Iterator[None]:
+    # Base vide au départ de chaque test, y compris des données livrées par les migrations.
+    _truncate_all()
+    yield
 
 
 @pytest.fixture

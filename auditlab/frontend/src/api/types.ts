@@ -234,3 +234,32 @@ export interface TimeSummary {
   par_personne: { cle: string; libelle: string; jours: number }[];
   par_activite: { cle: string; libelle: string; jours: number }[];
 }
+
+export type Cycle =
+  | "achats" | "ventes" | "paie" | "tresorerie" | "immobilisations" | "stocks"
+  | "notes_de_frais" | "systemes_information" | "gouvernance" | "conformite" | "autre";
+export type RiskCategory = "operationnel" | "reporting" | "conformite" | "strategique" | "fraude";
+export type ControlType = "preventif" | "detectif";
+export type ControlNature = "manuel" | "automatique" | "semi_automatique";
+export type Frequency = "ponctuel" | "quotidien" | "hebdomadaire" | "mensuel" | "trimestriel" | "annuel";
+
+export interface Control {
+  id: string;
+  libelle: string;
+  description: string | null;
+  cycle: Cycle;
+  type_controle: ControlType;
+  nature: ControlNature;
+  frequence: Frequency;
+  source_id: string | null;
+}
+
+export interface Risk {
+  id: string;
+  libelle: string;
+  description: string | null;
+  cycle: Cycle;
+  categorie: RiskCategory;
+  source_id: string | null;
+  controles: Control[];
+}
