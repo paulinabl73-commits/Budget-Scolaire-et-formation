@@ -7,6 +7,7 @@ import { api, post } from "../../api/client";
 import type { AnalysisOperation, AnalysisParam, Dataset } from "../../api/types";
 import Alert from "../Alert";
 import ConditionBuilder from "./ConditionBuilder";
+import SampleSizeCalculator from "./SampleSizeCalculator";
 
 type Values = Record<string, unknown>;
 
@@ -180,6 +181,9 @@ export default function AnalysisPanel({ ds }: { ds: Dataset }) {
                   {tables.map((d) => <option key={d.id} value={d.id}>{d.nom}</option>)}
                 </select>
               </div>
+            )}
+            {op.code === "echantillon" && (
+              <SampleSizeCalculator population={ds.totaux_controle[String(values.champ_montant ?? "")]?.somme} onUse={(n) => set("taille", String(n))} />
             )}
             {op.params.map(field)}
             <div>

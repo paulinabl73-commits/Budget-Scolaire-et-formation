@@ -23,6 +23,7 @@ from app.api import (
     program,
     review_notes,
     risk,
+    sampling,
     signoffs,
     teams,
     templates,
@@ -104,5 +105,6 @@ for router in (
     imports.router,
     views.router,
     analyses.router,
+    sampling.router,
 ):
     app.include_router(router, prefix="/api")

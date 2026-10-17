@@ -1070,5 +1070,20 @@
     "attendus": "Attendus",
     "partObservee": "Part observée",
     "partAttendue": "Part attendue"
+  },
+  "taille": {
+    "titre": "Calcul de la taille d'échantillon",
+    "type": "Type de test",
+    "mus": "Contrôle substantif (MUS)",
+    "attributs": "Test de contrôle (attributs)",
+    "confiance": "Niveau de confiance (%)",
+    "population": "Montant de la population",
+    "tolerable": "Erreur tolérable",
+    "attendue": "Erreur attendue",
+    "calculer": "Calculer",
+    "resultat": "Taille : {{n}}",
+    "facteur": "facteur de confiance {{f}}",
+    "intervalle": "intervalle {{i}}",
+    "utiliser": "Utiliser cette taille"
   }
 }
