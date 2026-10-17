@@ -130,10 +130,10 @@ ratios=[
  {"code":"delai_fournisseurs","libelle":"Délai de paiement fournisseurs (jours)","formule":"DJ/(RA+RC+RE)*360","unite":"jours","famille":"delais"},
 ]
 bases=[
- {"code":"total_bilan","libelle":"Total du bilan","formule":"BZ"},
- {"code":"chiffre_affaires","libelle":"Chiffre d'affaires","formule":"XB"},
- {"code":"resultat","libelle":"Résultat net","formule":"XI"},
- {"code":"capitaux_propres","libelle":"Capitaux propres","formule":"CP"},
+ {"code":"total_bilan","pct_min":"1","pct_max":"2","libelle":"Total du bilan","formule":"BZ"},
+ {"code":"chiffre_affaires","pct_min":"0.5","pct_max":"2","libelle":"Chiffre d'affaires","formule":"XB"},
+ {"code":"resultat","pct_min":"5","pct_max":"10","libelle":"Résultat net","formule":"XI"},
+ {"code":"capitaux_propres","pct_min":"1","pct_max":"5","libelle":"Capitaux propres","formule":"CP"},
 ]
 regles=[
  {"code":"bilan_equilibre","libelle":"Le bilan est équilibré (total actif = total passif)","gauche":"BZ","droite":"DZ"},
@@ -166,7 +166,7 @@ cip={"code":"CIPRES","version":"modele","libelle":"Plan comptable CIPRES – mod
  "branches":[{"code":"PF","libelle":"Prestations familiales"},{"code":"RP","libelle":"Risques professionnels"},{"code":"PV","libelle":"Pensions de vieillesse, d'invalidité et de décès"},{"code":"AM","libelle":"Assurance maladie"},{"code":"GA","libelle":"Gestion administrative"}],
  "comptes":cip_accounts,"postes":cip_lines,
  "ratios":[{"code":"autonomie","libelle":"Réserves / total bilan","formule":"RE/TAZ","unite":"pourcentage","famille":"solvabilite"}],
- "bases_seuil":[{"code":"total_bilan","libelle":"Total du bilan","formule":"TAZ"},{"code":"cotisations","libelle":"Cotisations (produits)","formule":"PC"},{"code":"resultat","libelle":"Résultat net","formule":"RN"}],
+ "bases_seuil":[{"code":"total_bilan","pct_min":"1","pct_max":"2","libelle":"Total du bilan","formule":"TAZ"},{"code":"cotisations","pct_min":"0.5","pct_max":"2","libelle":"Cotisations (produits)","formule":"PC"},{"code":"resultat","pct_min":"5","pct_max":"10","libelle":"Résultat net","formule":"RN"}],
  "regles":[{"code":"bilan_equilibre","libelle":"Le bilan est équilibré","gauche":"TAZ","droite":"TPZ"}],
  "parametres":[]}
 json.dump(cip,open(__import__("os").path.join(__import__("os").path.dirname(__file__), "cipres_modele.json"),"w"),ensure_ascii=False,indent=1)

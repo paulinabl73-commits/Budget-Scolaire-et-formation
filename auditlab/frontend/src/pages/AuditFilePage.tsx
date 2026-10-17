@@ -7,11 +7,12 @@ import type { AuditFile } from "../api/types";
 import Alert from "../components/Alert";
 import ImportsPanel from "../components/revision/ImportsPanel";
 import MappingPanel from "../components/revision/MappingPanel";
+import MaterialityPanel from "../components/revision/MaterialityPanel";
 import type { Mapping } from "../components/revision/MappingPanel";
 import StatementsPreview from "../components/revision/StatementsPreview";
 import { formatDate } from "../lib/format";
 
-const VIEWS = ["donnees", "affectation"] as const;
+const VIEWS = ["donnees", "affectation", "planification"] as const;
 type View = (typeof VIEWS)[number];
 
 /** Dossier de révision (Module 5) : balances, affectation, seuils, revue analytique. */
@@ -72,6 +73,7 @@ export default function AuditFilePage() {
           <StatementsPreview file={file} blocked={unmapped > 0} />
         </>
       )}
+      {view === "planification" && <MaterialityPanel file={file} onChange={() => void load()} />}
     </div>
   );
 }

@@ -1525,5 +1525,24 @@
       "risques": "Matrice des risques"
     },
     "navigation": "Sections du dossier"
+  },
+  "seuil": {
+    "titre": "Seuil de signification",
+    "seuil_signification": "Seuil de signification",
+    "seuil_planification": "Seuil de planification",
+    "seuil_insignifiant": "Anomalies manifestement insignifiantes",
+    "de": "de la base « {{base}} » ({{montant}})",
+    "duSeuil": "du seuil de signification",
+    "nonFixe": "Seuil non encore fixé.",
+    "basesIndisponibles": "Montants des bases non calculés ({{raison}}) : saisissez le montant retenu.",
+    "base": "Base",
+    "fourchette": "Fourchette indicative : {{min}} % à {{max}} %",
+    "pct": "Pourcentage (%)",
+    "montantSaisi": "Montant de base saisi (facultatif)",
+    "pctPlanification": "Seuil de planification (% du seuil)",
+    "pctInsignifiant": "Seuil d'insignifiance (% du seuil)",
+    "pctVariation": "Variation signalée en revue analytique (%)",
+    "justification": "Justification du choix (base et pourcentages)",
+    "fixer": "Fixer le seuil"
   }
 }

@@ -27,6 +27,7 @@ from app.api import (
     library,
     macros,
     mapping,
+    materiality,
     meta,
     notifications,
     plans,
@@ -130,5 +131,6 @@ for router in (
     trial_balances.router,
     currencies.router,
     mapping.router,
+    materiality.router,
 ):
     app.include_router(router, prefix="/api")

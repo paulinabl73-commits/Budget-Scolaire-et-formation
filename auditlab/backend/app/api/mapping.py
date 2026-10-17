@@ -16,10 +16,11 @@ from app.models.revision import AccountingFramework, AccountMapping, AuditFile, 
 from app.revision.balances import clean_account
 from app.revision.mapping import (
     PERIODS,
+    UnmappedError,
     assignments,
+    file_values,
     overrides,
     postes,
-    statement_values,
     unmapped,
 )
 
@@ -110,21 +111,22 @@ def reset_mapping(
     return read_mapping(file_id, user, db)
 
 
+def values_or_409(db: Session, file: AuditFile) -> dict[str, dict[str, Decimal]]:
+    try:
+        return file_values(db, file)
+    except UnmappedError as exc:
+        if not exc.comptes:
+            raise HTTPException(status.HTTP_409_CONFLICT, str(exc)) from exc
+        detail = {"message": str(exc), "comptes": exc.comptes}
+        raise HTTPException(status.HTTP_409_CONFLICT, detail) from exc
+
+
 @router.get("/audit-files/{file_id}/statements/preview")
 def preview(file_id: uuid.UUID, user: CurrentUser, db: DbSession) -> dict[str, Any]:
     """Aperçu des états N et N-1 ; refusé tant qu'un compte n'est pas affecté (REV-10)."""
     file, _ = get_file(db, file_id, user)
-    items = assignments(db, file)
-    if not any("N" in a.soldes for a in items):
-        raise HTTPException(status.HTTP_409_CONFLICT, "Aucune balance N acceptée")
-    missing = unmapped(items)
-    if missing:
-        raise HTTPException(status.HTTP_409_CONFLICT, {
-            "message": f"{len(missing)} compte(s) non affecté(s) : aucun état ne peut être produit",
-            "comptes": [a.compte for a in missing],
-        })  # fmt: skip
+    values = values_or_409(db, file)
     lines = postes(db, file.framework_id)
-    values = {p: statement_values(lines, items, p) for p in PERIODS}
     states: dict[str, list[dict[str, Any]]] = {}
     for ln in lines:
         states.setdefault(ln.etat, []).append({

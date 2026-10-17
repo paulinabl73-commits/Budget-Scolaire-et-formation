@@ -30,6 +30,10 @@ class Settings(BaseSettings):
     racine_minimale_plan: int = 2
     classes_bilan: str = "12345"
     classes_resultat: str = "678"
+    # Seuils dérivés du seuil de signification (REV-11), en % : seuil de planification
+    # (signification de travail) et seuil des anomalies manifestement insignifiantes.
+    pct_planification_defaut: float = 75.0
+    pct_insignifiant_defaut: float = 5.0
     # Classes exclues des états financiers (comptabilité analytique, engagements hors bilan).
     classes_hors_etats: str = "9"
     cors_origins: list[str] = ["http://localhost:5173"]

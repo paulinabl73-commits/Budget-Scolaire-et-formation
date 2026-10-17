@@ -2417,28 +2417,7 @@
    "famille": "delais"
   }
  ],
- "bases_seuil": [
-  {
-   "code": "total_bilan",
-   "libelle": "Total du bilan",
-   "formule": "BZ"
-  },
-  {
-   "code": "chiffre_affaires",
-   "libelle": "Chiffre d'affaires",
-   "formule": "XB"
-  },
-  {
-   "code": "resultat",
-   "libelle": "Résultat net",
-   "formule": "XI"
-  },
-  {
-   "code": "capitaux_propres",
-   "libelle": "Capitaux propres",
-   "formule": "CP"
-  }
- ],
+ "bases_seuil": [{"code": "total_bilan", "libelle": "Total du bilan", "formule": "BZ", "pct_min": "1", "pct_max": "2"}, {"code": "chiffre_affaires", "libelle": "Chiffre d'affaires", "formule": "XB", "pct_min": "0.5", "pct_max": "2"}, {"code": "resultat", "libelle": "Résultat net", "formule": "XI", "pct_min": "5", "pct_max": "10"}, {"code": "capitaux_propres", "libelle": "Capitaux propres", "formule": "CP", "pct_min": "1", "pct_max": "5"}],
  "regles": [
   {
    "code": "bilan_equilibre",

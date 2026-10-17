@@ -253,23 +253,7 @@
    "famille": "solvabilite"
   }
  ],
- "bases_seuil": [
-  {
-   "code": "total_bilan",
-   "libelle": "Total du bilan",
-   "formule": "TAZ"
-  },
-  {
-   "code": "cotisations",
-   "libelle": "Cotisations (produits)",
-   "formule": "PC"
-  },
-  {
-   "code": "resultat",
-   "libelle": "Résultat net",
-   "formule": "RN"
-  }
- ],
+ "bases_seuil": [{"code": "total_bilan", "libelle": "Total du bilan", "formule": "TAZ", "pct_min": "1", "pct_max": "2"}, {"code": "cotisations", "libelle": "Cotisations (produits)", "formule": "PC", "pct_min": "0.5", "pct_max": "2"}, {"code": "resultat", "libelle": "Résultat net", "formule": "RN", "pct_min": "5", "pct_max": "10"}],
  "regles": [
   {
    "code": "bilan_equilibre",

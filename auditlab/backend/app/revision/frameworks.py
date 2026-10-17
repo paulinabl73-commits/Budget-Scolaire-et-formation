@@ -6,7 +6,8 @@ Classeur Excel attendu (une feuille par rubrique, en-têtes en première ligne) 
 - « Postes » : etat, code, libelle, nature, racines, formule, ordre, niveau ; « racines » liste
   les racines séparées par « ; », suivies de « :debit » ou « :credit » pour un compte à double
   sens (ex. « 409;40:debit ») ;
-- « Ratios » : code, libelle, formule, unite, famille ; « Bases » : code, libelle, formule ;
+- « Ratios » : code, libelle, formule, unite, famille ; « Bases » : code, libelle, formule,
+  pct_min, pct_max (fourchette indicative du pourcentage de seuil, REV-11) ;
 - « Règles » : code, libelle, gauche, droite ; « Paramètres » : code, libelle, valeur, unite,
   pays, exercice, branche ; « Branches » : code, libelle (CIPRES).
 """
@@ -184,7 +185,7 @@ SHEETS = {
         ["etat", "code", "libelle", "nature", "racines", "formule", "ordre", "niveau"],
     ),
     "Ratios": ("ratios", ["code", "libelle", "formule", "unite", "famille"]),
-    "Bases": ("bases_seuil", ["code", "libelle", "formule"]),
+    "Bases": ("bases_seuil", ["code", "libelle", "formule", "pct_min", "pct_max"]),
     "Règles": ("regles", ["code", "libelle", "gauche", "droite"]),
     "Paramètres": (
         "parametres",

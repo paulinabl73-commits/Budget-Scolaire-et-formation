@@ -145,3 +145,26 @@ def statement_values(
     for code in by_code:
         value(code)
     return values
+
+
+class UnmappedError(Exception):
+    """Aucun état ne peut être produit : balance N absente ou comptes non affectés (REV-10)."""
+
+    def __init__(self, message: str, comptes: list[str] | None = None) -> None:
+        super().__init__(message)
+        self.comptes = comptes or []
+
+
+def file_values(db: Session, file: AuditFile) -> dict[str, dict[str, Decimal]]:
+    """Montants des postes N et N-1 du dossier ; UnmappedError si un état est impossible."""
+    items = assignments(db, file)
+    if not any("N" in a.soldes for a in items):
+        raise UnmappedError("Aucune balance N acceptée")
+    missing = unmapped(items)
+    if missing:
+        raise UnmappedError(
+            f"{len(missing)} compte(s) non affecté(s) : aucun état ne peut être produit",
+            [a.compte for a in missing],
+        )
+    lines = postes(db, file.framework_id)
+    return {p: statement_values(lines, items, p) for p in PERIODS}
