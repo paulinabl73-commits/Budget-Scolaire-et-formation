@@ -89,3 +89,32 @@ class TickmarkOut(BaseModel):
     couleur: str
     ordre: int
     actif: bool
+
+
+class VersionSummary(BaseModel):
+    version: int
+    created_at: datetime | None
+    auteur: str | None
+    hash_contenu: str
+
+
+class VersionOut(VersionSummary):
+    contenu: dict[str, Any]
+
+
+class DiffSegment(BaseModel):
+    type: str  # egal, ajoute, supprime
+    texte: str
+
+
+class FieldDiff(BaseModel):
+    champ: str
+    libelle: str
+    modifie: bool
+    segments: list[DiffSegment]
+
+
+class CompareOut(BaseModel):
+    de: int
+    a: int
+    champs: list[FieldDiff]

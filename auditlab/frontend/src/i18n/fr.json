@@ -602,5 +602,16 @@
     "enregistre": "Marques mises à jour.",
     "desactiver": "Désactiver",
     "activer": "Activer"
+  },
+  "versions": {
+    "titre": "Versions",
+    "intro": "Chaque enregistrement crée une version conservée et inaltérable.",
+    "de": "Comparer la version",
+    "a": "avec la version",
+    "comparer": "Comparer",
+    "aucuneDiff": "Aucune différence.",
+    "inchange": "inchangé",
+    "par": "par {{auteur}}",
+    "version": "Version {{version}}"
   }
 }

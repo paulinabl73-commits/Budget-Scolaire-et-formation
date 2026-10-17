@@ -402,3 +402,62 @@ def test_aud16_marques_de_revision(client, ctx, account):
         ).status_code
         == 404
     )
+
+
+def test_aud17_versions_et_comparaison(client, ctx, db):
+    wp = create(
+        client, ctx, travaux=from_plain_text("25 créations testées"), conclusion="Contrôle opérant"
+    )
+    url = f"/api/workpapers/{wp['id']}"
+    client.patch(
+        url,
+        json={
+            "travaux": from_plain_text("30 créations testées, 2 exceptions"),
+            "evaluation": "partiellement_efficace",
+        },
+        headers=ctx["aud"].headers,
+    )
+    client.patch(
+        url, json={"conclusion": "Contrôle partiellement opérant"}, headers=ctx["aud"].headers
+    )
+    versions = client.get(f"{url}/versions", headers=ctx["da"].headers).json()
+    assert [v["version"] for v in versions] == [3, 2, 1]
+    assert versions[0]["auteur"] == ctx["aud"].user.nom
+    assert len({v["hash_contenu"] for v in versions}) == 3
+
+    v1 = client.get(f"{url}/versions/1", headers=ctx["aud"].headers).json()
+    assert v1["contenu"]["conclusion"] == "Contrôle opérant"
+
+    cmp = client.get(f"{url}/compare?de=1&a=3", headers=ctx["aud"].headers).json()
+    champs = {c["champ"]: c for c in cmp["champs"]}
+    assert not champs["titre"]["modifie"]
+    travaux = [(s["type"], s["texte"]) for s in champs["travaux"]["segments"]]
+    assert ("supprime", "25") in travaux and ("ajoute", "30") in travaux
+    assert ("ajoute", ", 2 exceptions") in [(t, x) for t, x in travaux] or any(
+        t == "ajoute" and "exceptions" in x for t, x in travaux
+    )
+    assert champs["evaluation"]["segments"] == [
+        {"type": "ajoute", "texte": "partiellement_efficace"}
+    ]
+    assert client.get(f"{url}/versions/9", headers=ctx["aud"].headers).status_code == 404
+
+    # Les versions sont inaltérables, même en accès direct à la base.
+    from sqlalchemy import text
+    from sqlalchemy.exc import DBAPIError
+
+    from app.db import engine
+
+    with pytest.raises(DBAPIError, match="ajout seul"), engine.begin() as conn:
+        conn.execute(text("UPDATE workpaper_versions SET hash_contenu = 'x'"))
+
+
+def test_diff_text():
+    from app.workpaper_versions import diff_text
+
+    assert diff_text("a b c", "a x c") == [
+        {"type": "egal", "texte": "a "},
+        {"type": "supprime", "texte": "b"},
+        {"type": "ajoute", "texte": "x"},
+        {"type": "egal", "texte": " c"},
+    ]
+    assert diff_text("", "") == []

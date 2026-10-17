@@ -27,7 +27,13 @@ from app.models.program import (
 from app.models.risk import Axis, CriterionMode, RiskAssessment, RiskCriterion
 from app.models.universe import AuditableEntity, EntityType
 from app.models.user import Team, User, UserSession, user_teams
-from app.models.workpaper import Attachment, ControlAssessment, Tickmark, Workpaper
+from app.models.workpaper import (
+    Attachment,
+    ControlAssessment,
+    Tickmark,
+    Workpaper,
+    WorkpaperVersion,
+)
 
 __all__ = [
     "Attachment",
@@ -69,4 +75,5 @@ __all__ = [
     "UserSession",
     "user_teams",
     "Workpaper",
+    "WorkpaperVersion",
 ]

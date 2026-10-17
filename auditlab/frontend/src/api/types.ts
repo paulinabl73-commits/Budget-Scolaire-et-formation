@@ -348,3 +348,17 @@ export interface Tickmark {
   ordre: number;
   actif: boolean;
 }
+
+export interface VersionSummary {
+  version: number;
+  created_at: string | null;
+  auteur: string | null;
+  hash_contenu: string;
+}
+
+export interface FieldDiff {
+  champ: string;
+  libelle: string;
+  modifie: boolean;
+  segments: { type: "egal" | "ajoute" | "supprime"; texte: string }[];
+}

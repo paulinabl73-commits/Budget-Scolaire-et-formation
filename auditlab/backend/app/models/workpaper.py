@@ -1,10 +1,21 @@
 """Papiers de travail (AUD-13 à AUD-20)."""
 
 import uuid
+from datetime import datetime
 from enum import StrEnum
 from typing import Any
 
-from sqlalchemy import BigInteger, Boolean, ForeignKey, Integer, String, Text
+from sqlalchemy import (
+    BigInteger,
+    Boolean,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    UniqueConstraint,
+    func,
+)
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -63,3 +74,18 @@ class Tickmark(TrackedMixin, Base):
     couleur: Mapped[str] = mapped_column(String(7), default="#1f5fa8")
     ordre: Mapped[int] = mapped_column(Integer, default=0)
     actif: Mapped[bool] = mapped_column(Boolean, default=True)
+
+
+class WorkpaperVersion(Base):
+    """Version figée d'un papier de travail (AUD-17), en ajout seul (déclencheur SQL)."""
+
+    __tablename__ = "workpaper_versions"
+    __table_args__ = (UniqueConstraint("workpaper_id", "version"),)
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    workpaper_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("workpapers.id"), index=True)
+    version: Mapped[int] = mapped_column(Integer)
+    contenu: Mapped[dict[str, Any]] = mapped_column(JSONB)
+    hash_contenu: Mapped[str] = mapped_column(String(64))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    created_by: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)

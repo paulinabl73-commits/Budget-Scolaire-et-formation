@@ -9,6 +9,7 @@ import Alert from "../components/Alert";
 import AttachmentsPanel from "../components/workpaper/AttachmentsPanel";
 import RichEditor from "../components/workpaper/RichEditor";
 import { TickmarkNode } from "../components/workpaper/tickmark";
+import VersionsPanel from "../components/workpaper/VersionsPanel";
 import { tickmarkIds } from "../lib/richtext";
 import { resolveImages, unresolveImages } from "../lib/richtext";
 
@@ -122,7 +123,10 @@ export default function WorkpaperPage() {
         </div>
         {!ro && <button type="submit" className="btn-primaire">{t("commun.enregistrer")}</button>}
       </form>
-      <AttachmentsPanel workpaperId={wp.id} attachments={attachments} editable={!ro} onChange={() => void loadAttachments()} />
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <AttachmentsPanel workpaperId={wp.id} attachments={attachments} editable={!ro} onChange={() => void loadAttachments()} />
+        <VersionsPanel workpaperId={wp.id} current={wp.version} />
+      </div>
     </div>
   );
 }

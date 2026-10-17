@@ -13,10 +13,19 @@ from app.api.program import mission_procedure
 from app.models.engagement import Engagement, MissionRole
 from app.models.program import Procedure
 from app.models.user import User
-from app.models.workpaper import Workpaper
+from app.models.workpaper import Workpaper, WorkpaperVersion
 from app.richtext import EMPTY_DOC, InvalidDocument, validate_doc
-from app.schemas_workpaper import WorkpaperIn, WorkpaperOut, WorkpaperSummary, WorkpaperUpdate
+from app.schemas_workpaper import (
+    CompareOut,
+    VersionOut,
+    VersionSummary,
+    WorkpaperIn,
+    WorkpaperOut,
+    WorkpaperSummary,
+    WorkpaperUpdate,
+)
 from app.security.roles import Perm, has_permission
+from app.workpaper_versions import compare, record_version
 
 router = APIRouter(tags=["Papiers de travail"])
 
@@ -161,6 +170,8 @@ def create_workpaper(
         version=1,
     )
     db.add(wp)
+    db.flush()
+    record_version(db, wp)
     db.commit()
     return workpaper_out(db, wp, engagement, user)
 
@@ -199,7 +210,8 @@ def update_workpaper(
 ) -> WorkpaperOut:
     wp, engagement = get_workpaper(db, workpaper_id, user)
     require_preparer(engagement, user)
-    apply_update(db, wp, engagement, body)
+    if apply_update(db, wp, engagement, body):
+        record_version(db, wp)
     db.commit()
     return workpaper_out(db, wp, engagement, user)
 
@@ -215,3 +227,64 @@ def delete_workpaper(workpaper_id: uuid.UUID, user: CurrentUser, db: DbSession) 
     wp.deleted_at = datetime.now(UTC)
     wp.deleted_by = user.id
     db.commit()
+
+
+def _versions(db: Session, wp: Workpaper) -> list[tuple[WorkpaperVersion, str | None]]:
+    return list(
+        db.execute(
+            select(WorkpaperVersion, User.nom)
+            .outerjoin(User, User.id == WorkpaperVersion.created_by)
+            .where(WorkpaperVersion.workpaper_id == wp.id)
+            .order_by(WorkpaperVersion.version.desc())
+        ).all()
+    )
+
+
+def _version(db: Session, wp: Workpaper, number: int) -> WorkpaperVersion:
+    v = db.scalar(
+        select(WorkpaperVersion).where(
+            WorkpaperVersion.workpaper_id == wp.id, WorkpaperVersion.version == number
+        )
+    )
+    if v is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, f"Version {number} introuvable")
+    return v
+
+
+@router.get("/workpapers/{workpaper_id}/versions", response_model=list[VersionSummary])
+def list_versions(
+    workpaper_id: uuid.UUID, user: CurrentUser, db: DbSession
+) -> list[VersionSummary]:
+    wp, _ = get_workpaper(db, workpaper_id, user)
+    return [
+        VersionSummary(
+            version=v.version, created_at=v.created_at, auteur=nom, hash_contenu=v.hash_contenu
+        )
+        for v, nom in _versions(db, wp)
+    ]
+
+
+@router.get("/workpapers/{workpaper_id}/versions/{number}", response_model=VersionOut)
+def read_version(
+    workpaper_id: uuid.UUID, number: int, user: CurrentUser, db: DbSession
+) -> VersionOut:
+    wp, _ = get_workpaper(db, workpaper_id, user)
+    v = _version(db, wp, number)
+    author = db.get(User, v.created_by) if v.created_by else None
+    return VersionOut(
+        version=v.version,
+        created_at=v.created_at,
+        auteur=author.nom if author else None,
+        hash_contenu=v.hash_contenu,
+        contenu=v.contenu,
+    )
+
+
+@router.get("/workpapers/{workpaper_id}/compare", response_model=CompareOut)
+def compare_versions(
+    workpaper_id: uuid.UUID, de: int, a: int, user: CurrentUser, db: DbSession
+) -> CompareOut:
+    """Comparaison mot à mot de deux versions, champ par champ (AUD-17)."""
+    wp, _ = get_workpaper(db, workpaper_id, user)
+    old, new = _version(db, wp, de), _version(db, wp, a)
+    return CompareOut(de=de, a=a, champs=compare(old.contenu, new.contenu))
