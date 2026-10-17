@@ -13,6 +13,7 @@ from typing import Any
 from sqlalchemy import (
     Boolean,
     Date,
+    DateTime,
     ForeignKey,
     Index,
     Integer,
@@ -282,3 +283,39 @@ class AssertionRisk(TrackedMixin, Base):
     risque_important: Mapped[bool] = mapped_column(Boolean, default=False)
     commentaire: Mapped[str | None] = mapped_column(Text, nullable=True)
     risk_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("risks.id"), nullable=True)
+
+
+class Adjustment(TrackedMixin, Base):
+    """Proposition d'écriture d'ajustement (REV-21) : correction ou reclassement, justifiée et
+    liée à un papier de travail ; Proposée, puis Acceptée ou Refusée par l'entité. Seules les
+    écritures acceptées modifient les soldes révisés ; les autres alimentent le tableau des
+    anomalies non corrigées (REV-22)."""
+
+    __tablename__ = "adjustments"
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
+    numero: Mapped[int] = mapped_column(Integer)
+    type: Mapped[str] = mapped_column(String(20))  # correction, reclassement
+    libelle: Mapped[str] = mapped_column(String(300))
+    justification: Mapped[str] = mapped_column(Text)
+    workpaper_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("workpapers.id"), nullable=True
+    )
+    statut: Mapped[str] = mapped_column(String(20), default="proposee")
+    decision_le: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    decision_par: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    motif_decision: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+
+class AdjustmentLine(Base):
+    """Ligne d'une écriture d'ajustement ; débit ou crédit."""
+
+    __tablename__ = "adjustment_lines"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    adjustment_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("adjustments.id"), index=True)
+    compte: Mapped[str] = mapped_column(String(30))
+    libelle: Mapped[str | None] = mapped_column(String(300), nullable=True)
+    debit: Mapped[Decimal] = mapped_column(MONEY, default=Decimal(0))
+    credit: Mapped[Decimal] = mapped_column(MONEY, default=Decimal(0))

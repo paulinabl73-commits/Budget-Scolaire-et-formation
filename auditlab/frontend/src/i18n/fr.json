@@ -1522,7 +1522,8 @@
       "planification": "Seuil de signification",
       "analytique": "Revue analytique",
       "ratios": "Ratios",
-      "risques": "Matrice des risques"
+      "risques": "Matrice des risques",
+      "ajustements": "Ajustements"
     },
     "navigation": "Sections du dossier"
   },
@@ -1600,5 +1601,46 @@
     "risque_controle": "Risque lié au contrôle",
     "important": "Risque important (ISA 315)",
     "commentaire": "Facteurs de risque"
+  },
+  "ajustements": {
+    "titre": "Écritures d'ajustement proposées",
+    "nouvelle": "Proposer une écriture",
+    "type": "Nature",
+    "types": {
+      "correction": "Correction",
+      "reclassement": "Reclassement"
+    },
+    "libelle": "Libellé",
+    "papier": "Papier de travail",
+    "justification": "Justification",
+    "col": {
+      "compte": "Compte",
+      "libelleLigne": "Libellé",
+      "debit": "Débit",
+      "credit": "Crédit"
+    },
+    "ligne": {
+      "compte": "Compte, ligne {{n}}",
+      "libelle": "Libellé, ligne {{n}}",
+      "debit": "Débit, ligne {{n}}",
+      "credit": "Crédit, ligne {{n}}"
+    },
+    "retirer": "Retirer",
+    "ajouterLigne": "Ajouter une ligne",
+    "proposer": "Proposer",
+    "aucune": "Aucune écriture proposée.",
+    "statuts": {
+      "proposee": "Proposée",
+      "acceptee": "Acceptée par l'entité",
+      "refusee": "Refusée par l'entité"
+    },
+    "effet": "Effet sur le résultat : {{montant}}",
+    "decision": "décision enregistrée par {{par}} le {{date}}",
+    "accepter": "Enregistrer l'acceptation",
+    "refuser": "Enregistrer le refus",
+    "motif": "Motif du refus de l'écriture {{n}}",
+    "motifPlaceholder": "Motif du refus",
+    "modifier": "Modifier",
+    "supprimer": "Supprimer"
   }
 }

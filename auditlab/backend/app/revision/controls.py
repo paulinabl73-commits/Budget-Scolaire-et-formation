@@ -97,17 +97,20 @@ def equilibre(db: Session, parsed: Parsed) -> None:
 # --- Comptes hors plan -------------------------------------------------------------------------
 
 
+def plan_roots(db: Session, framework_id: Any) -> set[str]:
+    """Racines du référentiel assez longues pour reconnaître un compte (comptes hors plan)."""
+    minimum = get_settings().racine_minimale_plan
+    numbers = db.scalars(
+        select(FrameworkAccount.numero).where(FrameworkAccount.framework_id == framework_id)
+    )
+    return {n for n in numbers if len(n) >= minimum}
+
+
 def hors_plan(db: Session, parsed: Parsed) -> None:
     """Chaque compte doit commencer par une racine du référentiel d'au moins N chiffres."""
     if parsed.request.type not in ("balance", "grand_livre"):
         return  # les balances auxiliaires portent des codes tiers
-    minimum = get_settings().racine_minimale_plan
-    numbers = db.scalars(
-        select(FrameworkAccount.numero).where(
-            FrameworkAccount.framework_id == parsed.file.framework_id
-        )
-    )
-    roots = {n for n in numbers if len(n) >= minimum}
+    roots = plan_roots(db, parsed.file.framework_id)
     if parsed.ledger is not None:
         accounts = sorted(set(parsed.ledger["compte"].to_list()))
     else:

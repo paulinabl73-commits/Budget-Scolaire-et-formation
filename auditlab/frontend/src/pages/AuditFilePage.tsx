@@ -5,6 +5,7 @@ import { Link, useParams, useSearchParams } from "react-router-dom";
 import { api } from "../api/client";
 import type { AuditFile } from "../api/types";
 import Alert from "../components/Alert";
+import AdjustmentsPanel from "../components/revision/AdjustmentsPanel";
 import AnalyticalPanel from "../components/revision/AnalyticalPanel";
 import ImportsPanel from "../components/revision/ImportsPanel";
 import MappingPanel from "../components/revision/MappingPanel";
@@ -15,7 +16,7 @@ import RiskMatrixPanel from "../components/revision/RiskMatrixPanel";
 import StatementsPreview from "../components/revision/StatementsPreview";
 import { formatDate } from "../lib/format";
 
-const VIEWS = ["donnees", "affectation", "planification", "analytique", "ratios", "risques"] as const;
+const VIEWS = ["donnees", "affectation", "planification", "analytique", "ratios", "risques", "ajustements"] as const;
 type View = (typeof VIEWS)[number];
 
 /** Dossier de révision (Module 5) : balances, affectation, seuils, revue analytique. */
@@ -80,6 +81,7 @@ export default function AuditFilePage() {
       {view === "analytique" && <AnalyticalPanel file={file} />}
       {view === "ratios" && <RatiosPanel file={file} />}
       {view === "risques" && <RiskMatrixPanel file={file} />}
+      {view === "ajustements" && <AdjustmentsPanel file={file} />}
     </div>
   );
 }

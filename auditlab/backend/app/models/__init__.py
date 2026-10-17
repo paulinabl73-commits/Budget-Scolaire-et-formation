@@ -49,6 +49,8 @@ from app.models.program import (
 from app.models.revision import (
     AccountingFramework,
     AccountMapping,
+    Adjustment,
+    AdjustmentLine,
     AnalyticalJustification,
     AssertionRisk,
     AuditFile,
@@ -80,6 +82,8 @@ from app.models.workpaper import (
 __all__ = [
     "AccountingFramework",
     "AccountMapping",
+    "Adjustment",
+    "AdjustmentLine",
     "AnalyticalJustification",
     "AssertionRisk",
     "AuditFile",
