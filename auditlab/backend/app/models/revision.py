@@ -14,11 +14,13 @@ from sqlalchemy import (
     Boolean,
     Date,
     ForeignKey,
+    Index,
     Integer,
     Numeric,
     String,
     Text,
     UniqueConstraint,
+    text,
 )
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
@@ -117,6 +119,11 @@ class AuditFile(TrackedMixin, Base):
     """Dossier de révision d'une entité pour un exercice (REV-02, REV-03, REV-04)."""
 
     __tablename__ = "audit_files"
+    # Un seul dossier actif par entité et par exercice.
+    __table_args__ = (
+        Index("uq_audit_files_entite_exercice", "entity_id", "exercice", unique=True,
+              postgresql_where=text("deleted_at IS NULL")),
+    )  # fmt: skip
 
     engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
     entity_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("auditable_entities.id"), index=True)
