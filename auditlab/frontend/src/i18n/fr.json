@@ -16,7 +16,8 @@
     "carte": "Carte des risques",
     "plan": "Plan annuel",
     "missions": "Missions",
-    "bibliotheque": "Bibliothèque"
+    "bibliotheque": "Bibliothèque",
+    "marques": "Marques de révision"
   },
   "commun": {
     "enregistrer": "Enregistrer",
@@ -586,5 +587,20 @@
     "defaire": "Annuler",
     "refaire": "Rétablir",
     "zone": "Travaux réalisés"
+  },
+  "marques": {
+    "titre": "Marques de révision (tickmarks)",
+    "intro": "Symboles insérés dans les travaux pour signaler une vérification. Une marque désactivée n'est plus proposée mais reste lisible dans les papiers existants.",
+    "symbole": "Symbole",
+    "libelle": "Signification",
+    "couleur": "Couleur",
+    "actif": "Active",
+    "ajouter": "Ajouter la marque",
+    "inserer": "Insérer une marque",
+    "choisir": "— Marque —",
+    "legende": "Légende des marques",
+    "enregistre": "Marques mises à jour.",
+    "desactiver": "Désactiver",
+    "activer": "Activer"
   }
 }

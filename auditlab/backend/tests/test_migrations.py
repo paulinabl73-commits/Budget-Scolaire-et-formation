@@ -6,6 +6,8 @@ from sqlalchemy import text
 from app.db import engine
 from tests.conftest import alembic_config
 
+SEEDED = ("risk_criteria", "risks", "controls", "risk_controls", "procedures", "tickmarks")
+
 
 def test_migrations_aller_retour_et_donnees_de_depart():
     cfg = alembic_config()
@@ -14,7 +16,7 @@ def test_migrations_aller_retour_et_donnees_de_depart():
     with engine.connect() as conn:
         counts = {
             t: conn.scalar(text(f"SELECT count(*) FROM {t}"))  # noqa: S608
-            for t in ("risk_criteria", "risks", "controls", "risk_controls", "procedures")
+            for t in SEEDED
         }
     assert counts == {
         "risk_criteria": 5,
@@ -22,4 +24,5 @@ def test_migrations_aller_retour_et_donnees_de_depart():
         "controls": 15,
         "risk_controls": 15,
         "procedures": 16,
+        "tickmarks": 6,
     }

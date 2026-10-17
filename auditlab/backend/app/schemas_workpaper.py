@@ -64,3 +64,28 @@ class AttachmentOut(BaseModel):
     version: int
     created_at: datetime | None = None
     url: str = ""
+
+
+class TickmarkIn(BaseModel):
+    symbole: str = Field(min_length=1, max_length=4)
+    libelle: str = Field(min_length=1, max_length=200)
+    couleur: str = Field(default="#1f5fa8", pattern=r"^#[0-9a-fA-F]{6}$")
+    ordre: int = 0
+
+
+class TickmarkUpdate(BaseModel):
+    libelle: str | None = Field(default=None, min_length=1, max_length=200)
+    couleur: str | None = Field(default=None, pattern=r"^#[0-9a-fA-F]{6}$")
+    ordre: int | None = None
+    actif: bool | None = None
+
+
+class TickmarkOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    symbole: str
+    libelle: str
+    couleur: str
+    ordre: int
+    actif: bool

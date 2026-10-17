@@ -339,3 +339,12 @@ export interface Attachment {
   created_at: string | null;
   url: string;
 }
+
+export interface Tickmark {
+  id: string;
+  symbole: string;
+  libelle: string;
+  couleur: string;
+  ordre: number;
+  actif: boolean;
+}

@@ -54,3 +54,14 @@ export function unresolveImages(doc: RichDoc): RichDoc {
     return attachmentId ? { ...rest, src: `attachment:${String(attachmentId)}` } : rest;
   }) as RichDoc;
 }
+
+/** Identifiants des marques de révision présentes dans un document. */
+export function tickmarkIds(doc: RichDoc): Set<string> {
+  const found = new Set<string>();
+  const walk = (n: AnyNode) => {
+    if (n.type === "tickmark" && n.attrs?.id) found.add(String(n.attrs.id));
+    (n.content ?? []).forEach(walk);
+  };
+  walk(doc as AnyNode);
+  return found;
+}

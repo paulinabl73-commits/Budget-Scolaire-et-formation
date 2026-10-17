@@ -4,7 +4,7 @@ import uuid
 from enum import StrEnum
 from typing import Any
 
-from sqlalchemy import BigInteger, ForeignKey, Integer, String, Text
+from sqlalchemy import BigInteger, Boolean, ForeignKey, Integer, String, Text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -51,3 +51,15 @@ class Attachment(TrackedMixin, Base):
     storage_key: Mapped[str] = mapped_column(String(300), unique=True)
     # Un même nom déposé plusieurs fois sur un papier forme des versions successives.
     version: Mapped[int] = mapped_column(Integer, default=1)
+
+
+class Tickmark(TrackedMixin, Base):
+    """Marque de révision paramétrable insérée dans les travaux (AUD-16)."""
+
+    __tablename__ = "tickmarks"
+
+    symbole: Mapped[str] = mapped_column(String(4), unique=True)
+    libelle: Mapped[str] = mapped_column(String(200))
+    couleur: Mapped[str] = mapped_column(String(7), default="#1f5fa8")
+    ordre: Mapped[int] = mapped_column(Integer, default=0)
+    actif: Mapped[bool] = mapped_column(Boolean, default=True)

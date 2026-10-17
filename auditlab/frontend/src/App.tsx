@@ -21,6 +21,7 @@ const MissionsPage = lazy(() => import("./pages/MissionsPage"));
 const MissionPage = lazy(() => import("./pages/MissionPage"));
 const LibraryPage = lazy(() => import("./pages/LibraryPage"));
 const WorkpaperPage = lazy(() => import("./pages/WorkpaperPage"));
+const TickmarksPage = lazy(() => import("./pages/TickmarksPage"));
 
 export default function App() {
   const { t } = useTranslation();
@@ -113,6 +114,14 @@ export default function App() {
           element={
             <RequireAuth permission={[PERM.MISSIONS_READ_ALL, PERM.MISSIONS_READ_OWN]}>
               <LibraryPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="marques"
+          element={
+            <RequireAuth permission={[PERM.SETTINGS_MANAGE, PERM.PLAN_MANAGE]}>
+              <TickmarksPage />
             </RequireAuth>
           }
         />

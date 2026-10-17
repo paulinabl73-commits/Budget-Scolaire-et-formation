@@ -324,3 +324,81 @@ def test_aud14_contenu_refuse(client, ctx, node, message):
         f"{ctx['url']}/workpapers", json={**WP, "travaux": _doc(node)}, headers=ctx["aud"].headers
     )
     assert resp.status_code == 422 and message in resp.json()["detail"]
+
+
+def test_aud16_marques_de_revision(client, ctx, account):
+    directeur = account(Role.DIRECTEUR).headers
+    tm = client.post(
+        "/api/tickmarks",
+        json={"symbole": "✓", "libelle": "Vérifié sur pièce", "couleur": "#15803d"},
+        headers=directeur,
+    )
+    assert tm.status_code == 201
+    tm = tm.json()
+    assert (
+        client.post(
+            "/api/tickmarks", json={"symbole": "✓", "libelle": "Doublon"}, headers=directeur
+        ).status_code
+        == 409
+    )
+    assert (
+        client.post(
+            "/api/tickmarks",
+            json={"symbole": "Σ", "libelle": "x", "couleur": "rouge"},
+            headers=directeur,
+        ).status_code
+        == 422
+    )
+    assert (
+        client.post(
+            "/api/tickmarks", json={"symbole": "Σ", "libelle": "x"}, headers=ctx["aud"].headers
+        ).status_code
+        == 403
+    )
+
+    mark = {"type": "tickmark", "attrs": {"id": tm["id"], "symbole": "✓"}}
+    cell = {
+        "type": "tableCell",
+        "content": [{"type": "paragraph", "content": [{"type": "text", "text": "150 000 "}, mark]}],
+    }
+    doc = _doc(
+        _para("Montant vérifié"),
+        {"type": "paragraph", "content": [mark]},
+        {"type": "table", "content": [{"type": "tableRow", "content": [cell]}]},
+    )
+    wp = create(client, ctx, travaux=doc)
+    assert to_plain_text(wp["travaux"]) == "Montant vérifié\n[✓]\n150 000 [✓]"
+
+    from app.richtext import tickmark_ids
+
+    assert tickmark_ids(wp["travaux"]) == {tm["id"]}
+    unknown = _doc(
+        {
+            "type": "paragraph",
+            "content": [{"type": "tickmark", "attrs": {"id": str(uuid.uuid4()), "symbole": "?"}}],
+        }
+    )
+    resp = client.patch(
+        f"/api/workpapers/{wp['id']}", json={"travaux": unknown}, headers=ctx["aud"].headers
+    )
+    assert resp.status_code == 422 and "Marque" in resp.json()["detail"]
+
+    # Une marque désactivée n'est plus proposée mais reste valide dans les papiers existants.
+    resp = client.patch(
+        f"/api/tickmarks/{tm['id']}", json={"actif": False, "couleur": "#000000"}, headers=directeur
+    )
+    assert resp.json()["actif"] is False
+    resp = client.patch(
+        f"/api/workpapers/{wp['id']}",
+        json={"travaux": doc, "titre": "Revu"},
+        headers=ctx["aud"].headers,
+    )
+    assert resp.status_code == 200
+    listed = client.get("/api/tickmarks", headers=ctx["aud"].headers).json()
+    assert [(t["symbole"], t["actif"]) for t in listed] == [("✓", False)]
+    assert (
+        client.patch(
+            f"/api/tickmarks/{uuid.uuid4()}", json={"ordre": 1}, headers=directeur
+        ).status_code
+        == 404
+    )

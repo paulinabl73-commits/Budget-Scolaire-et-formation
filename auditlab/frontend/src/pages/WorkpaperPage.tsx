@@ -4,10 +4,12 @@ import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 
 import { api, patch } from "../api/client";
-import type { Attachment, ControlAssessment, RichDoc, Workpaper, WorkpaperSummary } from "../api/types";
+import type { Attachment, ControlAssessment, RichDoc, Tickmark, Workpaper, WorkpaperSummary } from "../api/types";
 import Alert from "../components/Alert";
 import AttachmentsPanel from "../components/workpaper/AttachmentsPanel";
 import RichEditor from "../components/workpaper/RichEditor";
+import { TickmarkNode } from "../components/workpaper/tickmark";
+import { tickmarkIds } from "../lib/richtext";
 import { resolveImages, unresolveImages } from "../lib/richtext";
 
 const EVALS: ControlAssessment[] = ["efficace", "partiellement_efficace", "inefficace"];
@@ -20,6 +22,7 @@ export default function WorkpaperPage() {
   const [f, setF] = useState({ titre: "", objectif: "", conclusion: "", evaluation: "" });
   const [travaux, setTravaux] = useState<RichDoc>({ type: "doc", content: [] });
   const [siblings, setSiblings] = useState<WorkpaperSummary[]>([]);
+  const [tickmarks, setTickmarks] = useState<Tickmark[]>([]);
   const [message, setMessage] = useState<{ kind: "erreur" | "succes"; text: string } | null>(null);
 
   const apply = (w: Workpaper, files: Attachment[]) => {
@@ -42,6 +45,7 @@ export default function WorkpaperPage() {
     const [w, files] = await Promise.all([api<Workpaper>(`/workpapers/${wpId}`), loadAttachments()]);
     apply(w, files);
     setSiblings((await api<WorkpaperSummary[]>(`/engagements/${w.engagement_id}/workpapers`)).filter((x) => x.id !== w.id));
+    setTickmarks(await api<Tickmark[]>("/tickmarks"));
   }, [wpId, loadAttachments]);
   useEffect(() => {
     load().catch((e: Error) => setMessage({ kind: "erreur", text: e.message }));
@@ -92,7 +96,18 @@ export default function WorkpaperPage() {
         <div>
           <p className="etiquette mb-1">{t("papiers.travaux")}</p>
           <RichEditor value={travaux} editable={!ro} onChange={setTravaux} images={attachments}
-            workpapers={siblings} missionId={wp.engagement_id} />
+            workpapers={siblings} missionId={wp.engagement_id} extraExtensions={[TickmarkNode]}
+            extraTools={(editor) => (
+              <select aria-label={t("marques.inserer")} className="rounded border border-slate-300 px-1 py-1 text-sm" value=""
+                onChange={(e) => {
+                  const tm = tickmarks.find((x) => x.id === e.target.value);
+                  if (tm) editor.chain().focus().insertTickmark({ id: tm.id, symbole: tm.symbole, couleur: tm.couleur, libelle: tm.libelle }).run();
+                }}>
+                <option value="">{t("marques.inserer")}</option>
+                {tickmarks.filter((x) => x.actif).map((x) => <option key={x.id} value={x.id}>{x.symbole} {x.libelle}</option>)}
+              </select>
+            )} />
+          <Legend tickmarks={tickmarks.filter((x) => tickmarkIds(travaux).has(x.id))} />
         </div>
         <div>
           <label htmlFor="w-concl" className="etiquette">{t("papiers.conclusion")}</label>
@@ -108,6 +123,23 @@ export default function WorkpaperPage() {
         {!ro && <button type="submit" className="btn-primaire">{t("commun.enregistrer")}</button>}
       </form>
       <AttachmentsPanel workpaperId={wp.id} attachments={attachments} editable={!ro} onChange={() => void loadAttachments()} />
+    </div>
+  );
+}
+
+function Legend({ tickmarks }: { tickmarks: Tickmark[] }) {
+  const { t } = useTranslation();
+  if (!tickmarks.length) return null;
+  return (
+    <div className="mt-2 rounded border border-slate-200 bg-slate-50 px-3 py-2 text-xs">
+      <p className="font-medium">{t("marques.legende")}</p>
+      <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
+        {tickmarks.map((x) => (
+          <li key={x.id}>
+            <span className="font-bold" style={{ color: x.couleur }}>{x.symbole}</span> {x.libelle}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

@@ -99,7 +99,7 @@ def workpaper_out(db: Session, wp: Workpaper, engagement: Engagement, user: User
 def _check_doc(db: Session, doc: dict | None, workpaper_id: uuid.UUID | None = None) -> None:
     if doc is None:
         return
-    from app.models.workpaper import Attachment
+    from app.models.workpaper import Attachment, Tickmark
 
     allowed: set[str] = set()
     if workpaper_id:
@@ -111,8 +111,12 @@ def _check_doc(db: Session, doc: dict | None, workpaper_id: uuid.UUID | None = N
                 )
             )
         }
+    # Une marque désactivée reste admise dans les papiers qui l'utilisent déjà.
+    tickmarks = {
+        str(i) for i in db.scalars(select(Tickmark.id).where(Tickmark.deleted_at.is_(None)))
+    }
     try:
-        validate_doc(doc, allowed)
+        validate_doc(doc, allowed, tickmarks)
     except InvalidDocument as exc:
         raise HTTPException(422, str(exc)) from exc
 

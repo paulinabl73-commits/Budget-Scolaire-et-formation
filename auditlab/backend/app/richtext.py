@@ -63,6 +63,7 @@ ALLOWED_NODES = {
     "tableCell",
     "tableHeader",
     "image",
+    "tickmark",
 }
 ALLOWED_MARKS = {"bold", "italic", "underline", "strike", "link", "code"}
 LINK_PREFIXES = ("https://", "http://", "mailto:", "/missions/")
@@ -73,7 +74,23 @@ class InvalidDocument(ValueError):
     pass
 
 
-def validate_doc(doc: Any, allowed_attachments: set[str] | None = None) -> None:
+def tickmark_ids(doc: dict[str, Any] | None) -> set[str]:
+    """Identifiants des marques de révision utilisées dans un document."""
+    found: set[str] = set()
+    stack = [doc] if doc else []
+    while stack:
+        node = stack.pop()
+        if node.get("type") == "tickmark":
+            found.add(str((node.get("attrs") or {}).get("id", "")))
+        stack.extend(node.get("content", []) or [])
+    return found
+
+
+def validate_doc(
+    doc: Any,
+    allowed_attachments: set[str] | None = None,
+    allowed_tickmarks: set[str] | None = None,
+) -> None:
     """Refuse tout nœud, marque, lien ou image non admis.
 
     Les images doivent désigner une pièce jointe du papier (`attachment:<id>`) ; les liens
@@ -105,4 +122,7 @@ def validate_doc(doc: Any, allowed_attachments: set[str] | None = None) -> None:
                 and src[len(IMAGE_PREFIX) :] not in allowed_attachments
             ):
                 raise InvalidDocument("Image inconnue : déposez-la d'abord en pièce jointe")
+        if kind == "tickmark" and allowed_tickmarks is not None:
+            if str((node.get("attrs") or {}).get("id", "")) not in allowed_tickmarks:
+                raise InvalidDocument("Marque de révision inconnue")
         stack.extend(node.get("content", []) or [])

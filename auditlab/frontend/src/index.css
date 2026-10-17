@@ -34,3 +34,4 @@
 .prose-travaux th { background: #f1f5f9; font-weight: 600; text-align: left; }
 .prose-travaux img { max-width: 100%; display: inline-block; border: 1px solid #e2e8f0; }
 .prose-travaux .selectedCell { background: #dbeafe; }
+.prose-travaux .tickmark { font-weight: 700; padding: 0 0.1rem; cursor: help; }
