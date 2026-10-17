@@ -211,3 +211,128 @@ def test_aud19_approbation_bloquee_par_les_notes(client, team):
     assert r.status_code == 409 and "note(s) de revue" in r.json()["detail"]
     client.post(f"/api/review-notes/{n['id']}/close", headers=team["chef"].headers)
     assert sign(client, wp, team["chef"], "approuve").status_code == 201
+
+
+def test_aud20_modification_apres_signature(client, team, db):
+    from sqlalchemy import select
+
+    from app.models import EmailMessage
+
+    wp = ready_workpaper(client, team)
+    sign(client, wp, team["aud"], "prepare")
+    sign(client, wp, team["chef"], "revu")
+    resp = client.patch(
+        f"/api/workpapers/{wp['id']}",
+        json={"conclusion": "Contrôle non opérant"},
+        headers=team["aud"].headers,
+    )
+    detail = resp.json()
+    assert detail["statut_signature"] == "brouillon" and detail["signatures"] == []
+    history = client.get(f"/api/workpapers/{wp['id']}/signoffs", headers=team["aud"].headers).json()
+    assert all(s["annule_le"] for s in history)
+    assert history[0]["motif_annulation"] == "version 2 enregistrée"
+
+    # Le réviseur (chef de mission) est notifié, dans l'application et par e-mail.
+    notes = client.get("/api/me/notifications", headers=team["chef"].headers).json()
+    assert notes["non_lues"] == 1
+    n = notes["items"][0]
+    assert n["type"] == "signature_annulee" and "A-1" in n["titre"]
+    assert n["lien"] == f"/missions/{team['mission']['id']}/papiers/{wp['id']}"
+    mail = db.scalar(
+        select(EmailMessage).where(EmailMessage.destinataire == team["chef"].user.email)
+    )
+    assert mail.statut == "en_attente" and "A-1" in mail.sujet
+    # L'auteur de la modification n'est pas notifié.
+    assert client.get("/api/me/notifications", headers=team["aud"].headers).json()["non_lues"] == 0
+
+    assert (
+        client.post(
+            f"/api/me/notifications/{n['id']}/read", headers=team["chef"].headers
+        ).status_code
+        == 204
+    )
+    assert client.get("/api/me/notifications", headers=team["chef"].headers).json()["non_lues"] == 0
+    assert (
+        client.post(
+            f"/api/me/notifications/{n['id']}/read", headers=team["aud"].headers
+        ).status_code
+        == 404
+    )
+
+    # Nouvelle signature possible sur la nouvelle version.
+    resp = sign(client, wp, team["aud"], "prepare")
+    assert resp.status_code == 201 and resp.json()["version"] == 2
+
+
+def test_aud20_piece_jointe_apres_signature(client, team):
+    from tests.test_attachments import PDF, upload
+
+    wp = ready_workpaper(client, team)
+    sign(client, wp, team["aud"], "prepare")
+    a = upload(client, wp, team["aud"]).json()
+    assert (
+        client.get(f"/api/workpapers/{wp['id']}", headers=team["aud"].headers).json()[
+            "statut_signature"
+        ]
+        == "brouillon"
+    )
+    sign(client, wp, team["aud"], "prepare")
+    client.delete(f"/api/attachments/{a['id']}", headers=team["aud"].headers)
+    history = client.get(f"/api/workpapers/{wp['id']}/signoffs", headers=team["aud"].headers).json()
+    assert [s["motif_annulation"] for s in history] == [
+        "pièce jointe « facture.pdf » ajoutée",
+        "pièce jointe « facture.pdf » retirée",
+    ]
+    assert PDF
+    client.post("/api/me/notifications/read-all", headers=team["chef"].headers)
+    assert client.get("/api/me/notifications", headers=team["chef"].headers).json()["non_lues"] == 0
+
+
+def test_envoi_des_emails(db, monkeypatch):
+    from app.config import get_settings
+    from app.models import EmailMessage
+    from app.notify import send_pending
+
+    db.add(
+        EmailMessage(
+            destinataire="a@exemple.org",
+            sujet="Test",
+            corps="Bonjour",
+            statut="en_attente",
+            tentatives=0,
+        )
+    )
+    db.commit()
+    assert send_pending(db) == 0  # pas de serveur SMTP configuré
+
+    sent = []
+
+    class FakeSMTP:
+        def __init__(self, *a, **k):
+            pass
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def starttls(self):
+            pass
+
+        def login(self, *a):
+            pass
+
+        def send_message(self, msg):
+            sent.append(msg["To"])
+
+    monkeypatch.setattr("app.notify.smtplib.SMTP", FakeSMTP)
+    settings = get_settings()
+    monkeypatch.setattr(settings, "smtp_host", "smtp.exemple.org")
+    monkeypatch.setattr(settings, "smtp_user", "auditlab")
+    assert send_pending(db) == 1 and sent == ["a@exemple.org"]
+    db.expire_all()
+    assert db.query(EmailMessage).one().statut == "envoye"
+    from app.cli import main
+
+    assert main(["send-emails"]) == 0

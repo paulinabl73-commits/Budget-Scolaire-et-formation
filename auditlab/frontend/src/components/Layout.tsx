@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../auth/AuthContext";
+import NotificationBell from "./NotificationBell";
 import { can, PERM } from "../lib/permissions";
 
 const lien = ({ isActive }: { isActive: boolean }) =>
@@ -92,6 +93,7 @@ export default function Layout() {
         <div className="border-t border-marque-700 px-3 pt-4 text-sm text-marque-50">
           <p className="font-medium">{user?.nom}</p>
           <p className="text-xs text-marque-100">{user && t(`roles.${user.role}`)}</p>
+          <NotificationBell />
           <button type="button" onClick={onLogout} className="mt-3 text-sm underline">
             {t("nav.deconnexion")}
           </button>

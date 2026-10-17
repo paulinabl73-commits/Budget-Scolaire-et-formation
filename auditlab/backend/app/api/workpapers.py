@@ -225,6 +225,9 @@ def update_workpaper(
     require_preparer(engagement, user)
     if apply_update(db, wp, engagement, body):
         record_version(db, wp)
+        from app.api.signoffs import invalidate
+
+        invalidate(db, wp, engagement, user, f"version {wp.version} enregistrée")
     db.commit()
     return workpaper_out(db, wp, engagement, user)
 

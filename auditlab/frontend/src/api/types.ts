@@ -397,3 +397,13 @@ export interface ReviewNote {
   cloturee_le: string | null;
   reponses: { id: string; texte: string; auteur: string | null; created_at: string | null }[];
 }
+
+export interface AppNotification {
+  id: string;
+  type: string;
+  titre: string;
+  message: string;
+  lien: string | null;
+  lue_le: string | null;
+  created_at: string | null;
+}

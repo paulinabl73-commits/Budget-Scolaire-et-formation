@@ -189,3 +189,30 @@ def history(workpaper_id: uuid.UUID, user: CurrentUser, db: DbSession) -> list[S
 
     wp, _ = get_workpaper(db, workpaper_id, user)
     return [signoff_out(s) for s in signoffs_by_workpaper(db, [wp.id], active_only=False)[wp.id]]
+
+
+def invalidate(db: Session, wp: Workpaper, engagement: Engagement, actor: User, motif: str) -> int:
+    """AUD-20 : toute modification après signature annule les signatures et prévient le
+    réviseur. Renvoie le nombre de signatures annulées."""
+    from app.notify import notify
+
+    active = signoffs_by_workpaper(db, [wp.id])[wp.id]
+    if not active:
+        return 0
+    now = datetime.now(UTC)
+    for s in active:
+        s.annule_le = now
+        s.motif_annulation = motif
+    recipients = {s.user_id for s in active if s.type != SignoffType.PREPARE}
+    recipients |= {m.user_id for m in engagement.members if m.role_mission == MissionRole.CHEF}
+    recipients.discard(actor.id)
+    notify(
+        db,
+        recipients,
+        "signature_annulee",
+        f"{engagement.reference} · {wp.reference} modifié après signature",
+        f"{actor.nom} a modifié le papier {wp.reference} « {wp.titre} » ({motif}). "
+        f"Ses {len(active)} signature(s) sont annulées : une nouvelle revue est nécessaire.",
+        lien=f"/missions/{engagement.id}/papiers/{wp.id}",
+    )
+    return len(active)

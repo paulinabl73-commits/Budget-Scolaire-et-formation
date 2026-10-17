@@ -15,6 +15,7 @@ from app.api import (
     engagements,
     library,
     meta,
+    notifications,
     plans,
     program,
     review_notes,
@@ -94,5 +95,6 @@ for router in (
     tickmarks.router,
     signoffs.router,
     review_notes.router,
+    notifications.router,
 ):
     app.include_router(router, prefix="/api")

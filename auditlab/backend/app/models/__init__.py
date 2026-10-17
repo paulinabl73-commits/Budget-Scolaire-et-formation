@@ -9,6 +9,7 @@ from app.models.engagement import (
     TimeActivity,
     TimeEntry,
 )
+from app.models.notification import EmailMessage, Notification
 from app.models.plan import AuditPlan, PlanItem, PlanStatus
 from app.models.program import (
     Control,
@@ -54,6 +55,7 @@ __all__ = [
     "ControlType",
     "Cycle",
     "CriterionMode",
+    "EmailMessage",
     "Engagement",
     "EngagementMember",
     "EngagementStatus",
@@ -61,6 +63,7 @@ __all__ = [
     "EntityType",
     "Frequency",
     "MissionRole",
+    "Notification",
     "PlanItem",
     "Procedure",
     "ProcedureStatus",

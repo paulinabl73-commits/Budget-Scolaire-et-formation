@@ -30,6 +30,14 @@ class Settings(BaseSettings):
     s3_secret_key: str | None = None
     s3_bucket: str = "auditlab"
     max_upload_mb: int = 100
+    # Envoi des e-mails : sans serveur SMTP, les messages restent en file (journalisés).
+    smtp_host: str | None = None
+    smtp_port: int = 587
+    smtp_user: str | None = None
+    smtp_password: str | None = None
+    smtp_tls: bool = True
+    mail_from: str = "auditlab@localhost"
+    public_url: str = "http://localhost:8080"
     log_level: str = "INFO"
 
 

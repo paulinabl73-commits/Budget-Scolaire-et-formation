@@ -668,5 +668,12 @@
       "general": "Le papier en général"
     },
     "ouvertes": "{{count}} note(s) non clôturée(s)"
+  },
+  "notifications": {
+    "titre": "Notifications",
+    "nonLues": "{{count}} notification(s) non lue(s)",
+    "aucune": "Aucune notification.",
+    "toutLu": "Tout marquer comme lu",
+    "ouvrir": "Ouvrir"
   }
 }

@@ -58,6 +58,14 @@ def cmd_create_admin(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_send_emails(_: argparse.Namespace) -> int:
+    from app.notify import send_pending
+
+    with SessionLocal() as db:
+        print(f"{send_pending(db)} e-mail(s) envoyé(s).")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="auditlab")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -65,8 +73,14 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("create-admin", help="Crée le premier administrateur")
     p.add_argument("--email", required=True)
     p.add_argument("--nom", default="Administrateur")
+    sub.add_parser("send-emails", help="Envoie les e-mails en attente (SMTP)")
     args = parser.parse_args(argv)
-    return {"verify-audit-chain": cmd_verify, "create-admin": cmd_create_admin}[args.cmd](args)
+    commands = {
+        "verify-audit-chain": cmd_verify,
+        "create-admin": cmd_create_admin,
+        "send-emails": cmd_send_emails,
+    }
+    return commands[args.cmd](args)
 
 
 if __name__ == "__main__":

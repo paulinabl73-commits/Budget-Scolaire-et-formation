@@ -11,6 +11,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.api.deps import CurrentUser, DbSession, user_from_request
+from app.api.signoffs import invalidate
 from app.api.workpapers import get_workpaper, require_preparer
 from app.audit.listeners import record_event
 from app.config import get_settings
@@ -106,6 +107,7 @@ def upload(
         version=previous + 1,
     )
     db.add(attachment)
+    invalidate(db, wp, engagement, user, f"pièce jointe « {name} » ajoutée")
     db.commit()
     return attachment_out(attachment)
 
@@ -153,8 +155,9 @@ def delete_attachment(attachment_id: uuid.UUID, user: CurrentUser, db: DbSession
     )
     if attachment is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Pièce jointe introuvable")
-    _, engagement = get_workpaper(db, attachment.workpaper_id, user)
+    wp, engagement = get_workpaper(db, attachment.workpaper_id, user)
     require_preparer(engagement, user)
     attachment.deleted_at = datetime.now(UTC)
     attachment.deleted_by = user.id
+    invalidate(db, wp, engagement, user, f"pièce jointe « {attachment.nom_fichier} » retirée")
     db.commit()
