@@ -16,6 +16,37 @@ Le document de synthèse partageable reprend ce fichier.
 - Fichiers stockés hors base, dans un stockage compatible S3 (MinIO) chiffré au repos.
   Téléchargements journalisés ; liens signés valides une heure pour l'affichage des images.
 
+## Module 2 — analyse de données
+
+### Lot 5
+- Les données analysées restent hors de la base de gestion : fichiers Parquet compressés,
+  écrits une seule fois puis en lecture seule. La base ne garde que les métadonnées.
+- Le fichier source déposé est conservé tel quel avec son empreinte SHA-256 (élément probant,
+  ISA 500 et norme IIA 2330). La table produite a sa propre empreinte ; les deux se vérifient à
+  tout moment.
+- Formats par défaut de l'assistant : encodage détecté (UTF-8 ou Windows-1252), séparateur
+  « ; », virgule décimale, espace pour les milliers, dates jj/mm/aaaa, montants entre
+  parenthèses lus comme négatifs. Tous sont modifiables avant import.
+- Une valeur non convertible n'interrompt pas l'import : elle devient vide et le nombre de
+  valeurs concernées est signalé par colonne, pour que l'auditeur l'apprécie.
+- Totaux de contrôle : somme exacte (arithmétique décimale) et nombre de valeurs de chaque
+  colonne numérique, première et dernière date ; ils servent au rapprochement avec la
+  source (balance, journal).
+- Taille maximale d'un fichier importé : 2 Go (paramétrable).
+- Bases SQL : seul l'administrateur déclare une source (adresse et compte de lecture) ; les
+  utilisateurs n'écrivent qu'une requête SELECT, exécutée dans une transaction en lecture
+  seule. Aucun utilisateur ne saisit d'adresse de connexion.
+- Relevés PDF : seuls les PDF à texte sont lus (pas de reconnaissance de caractères sur les
+  scans).
+- Champs calculés : syntaxe proche d'Excel en français (SI, ARRONDI, ANNEE…, arguments séparés
+  par « ; »), mots-clés anglais acceptés ; une division par zéro donne une valeur vide. Pas de
+  fonction « aujourd'hui », pour que le résultat soit reproductible (NF-04).
+- Une vue ne contient aucune donnée : la modifier est permis, la table d'origine ne change
+  jamais.
+- Statistiques : écart-type d'échantillon (n − 1), comme IDEA et Excel (ECARTYPE).
+- Droits : lecture des données par les rôles ayant `data:read` ; import, vues et analyses par
+  les membres de la mission ayant `data:analyze` (auditeur, chef de mission, data analyst).
+
 ## Module 1 — gestion des audits
 
 ### Lot 4

@@ -6,7 +6,7 @@
 | 2 | Univers et plan : AUD-01 à AUD-05 | **Livré** |
 | 3 | Missions et programme : AUD-06 à AUD-12 | **Livré** |
 | 4 | Papiers de travail et revue : AUD-13 à AUD-22 | **Livré** |
-| 5 | Import de données : DAT-01 à DAT-08 | À faire |
+| 5 | Import de données : DAT-01 à DAT-08 | **Livré** |
 | 6 | Analyses : DAT-09 à DAT-19 | À faire |
 | 7 | Échantillonnage et lignée : DAT-20 à DAT-25 | À faire |
 | 8 | Liaison audit et analyse, constats : DAT-30 à DAT-32, CON-01 à CON-09 | À faire |
@@ -16,6 +16,28 @@
 | 8d | Inventaire, fiscalité et livrables : RCO-11 à RCO-27 | À faire |
 | 9 | Scripts et automatisation : DAT-26 à DAT-29 | À faire |
 | 10 | Reporting et finitions : REP-01 à REP-08, NF-09 à NF-11 | À faire |
+
+## Lot 5 — détail
+
+**Livré** (un commit par exigence)
+- **DAT-01** : import CSV, TXT à largeur fixe, Excel (.xlsx, .xls), JSON (aplati), Parquet et
+  requêtes sur des bases SQL déclarées par l'administrateur ; import en tâche de fond (Celery).
+- **DAT-02** : assistant d'import : détection de l'encodage (UTF-8, Windows-1252), du
+  séparateur et des types, aperçu de 100 lignes, formats français (virgule décimale, espace
+  des milliers, jj/mm/aaaa, montants négatifs entre parenthèses).
+- **DAT-03** : relevés PDF (pdfplumber), par tableaux détectés ou par colonnes définies par
+  l'utilisateur, avec choix des pages.
+- **DAT-04** : empreinte SHA-256 du fichier source et de la table, nombre de lignes, totaux de
+  contrôle ; vérification d'intégrité rejouable.
+- **DAT-05** : tables en Parquet, écrites une fois puis en lecture seule (0444).
+- **DAT-06** : champs calculés par expression (grammaire fermée, 37 fonctions françaises et
+  anglaises), créés comme vue sans copie ni modification de la source.
+- **DAT-07** : grille virtualisée AG Grid (blocs de 200 lignes lus par DuckDB) : tri, filtres,
+  recherche, masquage de colonnes. Test de volume : page au milieu d'un tri sur 1 million de
+  lignes en moins de 3 s.
+- **DAT-08** : statistiques de champ sur la table ou la sélection filtrée.
+- Tests : 283 tests backend (couverture de 98 %) et 21 tests frontend. Le parcours import,
+  grille, recherche, tri, statistiques et champ calculé a été rejoué dans un navigateur.
 
 ## Lot 4 — détail
 

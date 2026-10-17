@@ -16,6 +16,10 @@ auditlab/
                       program.py, templates.py, mission_access.py = lot 3
                       workpapers.py, attachments.py, tickmarks.py, signoffs.py,
                       review_notes.py, notifications.py = lot 4
+                      datasets.py, imports.py, views.py = lot 5
+      analytics/      Module 2 : store.py (Parquet, DuckDB), formats.py, detect.py, pdf.py,
+                      sql_source.py, jobs.py (tâches Celery), expr.py (expressions),
+                      relation.py (relation SQL d'une table ou d'une vue), grid.py
       audit/          chain.py (chaînage par hash), listeners.py (journalisation automatique)
       models/         modèles SQLAlchemy ; base.py = TrackedMixin
       security/       passwords (Argon2), totp, sessions, roles (matrice des droits)
@@ -29,7 +33,7 @@ auditlab/
     tests/            pytest (base PostgreSQL réelle)
   frontend/           React 18, TypeScript, Vite, Tailwind, AG Grid
     src/i18n/fr.json  TOUS les textes de l'interface (NF-13)
-  docker-compose.yml  db + minio + backend + frontend (nginx, proxy /api)
+  docker-compose.yml  db + minio + redis + backend + worker (Celery) + frontend (nginx, proxy /api)
 ```
 
 ## Commandes
@@ -177,3 +181,32 @@ docker compose up -d --build
   - l'écouteur `_refuse_closed_engagements` refuse toute écriture sur un objet portant
     l'`engagement_id` d'une mission clôturée. Toute nouvelle table rattachée à une mission doit
     donc porter `engagement_id`.
+
+### Lot 5 — import de données
+
+- **Stockage** : les lignes ne sont jamais en PostgreSQL. `Dataset` porte les métadonnées ; la
+  table est un fichier Parquet neuf (`store.write_table` ou `write_duckdb_query`) sous
+  `AUDITLAB_DATA_DIR/<mission>/<uuid>.parquet`, en droits 0444. Aucune route ne réécrit une
+  table : toute transformation crée une nouvelle table (lignée au lot 7).
+- **Import** : dépôt (`Upload`, fichier conservé dans le stockage comme preuve), détection
+  (`detect.suggest`), aperçu, puis tâche Celery `auditlab.import_dataset`
+  (`AUDITLAB_TASKS_EAGER=true` l'exécute dans le processus, comme dans les tests). Les fichiers
+  texte sont lus en chaînes puis convertis colonne par colonne aux formats français ; une valeur
+  non convertible devient vide et est comptée dans `options.avertissements`.
+- **Sources SQL** : déclarées par l'administrateur (`DataSource`, adresse masquée dans le
+  journal) ; requête en lecture seule contrôlée par `sql_source.check_query`.
+- **Empreintes** : `source_sha256` (fichier d'origine), `parquet_sha256` (table produite),
+  `totaux_controle` (somme exacte et nombre de valeurs par colonne numérique, bornes des dates).
+  `GET /datasets/{id}/integrity` les recalcule.
+- **Expressions** (`analytics/expr.py`) : grammaire fermée, compilée en SQL DuckDB. Colonnes
+  vérifiées dans le schéma puis citées (`quote_ident`), textes et dates en paramètres `?`,
+  nombres réécrits depuis leur valeur. Ajouter une fonction : `_fn("nom_fr nom_en", min, max,
+  "gabarit {0} {1:int}")`. À réutiliser pour l'extraction (DAT-09).
+- **Vues** (kind `vue`) : pas de fichier ; `definition.champs` = liste `{nom, expression}`.
+  `relation.relation(db, ds)` renvoie le SQL et les paramètres de n'importe quelle table (vues
+  imbriquées comprises) ; `relation.evaluate(rel, "SELECT … FROM t")` l'interroge. Toute
+  lecture (grille, statistiques, analyses) passe par là.
+- **Grille** : `POST /datasets/{id}/rows` traduit le modèle de filtres AG Grid en SQL paramétré
+  (`grid.where_clause`) ; `POST /datasets/{id}/stats` réutilise la même sélection.
+- **Tests** : `tests/data_helpers.make_dataset(db, mission_id, polars_df)` crée une table de
+  référence sans passer par l'import ; `tests/data_files.py` contient les fichiers d'exemple.
