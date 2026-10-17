@@ -16,6 +16,7 @@ const UsersPage = lazy(() => import("./pages/UsersPage"));
 const UniversePage = lazy(() => import("./pages/UniversePage"));
 const CriteriaPage = lazy(() => import("./pages/CriteriaPage"));
 const RiskMapPage = lazy(() => import("./pages/RiskMapPage"));
+const PlanPage = lazy(() => import("./pages/PlanPage"));
 
 export default function App() {
   const { t } = useTranslation();
@@ -68,6 +69,14 @@ export default function App() {
           element={
             <RequireAuth permission={PERM.PLAN_READ}>
               <RiskMapPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="plan"
+          element={
+            <RequireAuth permission={PERM.PLAN_READ}>
+              <PlanPage />
             </RequireAuth>
           }
         />

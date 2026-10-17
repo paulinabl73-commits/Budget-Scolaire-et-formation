@@ -13,7 +13,8 @@
     "principale": "Navigation principale",
     "univers": "Univers d'audit",
     "criteres": "Critères de risque",
-    "carte": "Carte des risques"
+    "carte": "Carte des risques",
+    "plan": "Plan annuel"
   },
   "commun": {
     "enregistrer": "Enregistrer",
@@ -234,5 +235,47 @@
       "eleve": "Élevé",
       "critique": "Critique"
     }
+  },
+  "plan": {
+    "titre": "Plan d'audit annuel",
+    "annee": "Année",
+    "creer": "Créer le plan {{annee}}",
+    "nouveauPlan": "Nouveau plan",
+    "aucun": "Aucun plan pour l'instant.",
+    "version": "Version {{version}}",
+    "statuts": {
+      "brouillon": "Brouillon",
+      "valide": "Validé",
+      "remplace": "Remplacé"
+    },
+    "capacite": "Capacité (jours-homme)",
+    "commentaire": "Commentaire",
+    "charge": "{{total}} j planifiés sur {{capacite}} j disponibles",
+    "chargeSansCapacite": "{{total}} j planifiés",
+    "depassement": "La charge dépasse la capacité de {{ecart}} j.",
+    "missions": "Missions prévues ({{count}})",
+    "aucuneMission": "Aucune mission. Ajoutez des entités de l'univers, en commençant par les plus risquées.",
+    "colTitre": "Mission",
+    "colEntite": "Entité",
+    "colScore": "Score",
+    "colBudget": "Budget (j)",
+    "colPeriode": "Période",
+    "colJustification": "Justification",
+    "du": "du {{debut}} au {{fin}}",
+    "ajouter": "Ajouter une mission",
+    "modifierMission": "Modifier la mission",
+    "entite": "Entité à auditer",
+    "choisirEntite": "— Choisir une entité (triées par score de risque) —",
+    "titreMission": "Intitulé de la mission",
+    "titreAide": "Par défaut : « Audit » suivi du nom de l'entité.",
+    "budget": "Budget (jours-homme)",
+    "debut": "Début de période",
+    "fin": "Fin de période",
+    "justification": "Justification",
+    "enregistrer": "Enregistrer la mission",
+    "retirer": "Retirer",
+    "confirmerRetrait": "Retirer « {{titre}} » du plan ?",
+    "enregistre": "Plan enregistré.",
+    "lectureSeule": "Ce plan n'est plus modifiable. Pour le faire évoluer, créez une nouvelle version."
   }
 }

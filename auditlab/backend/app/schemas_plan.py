@@ -2,10 +2,11 @@
 
 import uuid
 from datetime import date, datetime
-from typing import Any
+from typing import Any, Self
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from app.models.plan import PlanStatus
 from app.models.risk import Axis, CriterionMode
 from app.models.universe import EntityType
 
@@ -121,3 +122,73 @@ class RiskMapOut(BaseModel):
     echelle: int
     cellules: list[MapCell]
     non_evaluees: list[MapEntity]
+
+
+class PlanIn(BaseModel):
+    annee: int = Field(ge=2000, le=2100)
+    capacite_jours: float | None = Field(default=None, gt=0)
+    commentaire: str | None = None
+
+
+class PlanUpdate(BaseModel):
+    capacite_jours: float | None = Field(default=None, gt=0)
+    commentaire: str | None = None
+
+
+class _Period(BaseModel):
+    @model_validator(mode="after")
+    def _check_period(self) -> Self:
+        debut = getattr(self, "periode_debut", None)
+        fin = getattr(self, "periode_fin", None)
+        if debut and fin and fin < debut:
+            raise ValueError("La fin de la période précède son début")
+        return self
+
+
+class PlanItemIn(_Period):
+    entity_id: uuid.UUID
+    titre: str | None = Field(default=None, max_length=300)
+    budget_jours: float = Field(gt=0, le=10000)
+    periode_debut: date
+    periode_fin: date
+    justification: str | None = None
+
+
+class PlanItemUpdate(_Period):
+    titre: str | None = Field(default=None, min_length=1, max_length=300)
+    budget_jours: float | None = Field(default=None, gt=0, le=10000)
+    periode_debut: date | None = None
+    periode_fin: date | None = None
+    justification: str | None = None
+
+
+class PlanItemOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    entity_id: uuid.UUID
+    entity_nom: str
+    score_risque: float | None
+    titre: str
+    budget_jours: float
+    periode_debut: date
+    periode_fin: date
+    justification: str | None
+
+
+class PlanSummary(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    annee: int
+    version: int
+    statut: PlanStatus
+    capacite_jours: float | None
+    commentaire: str | None
+    nb_missions: int
+    total_jours: float
+    created_at: datetime | None = None
+
+
+class PlanOut(PlanSummary):
+    items: list[PlanItemOut]

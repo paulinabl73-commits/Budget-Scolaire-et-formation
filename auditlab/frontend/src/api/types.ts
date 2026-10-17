@@ -124,3 +124,33 @@ export interface RiskMap {
   cellules: { impact: number; probabilite: number; entites: MapEntity[] }[];
   non_evaluees: MapEntity[];
 }
+
+export type PlanStatus = "brouillon" | "valide" | "remplace";
+
+export interface PlanItem {
+  id: string;
+  entity_id: string;
+  entity_nom: string;
+  score_risque: number | null;
+  titre: string;
+  budget_jours: number;
+  periode_debut: string;
+  periode_fin: string;
+  justification: string | null;
+}
+
+export interface PlanSummary {
+  id: string;
+  annee: number;
+  version: number;
+  statut: PlanStatus;
+  capacite_jours: number | null;
+  commentaire: string | null;
+  nb_missions: number;
+  total_jours: number;
+  created_at: string | null;
+}
+
+export interface Plan extends PlanSummary {
+  items: PlanItem[];
+}

@@ -46,6 +46,11 @@ export default function Layout() {
               {t("nav.carte")}
             </NavLink>
           )}
+          {can(user?.permissions, PERM.PLAN_READ) && (
+            <NavLink to="/plan" className={lien}>
+              {t("nav.plan")}
+            </NavLink>
+          )}
           {(can(user?.permissions, PERM.SETTINGS_MANAGE) ||
             can(user?.permissions, PERM.PLAN_MANAGE)) && (
             <NavLink to="/criteres" className={lien}>
