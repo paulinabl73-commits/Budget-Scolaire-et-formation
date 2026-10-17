@@ -94,9 +94,9 @@ def run(rels: list[Relation], p: dict[str, Any]) -> OpResult:
             ]
             selection = monetary_unit(amounts, size, seed)
             rows = sorted(selection.hits)
-            extra[unique_name("point_selection", taken)] = [
-                format(selection.hits[r][0], "f") for r in rows
-            ]
+            extra[unique_name("point_selection", taken)] = pl.Series(
+                [selection.hits[r][0] for r in rows], dtype=pl.Decimal(38, 2)
+            )
             extra[unique_name("nb_selections", taken)] = [len(selection.hits[r]) for r in rows]
             positive = sum((a for a in amounts if a > 0), Decimal(0))
             info.update(

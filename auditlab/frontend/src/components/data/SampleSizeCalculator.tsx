@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { post } from "../../api/client";
@@ -21,6 +21,10 @@ export default function SampleSizeCalculator({ population, onUse }: { population
   const [type, setType] = useState<"mus" | "attributs">("mus");
   const [confiance, setConfiance] = useState("95");
   const [pop, setPop] = useState(population ?? "");
+  // Montant repris des totaux de contrôle quand le champ montant est choisi.
+  useEffect(() => {
+    if (population) setPop(population);
+  }, [population]);
   const [tolerable, setTolerable] = useState("");
   const [attendu, setAttendu] = useState("0");
   const [res, setRes] = useState<SizeOut | null>(null);

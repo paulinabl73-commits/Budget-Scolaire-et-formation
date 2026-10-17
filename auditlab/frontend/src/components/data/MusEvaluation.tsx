@@ -26,7 +26,8 @@ interface Evaluation {
 }
 
 const num = (v: string) => v.replace(/\s/g, "").replace(",", ".");
-const money = (v: string) => formatNombre(Number(v));
+const montant = new Intl.NumberFormat("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const money = (v: string) => montant.format(Number(v));
 
 /** Évaluation d'un échantillon MUS (DAT-23) : erreurs constatées, projection, limite supérieure. */
 export default function MusEvaluation({ ds, canEdit }: { ds: Dataset; canEdit: boolean }) {
