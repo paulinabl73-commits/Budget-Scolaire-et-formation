@@ -319,3 +319,18 @@ class AdjustmentLine(Base):
     libelle: Mapped[str | None] = mapped_column(String(300), nullable=True)
     debit: Mapped[Decimal] = mapped_column(MONEY, default=Decimal(0))
     credit: Mapped[Decimal] = mapped_column(MONEY, default=Decimal(0))
+
+
+class LeadScheduleReference(TrackedMixin, Base):
+    """Renvoi d'une feuille maîtresse de cycle à un papier de travail (REV-15)."""
+
+    __tablename__ = "lead_schedule_references"
+    __table_args__ = (
+        Index("uq_lead_schedule_references", "audit_file_id", "cycle", "workpaper_id",
+              unique=True, postgresql_where=text("deleted_at IS NULL")),
+    )  # fmt: skip
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
+    cycle: Mapped[str] = mapped_column(String(40))
+    workpaper_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("workpapers.id"))

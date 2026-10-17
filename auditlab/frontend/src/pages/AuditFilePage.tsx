@@ -8,6 +8,7 @@ import Alert from "../components/Alert";
 import AdjustmentsPanel from "../components/revision/AdjustmentsPanel";
 import AnalyticalPanel from "../components/revision/AnalyticalPanel";
 import ImportsPanel from "../components/revision/ImportsPanel";
+import LeadSchedulesPanel from "../components/revision/LeadSchedulesPanel";
 import MappingPanel from "../components/revision/MappingPanel";
 import MaterialityPanel from "../components/revision/MaterialityPanel";
 import type { Mapping } from "../components/revision/MappingPanel";
@@ -16,7 +17,7 @@ import RiskMatrixPanel from "../components/revision/RiskMatrixPanel";
 import StatementsPreview from "../components/revision/StatementsPreview";
 import { formatDate } from "../lib/format";
 
-const VIEWS = ["donnees", "affectation", "planification", "analytique", "ratios", "risques", "ajustements"] as const;
+const VIEWS = ["donnees", "affectation", "planification", "analytique", "ratios", "risques", "ajustements", "cycles"] as const;
 type View = (typeof VIEWS)[number];
 
 /** Dossier de révision (Module 5) : balances, affectation, seuils, revue analytique. */
@@ -82,6 +83,7 @@ export default function AuditFilePage() {
       {view === "ratios" && <RatiosPanel file={file} />}
       {view === "risques" && <RiskMatrixPanel file={file} />}
       {view === "ajustements" && <AdjustmentsPanel file={file} />}
+      {view === "cycles" && <LeadSchedulesPanel file={file} />}
     </div>
   );
 }

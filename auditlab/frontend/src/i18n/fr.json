@@ -1523,7 +1523,8 @@
       "analytique": "Revue analytique",
       "ratios": "Ratios",
       "risques": "Matrice des risques",
-      "ajustements": "Ajustements"
+      "ajustements": "Ajustements",
+      "cycles": "Feuilles maîtresses"
     },
     "navigation": "Sections du dossier"
   },
@@ -1642,5 +1643,24 @@
     "motifPlaceholder": "Motif du refus",
     "modifier": "Modifier",
     "supprimer": "Supprimer"
+  },
+  "feuilles": {
+    "titre": "Feuilles maîtresses par cycle",
+    "aide": "Soldes nets (débit − crédit). Le solde révisé intègre les seules écritures d'ajustement acceptées par l'entité.",
+    "cycle": "Cycle",
+    "compte": "Compte",
+    "total": "Total du cycle",
+    "col": {
+      "N-1": "N-1",
+      "N": "N",
+      "ajustements": "Ajustements",
+      "revise": "Solde révisé",
+      "papiers": "Papiers"
+    },
+    "detail": "Feuille maîtresse – {{cycle}}",
+    "ecritures": "Écritures du cycle :",
+    "renvois": "Renvois aux papiers de travail",
+    "aucunPapier": "Aucun papier de travail dans la mission.",
+    "viaAjustement": "cité par une écriture d'ajustement"
   }
 }

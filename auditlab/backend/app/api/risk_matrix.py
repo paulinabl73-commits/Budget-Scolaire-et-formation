@@ -37,7 +37,7 @@ class CellIn(BaseModel):
     commentaire: str | None = Field(default=None, max_length=5000)
 
 
-def _cycles(db: Session, file: AuditFile) -> list[dict[str, Any]]:
+def file_cycles(db: Session, file: AuditFile) -> list[dict[str, Any]]:
     return cycles_for(db.get(AccountingFramework, file.framework_id).code)
 
 
@@ -51,7 +51,7 @@ def _cells(db: Session, file_id: uuid.UUID) -> dict[tuple[str, str], AssertionRi
 
 
 def _matrix(db: Session, file: AuditFile) -> dict[str, Any]:
-    cycles = _cycles(db, file)
+    cycles = file_cycles(db, file)
     amounts: dict[str, Decimal] = defaultdict(Decimal)
     for a in assignments(db, file):
         code = cycle_of(a.compte, cycles)
@@ -100,7 +100,7 @@ def set_cell(
 ) -> dict[str, Any]:  # fmt: skip
     file, engagement = get_file(db, file_id, user)
     require_work(file, engagement, user)
-    if cycle not in {c["code"] for c in _cycles(db, file)} or assertion not in {
+    if cycle not in {c["code"] for c in file_cycles(db, file)} or assertion not in {
         a["code"] for a in assertions()
     }:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Cycle ou assertion inconnu")
@@ -121,7 +121,7 @@ def generate_program(file_id: uuid.UUID, user: CurrentUser, db: DbSession) -> di
     file, _ = get_file(db, file_id, user)
     engagement = editable(db, file.engagement_id, user)  # chef de mission, mission ouverte
     lib = library()
-    cycles = {c["code"]: c for c in _cycles(db, file)}
+    cycles = {c["code"]: c for c in file_cycles(db, file)}
     names = {a["code"]: a for a in assertions()}
     created = updated = 0
     for cell in _cells(db, file.id).values():

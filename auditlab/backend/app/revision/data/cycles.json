@@ -20,8 +20,8 @@
     "SYSCOHADA": [
       {"code": "immobilisations", "libelle": "Immobilisations", "racines": ["2"], "cycle_mission": "immobilisations"},
       {"code": "stocks", "libelle": "Stocks", "racines": ["3"], "cycle_mission": "stocks"},
-      {"code": "clients", "libelle": "Clients et cotisants", "racines": ["41"], "cycle_mission": "ventes"},
-      {"code": "fournisseurs", "libelle": "Fournisseurs", "racines": ["40"], "cycle_mission": "achats"},
+      {"code": "clients", "libelle": "Clients et cotisants", "racines": ["41", "491"], "cycle_mission": "ventes"},
+      {"code": "fournisseurs", "libelle": "Fournisseurs", "racines": ["40", "490"], "cycle_mission": "achats"},
       {"code": "tresorerie", "libelle": "Trésorerie", "racines": ["5"], "cycle_mission": "tresorerie"},
       {"code": "capitaux_propres", "libelle": "Capitaux propres et réserves", "racines": ["10", "11", "12", "13", "14", "15"], "cycle_mission": "autre"},
       {"code": "provisions", "libelle": "Provisions", "racines": ["19"], "cycle_mission": "autre"},

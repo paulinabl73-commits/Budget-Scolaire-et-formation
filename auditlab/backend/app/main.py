@@ -26,6 +26,7 @@ from app.api import (
     findings,
     frameworks,
     imports,
+    lead_schedules,
     library,
     macros,
     mapping,
@@ -140,5 +141,6 @@ for router in (
     ratios.router,
     risk_matrix.router,
     adjustments.router,
+    lead_schedules.router,
 ):
     app.include_router(router, prefix="/api")
