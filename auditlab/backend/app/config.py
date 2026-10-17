@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     argon2_memory_cost: int = 65536
     argon2_parallelism: int = 4
     totp_issuer: str = "AuditLab"
+    # Conversion des heures saisies en jours-homme (AUD-08).
+    heures_par_jour: float = 8.0
     cors_origins: list[str] = ["http://localhost:5173"]
     log_level: str = "INFO"
 

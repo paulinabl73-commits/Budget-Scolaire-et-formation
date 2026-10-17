@@ -43,8 +43,9 @@ ALLOWED_ROLES: dict[MissionRole, set[Role]] = {
 
 
 def consumed_days(db: DbSession, engagement_ids: list[uuid.UUID]) -> dict[uuid.UUID, float]:
-    """Jours consommés par mission ; alimenté par la saisie des temps (AUD-08)."""
-    return {}
+    from app.api.timesheets import consumed_days as from_timesheets
+
+    return from_timesheets(db, engagement_ids)
 
 
 def summary(e: Engagement, user: User, consumed: float) -> dict:

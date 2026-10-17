@@ -212,3 +212,25 @@ export interface StatusChange {
   avant: EngagementStatus;
   apres: EngagementStatus;
 }
+
+export type TimeActivity = "preparation" | "terrain" | "revue" | "rapport" | "autre";
+
+export interface TimeEntry {
+  id: string;
+  user_id: string;
+  user_nom: string;
+  date: string;
+  heures: number;
+  activite: TimeActivity;
+  commentaire: string | null;
+}
+
+export interface TimeSummary {
+  budget_jours: number;
+  jours_consommes: number;
+  ecart_jours: number;
+  taux_consommation: number;
+  heures_par_jour: number;
+  par_personne: { cle: string; libelle: string; jours: number }[];
+  par_activite: { cle: string; libelle: string; jours: number }[];
+}

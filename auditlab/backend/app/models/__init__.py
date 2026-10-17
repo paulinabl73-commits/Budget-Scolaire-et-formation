@@ -6,6 +6,8 @@ from app.models.engagement import (
     EngagementMember,
     EngagementStatus,
     MissionRole,
+    TimeActivity,
+    TimeEntry,
 )
 from app.models.plan import AuditPlan, PlanItem, PlanStatus
 from app.models.risk import Axis, CriterionMode, RiskAssessment, RiskCriterion
@@ -30,6 +32,8 @@ __all__ = [
     "RiskAssessment",
     "RiskCriterion",
     "Team",
+    "TimeActivity",
+    "TimeEntry",
     "TrackedMixin",
     "User",
     "UserSession",

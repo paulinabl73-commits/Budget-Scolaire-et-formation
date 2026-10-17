@@ -1,12 +1,13 @@
 """Schémas du lot 3 : missions, temps, bibliothèque, matrice, procédures, modèles."""
 
+import datetime as dt
 import uuid
 from datetime import date, datetime
 from typing import Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from app.models.engagement import EngagementStatus, MissionRole
+from app.models.engagement import EngagementStatus, MissionRole, TimeActivity
 
 
 class MemberIn(BaseModel):
@@ -95,3 +96,45 @@ class EngagementOut(EngagementSummary):
     transitions: list[TransitionOut] = []
     peut_gerer: bool = False
     created_at: datetime | None = None
+
+
+class TimeEntryIn(BaseModel):
+    date: dt.date
+    heures: float = Field(gt=0, le=24, multiple_of=0.25)
+    activite: TimeActivity
+    commentaire: str | None = Field(default=None, max_length=500)
+
+
+class TimeEntryUpdate(BaseModel):
+    date: dt.date | None = None
+    heures: float | None = Field(default=None, gt=0, le=24, multiple_of=0.25)
+    activite: TimeActivity | None = None
+    commentaire: str | None = Field(default=None, max_length=500)
+
+
+class TimeEntryOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    user_id: uuid.UUID
+    user_nom: str
+    date: dt.date
+    heures: float
+    activite: TimeActivity
+    commentaire: str | None
+
+
+class TimeLine(BaseModel):
+    cle: str
+    libelle: str
+    jours: float
+
+
+class TimeSummary(BaseModel):
+    budget_jours: float
+    jours_consommes: float
+    ecart_jours: float
+    taux_consommation: float
+    heures_par_jour: float
+    par_personne: list[TimeLine]
+    par_activite: list[TimeLine]

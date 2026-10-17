@@ -8,11 +8,12 @@ import Alert from "../components/Alert";
 import StatusBar from "../components/mission/StatusBar";
 import StatusHistory from "../components/mission/StatusHistory";
 import SynthesisTab from "../components/mission/SynthesisTab";
+import TimeTab from "../components/mission/TimeTab";
 import { formatDate } from "../lib/format";
 import { STATUS_BADGE } from "../lib/mission";
 
 /** Onglets de la fiche mission ; chaque lot ajoute les siens. */
-export const MISSION_TABS = ["synthese"] as const;
+export const MISSION_TABS = ["synthese", "temps"] as const;
 type Tab = (typeof MISSION_TABS)[number];
 
 export default function MissionPage() {
@@ -79,6 +80,7 @@ export default function MissionPage() {
           <StatusHistory missionId={mission.id} statut={mission.statut} />
         </>
       )}
+      {tab === "temps" && <TimeTab mission={mission} onChange={() => void load()} />}
     </div>
   );
 }

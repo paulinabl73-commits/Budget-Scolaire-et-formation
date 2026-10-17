@@ -72,3 +72,26 @@ class EngagementMember(TrackedMixin, Base):
     role_mission: Mapped[str] = mapped_column(String(20))
 
     user: Mapped[User] = relationship(foreign_keys=[user_id], viewonly=True)
+
+
+class TimeActivity(StrEnum):
+    PREPARATION = "preparation"
+    TERRAIN = "terrain"
+    REVUE = "revue"
+    RAPPORT = "rapport"
+    AUTRE = "autre"
+
+
+class TimeEntry(TrackedMixin, Base):
+    """Temps passé par un membre de l'équipe sur la mission (AUD-08)."""
+
+    __tablename__ = "time_entries"
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), index=True)
+    date: Mapped[date] = mapped_column(Date)
+    heures: Mapped[float] = mapped_column(Float)
+    activite: Mapped[str] = mapped_column(String(20))
+    commentaire: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    user: Mapped[User] = relationship(foreign_keys=[user_id], viewonly=True)

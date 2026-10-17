@@ -370,6 +370,31 @@
   },
   "temps": {
     "budget": "Budget et temps passé",
-    "consommation": "{{consomme}} j consommés sur {{budget}} j budgétés"
+    "consommation": "{{consomme}} j consommés sur {{budget}} j budgétés",
+    "saisir": "Saisir du temps",
+    "date": "Date",
+    "heures": "Heures",
+    "activite": "Activité",
+    "commentaire": "Commentaire",
+    "ajouter": "Enregistrer",
+    "enregistre": "Temps enregistré.",
+    "supprime": "Saisie supprimée.",
+    "mesSaisies": "Mes saisies",
+    "saisies": "Saisies de l'équipe",
+    "aucune": "Aucune saisie.",
+    "parPersonne": "Par personne (jours)",
+    "parActivite": "Par activité (jours)",
+    "ecart": "Reste {{ecart}} j ({{taux}} % consommés)",
+    "depassement": "Dépassement de {{ecart}} j ({{taux}} % consommés)",
+    "conversion": "1 jour = {{heures}} heures",
+    "personne": "Personne",
+    "activites": {
+      "preparation": "Préparation",
+      "terrain": "Terrain",
+      "revue": "Revue",
+      "rapport": "Rapport",
+      "autre": "Autre"
+    },
+    "confirmerSuppression": "Supprimer cette saisie ?"
   }
 }
