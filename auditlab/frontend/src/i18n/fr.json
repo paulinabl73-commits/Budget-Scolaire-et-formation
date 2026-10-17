@@ -1240,6 +1240,12 @@
       "realise": "Déclarer réalisé",
       "verifie": "Vérifier et clôturer",
       "risque_accepte": "Accepter le risque"
+    },
+    "relances": "Relances envoyées",
+    "typesRelance": {
+      "j15": "J-15",
+      "echeance": "échéance",
+      "retard": "retard"
     }
   },
   "contradictoire": {

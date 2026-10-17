@@ -90,6 +90,11 @@ export default function ActionPlansPanel({ findingId, canCreate, extra }: {
               {t("plans.responsable")} : {p.responsable ?? "—"} · {t("plans.echeance")} : {formatDate(p.echeance)}
               {p.commentaire && ` · ${p.commentaire}`}
             </p>
+            {p.relances.length > 0 && (
+              <p className="text-xs text-slate-500">
+                {t("plans.relances")} : {p.relances.map((r) => `${t(`plans.typesRelance.${r.type}`)} (${formatDate(r.date)})`).join(", ")}
+              </p>
+            )}
             <div className="flex flex-wrap gap-2">
               {p.transitions.map((s) => (
                 <button key={s} type="button" className="btn-secondaire py-1 text-xs" onClick={() => move(p, s)}>

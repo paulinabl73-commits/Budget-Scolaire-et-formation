@@ -84,7 +84,8 @@ services:
   # Exécute les imports et analyses longues ; partage le volume des tables Parquet.
   worker:
     build: ./backend
-    command: celery -A app.tasks worker --loglevel=INFO --concurrency=2
+    # --beat : planification des tâches quotidiennes (relances des plans d'action, CON-06).
+    command: celery -A app.tasks worker --beat --schedule /tmp/celerybeat-schedule --loglevel=INFO --concurrency=2
     environment:
       AUDITLAB_DATABASE_URL: postgresql+psycopg://auditlab:${POSTGRES_PASSWORD:-auditlab}@db:5432/auditlab
       AUDITLAB_STORAGE_BACKEND: s3

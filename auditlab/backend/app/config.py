@@ -21,6 +21,9 @@ class Settings(BaseSettings):
     heures_par_jour: float = 8.0
     # Constats (CON-04) : délai de réponse proposé à l'audité, en jours calendaires.
     delai_reponse_constat_jours: int = 15
+    # Relances des plans d'action (CON-06) : J-15, à l'échéance, puis tous les 14 jours de retard.
+    relance_avant_echeance_jours: int = 15
+    relance_retard_jours: int = 14
     cors_origins: list[str] = ["http://localhost:5173"]
     # Clé de signature des liens de téléchargement ; à fixer en production (32 octets aléatoires).
     secret_key: str = "dev-change-me-" + "0" * 32

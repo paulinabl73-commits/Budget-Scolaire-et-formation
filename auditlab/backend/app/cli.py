@@ -2,6 +2,8 @@
 
 python -m app.cli verify-audit-chain
 python -m app.cli create-admin --email admin@exemple.org --nom "Admin"
+python -m app.cli send-emails
+python -m app.cli send-reminders   (chaque jour)
 """
 
 import argparse
@@ -66,6 +68,14 @@ def cmd_send_emails(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_send_reminders(_: argparse.Namespace) -> int:
+    from app.followup import send_reminders
+
+    with SessionLocal() as db:
+        print(f"{send_reminders(db)} relance(s) de plans d'action.")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="auditlab")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -74,11 +84,13 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--email", required=True)
     p.add_argument("--nom", default="Administrateur")
     sub.add_parser("send-emails", help="Envoie les e-mails en attente (SMTP)")
+    sub.add_parser("send-reminders", help="Relance les plans d'action (CON-06), chaque jour")
     args = parser.parse_args(argv)
     commands = {
         "verify-audit-chain": cmd_verify,
         "create-admin": cmd_create_admin,
         "send-emails": cmd_send_emails,
+        "send-reminders": cmd_send_reminders,
     }
     return commands[args.cmd](args)
 
