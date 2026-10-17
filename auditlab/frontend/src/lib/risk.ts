@@ -21,3 +21,21 @@ export function today(): string {
   const pad = (n: number) => String(n).padStart(2, "0");
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
+
+export type Level = "faible" | "modere" | "eleve" | "critique";
+
+/** Niveau d'une case de la carte selon impact × probabilité (1 à 25). */
+export function cellLevel(impact: number, probabilite: number): Level {
+  const p = impact * probabilite;
+  if (p >= 15) return "critique";
+  if (p >= 8) return "eleve";
+  if (p >= 4) return "modere";
+  return "faible";
+}
+
+export const LEVEL_CLASSES: Record<Level, string> = {
+  faible: "bg-green-200 text-green-950",
+  modere: "bg-yellow-200 text-yellow-950",
+  eleve: "bg-orange-300 text-orange-950",
+  critique: "bg-red-400 text-red-950",
+};

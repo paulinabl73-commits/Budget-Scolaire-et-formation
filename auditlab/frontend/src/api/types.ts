@@ -109,3 +109,18 @@ export interface RiskAssessment {
   commentaire: string | null;
   created_at: string | null;
 }
+
+export interface MapEntity {
+  id: string;
+  nom: string;
+  type: EntityType;
+  score_risque: number | null;
+  impact: number | null;
+  probabilite: number | null;
+}
+
+export interface RiskMap {
+  echelle: number;
+  cellules: { impact: number; probabilite: number; entites: MapEntity[] }[];
+  non_evaluees: MapEntity[];
+}

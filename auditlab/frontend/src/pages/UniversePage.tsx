@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 
 import { api, del, patch, post } from "../api/client";
 import type { AuditableEntity } from "../api/types";
@@ -20,7 +21,8 @@ export default function UniversePage() {
   const { user } = useAuth();
   const canManage = can(user?.permissions, PERM.PLAN_MANAGE);
   const [entities, setEntities] = useState<AuditableEntity[]>([]);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [params] = useSearchParams();
+  const [selectedId, setSelectedId] = useState<string | null>(params.get("entite"));
   const [mode, setMode] = useState<Mode>({ kind: "view" });
   const [message, setMessage] = useState<{ kind: "erreur" | "succes"; text: string } | null>(
     null,

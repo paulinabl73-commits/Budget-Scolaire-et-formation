@@ -185,3 +185,40 @@ def test_aud02_droits(client, account, criteria, role):
     expected = 200 if role is Role.CHEF_MISSION else 403
     assert client.get(url, headers=h).status_code == expected
     assert client.get("/api/risk/criteria", headers=h).status_code == expected
+
+
+@pytest.mark.parametrize(("value", "cell"), [(1.0, 1), (2.49, 2), (2.5, 3), (3.6, 4), (5.0, 5)])
+def test_aud03_case_de_la_carte(value, cell):
+    from app.risk_scoring import map_cell
+
+    assert map_cell(value) == cell
+
+
+def test_aud03_carte_des_risques(client, account, criteria):
+    h = account(Role.DIRECTEUR).headers
+    a = _entity(client, h, nom="Achats")
+    b = _entity(client, h, nom="Paie")
+    _entity(client, h, nom="Trésorerie")
+    client.post(
+        f"/api/universe/entities/{a['id']}/assessments", json={"notes": ALL_HIGH}, headers=h
+    )
+    client.post(
+        f"/api/universe/entities/{b['id']}/assessments",
+        json={"notes": {"IMPACT_FIN": 4, "IMPACT_REG": 3, "PROBA": 2, "CTRL_INT": 2}},
+        headers=h,
+    )
+
+    carte = client.get("/api/risk/map", headers=account(Role.CHEF_MISSION).headers).json()
+    assert carte["echelle"] == 5 and len(carte["cellules"]) == 25
+    filled = {
+        (c["impact"], c["probabilite"]): [e["nom"] for e in c["entites"]]
+        for c in carte["cellules"]
+        if c["entites"]
+    }
+    # Paie : impact (3×4 + 2×3) / 5 = 3,6 → 4 ; probabilité 2.
+    assert filled == {(5, 5): ["Achats"], (4, 2): ["Paie"]}
+    assert [e["nom"] for e in carte["non_evaluees"]] == ["Trésorerie"]
+
+
+def test_aud03_carte_refusee(client, account):
+    assert client.get("/api/risk/map", headers=account(Role.AUDITEUR).headers).status_code == 403

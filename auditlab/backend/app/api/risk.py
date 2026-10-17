@@ -8,16 +8,20 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 
 from app.api.deps import DbSession, require
-from app.api.universe import get_entity
+from app.api.universe import active_entities, get_entity
 from app.models.risk import RiskAssessment, RiskCriterion
+from app.models.universe import AuditableEntity
 from app.models.user import User
-from app.risk_scoring import CriterionSpec, compute_score
+from app.risk_scoring import NOTE_MAX, CriterionSpec, compute_score, map_cell
 from app.schemas_plan import (
     AssessmentIn,
     AssessmentOut,
     CriterionIn,
     CriterionOut,
     CriterionUpdate,
+    MapCell,
+    MapEntity,
+    RiskMapOut,
 )
 from app.security.roles import Perm
 
@@ -117,3 +121,28 @@ def assess(entity_id: uuid.UUID, body: AssessmentIn, _: Manager, db: DbSession) 
         entity.date_evaluation = on
     db.commit()
     return assessment
+
+
+@router.get("/risk/map", response_model=RiskMapOut)
+def risk_map(_: Reader, db: DbSession) -> RiskMapOut:
+    """Carte des risques impact × probabilité (AUD-03) : les 25 cases, même vides."""
+    cells: dict[tuple[int, int], list[MapEntity]] = {
+        (i, p): [] for i in range(1, NOTE_MAX + 1) for p in range(1, NOTE_MAX + 1)
+    }
+    pending: list[MapEntity] = []
+    entities = db.scalars(
+        active_entities().order_by(
+            AuditableEntity.score_risque.desc().nulls_last(), AuditableEntity.nom
+        )
+    )
+    for e in entities:
+        item = MapEntity.model_validate(e)
+        if e.impact is None or e.probabilite is None:
+            pending.append(item)
+        else:
+            cells[(map_cell(e.impact), map_cell(e.probabilite))].append(item)
+    return RiskMapOut(
+        echelle=NOTE_MAX,
+        cellules=[MapCell(impact=i, probabilite=p, entites=v) for (i, p), v in cells.items()],
+        non_evaluees=pending,
+    )

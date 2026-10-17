@@ -12,7 +12,8 @@
     "deconnexion": "Se déconnecter",
     "principale": "Navigation principale",
     "univers": "Univers d'audit",
-    "criteres": "Critères de risque"
+    "criteres": "Critères de risque",
+    "carte": "Carte des risques"
   },
   "commun": {
     "enregistrer": "Enregistrer",
@@ -214,5 +215,24 @@
       "anciennete": "Ancienneté du dernier audit"
     },
     "codeAide": "Majuscules, chiffres et _ uniquement."
+  },
+  "carte": {
+    "titre": "Carte des risques",
+    "intro": "Position de chaque entité selon l'impact et la probabilité de sa dernière évaluation. Cliquez sur une case pour voir les entités concernées.",
+    "impact": "Impact",
+    "probabilite": "Probabilité",
+    "case": "Impact {{impact}}, probabilité {{probabilite}} : {{count}} entité(s)",
+    "selection": "Entités — impact {{impact}}, probabilité {{probabilite}}",
+    "aucune": "Aucune entité dans cette case.",
+    "choisir": "Sélectionnez une case de la carte.",
+    "nonEvaluees": "Entités non évaluées ({{count}})",
+    "ouvrir": "Ouvrir dans l'univers",
+    "legende": "Niveau de risque (impact × probabilité)",
+    "niveaux": {
+      "faible": "Faible",
+      "modere": "Modéré",
+      "eleve": "Élevé",
+      "critique": "Critique"
+    }
   }
 }

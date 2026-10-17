@@ -38,3 +38,13 @@ describe("évaluation des risques", () => {
     expect(seniorityNote("2010-01-01", "2027-01-01")).toBe(5);
   });
 });
+
+describe("carte des risques", () => {
+  it("classe les cases par niveau", async () => {
+    const { cellLevel } = await import("../lib/risk");
+    expect(cellLevel(1, 1)).toBe("faible");
+    expect(cellLevel(2, 2)).toBe("modere");
+    expect(cellLevel(4, 2)).toBe("eleve");
+    expect(cellLevel(5, 3)).toBe("critique");
+  });
+});

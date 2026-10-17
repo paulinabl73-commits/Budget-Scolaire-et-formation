@@ -7,6 +7,7 @@
   dernier audit, plafonné à 5.
 """
 
+import math
 from dataclasses import dataclass
 from datetime import date
 from typing import Any
@@ -90,3 +91,8 @@ def compute_score(
         probabilite=_weighted_mean([r for r in rows if r["axe"] == "probabilite"]),
         criteres=rows,
     )
+
+
+def map_cell(value: float) -> int:
+    """Case de la carte des risques (AUD-03) : arrondi au plus proche, 2,5 → 3."""
+    return max(NOTE_MIN, min(NOTE_MAX, math.floor(value + 0.5)))

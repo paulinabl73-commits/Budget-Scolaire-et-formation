@@ -15,6 +15,7 @@ const AuditLogPage = lazy(() => import("./pages/AuditLogPage"));
 const UsersPage = lazy(() => import("./pages/UsersPage"));
 const UniversePage = lazy(() => import("./pages/UniversePage"));
 const CriteriaPage = lazy(() => import("./pages/CriteriaPage"));
+const RiskMapPage = lazy(() => import("./pages/RiskMapPage"));
 
 export default function App() {
   const { t } = useTranslation();
@@ -59,6 +60,14 @@ export default function App() {
           element={
             <RequireAuth permission={PERM.PLAN_READ}>
               <UniversePage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="carte-des-risques"
+          element={
+            <RequireAuth permission={PERM.PLAN_READ}>
+              <RiskMapPage />
             </RequireAuth>
           }
         />

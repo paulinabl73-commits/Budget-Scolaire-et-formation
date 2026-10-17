@@ -98,3 +98,26 @@ class AssessmentOut(BaseModel):
     commentaire: str | None
     created_at: datetime | None = None
     created_by: uuid.UUID | None = None
+
+
+class MapEntity(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    nom: str
+    type: EntityType
+    score_risque: float | None
+    impact: float | None
+    probabilite: float | None
+
+
+class MapCell(BaseModel):
+    impact: int
+    probabilite: int
+    entites: list[MapEntity]
+
+
+class RiskMapOut(BaseModel):
+    echelle: int
+    cellules: list[MapCell]
+    non_evaluees: list[MapEntity]
