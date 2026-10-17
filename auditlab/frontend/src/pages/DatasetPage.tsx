@@ -5,6 +5,8 @@ import { Link, useParams } from "react-router-dom";
 import { api } from "../api/client";
 import type { Dataset } from "../api/types";
 import Alert from "../components/Alert";
+import AnalysisPanel from "../components/data/AnalysisPanel";
+import AnalysisResult from "../components/data/AnalysisResult";
 import CalculatedFields from "../components/data/CalculatedFields";
 import ControlSheet from "../components/data/ControlSheet";
 import DataGrid from "../components/data/DataGrid";
@@ -33,6 +35,14 @@ export default function DatasetPage() {
   useEffect(() => {
     load().catch((e: Error) => setError(e.message));
   }, [load]);
+  // Analyse ou import en tâche de fond : relecture jusqu'à la fin.
+  useEffect(() => {
+    if (ds?.statut !== "en_cours") return;
+    const timer = setTimeout(() => {
+      api<Dataset>(`/datasets/${ds.id}`).then(setDs).catch(() => undefined);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [ds]);
 
   if (error) return <Alert kind="erreur">{error}</Alert>;
   if (!ds) return <p>{t("commun.chargement")}</p>;
@@ -43,12 +53,16 @@ export default function DatasetPage() {
         <h1 className="text-2xl font-semibold">{ds.nom}</h1>
         {ds.description && <p className="text-slate-600">{ds.description}</p>}
       </header>
-      {ds.kind !== "vue" && <ControlSheet ds={ds} />}
+      {ds.kind === "analyse" && <AnalysisResult ds={ds} />}
+      {ds.statut === "en_cours" && <Alert kind="succes">{t("analyses.enCours")}</Alert>}
+      {ds.statut === "erreur" && <Alert kind="erreur">{ds.erreur}</Alert>}
+      {ds.kind !== "vue" && ds.statut === "pret" && <ControlSheet ds={ds} />}
       {ds.statut === "pret" && <DataGrid key={ds.id} ds={ds} onColumnFocus={setColumn} onQuery={onQuery} />}
       {ds.statut === "pret" && ds.schema.length > 0 && (
         <FieldStats ds={ds} column={column ?? ds.schema[0].nom} query={query} onColumn={setColumn} />
       )}
-      <CalculatedFields ds={ds} canEdit={can(user?.permissions, "data:analyze")} onChanged={setDs} />
+      {ds.statut === "pret" && can(user?.permissions, "data:analyze") && <AnalysisPanel key={`a-${ds.id}`} ds={ds} />}
+      {ds.statut === "pret" && <CalculatedFields ds={ds} canEdit={can(user?.permissions, "data:analyze")} onChanged={setDs} />}
     </div>
   );
 }

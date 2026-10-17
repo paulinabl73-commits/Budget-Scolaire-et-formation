@@ -434,6 +434,27 @@ export interface Dataset {
   duree_ms: number | null;
   created_at: string | null;
   lecture_seule: boolean;
+  operation: string | null;
+  resultat: Record<string, unknown>;
+}
+
+export interface AnalysisParam {
+  nom: string;
+  type: "colonne" | "colonnes" | "nombre" | "entier" | "nombres" | "texte" | "expression" | "choix" | "date" | "agregats" | "paires";
+  requis: boolean;
+  defaut: unknown;
+  choix: string[];
+  table: number;
+  types_colonne: string[];
+  minimum: number | null;
+  maximum: number | null;
+}
+
+export interface AnalysisOperation {
+  code: string;
+  exigence: string;
+  entrees: number;
+  params: AnalysisParam[];
 }
 
 export interface UploadInfo {

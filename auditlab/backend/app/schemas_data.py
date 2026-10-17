@@ -32,6 +32,8 @@ class DatasetOut(BaseModel):
     definition: dict[str, Any]
     options: dict[str, Any]
     duree_ms: int | None
+    operation: str | None = None
+    resultat: dict[str, Any] = {}
     created_at: datetime | None = None
     lecture_seule: bool = True
 

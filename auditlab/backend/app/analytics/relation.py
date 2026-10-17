@@ -84,11 +84,17 @@ def clean_error(exc: Exception) -> str:
 
 def evaluate(rel: Relation, sql: str, params: list[Any] | None = None) -> pl.DataFrame:
     """Exécute une requête sur la relation, exposée sous le nom `t`."""
+    return evaluate_many({"t": rel}, sql, params)
+
+
+def evaluate_many(
+    rels: dict[str, Relation], sql: str, params: list[Any] | None = None
+) -> pl.DataFrame:
+    """Exécute une requête sur plusieurs relations, exposées sous les noms donnés (a, b…)."""
+    ctes = ", ".join(f"{name} AS ({rel.sql})" for name, rel in rels.items())
+    values = [v for rel in rels.values() for v in rel.params] + (params or [])
     with connect() as con:
         try:
-            return con.execute(
-                f"WITH t AS ({rel.sql}) {sql}",  # noqa: S608
-                rel.params + (params or []),
-            ).pl()
+            return con.execute(f"WITH {ctes} {sql}", values).pl()  # noqa: S608
         except duckdb.Error as exc:
             raise RelationError(clean_error(exc)) from exc

@@ -53,6 +53,9 @@ class Dataset(TrackedMixin, Base):
     # Vue : définition des champs calculés (DAT-06).
     definition: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
     duree_ms: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    # Analyse (lot 6) : opération appliquée et résultat de synthèse (tests, graphiques).
+    operation: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    resultat: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict, server_default="{}")
 
 
 class Upload(TrackedMixin, Base):

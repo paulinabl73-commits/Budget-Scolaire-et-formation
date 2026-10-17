@@ -60,3 +60,41 @@ def import_dataset(dataset_id: str) -> str:
         ds.duree_ms = int((time.perf_counter() - start) * 1000)
         db.commit()
         return ds.statut
+
+
+def input_relations(db, ds: Dataset):  # noqa: ANN001,ANN201
+    from app.analytics.relation import relation
+
+    ids = ds.definition.get("entrees", [])
+    return [relation(db, db.get(Dataset, uuid.UUID(i))) for i in ids]
+
+
+@celery.task(name="auditlab.run_analysis")
+def run_analysis(dataset_id: str) -> str:
+    """Exécute une analyse et écrit sa table de résultat (lot 6)."""
+    from app.analytics.operations import REGISTRY, AnalysisError
+    from app.analytics.relation import RelationError
+
+    start = time.perf_counter()
+    with SessionLocal() as db:
+        ds = db.get(Dataset, uuid.UUID(dataset_id))
+        set_actor(db, ds.created_by)
+        try:
+            op = REGISTRY[ds.operation]
+            result = op.run(input_relations(db, ds), ds.definition["parametres"])
+            written = write_table(result.df, ds.engagement_id)
+        except (AnalysisError, RelationError) as exc:
+            ds.statut, ds.erreur = DatasetStatus.ERREUR.value, str(exc)
+        except Exception as exc:  # noqa: BLE001
+            ds.statut, ds.erreur = DatasetStatus.ERREUR.value, f"Erreur inattendue : {exc}"
+        else:
+            ds.chemin_parquet = written.chemin
+            ds.nb_lignes, ds.nb_colonnes = written.nb_lignes, written.nb_colonnes
+            ds.schema = written.schema
+            ds.resultat = result.resultat
+            ds.totaux_controle = control_totals(written.chemin, written.schema)
+            ds.parquet_sha256 = file_sha256(written.chemin)
+            ds.statut, ds.erreur = DatasetStatus.PRET.value, None
+        ds.duree_ms = int((time.perf_counter() - start) * 1000)
+        db.commit()
+        return ds.statut

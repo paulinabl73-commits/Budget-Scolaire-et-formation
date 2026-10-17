@@ -825,5 +825,219 @@
     "vide": "(vide)",
     "surTable": "Sur toute la table ({{n}} lignes).",
     "surSelection": "Sur la sélection filtrée ({{n}} lignes)."
+  },
+  "analyses": {
+    "titre": "Lancer une analyse",
+    "choisir": "Analyse",
+    "secondeTable": "Seconde table",
+    "nomResultat": "Nom de la table de résultat",
+    "lancer": "Lancer l'analyse",
+    "facultatif": "facultatif",
+    "fonction": "Fonction",
+    "champ": "Champ",
+    "retirer": "Retirer",
+    "ajouterAgregat": "Ajouter un agrégat",
+    "ajouterCle": "Ajouter une clé",
+    "cleGauche": "Clé de la table principale",
+    "cleDroite": "Clé de la seconde table",
+    "enCours": "Analyse en cours…",
+    "choix": {
+      "exacte": "Exacte",
+      "approchee": "Approchée (Jaro-Winkler)",
+      "premier": "1er chiffre",
+      "second": "2e chiffre",
+      "deux_premiers": "2 premiers chiffres",
+      "interne": "Interne (lignes appariées)",
+      "gauche": "Gauche (toute la table principale)",
+      "non_apparies": "Non appariés",
+      "zscore": "Score z",
+      "iqr": "Écart interquartile (IQR)",
+      "somme": "Somme",
+      "moyenne": "Moyenne",
+      "min": "Minimum",
+      "max": "Maximum",
+      "nombre": "Nombre",
+      "distincts": "Valeurs distinctes",
+      "ecart_type": "Écart-type"
+    },
+    "extraction": {
+      "titre": "Extraction par critère",
+      "description": "Retient les lignes qui satisfont une condition, construite visuellement ou saisie.",
+      "params": {
+        "expression": "Condition"
+      }
+    },
+    "doublons": {
+      "titre": "Doublons",
+      "description": "Groupes de lignes ayant les mêmes valeurs sur les champs clés, à l'identique ou de façon approchée.",
+      "params": {
+        "cles": "Champs clés",
+        "mode": "Correspondance",
+        "seuil": "Seuil de similarité (0 à 1)"
+      }
+    },
+    "sequence": {
+      "titre": "Ruptures de séquence",
+      "description": "Numéros manquants et numéros en double dans une série (factures, chèques, pièces).",
+      "params": {
+        "champ": "Champ numéroté",
+        "pas": "Pas attendu"
+      }
+    },
+    "stratification": {
+      "titre": "Stratification",
+      "description": "Nombre et total des lignes par tranche de valeurs.",
+      "params": {
+        "champ": "Champ numérique",
+        "bornes": "Bornes des tranches"
+      }
+    },
+    "synthese": {
+      "titre": "Synthèse",
+      "description": "Regroupe les lignes et calcule des agrégats par groupe.",
+      "params": {
+        "groupes": "Champs de regroupement",
+        "agregats": "Agrégats"
+      }
+    },
+    "anciennete": {
+      "titre": "Ancienneté (aging)",
+      "description": "Montants par tranche d'ancienneté à une date de référence.",
+      "params": {
+        "champ_date": "Champ date",
+        "date_reference": "Date de référence",
+        "tranches": "Tranches (jours)",
+        "champ_montant": "Champ montant"
+      }
+    },
+    "benford": {
+      "titre": "Loi de Benford",
+      "description": "Compare la distribution des premiers chiffres à la loi de Benford (khi-deux, MAD) et isole les lignes suspectes.",
+      "params": {
+        "champ": "Champ montant",
+        "test": "Test",
+        "montant_minimum": "Montant minimum retenu"
+      }
+    },
+    "jointure": {
+      "titre": "Jointure",
+      "description": "Associe deux tables sur des clés.",
+      "params": {
+        "cles": "Clés",
+        "type": "Type de jointure"
+      }
+    },
+    "rapprochement": {
+      "titre": "Rapprochement",
+      "description": "Compare les montants de deux tables par clé : écarts et lignes orphelines.",
+      "params": {
+        "cles": "Clés",
+        "montant_gauche": "Montant de la table principale",
+        "montant_droite": "Montant de la seconde table",
+        "tolerance": "Tolérance d'écart"
+      }
+    },
+    "aberrantes": {
+      "titre": "Valeurs aberrantes",
+      "description": "Lignes dont la valeur s'écarte de la norme (score z ou écart interquartile).",
+      "params": {
+        "champ": "Champ numérique",
+        "methode": "Méthode",
+        "seuil": "Seuil (3 pour z, 1,5 pour IQR)"
+      }
+    },
+    "floue": {
+      "titre": "Recherche floue",
+      "description": "Paires de noms similaires entre deux listes (ex. fournisseurs et salariés).",
+      "params": {
+        "champ_gauche": "Nom dans la table principale",
+        "champ_droite": "Nom dans la seconde table",
+        "seuil": "Seuil de similarité (0 à 1)"
+      }
+    }
+  },
+  "constructeur": {
+    "titre": "Constructeur de condition",
+    "colonne": "Colonne",
+    "operateur": "Opérateur",
+    "valeur": "Valeur",
+    "ajouter": "Ajouter un critère",
+    "combiner": "Combiner par",
+    "et": "ET",
+    "ou": "OU",
+    "ops": {
+      "=": "égal à",
+      "<>": "différent de",
+      ">": "supérieur à",
+      ">=": "supérieur ou égal à",
+      "<": "inférieur à",
+      "<=": "inférieur ou égal à",
+      "CONTIENT": "contient",
+      "EST VIDE": "est vide",
+      "EST NON VIDE": "n'est pas vide"
+    }
+  },
+  "resultats": {
+    "lignes_source": "Lignes de la table",
+    "lignes_retenues": "Lignes retenues",
+    "pourcentage": "Part des lignes (%)",
+    "groupes": "Groupes",
+    "lignes_en_double": "Lignes concernées",
+    "paires_comparees": "Paires comparées",
+    "minimum": "Plus petit numéro",
+    "maximum": "Plus grand numéro",
+    "attendus": "Numéros attendus",
+    "manquants": "Numéros manquants",
+    "doubles": "Numéros en double",
+    "plages_manquantes": "Plages manquantes",
+    "valeurs_vides": "Valeurs vides",
+    "total": "Total",
+    "nombre": "Nombre",
+    "lignes": "Lignes",
+    "total_general": "Total général",
+    "khi2": "Khi-deux",
+    "ddl": "Degrés de liberté",
+    "p_valeur": "p-valeur",
+    "mad": "MAD (écart absolu moyen)",
+    "conformite": "Conformité (Nigrini)",
+    "montants_retenus": "Montants retenus",
+    "lignes_suspectes": "Lignes suspectes",
+    "chiffres_significatifs": "Chiffres en excès significatif",
+    "appariees": "Lignes appariées",
+    "orphelines_gauche": "Orphelines de la table principale",
+    "orphelines_droite": "Orphelines de la seconde table",
+    "concordants": "Clés concordantes",
+    "ecarts": "Clés en écart",
+    "total_gauche": "Total de la table principale",
+    "total_droite": "Total de la seconde table",
+    "ecart_total": "Écart total",
+    "moyenne": "Moyenne",
+    "ecart_type": "Écart-type",
+    "q1": "1er quartile",
+    "q3": "3e quartile",
+    "borne_basse": "Borne basse",
+    "borne_haute": "Borne haute",
+    "aberrantes": "Valeurs aberrantes",
+    "paires": "Paires similaires",
+    "noms_gauche": "Noms de la table principale",
+    "noms_droite": "Noms de la seconde table",
+    "sans_date": "Lignes sans date",
+    "non_echu": "Non échu",
+    "valeurs": {
+      "conformite_etroite": "Conformité étroite",
+      "conformite_acceptable": "Conformité acceptable",
+      "conformite_marginale": "Conformité marginale",
+      "non_conformite": "Non-conformité"
+    }
+  },
+  "benford": {
+    "graphique": "Distribution observée et attendue",
+    "legende": "Barres : part observée (en rouge : excès significatif, z > 1,96). Ligne : part attendue selon la loi de Benford.",
+    "tableau": "Détail par chiffre",
+    "chiffres": "Chiffre(s)",
+    "observes": "Observés",
+    "attendus": "Attendus",
+    "partObservee": "Part observée",
+    "partAttendue": "Part attendue"
   }
 }
