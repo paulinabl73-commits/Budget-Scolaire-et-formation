@@ -95,6 +95,9 @@ def evaluate_many(
     values = [v for rel in rels.values() for v in rel.params] + (params or [])
     with connect() as con:
         try:
+            # Une requête qui commence par WITH prolonge la liste des tables nommées.
+            if sql.lstrip()[:5].upper() == "WITH ":
+                sql = ", " + sql.lstrip()[5:]
             return con.execute(f"WITH {ctes} {sql}", values).pl()  # noqa: S608
         except duckdb.Error as exc:
             raise RelationError(clean_error(exc)) from exc
