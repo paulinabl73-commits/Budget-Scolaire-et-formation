@@ -5,6 +5,7 @@ import { Link, useLocation, useParams, useSearchParams } from "react-router-dom"
 import { api } from "../api/client";
 import type { Engagement } from "../api/types";
 import Alert from "../components/Alert";
+import ProgramTab from "../components/mission/ProgramTab";
 import StatusBar from "../components/mission/StatusBar";
 import StatusHistory from "../components/mission/StatusHistory";
 import SynthesisTab from "../components/mission/SynthesisTab";
@@ -13,7 +14,7 @@ import { formatDate } from "../lib/format";
 import { STATUS_BADGE } from "../lib/mission";
 
 /** Onglets de la fiche mission ; chaque lot ajoute les siens. */
-export const MISSION_TABS = ["synthese", "temps"] as const;
+export const MISSION_TABS = ["synthese", "programme", "temps"] as const;
 type Tab = (typeof MISSION_TABS)[number];
 
 export default function MissionPage() {
@@ -80,6 +81,7 @@ export default function MissionPage() {
           <StatusHistory missionId={mission.id} statut={mission.statut} />
         </>
       )}
+      {tab === "programme" && <ProgramTab mission={mission} />}
       {tab === "temps" && <TimeTab mission={mission} onChange={() => void load()} />}
     </div>
   );

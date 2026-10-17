@@ -457,5 +457,34 @@
       "trimestriel": "Trimestriel",
       "annuel": "Annuel"
     }
+  },
+  "programme": {
+    "intro": "Matrice des risques et des contrôles de la mission, avec les procédures de test.",
+    "importer": "Importer un risque de la bibliothèque",
+    "choisirRisque": "— Choisir un risque —",
+    "importerBtn": "Importer",
+    "nouveauRisque": "Risque propre à la mission",
+    "ajouterControle": "Ajouter un contrôle",
+    "depuisBibliotheque": "Depuis la bibliothèque",
+    "nouveauControle": "Nouveau contrôle",
+    "choisirControle": "— Choisir un contrôle —",
+    "ajouter": "Ajouter",
+    "ajouterProcedure": "Ajouter une procédure",
+    "procedure": "Procédure",
+    "typeTest": "Type de test",
+    "aucunRisque": "Aucun risque. Importez des risques de la bibliothèque ou créez-en.",
+    "aucuneProcedure": "Aucune procédure.",
+    "controlesOrphelins": "Contrôles non rattachés à un risque",
+    "copie": "copie de la bibliothèque",
+    "enregistre": "Programme mis à jour.",
+    "confirmerSuppression": "Supprimer « {{libelle}} » du programme ?",
+    "typesTest": {
+      "conception": "Revue de conception",
+      "efficacite": "Test d'efficacité",
+      "substantif": "Contrôle substantif"
+    },
+    "risques": "{{count}} risque(s)",
+    "controles": "{{count}} contrôle(s)",
+    "procedures": "{{count}} procédure(s)"
   }
 }

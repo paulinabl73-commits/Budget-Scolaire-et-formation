@@ -15,6 +15,7 @@ from app.api import (
     library,
     meta,
     plans,
+    program,
     risk,
     teams,
     timesheets,
@@ -79,5 +80,6 @@ for router in (
     engagement_status.router,
     timesheets.router,
     library.router,
+    program.router,
 ):
     app.include_router(router, prefix="/api")

@@ -8,7 +8,14 @@ from typing import Self
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from app.models.engagement import EngagementStatus, MissionRole, TimeActivity
-from app.models.program import ControlNature, ControlType, Cycle, Frequency, RiskCategory
+from app.models.program import (
+    ControlNature,
+    ControlType,
+    Cycle,
+    Frequency,
+    RiskCategory,
+    TestType,
+)
 
 
 class MemberIn(BaseModel):
@@ -173,6 +180,27 @@ class ControlUpdate(BaseModel):
     frequence: Frequency | None = None
 
 
+class ProcedureIn(BaseModel):
+    control_id: uuid.UUID
+    description: str = Field(min_length=1)
+    type_test: TestType
+
+
+class ProcedureUpdate(BaseModel):
+    description: str | None = Field(default=None, min_length=1)
+    type_test: TestType | None = None
+
+
+class ProcedureOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    control_id: uuid.UUID
+    reference: str | None
+    description: str
+    type_test: TestType
+
+
 class ControlOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -184,6 +212,7 @@ class ControlOut(BaseModel):
     nature: ControlNature
     frequence: Frequency
     source_id: uuid.UUID | None = None
+    procedures: list[ProcedureOut] = []
 
 
 class RiskOut(BaseModel):
@@ -200,3 +229,29 @@ class RiskOut(BaseModel):
 
 class LinkIn(BaseModel):
     control_ids: list[uuid.UUID]
+
+
+class MissionRiskIn(BaseModel):
+    """Copie d'un risque de la bibliothèque, ou risque propre à la mission."""
+
+    library_risk_id: uuid.UUID | None = None
+    libelle: str | None = Field(default=None, min_length=1, max_length=300)
+    description: str | None = None
+    cycle: Cycle | None = None
+    categorie: RiskCategory | None = None
+
+
+class MissionControlIn(BaseModel):
+    library_control_id: uuid.UUID | None = None
+    libelle: str | None = Field(default=None, min_length=1, max_length=300)
+    description: str | None = None
+    cycle: Cycle | None = None
+    type_controle: ControlType | None = None
+    nature: ControlNature | None = None
+    frequence: Frequency | None = None
+    risk_ids: list[uuid.UUID] = []
+
+
+class MatrixOut(BaseModel):
+    risques: list[RiskOut]
+    controles: list[ControlOut]

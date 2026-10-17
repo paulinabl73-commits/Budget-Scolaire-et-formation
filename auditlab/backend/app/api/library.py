@@ -9,13 +9,16 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.api.deps import DbSession, require
-from app.models.program import Control, Risk, RiskControl
+from app.models.program import Control, Procedure, Risk, RiskControl
 from app.models.user import User
 from app.schemas_mission import (
     ControlIn,
     ControlOut,
     ControlUpdate,
     LinkIn,
+    ProcedureIn,
+    ProcedureOut,
+    ProcedureUpdate,
     RiskIn,
     RiskOut,
     RiskUpdate,
@@ -45,11 +48,38 @@ def linked_controls(db: Session, risk_ids: list[uuid.UUID]) -> dict[uuid.UUID, l
     return result
 
 
-def risk_out(risk: Risk, controls: list[Control]) -> RiskOut:
+def procedures_by_control(
+    db: Session, control_ids: list[uuid.UUID]
+) -> dict[uuid.UUID, list[Procedure]]:
+    result: dict[uuid.UUID, list[Procedure]] = {cid: [] for cid in control_ids}
+    for p in db.scalars(
+        select(Procedure)
+        .where(Procedure.control_id.in_(control_ids), Procedure.deleted_at.is_(None))
+        .order_by(Procedure.reference.nulls_last(), Procedure.created_at)
+    ):
+        result[p.control_id].append(p)
+    return result
+
+
+def control_out(control: Control, procedures: list[Procedure]) -> ControlOut:
+    return ControlOut.model_validate(
+        {
+            **{k: getattr(control, k) for k in ControlOut.model_fields if hasattr(control, k)},
+            "procedures": [ProcedureOut.model_validate(p) for p in procedures],
+        }
+    )
+
+
+def risk_out(
+    risk: Risk,
+    controls: list[Control],
+    procedures: dict[uuid.UUID, list[Procedure]] | None = None,
+) -> RiskOut:
+    procedures = procedures or {}
     return RiskOut.model_validate(
         {
             **{k: getattr(risk, k) for k in RiskOut.model_fields if hasattr(risk, k)},
-            "controles": [ControlOut.model_validate(c) for c in controls],
+            "controles": [control_out(c, procedures.get(c.id, [])) for c in controls],
         }
     )
 
@@ -100,7 +130,8 @@ def list_risks(_: Reader, db: DbSession, cycle: str | None = None) -> list[RiskO
         query = query.where(Risk.cycle == cycle)
     risks = list(db.scalars(query.order_by(Risk.cycle, Risk.libelle)))
     links = linked_controls(db, [r.id for r in risks])
-    return [risk_out(r, links[r.id]) for r in risks]
+    procedures = procedures_by_control(db, [c.id for cs in links.values() for c in cs])
+    return [risk_out(r, links[r.id], procedures) for r in risks]
 
 
 @router.post("/risks", response_model=RiskOut, status_code=201)
@@ -141,11 +172,13 @@ def delete_risk(risk_id: uuid.UUID, user: Manager, db: DbSession) -> None:
 
 
 @router.get("/controls", response_model=list[ControlOut])
-def list_controls(_: Reader, db: DbSession, cycle: str | None = None) -> list[Control]:
+def list_controls(_: Reader, db: DbSession, cycle: str | None = None) -> list[ControlOut]:
     query = select(Control).where(Control.bibliotheque.is_(True), Control.deleted_at.is_(None))
     if cycle:
         query = query.where(Control.cycle == cycle)
-    return list(db.scalars(query.order_by(Control.cycle, Control.libelle)))
+    controls = list(db.scalars(query.order_by(Control.cycle, Control.libelle)))
+    procedures = procedures_by_control(db, [c.id for c in controls])
+    return [control_out(c, procedures[c.id]) for c in controls]
 
 
 @router.post("/controls", response_model=ControlOut, status_code=201)
@@ -180,4 +213,52 @@ def delete_control(control_id: uuid.UUID, user: Manager, db: DbSession) -> None:
         link.deleted_at = now
     control.deleted_at = now
     control.deleted_by = user.id
+    db.commit()
+
+
+@router.post("/procedures", response_model=ProcedureOut, status_code=201)
+def create_procedure(body: ProcedureIn, _: Manager, db: DbSession) -> Procedure:
+    """Procédure type d'un contrôle de la bibliothèque, copiée dans les missions."""
+    control = _library_control(db, body.control_id)
+    procedure = Procedure(
+        control_id=control.id,
+        description=body.description,
+        type_test=body.type_test.value,
+        bibliotheque=True,
+    )
+    db.add(procedure)
+    db.commit()
+    return procedure
+
+
+def _library_procedure(db: Session, procedure_id: uuid.UUID) -> Procedure:
+    p = db.scalar(
+        select(Procedure).where(
+            Procedure.id == procedure_id,
+            Procedure.bibliotheque.is_(True),
+            Procedure.deleted_at.is_(None),
+        )
+    )
+    if p is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Procédure introuvable")
+    return p
+
+
+@router.patch("/procedures/{procedure_id}", response_model=ProcedureOut)
+def update_procedure(
+    procedure_id: uuid.UUID, body: ProcedureUpdate, _: Manager, db: DbSession
+) -> Procedure:
+    p = _library_procedure(db, procedure_id)
+    for key, value in body.model_dump(mode="json", exclude_unset=True).items():
+        if value is not None:
+            setattr(p, key, value)
+    db.commit()
+    return p
+
+
+@router.delete("/procedures/{procedure_id}", status_code=204)
+def delete_procedure(procedure_id: uuid.UUID, user: Manager, db: DbSession) -> None:
+    p = _library_procedure(db, procedure_id)
+    p.deleted_at = datetime.now(UTC)
+    p.deleted_by = user.id
     db.commit()

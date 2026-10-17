@@ -16,9 +16,11 @@ from app.models.program import (
     ControlType,
     Cycle,
     Frequency,
+    Procedure,
     Risk,
     RiskCategory,
     RiskControl,
+    TestType,
 )
 from app.models.risk import Axis, CriterionMode, RiskAssessment, RiskCriterion
 from app.models.universe import AuditableEntity, EntityType
@@ -42,6 +44,7 @@ __all__ = [
     "Frequency",
     "MissionRole",
     "PlanItem",
+    "Procedure",
     "PlanStatus",
     "STATUS_ORDER",
     "Risk",
@@ -50,6 +53,7 @@ __all__ = [
     "RiskControl",
     "RiskCriterion",
     "Team",
+    "TestType",
     "TimeActivity",
     "TimeEntry",
     "TrackedMixin",

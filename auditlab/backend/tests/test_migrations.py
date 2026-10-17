@@ -14,6 +14,12 @@ def test_migrations_aller_retour_et_donnees_de_depart():
     with engine.connect() as conn:
         counts = {
             t: conn.scalar(text(f"SELECT count(*) FROM {t}"))  # noqa: S608
-            for t in ("risk_criteria", "risks", "controls", "risk_controls")
+            for t in ("risk_criteria", "risks", "controls", "risk_controls", "procedures")
         }
-    assert counts == {"risk_criteria": 5, "risks": 11, "controls": 15, "risk_controls": 15}
+    assert counts == {
+        "risk_criteria": 5,
+        "risks": 11,
+        "controls": 15,
+        "risk_controls": 15,
+        "procedures": 16,
+    }

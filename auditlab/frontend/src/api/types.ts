@@ -243,6 +243,16 @@ export type ControlType = "preventif" | "detectif";
 export type ControlNature = "manuel" | "automatique" | "semi_automatique";
 export type Frequency = "ponctuel" | "quotidien" | "hebdomadaire" | "mensuel" | "trimestriel" | "annuel";
 
+export type TestType = "conception" | "efficacite" | "substantif";
+
+export interface Procedure {
+  id: string;
+  control_id: string;
+  reference: string | null;
+  description: string;
+  type_test: TestType;
+}
+
 export interface Control {
   id: string;
   libelle: string;
@@ -252,6 +262,7 @@ export interface Control {
   nature: ControlNature;
   frequence: Frequency;
   source_id: string | null;
+  procedures: Procedure[];
 }
 
 export interface Risk {
@@ -261,5 +272,10 @@ export interface Risk {
   cycle: Cycle;
   categorie: RiskCategory;
   source_id: string | null;
+  controles: Control[];
+}
+
+export interface Matrix {
+  risques: Risk[];
   controles: Control[];
 }

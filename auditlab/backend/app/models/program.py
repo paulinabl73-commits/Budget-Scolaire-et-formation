@@ -92,3 +92,26 @@ class RiskControl(TrackedMixin, Base):
 
     risk_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("risks.id"), index=True)
     control_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("controls.id"), index=True)
+
+
+class TestType(StrEnum):
+    """Nature de la procédure (normes IIA 2320 / ISA 330)."""
+
+    CONCEPTION = "conception"  # revue de conception, walk-through
+    EFFICACITE = "efficacite"  # test de fonctionnement du contrôle
+    SUBSTANTIF = "substantif"  # contrôle de détail ou analytique
+
+
+class Procedure(TrackedMixin, Base):
+    """Procédure de test rattachée à un contrôle (AUD-11) ; type dans la bibliothèque."""
+
+    __tablename__ = "procedures"
+
+    control_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("controls.id"), index=True)
+    engagement_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("engagements.id"), nullable=True, index=True
+    )
+    reference: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    description: Mapped[str] = mapped_column(Text)
+    type_test: Mapped[str] = mapped_column(String(20))
+    bibliotheque: Mapped[bool] = mapped_column(Boolean, default=True)
