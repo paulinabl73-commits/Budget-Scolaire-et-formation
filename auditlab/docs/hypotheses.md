@@ -16,6 +16,51 @@ Le document de synthèse partageable reprend ce fichier.
 - Fichiers stockés hors base, dans un stockage compatible S3 (SeaweedFS ; MinIO n'étant plus distribué en image publique) chiffré au repos.
   Téléchargements journalisés ; liens signés valides une heure pour l'affichage des images.
 
+## Module 5 — révision des comptes
+
+### Lot 8a
+- Référentiels : données versionnées, jamais écrites dans le programme. SYSCOHADA révisé 2017
+  livré pour le Système normal ; le plan CIPRES n'étant pas public, un modèle de structure est
+  livré, à compléter par import Excel (question ouverte du cahier des charges).
+- Un seul dossier actif par entité et par exercice ; le dossier de l'exercice précédent sert
+  de N-1 : sa balance N devient la balance N-1, ses affectations manuelles sont reprises.
+- Imports : reconnaissance des colonnes par synonymes propres à chaque logiciel, table de
+  correspondance manuelle en dernier recours ; montants au format français ou anglais,
+  négatifs entre parenthèses ou suffixés. Un nouvel import remplace le précédent du même type,
+  l'historique (y compris les imports rejetés) reste consultable avec le fichier source.
+- Contrôles bloquants (un écart rejette l'import) : tolérance de 0,01 unité monétaire plus
+  l'écart d'arrondi de conversion ; comptes hors plan = sans racine du référentiel d'au moins
+  deux chiffres ; à-nouveaux comparés compte par compte pour les classes 2 à 5 et en total
+  pour les capitaux propres (le résultat N-1 a pu être affecté entre comptes de la classe 1) ;
+  grand livre comparé à la balance hors journaux d'à-nouveaux (AN, RAN, ANO, ANX) ; balance
+  auxiliaire comparée aux comptes collectifs indiqués. Le contrôle croisé s'exécute à l'import
+  de la seconde donnée, un avertissement le signale tant qu'elle manque.
+- Une balance sans à-nouveaux (intégrés aux mouvements par certains logiciels) est rejetée
+  avec l'indication d'exporter les soldes d'ouverture : l'auditeur doit pouvoir vérifier les
+  soldes d'ouverture (ISA 510).
+- Devises : montants tenus dans la devise du dossier et arrondis à son nombre de décimales
+  (zéro pour XOF, XAF, GNF) ; conversion au cours de clôture par défaut (cours de la date
+  choisie, à défaut le dernier connu avant, signalé) ; cours inverse utilisé s'il est seul
+  connu ; aucun cours pré-enregistré, la parité fixe EUR/XOF comprise (donnée à saisir).
+- Affectation : racine la plus longue ; règle de sens appréciée sur le solde de chaque exercice
+  (un même compte peut changer de poste entre N et N-1) ; l'affectation manuelle prime et peut
+  prévoir un poste distinct pour un solde créditeur ; classe 9 hors états (paramétrable).
+- Seuil de signification (ISA 320) : fourchettes indicatives portées par le référentiel —
+  total du bilan 1 à 2 %, chiffre d'affaires 0,5 à 2 %, résultat 5 à 10 %, capitaux propres
+  1 à 5 %, cotisations 0,5 à 2 % ; seuil de planification 75 % et seuil d'insignifiance 5 % du
+  seuil, modifiables ; base négative refusée ; justification obligatoire ; fixé par le chef de
+  mission.
+- Revue analytique (ISA 520) : variation signalée au-delà du seuil de planification, ou au-delà
+  de 10 % (paramétrable par dossier) et du seuil d'insignifiance ; un poste nouveau ou disparu
+  compte pour 100 % ; les totaux ne sont pas signalés ; le seuil doit être fixé avant.
+- Ratios : N-2 tiré de la balance N-1 du dossier précédent ; délais calculés sur 360 jours.
+- Matrice des risques (ISA 315, ISA 330) : onze cycles (un cycle « Emprunts et autres tiers »
+  complète la liste du cahier des charges pour couvrir tous les comptes), six assertions ;
+  risque d'anomalie significative selon une grille inhérent × contrôle, un risque important
+  étant toujours élevé ; seules les cellules à risque moyen ou élevé alimentent le programme,
+  avec un test de détail par assertion, des tests étendus si le risque est élevé et un test
+  d'efficacité des contrôles si l'auditeur s'appuie sur eux (risque lié au contrôle faible).
+
 ## Module 3 — constats et suivi
 
 ### Lot 8

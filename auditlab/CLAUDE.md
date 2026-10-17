@@ -19,12 +19,20 @@ auditlab/
                       datasets.py, imports.py, views.py = lot 5 ; analyses.py = lot 6 ;
                       sampling.py, macros.py = lot 7 ;
                       data_links.py, findings.py, evidence.py, contradictory.py,
-                      action_plans.py, portal.py = lot 8
+                      action_plans.py, portal.py = lot 8 ;
+                      frameworks.py, audit_files.py, trial_balances.py, currencies.py,
+                      mapping.py, materiality.py, analytical.py, ratios.py,
+                      risk_matrix.py = lot 8a
       analytics/      Module 2 : store.py (Parquet, DuckDB), formats.py, detect.py, pdf.py,
                       sql_source.py, jobs.py (tâches Celery), expr.py (expressions),
                       relation.py (relation SQL d'une table ou d'une vue), grid.py,
                       statistics.py, operations/ (une analyse par module, lot 6),
                       sampling.py, lineage.py, macros.py (lot 7)
+      revision/       Module 5 : formula.py (formules fermées), frameworks.py (chargement,
+                      Excel), balances.py (lecture des fichiers), imports.py (import et
+                      reprise N-1), controls.py (REV-06), currency.py (REV-07),
+                      mapping.py (affectation, états), cycles.py (REV-14) ;
+                      data/ = référentiels, synonymes, devises, cycles (JSON)
       audit/          chain.py (chaînage par hash), listeners.py (journalisation automatique)
       models/         modèles SQLAlchemy ; base.py = TrackedMixin
       security/       passwords (Argon2), totp, sessions, roles (matrice des droits)
@@ -281,3 +289,27 @@ docker compose up -d --build
   est destinataire ou responsable.
 - **Tests** : `tests/finding_helpers.py` (fixture `team` avec risque, contrôle, papier et
   audité ; `create_finding`).
+
+### Lot 8a — référentiels et balance (Module 5)
+
+- **Référentiels** : `app/revision/data/*.json` chargés par la migration 0033 et par
+  `frameworks.load_framework` (tests : fixture `syscohada`, qui installe aussi les devises).
+  Les colonnes JSONB d'une table ad hoc de migration doivent être typées (`sa.column(c, JSONB)`)
+  sinon la valeur est sérialisée deux fois.
+- **Index uniques partiels** : toujours les déclarer dans le modèle (`__table_args__`), sinon
+  l'autogénération Alembic les supprime.
+- **Import** (`revision/imports.py`) : `import_file` lit, puis applique les étapes `PREPARE`
+  (conversion, `currency.py`) et `CONTROLS` (`controls.py`) enregistrées à l'import des modules ;
+  `api/trial_balances.py` les importe. Une anomalie = import rejeté (conservé, jamais utilisé).
+- **Reprise N-1** : hooks `audit_files.ON_CREATE` (balance : `imports.carry_over` ;
+  affectations : `mapping.carry_over_mappings`).
+- **États** : `revision/mapping.file_values` (lève `UnmappedError`) ; côté API
+  `mapping.values_or_409`. Montants signés selon la nature du poste (actif, charge : débit −
+  crédit). Seuil, revue analytique, ratios et matrice s'appuient dessus.
+- **Paramètres** (`config.py`) : tolérance des contrôles, racine minimale, classes de bilan, de
+  résultat et hors états, pourcentages par défaut des seuils dérivés.
+- **Écran** : `AuditFilePage` à vues (`?vue=donnees|affectation|planification|analytique|ratios|risques`)
+  et bandeau permanent des comptes non affectés ; devises et cours dans `/referentiels`.
+- **Tests** : `tests/revision_helpers.py` (fixture `rev`, `create_file`),
+  `tests/revision_data.py` (société de référence : total du bilan 31,7 M, CA 40 M, résultat
+  7,1 M), `test_affectation.load` (balances N-1 puis N).

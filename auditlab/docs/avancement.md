@@ -10,12 +10,43 @@
 | 6 | Analyses : DAT-09 à DAT-19 | **Livré** |
 | 7 | Échantillonnage et lignée : DAT-20 à DAT-25 | **Livré** |
 | 8 | Liaison audit et analyse, constats : DAT-30 à DAT-32, CON-01 à CON-09 | **Livré** |
-| 8a | Référentiels et balance : REV-01 à REV-14 | À faire |
+| 8a | Référentiels et balance : REV-01 à REV-14 | **Livré** |
 | 8b | Révision et états : REV-15 à REV-28, CIP-01 à CIP-09, IFR-01 à IFR-04 | À faire |
 | 8c | Portefeuille et contrôles : RCO-01 à RCO-10 | À faire |
 | 8d | Inventaire, fiscalité et livrables : RCO-11 à RCO-27 | À faire |
 | 9 | Scripts et automatisation : DAT-26 à DAT-29 | À faire |
 | 10 | Reporting et finitions : REP-01 à REP-08, NF-09 à NF-11 | À faire |
+
+## Lot 8a — détail
+
+**Livré** (un commit par exigence ; REV-02 à REV-04 ensemble, REV-08 à REV-10 ensemble :
+même modèle et même écran)
+- **REV-01** : référentiels versionnés (SYSCOHADA révisé 2017 livré : plan, postes du Système
+  normal, ratios, bases de seuil, règles de contrôle ; modèle de structure CIPRES), import et
+  export Excel, publication par l'administrateur.
+- **REV-02 / REV-03 / REV-04** : dossier de révision par entité et par exercice rattaché à une
+  mission, référentiel principal, restitution IFRS et cadre normatif ; dossier N-1 relié,
+  balance N et affectations manuelles reprises.
+- **REV-05** : import des balances N et N-1, du grand livre (versé comme table du Module 2) et
+  des balances auxiliaires ; Sage, Odoo, Perfecto, SAARI, export générique, CSV ou Excel.
+- **REV-06** : contrôles bloquants (équilibre, cohérence des lignes, comptes hors plan,
+  à-nouveaux, grand livre / balance, auxiliaire / collectif), quel que soit l'ordre d'import.
+- **REV-07** : devises et cours par date, conversion à l'import, FCFA sans décimales.
+- **REV-08 / REV-09 / REV-10** : affectation automatique par racine la plus longue, comptes à
+  double sens selon leur solde, affectation manuelle, bandeau permanent des comptes non
+  affectés ; aperçu des états N / N-1 refusé tant que la liste n'est pas vide.
+- **REV-11** : seuil de signification, de planification et d'insignifiance.
+- **REV-12** : revue analytique N/N-1 par poste et par compte, justification obligatoire.
+- **REV-13** : ratios sur trois exercices.
+- **REV-14** : matrice des risques par cycle et par assertion, qui alimente le programme de
+  travail de la mission.
+- Correctifs signalés : valeurs JSON des référentiels livrés (migration 0033) ; unicité du
+  dossier par entité et par exercice rétablie (index supprimé par la migration 0035).
+- Changements signalés d'exigences livrées : devise d'un nouveau dossier obligatoirement
+  définie (REV-04) ; totaux en FCFA sans décimales (REV-05).
+- Tests : 405 tests backend. Parcours import Sage et Odoo → contrôles → affectation →
+  aperçu des états → seuil → revue analytique → ratios → matrice et programme rejoué dans un
+  navigateur.
 
 ## Lot 8 — détail
 
