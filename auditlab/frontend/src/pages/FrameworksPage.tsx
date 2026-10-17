@@ -6,6 +6,7 @@ import { api, download, patch, post, upload } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
 import Alert from "../components/Alert";
 import CurrenciesPanel from "../components/revision/CurrenciesPanel";
+import ProgramsLibraryPanel from "../components/revision/ProgramsLibraryPanel";
 import { formatDate, formatNombre } from "../lib/format";
 import { can, PERM } from "../lib/permissions";
 
@@ -192,6 +193,7 @@ export default function FrameworksPage() {
         )}
       </section>
       <CurrenciesPanel />
+      <ProgramsLibraryPanel />
     </div>
   );
 }

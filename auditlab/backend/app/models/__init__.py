@@ -59,6 +59,7 @@ from app.models.revision import (
     FrameworkAccount,
     LeadScheduleReference,
     NormativeFramework,
+    ProgramStep,
     RegulatoryParameter,
     StatementLine,
 )
@@ -120,6 +121,7 @@ __all__ = [
     "FrameworkAccount",
     "LeadScheduleReference",
     "NormativeFramework",
+    "ProgramStep",
     "RegulatoryParameter",
     "StatementLine",
     "PlanEvidence",

@@ -1,0 +1,77 @@
+{
+  "source": "Programmes de travail types AuditLab (ISA 330, ISA 500, ISA 505, ISA 501, ISA 540) – à adapter par le cabinet",
+  "SYSCOHADA": {
+    "immobilisations": [
+      ["existence", "substantif", "Rapprocher le tableau des immobilisations (valeurs brutes, amortissements, dépréciations) de la balance et des états."],
+      ["existence", "substantif", "Inspecter physiquement un échantillon d'immobilisations corporelles significatives et rapprocher les numéros d'inventaire."],
+      ["droits_obligations", "substantif", "Examiner les titres de propriété, cartes grises, actes et contrats de location-acquisition des acquisitions de l'exercice."],
+      ["exhaustivite", "substantif", "Rechercher dans les comptes de charges (entretien, petits équipements) des dépenses à immobiliser."],
+      ["evaluation", "substantif", "Recalculer les dotations aux amortissements (durées, modes, approche par composants) et apprécier les indices de perte de valeur."],
+      ["separation", "substantif", "Vérifier la date de mise en service et de transfert de propriété des acquisitions et cessions proches de la clôture."],
+      ["presentation", "substantif", "Contrôler le calcul du résultat de cession (comptes 81 et 82) et l'information en annexe (notes 3 à 6)."]
+    ],
+    "stocks": [
+      ["existence", "substantif", "Assister à l'inventaire physique (ISA 501), réaliser des comptages par sondage dans les deux sens et suivre les écarts."],
+      ["exhaustivite", "substantif", "Rapprocher l'état d'inventaire valorisé des comptages et du solde comptable ; contrôler les stocks chez des tiers."],
+      ["evaluation", "substantif", "Contrôler le coût unitaire (CMUP ou PEPS) sur factures, la valeur nette de réalisation et les dépréciations des articles lents ou obsolètes."],
+      ["separation", "substantif", "Tester la séparation des exercices : derniers bons de réception et de livraison rapprochés des factures et de l'inventaire."],
+      ["droits_obligations", "substantif", "Identifier les stocks en consignation, en dépôt ou gagés et vérifier leur traitement."]
+    ],
+    "clients": [
+      ["existence", "substantif", "Circulariser un échantillon de clients (ISA 505) et effectuer des procédures alternatives en l'absence de réponse."],
+      ["existence", "substantif", "Rapprocher la balance âgée clients du compte collectif et analyser les soldes créditeurs et les comptes d'attente."],
+      ["evaluation", "substantif", "Examiner la recouvrabilité des créances anciennes ou litigieuses (encaissements postérieurs, contentieux) et le calcul des dépréciations."],
+      ["separation", "substantif", "Tester la séparation des ventes : dernières livraisons et premières factures de l'exercice suivant ; avoirs émis après la clôture."],
+      ["exhaustivite", "substantif", "Rapprocher le chiffre d'affaires des déclarations de TVA et des quantités livrées ; revue analytique des marges."],
+      ["presentation", "substantif", "Vérifier le classement des avances reçues, des effets escomptés non échus et des créances HAO."]
+    ],
+    "fournisseurs": [
+      ["exhaustivite", "substantif", "Rechercher les passifs non comptabilisés : factures reçues et décaissements postérieurs à la clôture, réceptions non facturées."],
+      ["existence", "substantif", "Circulariser un échantillon de fournisseurs, y compris à solde nul ou faible mais à volume d'achats important."],
+      ["existence", "substantif", "Rapprocher la balance fournisseurs du compte collectif et analyser les soldes débiteurs."],
+      ["separation", "substantif", "Tester la séparation des achats : derniers bons de réception, charges à payer et charges constatées d'avance."],
+      ["presentation", "substantif", "Vérifier le classement des fournisseurs débiteurs à l'actif et des fournisseurs d'immobilisations en dettes HAO."]
+    ],
+    "tresorerie": [
+      ["existence", "substantif", "Obtenir les confirmations bancaires (soldes, emprunts, garanties, signataires) pour toutes les banques, y compris les comptes clos."],
+      ["existence", "substantif", "Contrôler les rapprochements bancaires de clôture et le dénouement des suspens après la clôture."],
+      ["existence", "substantif", "Assister à l'inventaire de la caisse à la clôture et rapprocher le procès-verbal du solde comptable."],
+      ["separation", "substantif", "Vérifier la séparation des virements internes et des chèques émis non encaissés autour de la clôture."],
+      ["evaluation", "substantif", "Contrôler la conversion des comptes en devises au cours de clôture et l'évaluation des titres de placement."]
+    ],
+    "capitaux_propres": [
+      ["droits_obligations", "substantif", "Rapprocher le capital des statuts, des procès-verbaux d'assemblée et du registre des titres."],
+      ["presentation", "substantif", "Contrôler l'affectation du résultat N-1 conformément à la décision de l'assemblée générale et la dotation à la réserve légale."],
+      ["evaluation", "substantif", "Vérifier la reprise des subventions d'investissement au rythme des amortissements et les provisions réglementées."],
+      ["presentation", "substantif", "Établir le tableau de variation des capitaux propres et vérifier la situation des capitaux propres au regard de la moitié du capital."]
+    ],
+    "provisions": [
+      ["exhaustivite", "substantif", "Obtenir les lettres d'avocats (ISA 501) et examiner les procès-verbaux, litiges, garanties et contrôles fiscaux ou sociaux en cours."],
+      ["evaluation", "substantif", "Apprécier les hypothèses des provisions pour risques et charges, dont les indemnités de fin de carrière (ISA 540)."],
+      ["presentation", "substantif", "Vérifier les mouvements (dotations, reprises utilisées ou non) et l'information sur les passifs éventuels."]
+    ],
+    "financements": [
+      ["existence", "substantif", "Rapprocher les emprunts des contrats et des tableaux d'amortissement ; confirmer les soldes auprès des prêteurs."],
+      ["exhaustivite", "substantif", "Recalculer les intérêts courus et vérifier le respect des clauses (covenants) et des garanties données."],
+      ["existence", "substantif", "Analyser les comptes d'associés, d'attente et de débiteurs et créditeurs divers ; obtenir la justification des soldes anciens."]
+    ],
+    "personnel": [
+      ["exhaustivite", "substantif", "Rapprocher les salaires bruts comptabilisés des journaux de paie et des déclarations sociales et fiscales."],
+      ["existence", "substantif", "Vérifier sur un échantillon de salariés l'existence (contrat, présence) et le calcul de la paie selon la grille et la convention."],
+      ["evaluation", "substantif", "Contrôler les dettes sociales de clôture (congés payés, primes, cotisations) et leur règlement ultérieur."],
+      ["separation", "substantif", "Vérifier la comptabilisation des rémunérations et charges de décembre et des régularisations post-clôture."]
+    ],
+    "fiscalite": [
+      ["exhaustivite", "substantif", "Rapprocher la TVA collectée et déductible des déclarations mensuelles ; analyser les crédits de TVA."],
+      ["evaluation", "substantif", "Recalculer l'impôt sur le résultat (tableau de passage, minimum de perception) et les acomptes versés."],
+      ["exhaustivite", "substantif", "Vérifier les autres impôts et taxes (patentes, taxes sur salaires, retenues à la source) et leurs échéances."],
+      ["presentation", "substantif", "Examiner les notifications de redressement et apprécier la nécessité d'une provision ou d'une information."]
+    ],
+    "produits_charges": [
+      ["exhaustivite", "substantif", "Procédures analytiques substantives (ISA 520) sur les produits et charges, mois par mois et par rapport à N-1 et au budget."],
+      ["existence", "substantif", "Contrôler sur pièces un échantillon d'achats et de charges externes (bon de commande, réception, facture, règlement)."],
+      ["separation", "substantif", "Vérifier les charges à payer, produits à recevoir et charges ou produits constatés d'avance."],
+      ["presentation", "substantif", "Contrôler le classement des charges et produits hors activités ordinaires et des transferts de charges."]
+    ]
+  }
+}

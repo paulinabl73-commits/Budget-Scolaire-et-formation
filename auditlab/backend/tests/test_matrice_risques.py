@@ -66,7 +66,8 @@ def test_rev14_matrice_et_programme(client, rev):  # noqa: F811
     procedures = {
         r: [p["type_test"] for c in risks[r]["controles"] for p in c["procedures"]] for r in risks
     }
-    assert procedures["Trésorerie – Existence : risque élevé"] == ["substantif", "substantif"]
+    # Programme type (REV-16) : trois procédures d'existence pour la trésorerie, puis tests étendus.
+    assert procedures["Trésorerie – Existence : risque élevé"] == ["substantif"] * 4
     assert procedures["Clients et cotisants – Évaluation : risque moyen"] == ["substantif"]
     assert sorted(procedures["Fournisseurs – Exhaustivité : risque élevé (risque important)"]) == [
         "efficacite", "substantif", "substantif"]  # fmt: skip

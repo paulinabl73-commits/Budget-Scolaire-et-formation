@@ -1698,5 +1698,24 @@
     },
     "exportBloque": "Export impossible tant qu'un contrôle de cohérence est en écart.",
     "noteFlux": "Tableau des flux établi par différence entre les bilans N et N-1 (méthode indirecte) ; les flux d'investissement sont la variation des immobilisations nettes corrigée des dotations et reprises."
+  },
+  "programmes": {
+    "titre": "Programmes de travail types par cycle",
+    "referentiel": "Référentiel",
+    "cycle": "Cycle",
+    "repli": "Aucun programme propre à {{ref}} : le programme {{utilise}} s'applique. Ajoutez une procédure pour créer le programme {{ref}}.",
+    "desactiver": "Désactiver",
+    "reactiver": "Réactiver",
+    "assertion": "Assertion",
+    "typeTest": "Nature",
+    "types": {
+      "substantif": "Contrôle substantif",
+      "efficacite": "Test d'efficacité",
+      "conception": "Revue de conception"
+    },
+    "description": "Procédure",
+    "ajouter": "Ajouter au programme {{ref}}",
+    "appliquer": "Reprendre le programme type dans la mission",
+    "applique": "{{n}} procédure(s) ajoutée(s) au programme de la mission."
   }
 }

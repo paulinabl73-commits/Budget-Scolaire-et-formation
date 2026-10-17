@@ -334,3 +334,18 @@ class LeadScheduleReference(TrackedMixin, Base):
     audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
     cycle: Mapped[str] = mapped_column(String(40))
     workpaper_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("workpapers.id"))
+
+
+class ProgramStep(TrackedMixin, Base):
+    """Procédure d'un programme de travail type par cycle (REV-16), propre à un référentiel
+    (code SYSCOHADA, CIPRES…) ; livrée en bibliothèque, modifiable et désactivable."""
+
+    __tablename__ = "program_steps"
+
+    referentiel: Mapped[str] = mapped_column(String(20), index=True)
+    cycle: Mapped[str] = mapped_column(String(40))
+    assertion: Mapped[str] = mapped_column(String(40))
+    type_test: Mapped[str] = mapped_column(String(20))
+    description: Mapped[str] = mapped_column(Text)
+    ordre: Mapped[int] = mapped_column(Integer, default=0)
+    actif: Mapped[bool] = mapped_column(Boolean, default=True)

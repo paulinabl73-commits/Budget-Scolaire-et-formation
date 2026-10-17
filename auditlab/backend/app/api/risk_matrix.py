@@ -23,6 +23,7 @@ from app.api.deps import CurrentUser, DbSession
 from app.api.program import add_procedure, editable
 from app.models.program import Control, ControlNature, ControlType, Frequency, Risk, RiskControl
 from app.models.revision import AccountingFramework, AssertionRisk, AuditFile
+from app.revision import programs
 from app.revision.cycles import assertions, combined, cycle_of, cycles_for, library
 from app.revision.mapping import assignments
 
@@ -121,6 +122,7 @@ def generate_program(file_id: uuid.UUID, user: CurrentUser, db: DbSession) -> di
     file, _ = get_file(db, file_id, user)
     engagement = editable(db, file.engagement_id, user)  # chef de mission, mission ouverte
     lib = library()
+    framework_code = db.get(AccountingFramework, file.framework_id).code
     cycles = {c["code"]: c for c in file_cycles(db, file)}
     names = {a["code"]: a for a in assertions()}
     created = updated = 0
@@ -152,7 +154,14 @@ def generate_program(file_id: uuid.UUID, user: CurrentUser, db: DbSession) -> di
         db.flush()
         db.add(RiskControl(risk_id=risk.id, control_id=control.id))
         fmt = {"cycle": cycle["libelle"].lower(), "assertion": assertion["libelle"].lower()}
-        add_procedure(db, engagement, control, assertion["procedure"].format(**fmt), "substantif")
+        # REV-16 : procédures du programme type du cycle pour cette assertion, à défaut le
+        # texte générique de l'assertion.
+        templates = programs.steps(db, framework_code, cell.cycle, cell.assertion)
+        for step in templates:
+            add_procedure(db, engagement, control, step.description, step.type_test)
+        if not templates:
+            add_procedure(db, engagement, control, assertion["procedure"].format(**fmt),
+                          "substantif")  # fmt: skip
         if level == "eleve":
             add_procedure(db, engagement, control, lib["procedure_etendue"].format(**fmt),
                           "substantif")  # fmt: skip

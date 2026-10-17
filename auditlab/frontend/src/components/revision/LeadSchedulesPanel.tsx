@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { api, put } from "../../api/client";
+import { api, post, put } from "../../api/client";
 import type { AuditFile, WorkpaperSummary } from "../../api/types";
 import { formatNombre } from "../../lib/format";
 import Alert from "../Alert";
@@ -25,6 +25,7 @@ export default function LeadSchedulesPanel({ file }: { file: AuditFile }) {
   const [papers, setPapers] = useState<WorkpaperSummary[]>([]);
   const [cycle, setCycle] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
   const url = `/audit-files/${file.id}/lead-schedules`;
   useEffect(() => {
     api<Sheet[]>(url).then(setSheets).catch((e: Error) => setError(e.message));
@@ -63,7 +64,15 @@ export default function LeadSchedulesPanel({ file }: { file: AuditFile }) {
       </table>
       {sheet && (
         <div className="space-y-2 rounded border border-slate-200 p-3">
-          <h3 className="font-semibold">{t("feuilles.detail", { cycle: sheet.libelle })}</h3>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h3 className="font-semibold">{t("feuilles.detail", { cycle: sheet.libelle })}</h3>
+            {file.peut_gerer && (
+              <button type="button" className="btn-secondaire" onClick={() => void post<{ procedures_ajoutees: number }>(`/audit-files/${file.id}/programs/${sheet.cycle}/apply`).then((r) => setInfo(t("programmes.applique", { n: r.procedures_ajoutees }))).catch((e: Error) => setError(e.message))}>
+                {t("programmes.appliquer")}
+              </button>
+            )}
+          </div>
+          {info && <Alert kind="succes">{info}</Alert>}
           <table className="w-full text-sm">
             <thead className="text-xs text-slate-600"><tr><th scope="col" className="py-1 pr-3 text-left">{t("feuilles.compte")}</th>{COLS.map((k) => <th key={k} scope="col" className="py-1 pr-3 text-right">{t(`feuilles.col.${k}`)}</th>)}</tr></thead>
             <tbody className="divide-y divide-slate-100">

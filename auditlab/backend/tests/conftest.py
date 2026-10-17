@@ -162,10 +162,12 @@ def criteria(db: Session) -> list:
 @pytest.fixture
 def syscohada(db: Session):
     """Référentiel SYSCOHADA livré (la troncature des tests efface les données de départ)."""
+    from app.revision import programs
     from app.revision.currency import seed_currencies
     from app.revision.frameworks import builtin, load_framework
 
     fw = load_framework(db, builtin("syscohada_2017"))
     seed_currencies(db)
+    programs.seed(db)
     db.commit()
     return fw

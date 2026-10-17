@@ -9,7 +9,7 @@ from tests.conftest import alembic_config
 SEEDED = (
     "risk_criteria", "risks", "controls", "risk_controls", "procedures", "tickmarks",
     "accounting_frameworks", "framework_accounts", "statement_lines", "normative_frameworks",
-    "currencies",
+    "currencies", "program_steps",
 )  # fmt: skip
 
 
@@ -34,6 +34,7 @@ def test_migrations_aller_retour_et_donnees_de_depart():
         "statement_lines": 120,
         "normative_frameworks": 3,
         "currencies": 6,
+        "program_steps": 50,
     }
     # Les valeurs JSONB des référentiels sont des tableaux, pas des chaînes ré-encodées.
     with engine.connect() as conn:

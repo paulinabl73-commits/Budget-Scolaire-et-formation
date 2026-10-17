@@ -36,6 +36,7 @@ from app.api import (
     plans,
     portal,
     program,
+    programs,
     ratios,
     review_notes,
     risk,
@@ -144,5 +145,6 @@ for router in (
     adjustments.router,
     lead_schedules.router,
     statements.router,
+    programs.router,
 ):
     app.include_router(router, prefix="/api")
