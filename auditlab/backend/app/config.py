@@ -19,6 +19,8 @@ class Settings(BaseSettings):
     totp_issuer: str = "AuditLab"
     # Conversion des heures saisies en jours-homme (AUD-08).
     heures_par_jour: float = 8.0
+    # Constats (CON-04) : délai de réponse proposé à l'audité, en jours calendaires.
+    delai_reponse_constat_jours: int = 15
     cors_origins: list[str] = ["http://localhost:5173"]
     # Clé de signature des liens de téléchargement ; à fixer en production (32 octets aléatoires).
     secret_key: str = "dev-change-me-" + "0" * 32

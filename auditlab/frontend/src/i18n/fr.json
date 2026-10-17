@@ -1241,5 +1241,23 @@
       "verifie": "Vérifier et clôturer",
       "risque_accepte": "Accepter le risque"
     }
+  },
+  "contradictoire": {
+    "titre": "Phase contradictoire",
+    "brouillon": "Constat en cours de rédaction.",
+    "destinataire": "Audité destinataire",
+    "dateLimite": "Date limite de réponse (15 jours par défaut)",
+    "envoyer": "Envoyer à l'audité",
+    "envoye": "Envoyé à {{nom}} le {{date}} ; réponse attendue avant le {{limite}}.",
+    "positions": {
+      "accord": "L'audité est d'accord",
+      "accord_partiel": "L'audité est partiellement d'accord",
+      "desaccord": "L'audité est en désaccord",
+      "sans_reponse": "Pas de réponse de l'audité dans le délai"
+    },
+    "commentaireValidation": "Commentaire de validation",
+    "valider": "Valider le constat",
+    "validerSansReponse": "Valider sans réponse (délai dépassé)",
+    "valide": "Constat validé le {{date}}"
   }
 }

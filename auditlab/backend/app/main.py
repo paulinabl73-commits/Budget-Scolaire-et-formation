@@ -13,6 +13,7 @@ from app.api import (
     attachments,
     audit_log,
     auth,
+    contradictory,
     data_links,
     datasets,
     engagement_status,
@@ -116,5 +117,6 @@ for router in (
     findings.router,
     evidence.router,
     action_plans.router,
+    contradictory.router,
 ):
     app.include_router(router, prefix="/api")

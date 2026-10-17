@@ -135,3 +135,24 @@ class PlanOut(BaseModel):
     constat_titre: str | None = None
     mission_id: uuid.UUID | None = None
     transitions: list[str] = []
+
+
+class SendIn(BaseModel):
+    audite_id: uuid.UUID
+    date_limite_reponse: dt.date | None = None
+
+
+class ProposedPlan(BaseModel):
+    description: str = Field(min_length=1, max_length=10000)
+    responsable_nom: str | None = Field(default=None, max_length=200)
+    echeance: dt.date
+
+
+class ResponseIn(BaseModel):
+    position: str = Field(pattern="^(accord|accord_partiel|desaccord)$")
+    commentaire: str | None = Field(default=None, max_length=20000)
+    plans: list[ProposedPlan] = Field(default=[], max_length=20)
+
+
+class ValidateIn(BaseModel):
+    commentaire: str | None = Field(default=None, max_length=20000)
