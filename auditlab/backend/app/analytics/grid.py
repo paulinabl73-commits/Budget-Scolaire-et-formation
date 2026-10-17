@@ -157,3 +157,61 @@ def read_page(
         "lignes": [[jsonable(v) for v in row] for row in df.iter_rows()],
         "total": total,
     }
+
+
+def field_stats(
+    rel: Relation, column: str, filters: dict[str, Any], search: str | None
+) -> dict[str, Any]:
+    """Statistiques de champ (DAT-08), sur toute la table ou sur la sélection filtrée."""
+    types = rel.types
+    if column not in types:
+        raise GridError(f"Colonne inconnue « {column} »")
+    kind = types[column]
+    where, params = where_clause(rel.schema, filters, search)
+    q = quote_ident(column)
+    numeric = kind in ("entier", "decimal")
+    exprs = [
+        "count(*)",
+        f"count({q})",
+        f"count(DISTINCT {q})",
+        f"min({q})",
+        f"max({q})",
+    ]
+    if numeric:
+        exprs += [
+            f"sum({q})",
+            f"avg({q})",
+            f"stddev_samp({q})",
+            f"count(*) FILTER (WHERE {q} > 0)",
+            f"count(*) FILTER (WHERE {q} < 0)",
+            f"count(*) FILTER (WHERE {q} = 0)",
+        ]
+    row = evaluate(rel, f"SELECT {', '.join(exprs)} FROM t{where}", params).row(0)  # noqa: S608
+    lignes, valeurs, distinctes, low, high = row[:5]
+    stats: dict[str, Any] = {
+        "colonne": column,
+        "type": kind,
+        "lignes": lignes,
+        "nombre": valeurs,
+        "nulles": lignes - valeurs,
+        "distinctes": distinctes,
+        "min": jsonable(low),
+        "max": jsonable(high),
+    }
+    if numeric:
+        total, mean, std, pos, neg, zero = row[5:]
+        stats.update(
+            total=str(jsonable(total)) if total is not None else "0",
+            moyenne=float(mean) if mean is not None else None,
+            ecart_type=float(std) if std is not None else None,
+            positives=pos,
+            negatives=neg,
+            zeros=zero,
+        )
+    top = evaluate(
+        rel,
+        f"SELECT {q} AS v, count(*) AS n FROM t{where} GROUP BY 1 ORDER BY n DESC, v NULLS LAST LIMIT 10",  # noqa: S608, E501
+        params,
+    )
+    stats["frequentes"] = [{"valeur": jsonable(v), "nombre": n} for v, n in top.iter_rows()]
+    return stats

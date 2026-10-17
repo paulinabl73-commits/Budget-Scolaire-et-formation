@@ -804,5 +804,26 @@
     "colonnes": "Colonnes ({{visibles}}/{{total}})",
     "masquer": "Colonnes affichées",
     "effacerFiltres": "Effacer les filtres"
+  },
+  "stats": {
+    "titre": "Statistiques de champ",
+    "champ": "Champ",
+    "nombre": "Valeurs renseignées",
+    "nulles": "Valeurs vides",
+    "distinctes": "Valeurs distinctes",
+    "total": "Total",
+    "moyenne": "Moyenne",
+    "ecartType": "Écart-type",
+    "min": "Minimum",
+    "max": "Maximum",
+    "positives": "Valeurs positives",
+    "negatives": "Valeurs négatives",
+    "zeros": "Valeurs nulles (0)",
+    "frequentes": "Valeurs les plus fréquentes",
+    "valeur": "Valeur",
+    "occurrences": "Occurrences",
+    "vide": "(vide)",
+    "surTable": "Sur toute la table ({{n}} lignes).",
+    "surSelection": "Sur la sélection filtrée ({{n}} lignes)."
   }
 }

@@ -8,6 +8,8 @@ import Alert from "../components/Alert";
 import CalculatedFields from "../components/data/CalculatedFields";
 import ControlSheet from "../components/data/ControlSheet";
 import DataGrid from "../components/data/DataGrid";
+import FieldStats from "../components/data/FieldStats";
+import type { GridQuery } from "../components/data/FieldStats";
 import { useAuth } from "../auth/AuthContext";
 import { can } from "../lib/permissions";
 
@@ -18,7 +20,16 @@ export default function DatasetPage() {
   const [ds, setDs] = useState<Dataset | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
-  const load = useCallback(async () => setDs(await api<Dataset>(`/datasets/${dsId}`)), [dsId]);
+  const [column, setColumn] = useState<string | null>(null);
+  const [query, setQuery] = useState<GridQuery>({ filtres: {}, recherche: null });
+  const onQuery = useCallback((q: GridQuery) => {
+    setQuery((old) => (JSON.stringify(old) === JSON.stringify(q) ? old : q));
+  }, []);
+  const load = useCallback(async () => {
+    setColumn(null);
+    setQuery({ filtres: {}, recherche: null });
+    setDs(await api<Dataset>(`/datasets/${dsId}`));
+  }, [dsId]);
   useEffect(() => {
     load().catch((e: Error) => setError(e.message));
   }, [load]);
@@ -33,7 +44,10 @@ export default function DatasetPage() {
         {ds.description && <p className="text-slate-600">{ds.description}</p>}
       </header>
       {ds.kind !== "vue" && <ControlSheet ds={ds} />}
-      {ds.statut === "pret" && <DataGrid ds={ds} />}
+      {ds.statut === "pret" && <DataGrid key={ds.id} ds={ds} onColumnFocus={setColumn} onQuery={onQuery} />}
+      {ds.statut === "pret" && ds.schema.length > 0 && (
+        <FieldStats ds={ds} column={column ?? ds.schema[0].nom} query={query} onColumn={setColumn} />
+      )}
       <CalculatedFields ds={ds} canEdit={can(user?.permissions, "data:analyze")} onChanged={setDs} />
     </div>
   );

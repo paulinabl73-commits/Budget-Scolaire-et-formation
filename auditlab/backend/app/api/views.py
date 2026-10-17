@@ -201,3 +201,24 @@ def read_rows(
     except (GridError, RelationError) as exc:
         raise _invalid(str(exc)) from exc
     return GridPageOut(**page)
+
+
+class StatsIn(BaseModel):
+    colonne: str
+    filtres: dict[str, dict[str, Any]] = Field(default={})
+    recherche: str | None = Field(default=None, max_length=200)
+
+
+@router.post("/datasets/{dataset_id}/stats")
+def column_stats(
+    dataset_id: uuid.UUID, body: StatsIn, user: CurrentUser, db: DbSession
+) -> dict[str, Any]:
+    """DAT-08 : nombre, total, moyenne, min, max, écart-type, valeurs nulles et distinctes."""
+    from app.analytics.grid import GridError, field_stats
+
+    ds, _ = get_dataset(db, dataset_id, user)
+    rel = _view_base(db, ds)
+    try:
+        return field_stats(rel, body.colonne, body.filtres, body.recherche)
+    except (GridError, RelationError) as exc:
+        raise _invalid(str(exc)) from exc

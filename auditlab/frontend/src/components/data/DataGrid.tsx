@@ -30,10 +30,19 @@ function readHidden(id: string): string[] {
   }
 }
 
-function format(type: string, oui: string, non: string) {
+/** Nombre de décimales d'un type Decimal(precision=18, scale=2). */
+export function decimalScale(dtype: string): number | undefined {
+  const m = /scale=(\d+)/.exec(dtype);
+  return m ? Number(m[1]) : undefined;
+}
+
+function format(type: string, dtype: string, oui: string, non: string) {
+  const scale = decimalScale(dtype);
+  const decimal = scale !== undefined ? new Intl.NumberFormat("fr-FR", { minimumFractionDigits: scale, maximumFractionDigits: scale }) : null;
   return (p: ValueFormatterParams<Row>) => {
     const v = p.value;
     if (v === null || v === undefined) return "";
+    if (decimal) return decimal.format(Number(v));
     if (type === "decimal" || type === "entier") return formatNombre(Number(v));
     if (type === "date") return formatDate(String(v));
     if (type === "date_heure") return formatDateHeure(String(v));
@@ -43,7 +52,11 @@ function format(type: string, oui: string, non: string) {
 }
 
 /** Grille virtualisée (DAT-07) : les lignes sont lues par blocs, triées et filtrées côté serveur. */
-export default function DataGrid({ ds, onColumnFocus }: { ds: Dataset; onColumnFocus?: (col: string) => void }) {
+export default function DataGrid({ ds, onColumnFocus, onQuery }: {
+  ds: Dataset;
+  onColumnFocus?: (col: string) => void;
+  onQuery?: (q: { filtres: Record<string, unknown>; recherche: string | null }) => void;
+}) {
   const { t } = useTranslation();
   const apiRef = useRef<GridApi<Row> | null>(null);
   const [hidden, setHidden] = useState<string[]>(() => readHidden(ds.id));
@@ -67,7 +80,7 @@ export default function DataGrid({ ds, onColumnFocus }: { ds: Dataset; onColumnF
           sortable: true,
           filter: numeric ? "agNumberColumnFilter" : temporal ? "agDateColumnFilter" : "agTextColumnFilter",
           filterParams: { maxNumConditions: 2, buttons: ["reset", "apply"], closeOnApply: true },
-          valueFormatter: format(c.type, t("commun.oui"), t("commun.non")),
+          valueFormatter: format(c.type, c.dtype, t("commun.oui"), t("commun.non")),
           cellClass: numeric ? "text-right font-mono" : undefined,
           type: numeric ? "rightAligned" : undefined,
         };
@@ -79,6 +92,7 @@ export default function DataGrid({ ds, onColumnFocus }: { ds: Dataset; onColumnF
     () => ({
       getRows: (params) => {
         const tri = (params.sortModel as SortModelItem[]).map((s) => ({ colonne: s.colId, sens: s.sort }));
+        if (params.startRow === 0) onQuery?.({ filtres: params.filterModel, recherche: searchRef.current || null });
         const colonnes = ds.schema.filter((c) => !hidden.includes(c.nom)).map((c) => c.nom);
         post<Page>(`/datasets/${ds.id}/rows`, {
           offset: params.startRow,
@@ -98,7 +112,7 @@ export default function DataGrid({ ds, onColumnFocus }: { ds: Dataset; onColumnF
           .catch(() => params.failCallback());
       },
     }),
-    [ds.id, ds.schema, hidden],
+    [ds.id, ds.schema, hidden, onQuery],
   );
 
   // Recherche globale : relance la lecture après une courte pause.
