@@ -26,7 +26,7 @@ class AnalysisIn(BaseModel):
 
 @router.get("/analyses")
 def catalog(user: CurrentUser) -> list[dict[str, Any]]:
-    return [op.describe() for op in REGISTRY.values()]
+    return [op.describe() for op in sorted(REGISTRY.values(), key=lambda o: o.exigence)]
 
 
 @router.post(
