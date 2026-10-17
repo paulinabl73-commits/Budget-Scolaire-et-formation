@@ -1567,5 +1567,19 @@
     "justifier": "Justification de la variation {{ligne}}",
     "aJustifier": "À justifier",
     "justifieLe": "Justifié le {{date}}"
+  },
+  "ratios": {
+    "titre": "Ratios financiers sur trois exercices",
+    "ratio": "Ratio",
+    "jours": "j",
+    "indisponible": "Données non disponibles pour : {{exercices}} (balance absente ou comptes non affectés).",
+    "familles": {
+      "liquidite": "Liquidité",
+      "solvabilite": "Solvabilité",
+      "rentabilite": "Rentabilité",
+      "delais": "Délais clients et fournisseurs",
+      "autres": "Autres"
+    },
+    "note": "« — » : donnée absente ou ratio non significatif (dénominateur nul). Formules définies par le référentiel."
   }
 }

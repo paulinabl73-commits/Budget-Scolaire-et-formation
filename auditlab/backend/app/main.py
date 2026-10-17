@@ -34,6 +34,7 @@ from app.api import (
     plans,
     portal,
     program,
+    ratios,
     review_notes,
     risk,
     sampling,
@@ -134,5 +135,6 @@ for router in (
     mapping.router,
     materiality.router,
     analytical.router,
+    ratios.router,
 ):
     app.include_router(router, prefix="/api")
