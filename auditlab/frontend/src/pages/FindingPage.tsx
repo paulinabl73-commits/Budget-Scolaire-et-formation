@@ -12,6 +12,7 @@ import CriticalityBadge from "../components/finding/CriticalityBadge";
 import ActionPlansPanel from "../components/finding/ActionPlansPanel";
 import ContradictoryPanel from "../components/finding/ContradictoryPanel";
 import EvidencePanel from "../components/finding/EvidencePanel";
+import PlanEvidence from "../components/finding/PlanEvidence";
 import { CRITICITES } from "../components/mission/FindingsTab";
 
 const VOLETS = ["critere", "constat", "cause", "consequence", "recommandation"] as const;
@@ -124,7 +125,10 @@ export default function FindingPage() {
         canSend={finding.peut_modifier} canValidate={can(user?.permissions, "findings:validate")} />
       <EvidencePanel findingId={finding.id} missionId={finding.engagement_id} papers={papers}
         editable={finding.peut_modifier} />
-      <ActionPlansPanel findingId={finding.id} canCreate={finding.peut_modifier || (finding.statut === "valide" && can(user?.permissions, "findings:write"))} />
+      <ActionPlansPanel findingId={finding.id} canCreate={finding.peut_modifier || (finding.statut === "valide" && can(user?.permissions, "findings:write"))}
+        extra={(plan, reload) => (
+          <PlanEvidence plan={plan} canUpload={can(user?.permissions, "findings:write")} canReject={can(user?.permissions, "findings:write")} onChange={reload} />
+        )} />
     </div>
   );
 }

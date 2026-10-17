@@ -127,3 +127,17 @@ class ActionPlan(TrackedMixin, Base):
     verifie_par: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
     # CON-06 : relances envoyées ({"type": "j15" | "echeance" | "retard", "date": …}).
     relances: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
+
+
+class PlanEvidence(TrackedMixin, Base):
+    """Justificatif déposé pour un plan d'action (CON-07), conservé avec son empreinte."""
+
+    __tablename__ = "plan_evidences"
+
+    action_plan_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("action_plans.id"), index=True)
+    nom_fichier: Mapped[str] = mapped_column(String(255))
+    content_type: Mapped[str] = mapped_column(String(120))
+    taille: Mapped[int] = mapped_column()
+    sha256: Mapped[str] = mapped_column(String(64))
+    storage_key: Mapped[str] = mapped_column(String(300), unique=True)
+    commentaire: Mapped[str | None] = mapped_column(Text, nullable=True)

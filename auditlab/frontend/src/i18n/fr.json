@@ -1265,5 +1265,10 @@
     "valider": "Valider le constat",
     "validerSansReponse": "Valider sans réponse (délai dépassé)",
     "valide": "Constat validé le {{date}}"
+  },
+  "justificatifs": {
+    "deposer": "Déposer un justificatif",
+    "rejeter": "Rejeter la réalisation",
+    "motifRejet": "Motif du rejet (transmis au responsable) :"
   }
 }

@@ -6,14 +6,20 @@ passent pas par ensure_open, seulement par les droits sur la mission.
 
 import datetime as dt
 import uuid
+from pathlib import PurePath
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Form, HTTPException, Request, UploadFile, status
+from fastapi.responses import StreamingResponse
+from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.api.deps import CurrentUser, DbSession
+from app.api.attachments import ALLOWED
+from app.api.deps import CurrentUser, DbSession, user_from_request
 from app.api.findings import can_write, get_finding
 from app.api.mission_access import can_manage, get_engagement
+from app.audit.listeners import record_event
+from app.config import get_settings
 from app.models.engagement import Engagement
 from app.models.finding import (
     CLOSED_PLAN_STATUSES,
@@ -21,10 +27,14 @@ from app.models.finding import (
     ActionPlanStatus,
     Finding,
     FindingStatus,
+    PlanEvidence,
 )
 from app.models.user import User
+from app.notify import notify
 from app.schemas_finding import PlanIn, PlanOut, PlanStatusIn, PlanUpdate
 from app.security.roles import Perm, Role, has_permission
+from app.signing import sign, verify
+from app.storage import TooLarge, get_storage
 
 router = APIRouter(tags=["Plans d'action"])
 
@@ -174,6 +184,14 @@ def change_status(
         plan.commentaire = body.commentaire
     if body.statut == S.VERIFIE.value:
         plan.verifie_le, plan.verifie_par = dt.datetime.now(dt.UTC), user.id
+        notify(
+            db,
+            {u for u in (plan.responsable_id, finding.audite_id) if u},
+            "plan_verifie",
+            f"{finding.reference} : plan d'action clôturé",
+            f"L'audit a vérifié et clôturé le plan « {plan.description[:200]} ».",
+            lien=f"/portail/constats/{finding.id}",
+        )
     db.commit()
     return plan_out(db, plan, user)
 
@@ -195,3 +213,144 @@ def mission_plans(engagement_id: uuid.UUID, user: CurrentUser, db: DbSession) ->
         .order_by(ActionPlan.echeance)
     )
     return [plan_out(db, p, user) for p in plans]
+
+
+# --- CON-07 : justificatifs, vérification ou rejet par l'audit ------------------------------
+
+
+def evidence_out(e: PlanEvidence) -> dict:
+    expires, sig = sign(f"plan-evidence:{e.id}")
+    return {
+        "id": str(e.id),
+        "nom_fichier": e.nom_fichier,
+        "taille": e.taille,
+        "sha256": e.sha256,
+        "commentaire": e.commentaire,
+        "created_at": e.created_at.isoformat() if e.created_at else None,
+        "url": f"/api/plan-evidence/{e.id}/content?expires={expires}&sig={sig}",
+    }
+
+
+@router.get("/action-plans/{plan_id}/evidence")
+def list_plan_evidence(plan_id: uuid.UUID, user: CurrentUser, db: DbSession) -> list[dict]:
+    plan = get_plan(db, plan_id)
+    plan_context(db, plan, user)
+    rows = db.scalars(
+        select(PlanEvidence)
+        .where(PlanEvidence.action_plan_id == plan.id, PlanEvidence.deleted_at.is_(None))
+        .order_by(PlanEvidence.created_at)
+    )
+    return [evidence_out(e) for e in rows]
+
+
+@router.post("/action-plans/{plan_id}/evidence", status_code=status.HTTP_201_CREATED)
+def upload_plan_evidence(
+    plan_id: uuid.UUID,
+    file: UploadFile,
+    user: CurrentUser,
+    db: DbSession,
+    commentaire: str | None = Form(default=None),
+) -> dict:
+    """Dépôt d'un justificatif par le responsable, l'audité ou l'équipe d'audit."""
+    plan = get_plan(db, plan_id)
+    finding, engagement = plan_context(db, plan, user)
+    if not (is_owner(plan, finding, user) or can_write(engagement, user)):
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "Droits insuffisants")
+    if plan.statut in CLOSED_PLAN_STATUSES:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Plan clos")
+    name = PurePath(file.filename or "fichier").name[:255]
+    ext = PurePath(name).suffix.lower()
+    if ext not in ALLOWED:
+        raise HTTPException(415, "Format non admis : PDF, Excel, Word, CSV, texte ou image")
+    content_type, magics = ALLOWED[ext]
+    head = file.file.read(8)
+    file.file.seek(0)
+    if magics and not any(head.startswith(m) for m in magics):
+        raise HTTPException(415, "Le contenu du fichier ne correspond pas à son extension")
+    max_bytes = get_settings().max_upload_mb * 1024 * 1024
+    try:
+        stored = get_storage().put(
+            f"plans/{plan.id}/{uuid.uuid4()}{ext}", file.file, max_bytes=max_bytes
+        )
+    except TooLarge as exc:
+        raise HTTPException(413, f"Fichier trop volumineux ({max_bytes // 2**20} Mo)") from exc
+    evidence = PlanEvidence(
+        action_plan_id=plan.id, nom_fichier=name, content_type=content_type, taille=stored.size,
+        sha256=stored.sha256, storage_key=stored.key, commentaire=commentaire,
+    )  # fmt: skip
+    db.add(evidence)
+    if is_owner(plan, finding, user):  # l'équipe est prévenue d'un dépôt de l'audité
+        notify(
+            db,
+            _team_ids(engagement, finding),
+            "plan_justificatif",
+            f"{finding.reference} : justificatif déposé",
+            f"{user.nom} a déposé « {name} » pour le plan « {plan.description[:200]} ».",
+            lien=f"/missions/{engagement.id}/constats/{finding.id}",
+        )
+    db.commit()
+    return evidence_out(evidence)
+
+
+@router.get("/plan-evidence/{evidence_id}/content")
+def download_plan_evidence(
+    evidence_id: uuid.UUID,
+    request: Request,
+    db: DbSession,
+    expires: int | None = None,
+    sig: str | None = None,
+) -> StreamingResponse:
+    evidence = db.scalar(
+        select(PlanEvidence).where(
+            PlanEvidence.id == evidence_id, PlanEvidence.deleted_at.is_(None)
+        )
+    )
+    if evidence is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Justificatif introuvable")
+    if not (expires and sig and verify(f"plan-evidence:{evidence.id}", expires, sig)):
+        user = user_from_request(request, db)
+        plan_context(db, get_plan(db, evidence.action_plan_id), user)
+    record_event(db, "download", object_type="PlanEvidence", object_id=evidence.id)
+    db.commit()
+    filename = evidence.nom_fichier.replace('"', "")
+    return StreamingResponse(
+        get_storage().open(evidence.storage_key),
+        media_type=evidence.content_type,
+        headers={
+            "Content-Disposition": f'attachment; filename="{filename}"',
+            "X-Content-SHA256": evidence.sha256,
+        },
+    )
+
+
+class RejectIn(BaseModel):
+    commentaire: str = Field(min_length=1, max_length=4000)
+
+
+@router.post("/action-plans/{plan_id}/reject", response_model=PlanOut)
+def reject(plan_id: uuid.UUID, body: RejectIn, user: CurrentUser, db: DbSession) -> PlanOut:
+    """CON-07 : l'audit refuse la réalisation déclarée ; le plan repart en cours."""
+    plan = get_plan(db, plan_id)
+    finding, engagement = plan_context(db, plan, user)
+    require_auditor(engagement, user)
+    if plan.statut != S.REALISE.value:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Seul un plan déclaré réalisé se rejette")
+    plan.statut, plan.commentaire = S.EN_COURS.value, f"Rejeté par l'audit : {body.commentaire}"
+    notify(
+        db,
+        {u for u in (plan.responsable_id, finding.audite_id) if u},
+        "plan_rejete",
+        f"{finding.reference} : réalisation non acceptée",
+        f"L'audit n'a pas validé la réalisation du plan « {plan.description[:200]} » : "
+        f"{body.commentaire}",
+        lien=f"/portail/constats/{finding.id}",
+    )
+    db.commit()
+    return plan_out(db, plan, user)
+
+
+def _team_ids(engagement: Engagement, finding: Finding) -> set[uuid.UUID]:
+    from app.models.engagement import MissionRole
+
+    chefs = {m.user_id for m in engagement.members if m.role_mission == MissionRole.CHEF}
+    return chefs | ({finding.created_by} if finding.created_by else set())
