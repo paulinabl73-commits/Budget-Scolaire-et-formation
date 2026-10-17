@@ -6,6 +6,7 @@ import { api } from "../api/client";
 import type { Dataset } from "../api/types";
 import Alert from "../components/Alert";
 import AnalysisPanel from "../components/data/AnalysisPanel";
+import AttachToWorkpaper from "../components/data/AttachToWorkpaper";
 import AnalysisResult from "../components/data/AnalysisResult";
 import CalculatedFields from "../components/data/CalculatedFields";
 import ControlSheet from "../components/data/ControlSheet";
@@ -62,6 +63,7 @@ export default function DatasetPage() {
       {ds.statut === "en_cours" && <Alert kind="succes">{t("analyses.enCours")}</Alert>}
       {ds.statut === "erreur" && <Alert kind="erreur">{ds.erreur}</Alert>}
       {ds.kind !== "vue" && ds.statut === "pret" && <ControlSheet ds={ds} />}
+      {ds.statut === "pret" && (can(user?.permissions, "workpapers:prepare") || can(user?.permissions, "workpapers:review")) && <AttachToWorkpaper key={`j-${ds.id}`} ds={ds} />}
       {ds.statut === "pret" && <LineageGraph key={`l-${ds.id}`} ds={ds} canEdit={can(user?.permissions, "data:analyze")} />}
       {ds.statut === "pret" && <DataGrid key={ds.id} ds={ds} onColumnFocus={setColumn} onQuery={onQuery} />}
       {ds.statut === "pret" && ds.schema.length > 0 && (

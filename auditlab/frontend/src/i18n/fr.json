@@ -1130,5 +1130,21 @@
     "nomMacro": "Enregistrer cet historique comme macro",
     "enregistrer": "Enregistrer la macro",
     "enregistree": "Macro « {{nom}} » enregistrée : elle peut être rejouée sur un nouveau fichier de même structure."
+  },
+  "liens": {
+    "titre": "Données jointes",
+    "aucun": "Aucune table jointe. Depuis une table de la mission, utilisez « Joindre au papier de travail ».",
+    "historique": "Historique",
+    "retirer": "Retirer",
+    "modifiee": "La table a été recalculée depuis le lien : l'empreinte actuelle diffère de celle jointe.",
+    "nombre": "Nombre de lignes",
+    "joindre": "Joindre au papier de travail",
+    "papier": "Papier de travail",
+    "categorie": "Graphique : regrouper par",
+    "sansGraphique": "Sans graphique",
+    "valeur": "Graphique : valeur",
+    "commentaire": "Commentaire",
+    "joint": "Table jointe au papier de travail : ses signatures éventuelles sont à refaire.",
+    "voirPapier": "Voir le papier"
   }
 }

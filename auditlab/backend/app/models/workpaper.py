@@ -147,3 +147,19 @@ class ReviewNoteReply(TrackedMixin, Base):
     engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
     note_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("review_notes.id"), index=True)
     texte: Mapped[str] = mapped_column(Text)
+
+
+class WorkpaperDataLink(TrackedMixin, Base):
+    """Table de résultat jointe à un papier de travail (DAT-30), avec son historique et un
+    graphique figés au moment du lien : la preuve ne change pas si l'analyse est refaite."""
+
+    __tablename__ = "workpaper_data_links"
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    workpaper_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("workpapers.id"), index=True)
+    dataset_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("datasets.id"), index=True)
+    empreinte: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    nb_lignes: Mapped[int | None] = mapped_column(BigInteger, nullable=True)
+    lignee: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
+    graphique: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
+    commentaire: Mapped[str | None] = mapped_column(Text, nullable=True)

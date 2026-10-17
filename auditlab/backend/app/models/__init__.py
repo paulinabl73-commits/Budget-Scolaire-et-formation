@@ -49,6 +49,7 @@ from app.models.workpaper import (
     SignoffType,
     Tickmark,
     Workpaper,
+    WorkpaperDataLink,
     WorkpaperVersion,
 )
 
@@ -108,5 +109,6 @@ __all__ = [
     "UserSession",
     "user_teams",
     "Workpaper",
+    "WorkpaperDataLink",
     "WorkpaperVersion",
 ]

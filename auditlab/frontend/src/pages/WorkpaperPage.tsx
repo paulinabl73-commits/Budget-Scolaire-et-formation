@@ -9,6 +9,7 @@ import { useAuth } from "../auth/AuthContext";
 import { can, PERM } from "../lib/permissions";
 import Alert from "../components/Alert";
 import AttachmentsPanel from "../components/workpaper/AttachmentsPanel";
+import DataLinksPanel from "../components/workpaper/DataLinksPanel";
 import RichEditor from "../components/workpaper/RichEditor";
 import ReviewNotesPanel from "../components/workpaper/ReviewNotesPanel";
 import SignoffsPanel from "../components/workpaper/SignoffsPanel";
@@ -138,6 +139,7 @@ export default function WorkpaperPage() {
           isReviewer={mission.statut !== "cloturee" && (mission.mon_role === "chef_mission" || mission.mon_role === "superviseur" ||
             (can(user?.permissions, PERM.MISSIONS_READ_ALL) && can(user?.permissions, "workpapers:approve_final")))} />
       )}
+      <DataLinksPanel workpaperId={wp.id} missionId={wp.engagement_id} editable={!ro} refresh={wp.version} />
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <AttachmentsPanel workpaperId={wp.id} attachments={attachments} editable={!ro} onChange={() => void loadAttachments()} />
         <VersionsPanel workpaperId={wp.id} current={wp.version} />

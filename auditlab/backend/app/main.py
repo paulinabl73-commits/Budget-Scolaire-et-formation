@@ -12,6 +12,7 @@ from app.api import (
     attachments,
     audit_log,
     auth,
+    data_links,
     datasets,
     engagement_status,
     engagements,
@@ -108,5 +109,6 @@ for router in (
     analyses.router,
     sampling.router,
     macros.router,
+    data_links.router,
 ):
     app.include_router(router, prefix="/api")
