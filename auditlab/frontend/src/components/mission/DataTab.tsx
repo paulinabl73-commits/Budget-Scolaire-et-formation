@@ -9,6 +9,8 @@ import { useAuth } from "../../auth/AuthContext";
 import { formatDateHeure, formatNombre } from "../../lib/format";
 import { can } from "../../lib/permissions";
 import Alert from "../Alert";
+import ImportWizard from "../data/ImportWizard";
+import type { Preview, WizardOptions } from "../data/ImportWizard";
 
 export const DS_BADGE: Record<string, string> = {
   en_cours: "bg-sky-100 text-sky-900",
@@ -89,6 +91,7 @@ function ImportPanel({ missionId, onImported, onError }: { missionId: string; on
   const [sources, setSources] = useState<DataSourceInfo[]>([]);
   const [sourceId, setSourceId] = useState("");
   const [requete, setRequete] = useState("SELECT ");
+  const [wizard, setWizard] = useState<{ upload: UploadInfo; options: WizardOptions; apercu: Preview } | null>(null);
 
   useEffect(() => {
     api<DataSourceInfo[]>("/data-sources").then(setSources).catch(() => setSources([]));
@@ -99,13 +102,15 @@ function ImportPanel({ missionId, onImported, onError }: { missionId: string; on
     setBusy(true);
     try {
       if (mode === "fichier" && file) {
+        // Étape 1 : dépôt puis détection ; l'import part depuis l'assistant.
         const up = await upload<UploadInfo>(`/engagements/${missionId}/uploads`, file);
-        await post(`/engagements/${missionId}/imports`, { nom: nom || up.nom_fichier, upload_id: up.id });
-      } else {
-        await post(`/engagements/${missionId}/imports`, { nom, source_id: sourceId, requete });
+        const det = await post<{ options: WizardOptions; apercu: Preview }>(`/uploads/${up.id}/detect`);
+        setWizard({ upload: up, ...det });
+        if (!nom) setNom(up.nom_fichier.replace(/\.[^.]+$/, ""));
+        return;
       }
+      await post(`/engagements/${missionId}/imports`, { nom, source_id: sourceId, requete });
       onImported(t("donnees.lance"));
-      setFile(null);
       setNom("");
     } catch (err) {
       onError((err as Error).message);
@@ -113,6 +118,32 @@ function ImportPanel({ missionId, onImported, onError }: { missionId: string; on
       setBusy(false);
     }
   };
+
+  const launch = async (options: WizardOptions) => {
+    if (!wizard) return;
+    try {
+      await post(`/engagements/${missionId}/imports`, { nom: nom || wizard.upload.nom_fichier, upload_id: wizard.upload.id, options });
+      onImported(t("donnees.lance"));
+      setWizard(null);
+      setFile(null);
+      setNom("");
+    } catch (err) {
+      onError((err as Error).message);
+    }
+  };
+
+  if (wizard) {
+    return (
+      <div className="carte space-y-3">
+        <div>
+          <label htmlFor="imp-nom-w" className="etiquette">{t("donnees.nom")}</label>
+          <input id="imp-nom-w" className="champ" required value={nom} onChange={(e) => setNom(e.target.value)} />
+        </div>
+        <ImportWizard upload={wizard.upload} initial={wizard.options} initialPreview={wizard.apercu}
+          onImport={launch} onCancel={() => setWizard(null)} />
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={submit} className="carte space-y-3" aria-label={t("donnees.importer")}>

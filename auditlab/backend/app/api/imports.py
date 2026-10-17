@@ -15,7 +15,14 @@ from app.api.mission_access import get_engagement
 from app.config import get_settings
 from app.models.data import Dataset, DatasetKind, DatasetStatus, DataSource, Upload
 from app.models.user import User
-from app.schemas_data import DatasetOut, DataSourceIn, DataSourceOut, ImportIn, UploadOut
+from app.schemas_data import (
+    DatasetOut,
+    DataSourceIn,
+    DataSourceOut,
+    ImportIn,
+    ReadOptionsIn,
+    UploadOut,
+)
 from app.security.roles import Perm
 from app.storage import TooLarge, get_storage
 
@@ -142,3 +149,48 @@ def create_source(body: DataSourceIn, _: Admin, db: DbSession) -> DataSourceOut:
     db.add(source)
     db.commit()
     return DataSourceOut.model_validate(source).model_copy(update={"dialecte": dialect})
+
+
+def _with_upload_file(upload: Upload, action):  # noqa: ANN001,ANN202
+    import tempfile
+    from pathlib import Path
+
+    from app.storage import copy_to
+
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / f"source{PurePath(upload.nom_fichier).suffix.lower()}"
+        copy_to(get_storage(), upload.storage_key, path)
+        return action(path)
+
+
+@router.post("/uploads/{upload_id}/detect")
+def detect(upload_id: uuid.UUID, user: CurrentUser, db: DbSession) -> dict:
+    """DAT-02 : options proposées (encodage, séparateur, types…) et aperçu correspondant."""
+    from app.analytics.detect import preview, suggest
+    from app.analytics.formats import ImportFailure
+
+    upload = get_upload(db, upload_id, user)
+    try:
+
+        def run(path):  # noqa: ANN001,ANN202
+            options = suggest(path, upload.format)
+            return {"options": options, "apercu": preview(path, options)}
+
+        return _with_upload_file(upload, run)
+    except ImportFailure as exc:
+        raise HTTPException(422, str(exc)) from exc
+
+
+@router.post("/uploads/{upload_id}/preview")
+def preview_upload(
+    upload_id: uuid.UUID, body: ReadOptionsIn, user: CurrentUser, db: DbSession
+) -> dict:
+    """DAT-02 : aperçu des 100 premières lignes avec les options choisies."""
+    from app.analytics.detect import preview
+    from app.analytics.formats import ImportFailure
+
+    upload = get_upload(db, upload_id, user)
+    try:
+        return _with_upload_file(upload, lambda path: preview(path, body.model_dump()))
+    except ImportFailure as exc:
+        raise HTTPException(422, str(exc)) from exc

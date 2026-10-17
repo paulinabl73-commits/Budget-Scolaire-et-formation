@@ -217,3 +217,95 @@ def test_dat01_requete_refusee(query):
 def test_dat01_requete_admise():
     assert check_query("  select 'delete' as mot from t;  ") == "select 'delete' as mot from t"
     assert check_query("WITH a AS (SELECT 1) SELECT * FROM a").startswith("WITH")
+
+
+def test_dat02_detection_et_apercu(client, ctx):  # noqa: F811
+    up = upload(client, ctx, "factures.csv", data_files.CSV_FR)
+    resp = client.post(f"/api/uploads/{up['id']}/detect", headers=ctx["aud"].headers)
+    assert resp.status_code == 200, resp.text
+    det = resp.json()
+    opts = det["options"]
+    assert (opts["encodage"], opts["separateur"], opts["decimal"], opts["format_date"]) == (
+        "cp1252",
+        ";",
+        ",",
+        "%d/%m/%Y",
+    )
+    types = {c["nom"]: c["type"] for c in opts["colonnes"]}
+    assert types == {
+        "N° facture": "texte",
+        "Fournisseur": "texte",
+        "Date": "date",
+        "Montant TTC": "decimal",
+        "Payée": "booleen",
+    }
+    apercu = det["apercu"]
+    assert apercu["lignes"][0][3] == "1250000.50" and apercu["avertissements"] == {}
+    assert len(apercu["lignes_brutes"]) == 3
+
+    # L'utilisateur corrige une option : l'aperçu suit, avec les valeurs non convertibles.
+    opts["format_date"] = "%Y-%m-%d"
+    resp = client.post(f"/api/uploads/{up['id']}/preview", json=opts, headers=ctx["aud"].headers)
+    assert resp.json()["avertissements"] == {"Date": 3}
+
+    # Import avec les options validées dans l'assistant.
+    opts["format_date"] = "%d/%m/%Y"
+    ds = run_import(client, ctx, up, opts)
+    assert ds["statut"] == "pret" and ds["schema"][3]["type"] == "decimal"
+
+
+def test_dat02_virgule_et_tabulation(client, ctx):  # noqa: F811
+    data = b"compte\tsolde\tdate\n401100\t-1500.25\t2026-12-31\n411000\t2300\t2026-12-31\n"
+    up = upload(client, ctx, "balance.tsv", data)
+    opts = client.post(f"/api/uploads/{up['id']}/detect", headers=ctx["aud"].headers).json()[
+        "options"
+    ]
+    assert opts["separateur"] == "\t" and opts["encodage"] == "utf-8" and opts["decimal"] == "."
+    assert [c["type"] for c in opts["colonnes"]] == ["entier", "decimal", "date"]
+    up = upload(client, ctx, "f.xlsx", data_files.xlsx())
+    det = client.post(f"/api/uploads/{up['id']}/detect", headers=ctx["aud"].headers).json()
+    assert det["options"]["feuilles"] == ["Factures"]
+    assert det["apercu"]["colonnes"] == [
+        {"nom": "Facture", "type": "texte"},
+        {"nom": "Montant", "type": "decimal"},
+    ]
+    up = upload(client, ctx, "x.prn", data_files.fixed_width())
+    resp = client.post(f"/api/uploads/{up['id']}/detect", headers=ctx["aud"].headers)
+    # Largeur fixe : lignes brutes proposées pour définir les positions des colonnes.
+    assert resp.json()["apercu"]["lignes_brutes"][1] == ["A001  Fournitures bureau  0001250"]
+    resp = client.post(
+        f"/api/uploads/{up['id']}/preview",
+        json={"format": "txt_fixe", "colonnes": [{"nom": "code", "debut": 1, "fin": 4}]},
+        headers=ctx["aud"].headers,
+    )
+    assert resp.json()["lignes"] == [["A001"], ["A002"]]
+
+
+@pytest.mark.parametrize(
+    ("values", "kind", "extra"),
+    [
+        (["12", "1 250", "-3"], "entier", {"milliers": " "}),
+        (["1.250.000", "12"], "entier", {"milliers": "."}),
+        (["12,50", "3", "(4,00)"], "decimal", {"decimal": ","}),
+        (["12.5", "1,250.75"], "decimal", {"decimal": "."}),
+        (["31/12/2026", ""], "date", {"format_date": "%d/%m/%Y"}),
+        (["20261231", "20260101"], "date", {"format_date": "%Y%m%d"}),
+        (["oui", "Non"], "booleen", {}),
+        (["A1", "2"], "texte", {}),
+        ([None, ""], "texte", {}),
+    ],
+)
+def test_dat02_inference_des_types(values, kind, extra):
+    from app.analytics.detect import infer_type
+
+    assert infer_type(values) == (kind, extra)
+
+
+def test_dat02_encodage_et_separateur():
+    from app.analytics.detect import detect_encoding, detect_separator
+
+    assert detect_encoding("Société".encode()) == "utf-8"
+    assert detect_encoding("Société générale à Abidjan".encode("cp1252")) in ("cp1252", "latin-1")
+    assert detect_separator(["a,b;c", "1,2;3", "4,5;6"]) in (",", ";")
+    assert detect_separator(["a|b|c", "1|2|3"]) == "|"
+    assert detect_separator(["une seule colonne"]) == ";"

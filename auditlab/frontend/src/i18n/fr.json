@@ -708,5 +708,49 @@
     "requete": "Requête de lecture (SELECT)",
     "aucuneSource": "Aucune source déclarée par l'administrateur.",
     "ouvrir": "Ouvrir"
+  },
+  "assistant": {
+    "titre": "Assistant d'import — {{fichier}}",
+    "encodage": "Encodage",
+    "separateur": "Séparateur",
+    "entete": "Première ligne = noms des colonnes",
+    "decimal": "Séparateur décimal",
+    "milliers": "Séparateur des milliers",
+    "formatDate": "Format des dates",
+    "feuille": "Feuille",
+    "lignesIgnorees": "Lignes à ignorer en tête",
+    "colonnes": "Colonnes et types",
+    "type": "Type",
+    "apercu": "Aperçu (100 premières lignes)",
+    "actualiser": "Actualiser l'aperçu",
+    "importer": "Importer la table",
+    "annuler": "Abandonner",
+    "avertissement": "{{colonne}} : {{nombre}} valeur(s) non convertible(s), importée(s) vides.",
+    "largeurFixe": "Colonnes à largeur fixe (positions de 1 à n)",
+    "debut": "Début",
+    "fin": "Fin",
+    "ajouterColonne": "Ajouter une colonne",
+    "lignesBrutes": "Lignes brutes du fichier",
+    "typeOrigine": "— d'origine —",
+    "separateurs": {
+      ";": "Point-virgule (;)",
+      ",": "Virgule (,)",
+      "\t": "Tabulation",
+      "|": "Barre verticale (|)"
+    },
+    "milliersOptions": {
+      " ": "Espace",
+      ".": "Point",
+      "": "Aucun",
+      "'": "Apostrophe"
+    },
+    "types": {
+      "texte": "Texte",
+      "entier": "Entier",
+      "decimal": "Décimal",
+      "date": "Date",
+      "booleen": "Oui / non",
+      "date_heure": "Date et heure"
+    }
   }
 }

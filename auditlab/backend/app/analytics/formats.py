@@ -94,7 +94,7 @@ def _unique_names(names: Iterable[str]) -> list[str]:
     seen: dict[str, int] = {}
     result = []
     for i, raw in enumerate(names):
-        name = (str(raw).strip() if raw is not None else "") or f"colonne_{i + 1}"
+        name = (str(raw).strip().lstrip("\ufeff") if raw is not None else "") or f"colonne_{i + 1}"
         if name in seen:
             seen[name] += 1
             name = f"{name}_{seen[name]}"
