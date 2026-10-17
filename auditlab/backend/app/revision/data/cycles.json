@@ -1,0 +1,34 @@
+{
+  "source": "Bibliothèque méthodologique AuditLab (ISA 315 et ISA 330) – adaptable par le cabinet",
+  "niveaux": ["faible", "moyen", "eleve"],
+  "combinaison": {
+    "faible": {"faible": "faible", "moyen": "faible", "eleve": "moyen"},
+    "moyen": {"faible": "faible", "moyen": "moyen", "eleve": "eleve"},
+    "eleve": {"faible": "moyen", "moyen": "eleve", "eleve": "eleve"}
+  },
+  "assertions": [
+    {"code": "existence", "libelle": "Existence", "procedure": "Confirmer l'existence des soldes du cycle {cycle} : circularisation, inspection physique ou rapprochement avec des pièces externes."},
+    {"code": "exhaustivite", "libelle": "Exhaustivité", "procedure": "Vérifier l'exhaustivité du cycle {cycle} : recherche d'opérations non comptabilisées à partir des pièces et des sorties de trésorerie postérieures à la clôture."},
+    {"code": "evaluation", "libelle": "Évaluation", "procedure": "Apprécier l'évaluation des soldes du cycle {cycle} : recalcul, revue des dépréciations et des estimations comptables, comparaison avec les valeurs de réalisation."},
+    {"code": "droits_obligations", "libelle": "Droits et obligations", "procedure": "Contrôler les droits et obligations attachés aux soldes du cycle {cycle} : titres de propriété, contrats, engagements donnés et reçus."},
+    {"code": "separation", "libelle": "Séparation des exercices", "procedure": "Tester la séparation des exercices du cycle {cycle} : opérations des derniers et premiers jours, charges à payer et produits à recevoir."},
+    {"code": "presentation", "libelle": "Présentation", "procedure": "Vérifier la présentation et les informations fournies en annexe pour le cycle {cycle}, conformément au référentiel."}
+  ],
+  "procedure_controles": "Tester l'efficacité des contrôles clés du cycle {cycle} pour l'assertion « {assertion} » (risque lié au contrôle évalué faible : confiance accordée au contrôle interne).",
+  "procedure_etendue": "Risque élevé : étendre les tests de détail du cycle {cycle} (assertion « {assertion} ») à un échantillon dimensionné sur le seuil de planification, sans s'appuyer sur les seuls contrôles.",
+  "cycles": {
+    "SYSCOHADA": [
+      {"code": "immobilisations", "libelle": "Immobilisations", "racines": ["2"], "cycle_mission": "immobilisations"},
+      {"code": "stocks", "libelle": "Stocks", "racines": ["3"], "cycle_mission": "stocks"},
+      {"code": "clients", "libelle": "Clients et cotisants", "racines": ["41"], "cycle_mission": "ventes"},
+      {"code": "fournisseurs", "libelle": "Fournisseurs", "racines": ["40"], "cycle_mission": "achats"},
+      {"code": "tresorerie", "libelle": "Trésorerie", "racines": ["5"], "cycle_mission": "tresorerie"},
+      {"code": "capitaux_propres", "libelle": "Capitaux propres et réserves", "racines": ["10", "11", "12", "13", "14", "15"], "cycle_mission": "autre"},
+      {"code": "provisions", "libelle": "Provisions", "racines": ["19"], "cycle_mission": "autre"},
+      {"code": "financements", "libelle": "Emprunts et autres tiers", "racines": ["16", "17", "18", "45", "46", "47", "48", "49"], "cycle_mission": "autre"},
+      {"code": "personnel", "libelle": "Personnel", "racines": ["42", "43", "66"], "cycle_mission": "paie"},
+      {"code": "fiscalite", "libelle": "Fiscalité", "racines": ["44", "64", "89"], "cycle_mission": "conformite"},
+      {"code": "produits_charges", "libelle": "Produits et charges", "racines": ["6", "7", "8"], "cycle_mission": "autre"}
+    ]
+  }
+}

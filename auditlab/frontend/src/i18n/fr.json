@@ -1581,5 +1581,24 @@
       "autres": "Autres"
     },
     "note": "« — » : donnée absente ou ratio non significatif (dénominateur nul). Formules définies par le référentiel."
+  },
+  "matrice": {
+    "titre": "Matrice des risques par cycle et par assertion",
+    "generer": "Alimenter le programme de la mission",
+    "aide": "Le risque d'anomalie significative combine le risque inhérent et le risque lié au contrôle ; un risque important est toujours élevé. Les cellules à risque moyen ou élevé alimentent la matrice risques / contrôles / procédures de la mission.",
+    "genere": "Programme alimenté : {{crees}} risque(s) créé(s), {{maj}} mis à jour.",
+    "cycle": "Cycle (montant N)",
+    "significatif": "supérieur au seuil",
+    "niveaux": {
+      "faible": "Faible",
+      "moyen": "Moyen",
+      "eleve": "Élevé"
+    },
+    "cellule": "{{cycle}}, {{assertion}} : {{niveau}}",
+    "legende": "! risque important · ✓ repris dans le programme de la mission",
+    "risque_inherent": "Risque inhérent",
+    "risque_controle": "Risque lié au contrôle",
+    "important": "Risque important (ISA 315)",
+    "commentaire": "Facteurs de risque"
   }
 }

@@ -11,10 +11,11 @@ import MappingPanel from "../components/revision/MappingPanel";
 import MaterialityPanel from "../components/revision/MaterialityPanel";
 import type { Mapping } from "../components/revision/MappingPanel";
 import RatiosPanel from "../components/revision/RatiosPanel";
+import RiskMatrixPanel from "../components/revision/RiskMatrixPanel";
 import StatementsPreview from "../components/revision/StatementsPreview";
 import { formatDate } from "../lib/format";
 
-const VIEWS = ["donnees", "affectation", "planification", "analytique", "ratios"] as const;
+const VIEWS = ["donnees", "affectation", "planification", "analytique", "ratios", "risques"] as const;
 type View = (typeof VIEWS)[number];
 
 /** Dossier de révision (Module 5) : balances, affectation, seuils, revue analytique. */
@@ -78,6 +79,7 @@ export default function AuditFilePage() {
       {view === "planification" && <MaterialityPanel file={file} onChange={() => void load()} />}
       {view === "analytique" && <AnalyticalPanel file={file} />}
       {view === "ratios" && <RatiosPanel file={file} />}
+      {view === "risques" && <RiskMatrixPanel file={file} />}
     </div>
   );
 }

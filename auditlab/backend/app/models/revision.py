@@ -261,3 +261,24 @@ class AnalyticalJustification(TrackedMixin, Base):
     niveau: Mapped[str] = mapped_column(String(10))  # poste ou compte
     code: Mapped[str] = mapped_column(String(30))
     texte: Mapped[str] = mapped_column(Text)
+
+
+class AssertionRisk(TrackedMixin, Base):
+    """Évaluation d'un risque par cycle et par assertion (REV-14) ; le risque créé dans le
+    programme de travail de la mission (Module 1) y est rattaché."""
+
+    __tablename__ = "assertion_risks"
+    __table_args__ = (
+        Index("uq_assertion_risks_cellule", "audit_file_id", "cycle", "assertion", unique=True,
+              postgresql_where=text("deleted_at IS NULL")),
+    )  # fmt: skip
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
+    cycle: Mapped[str] = mapped_column(String(40))
+    assertion: Mapped[str] = mapped_column(String(40))
+    risque_inherent: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    risque_controle: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    risque_important: Mapped[bool] = mapped_column(Boolean, default=False)
+    commentaire: Mapped[str | None] = mapped_column(Text, nullable=True)
+    risk_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("risks.id"), nullable=True)

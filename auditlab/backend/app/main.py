@@ -37,6 +37,7 @@ from app.api import (
     ratios,
     review_notes,
     risk,
+    risk_matrix,
     sampling,
     signoffs,
     teams,
@@ -136,5 +137,6 @@ for router in (
     materiality.router,
     analytical.router,
     ratios.router,
+    risk_matrix.router,
 ):
     app.include_router(router, prefix="/api")
