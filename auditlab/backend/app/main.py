@@ -29,6 +29,7 @@ from app.api import (
     timesheets,
     universe,
     users,
+    views,
     workpapers,
 )
 from app.audit.listeners import AuditIntegrityError
@@ -100,5 +101,6 @@ for router in (
     notifications.router,
     datasets.router,
     imports.router,
+    views.router,
 ):
     app.include_router(router, prefix="/api")

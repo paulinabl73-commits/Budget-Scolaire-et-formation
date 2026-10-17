@@ -5,7 +5,10 @@ import { Link, useParams } from "react-router-dom";
 import { api } from "../api/client";
 import type { Dataset } from "../api/types";
 import Alert from "../components/Alert";
+import CalculatedFields from "../components/data/CalculatedFields";
 import ControlSheet from "../components/data/ControlSheet";
+import { useAuth } from "../auth/AuthContext";
+import { can } from "../lib/permissions";
 
 /** Fiche d'une table : empreinte et totaux (DAT-04), grille (DAT-07), statistiques (DAT-08). */
 export default function DatasetPage() {
@@ -13,6 +16,7 @@ export default function DatasetPage() {
   const { id, dsId } = useParams();
   const [ds, setDs] = useState<Dataset | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { user } = useAuth();
   const load = useCallback(async () => setDs(await api<Dataset>(`/datasets/${dsId}`)), [dsId]);
   useEffect(() => {
     load().catch((e: Error) => setError(e.message));
@@ -27,7 +31,8 @@ export default function DatasetPage() {
         <h1 className="text-2xl font-semibold">{ds.nom}</h1>
         {ds.description && <p className="text-slate-600">{ds.description}</p>}
       </header>
-      <ControlSheet ds={ds} />
+      {ds.kind !== "vue" && <ControlSheet ds={ds} />}
+      <CalculatedFields ds={ds} canEdit={can(user?.permissions, "data:analyze")} onChanged={setDs} />
     </div>
   );
 }

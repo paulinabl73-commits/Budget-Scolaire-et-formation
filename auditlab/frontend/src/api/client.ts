@@ -22,6 +22,7 @@ function detail(body: unknown, fallback: string): string {
     const d = (body as { detail: unknown }).detail;
     if (typeof d === "string") return d;
     if (Array.isArray(d)) return d.map((e) => (e as { msg?: string }).msg ?? "").join(" ; ");
+    if (d && typeof d === "object" && "message" in d) return String((d as { message: unknown }).message);
   }
   return fallback;
 }

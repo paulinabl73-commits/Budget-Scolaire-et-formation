@@ -779,5 +779,22 @@
     "lectureSeule": "Table en lecture seule",
     "avertissements": "Valeurs non converties à l'import",
     "duree": "Import en {{s}} s"
+  },
+  "calcul": {
+    "titre": "Champs calculés",
+    "aideSource": "Les champs calculés sont créés dans une vue : la table importée reste intacte.",
+    "aideVue": "Cette vue ne contient aucune donnée : ses champs se recalculent à partir de la table d'origine.",
+    "nomVue": "Nom de la vue",
+    "nomChamp": "Nom du champ",
+    "expression": "Expression",
+    "exemple": "ex. [Montant HT] * 0.18   ou   SI(montant > 1000; 'élevé'; 'faible')",
+    "position": "caractère {{n}}",
+    "valide": "Expression valide ({{type}}) — aperçu :",
+    "syntaxe": "Aide à la syntaxe",
+    "syntaxeDetail": "Colonnes : nom simple ou [Nom avec espaces]. Textes entre apostrophes 'texte', dates #31/12/2025#, décimales avec un point (0.18). Opérateurs : + - * / % & (concaténation), = <> < <= > >=, ET, OU, NON, CONTIENT, COMME 'abc%', DANS ('a'; 'b'), EST VIDE, EST NON VIDE. Arguments séparés par « ; ».",
+    "fonctions": "Fonctions",
+    "ajouter": "Ajouter le champ",
+    "creerVue": "Créer la vue",
+    "retirer": "Retirer {{nom}}"
   }
 }
