@@ -858,7 +858,11 @@
       "max": "Maximum",
       "nombre": "Nombre",
       "distincts": "Valeurs distinctes",
-      "ecart_type": "Écart-type"
+      "ecart_type": "Écart-type",
+      "aleatoire": "Aléatoire simple",
+      "systematique": "Systématique",
+      "stratifie": "Stratifié",
+      "mus": "Unités monétaires (MUS)"
     },
     "extraction": {
       "titre": "Extraction par critère",
@@ -955,7 +959,19 @@
         "seuil": "Seuil de similarité (0 à 1)"
       }
     },
-    "agregatDe": "{{fonction}} de {{champ}}"
+    "agregatDe": "{{fonction}} de {{champ}}",
+    "echantillon": {
+      "titre": "Échantillonnage",
+      "description": "Tire un échantillon reproductible : aléatoire simple, systématique, stratifié ou en unités monétaires (MUS).",
+      "params": {
+        "methode": "Méthode",
+        "taille": "Taille de l'échantillon",
+        "graine": "Graine aléatoire",
+        "champ_montant": "Champ montant (MUS, strates par montant)",
+        "champ_strate": "Champ de strate",
+        "bornes": "Bornes des strates de montant"
+      }
+    }
   },
   "constructeur": {
     "titre": "Constructeur de condition",
@@ -1028,8 +1044,22 @@
       "conformite_etroite": "Conformité étroite",
       "conformite_acceptable": "Conformité acceptable",
       "conformite_marginale": "Conformité marginale",
-      "non_conformite": "Non-conformité"
-    }
+      "non_conformite": "Non-conformité",
+      "aleatoire": "Aléatoire simple",
+      "systematique": "Systématique",
+      "stratifie": "Stratifié",
+      "mus": "Unités monétaires (MUS)"
+    },
+    "methode": "Méthode",
+    "graine": "Graine",
+    "taille_population": "Taille de la population",
+    "taille_echantillon": "Taille de l'échantillon",
+    "intervalle": "Intervalle",
+    "depart": "Point de départ",
+    "montant_population": "Montant de la population",
+    "montant_echantillon": "Montant de l'échantillon",
+    "lignes_non_positives": "Lignes nulles ou négatives (hors MUS)",
+    "strates": "Strates"
   },
   "benford": {
     "graphique": "Distribution observée et attendue",

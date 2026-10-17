@@ -5,6 +5,7 @@ from app.analytics.operations import (  # noqa: F401
     anciennete,
     benford,
     doublons,
+    echantillon,
     extraction,
     floue,
     jointure,
