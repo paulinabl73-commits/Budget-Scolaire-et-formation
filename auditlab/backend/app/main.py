@@ -18,6 +18,7 @@ from app.api import (
     program,
     risk,
     teams,
+    templates,
     timesheets,
     universe,
     users,
@@ -82,5 +83,6 @@ for router in (
     library.router,
     program.router,
     program.my_router,
+    templates.router,
 ):
     app.include_router(router, prefix="/api")

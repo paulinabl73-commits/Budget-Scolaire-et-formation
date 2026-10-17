@@ -501,5 +501,23 @@
       "terminee": "Terminée"
     },
     "personne": "— Personne —"
+  },
+  "modeles": {
+    "onglet": "Modèles de mission",
+    "intro": "Programmes de travail types, utilisables à la création d'une mission.",
+    "nouveau": "Nouveau modèle",
+    "nom": "Nom du modèle",
+    "description": "Description",
+    "budget": "Budget indicatif (j)",
+    "risques": "Risques de la bibliothèque à inclure",
+    "creer": "Créer le modèle",
+    "cree": "Modèle enregistré.",
+    "aucun": "Aucun modèle.",
+    "contenu": "{{risques}} risque(s), {{controles}} contrôle(s), {{procedures}} procédure(s)",
+    "enregistrerCommeModele": "Enregistrer comme modèle",
+    "nomDuModele": "Nom du nouveau modèle",
+    "choisir": "Modèle de mission (facultatif)",
+    "aucunModele": "— Aucun —",
+    "confirmerSuppression": "Supprimer le modèle « {{nom}} » ? Les missions déjà créées ne changent pas."
   }
 }

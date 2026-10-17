@@ -6,6 +6,7 @@ import type { Control, Cycle, Risk } from "../api/types";
 import { useAuth } from "../auth/AuthContext";
 import Alert from "../components/Alert";
 import { ControlForm, controlPayload, RiskForm, riskPayload } from "../components/RiskControlForms";
+import TemplatesPanel from "../components/TemplatesPanel";
 import { CYCLES } from "../lib/library";
 import { can, PERM } from "../lib/permissions";
 
@@ -13,7 +14,7 @@ export default function LibraryPage() {
   const { t } = useTranslation();
   const { user } = useAuth();
   const canManage = can(user?.permissions, PERM.MISSIONS_MANAGE);
-  const [tab, setTab] = useState<"risques" | "controles">("risques");
+  const [tab, setTab] = useState<"risques" | "controles" | "modeles">("risques");
   const [cycle, setCycle] = useState<Cycle | "">("");
   const [risks, setRisks] = useState<Risk[]>([]);
   const [controls, setControls] = useState<Control[]>([]);
@@ -55,11 +56,11 @@ export default function LibraryPage() {
       {message && <Alert kind={message.kind}>{message.text}</Alert>}
       <div className="flex flex-wrap items-end justify-between gap-4">
         <nav className="flex gap-1 border-b border-slate-200" aria-label={t("bibliotheque.titre")}>
-          {(["risques", "controles"] as const).map((k) => (
+          {(["risques", "controles", "modeles"] as const).map((k) => (
             <button key={k} type="button" aria-current={k === tab ? "page" : undefined}
               onClick={() => { setTab(k); setAdding(false); }}
               className={`-mb-px border-b-2 px-4 py-2 text-sm font-medium ${k === tab ? "border-marque-600 text-marque-700" : "border-transparent text-slate-600"}`}>
-              {t(`bibliotheque.${k}`)}
+              {k === "modeles" ? t("modeles.onglet") : t(`bibliotheque.${k}`)}
             </button>
           ))}
         </nav>
@@ -71,7 +72,7 @@ export default function LibraryPage() {
               {CYCLES.map((c) => <option key={c} value={c}>{t(`bibliotheque.cycles.${c}`)}</option>)}
             </select>
           </div>
-          {canManage && (
+          {canManage && tab !== "modeles" && (
             <button type="button" className="btn-primaire" onClick={() => setAdding(true)}>
               {tab === "risques" ? t("bibliotheque.nouveauRisque") : t("bibliotheque.nouveauControle")}
             </button>
@@ -87,7 +88,9 @@ export default function LibraryPage() {
           onSubmit={(d) => run(() => post("/library/controls", controlPayload(d)))} />
       )}
 
-      {tab === "risques" ? (
+      {tab === "modeles" ? (
+        <TemplatesPanel canManage={canManage} />
+      ) : tab === "risques" ? (
         <ul className="space-y-3">
           {risks.map((r) => (
             <li key={r.id} className="carte space-y-2">

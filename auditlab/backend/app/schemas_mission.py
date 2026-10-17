@@ -43,6 +43,7 @@ class _Dates(BaseModel):
 
 class EngagementIn(_Dates):
     plan_item_id: uuid.UUID | None = None
+    template_id: uuid.UUID | None = None
     entity_id: uuid.UUID | None = None
     titre: str | None = Field(default=None, max_length=300)
     perimetre: str | None = None
@@ -277,3 +278,36 @@ class MissionControlIn(BaseModel):
 class MatrixOut(BaseModel):
     risques: list[RiskOut]
     controles: list[ControlOut]
+
+
+class TemplateIn(BaseModel):
+    nom: str = Field(min_length=1, max_length=200)
+    description: str | None = None
+    perimetre: str | None = None
+    objectifs: str | None = None
+    budget_jours: float | None = Field(default=None, gt=0, le=10000)
+    from_engagement_id: uuid.UUID | None = None
+    library_risk_ids: list[uuid.UUID] = []
+
+
+class TemplateUpdate(BaseModel):
+    nom: str | None = Field(default=None, min_length=1, max_length=200)
+    description: str | None = None
+    perimetre: str | None = None
+    objectifs: str | None = None
+    budget_jours: float | None = Field(default=None, gt=0, le=10000)
+
+
+class TemplateOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    nom: str
+    description: str | None
+    perimetre: str | None
+    objectifs: str | None
+    budget_jours: float | None
+    nb_risques: int
+    nb_controles: int
+    nb_procedures: int
+    contenu: dict

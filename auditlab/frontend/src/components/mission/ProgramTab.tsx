@@ -19,6 +19,7 @@ export default function ProgramTab({ mission }: { mission: Engagement }) {
   const [libControls, setLibControls] = useState<Control[]>([]);
   const [pick, setPick] = useState("");
   const [newRisk, setNewRisk] = useState(false);
+  const [templateName, setTemplateName] = useState("");
   const [message, setMessage] = useState<{ kind: "erreur" | "succes"; text: string } | null>(null);
 
   const load = useCallback(async () => setMatrix(await api<Matrix>(`${base}/matrix`)), [base]);
@@ -88,6 +89,19 @@ export default function ProgramTab({ mission }: { mission: Engagement }) {
         </section>
       )}
       {matrix.risques.length === 0 && <p className="carte text-sm text-slate-600">{t("programme.aucunRisque")}</p>}
+      {mission.peut_gerer && matrix.risques.length > 0 && (
+        <form className="flex flex-wrap items-end gap-2"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            if (await run(() => post("/templates", { nom: templateName, from_engagement_id: mission.id }))) setTemplateName("");
+          }}>
+          <div>
+            <label htmlFor="pg-tpl" className="etiquette">{t("modeles.nomDuModele")}</label>
+            <input id="pg-tpl" className="champ" required value={templateName} onChange={(e) => setTemplateName(e.target.value)} />
+          </div>
+          <button type="submit" className="btn-secondaire">{t("modeles.enregistrerCommeModele")}</button>
+        </form>
+      )}
       {matrix.risques.map((r) => (
         <section key={r.id} className="carte space-y-3">
           <div className="flex items-start justify-between gap-3">

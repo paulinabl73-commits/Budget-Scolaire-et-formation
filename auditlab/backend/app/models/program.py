@@ -3,8 +3,10 @@
 import uuid
 from datetime import date
 from enum import StrEnum
+from typing import Any
 
-from sqlalchemy import Boolean, Date, ForeignKey, String, Text
+from sqlalchemy import Boolean, Date, Float, ForeignKey, String, Text
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, TrackedMixin
@@ -143,3 +145,20 @@ class Procedure(TrackedMixin, Base):
     @property
     def assigne_nom(self) -> str | None:
         return self.assignee.nom if self.assignee else None
+
+
+class EngagementTemplate(TrackedMixin, Base):
+    """Programme de travail type (AUD-09).
+
+    Le contenu fige risques, contrôles et procédures au moment de l'enregistrement :
+    `{"risques": [{..., "controles": [clé]}], "controles": [{"cle", ..., "procedures"}]}`.
+    """
+
+    __tablename__ = "engagement_templates"
+
+    nom: Mapped[str] = mapped_column(String(200), unique=True)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    perimetre: Mapped[str | None] = mapped_column(Text, nullable=True)
+    objectifs: Mapped[str | None] = mapped_column(Text, nullable=True)
+    budget_jours: Mapped[float | None] = mapped_column(Float, nullable=True)
+    contenu: Mapped[dict[str, Any]] = mapped_column(JSONB)

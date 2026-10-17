@@ -164,6 +164,11 @@ def create_engagement(body: EngagementIn, user: Manager, db: DbSession) -> Engag
         "budget_jours": body.budget_jours,
         "entity_id": body.entity_id,
     }
+    template = None
+    if body.template_id:
+        from app.api.templates import get_template
+
+        template = get_template(db, body.template_id)
     if body.plan_item_id:
         item = db.scalar(
             select(PlanItem).where(PlanItem.id == body.plan_item_id, PlanItem.deleted_at.is_(None))
@@ -190,6 +195,9 @@ def create_engagement(body: EngagementIn, user: Manager, db: DbSession) -> Engag
             plan_id=plan.id,
             plan_item_id=item.id,
         )
+    if template is not None:
+        for key in ("perimetre", "objectifs", "budget_jours"):
+            values[key] = values[key] or getattr(template, key)
     if values["entity_id"]:
         get_entity(db, values["entity_id"])
     missing = [k for k in ("titre", "date_debut", "date_fin", "budget_jours") if not values[k]]
@@ -219,6 +227,10 @@ def create_engagement(body: EngagementIn, user: Manager, db: DbSession) -> Engag
                 engagement_id=engagement.id, user_id=m.user_id, role_mission=m.role_mission.value
             )
         )
+    if template is not None:
+        from app.api.templates import instantiate
+
+        instantiate(db, template, engagement)
     db.commit()
     return engagement_out(db, get_engagement(db, engagement.id, user), user)
 

@@ -293,3 +293,15 @@ export interface Matrix {
   risques: Risk[];
   controles: Control[];
 }
+
+export interface EngagementTemplate {
+  id: string;
+  nom: string;
+  description: string | null;
+  perimetre: string | null;
+  objectifs: string | null;
+  budget_jours: number | null;
+  nb_risques: number;
+  nb_controles: number;
+  nb_procedures: number;
+}

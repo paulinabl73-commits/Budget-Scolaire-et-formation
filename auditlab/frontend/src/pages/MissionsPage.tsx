@@ -8,6 +8,7 @@ import type {
   AuditableEntity,
   Engagement,
   EngagementSummary,
+  EngagementTemplate,
   Member,
   MissionRole,
   Plan,
@@ -119,6 +120,8 @@ function NewMissionForm({ onCancel, onCreated }: { onCancel: () => void; onCreat
   const [entities, setEntities] = useState<AuditableEntity[]>([]);
   const [staff, setStaff] = useState<Member[]>([]);
   const [team, setTeam] = useState<Record<string, MissionRole>>({});
+  const [templates, setTemplates] = useState<EngagementTemplate[]>([]);
+  const [templateId, setTemplateId] = useState("");
   const [f, setF] = useState({
     plan_item_id: "", entity_id: "", titre: "", perimetre: "", objectifs: "",
     date_debut: "", date_fin: "", budget_jours: "",
@@ -129,6 +132,7 @@ function NewMissionForm({ onCancel, onCreated }: { onCancel: () => void; onCreat
   useEffect(() => {
     (async () => {
       setStaff(await api<Member[]>("/staff"));
+      setTemplates(await api<EngagementTemplate[]>("/templates").catch(() => []));
       setEntities(await api<AuditableEntity[]>("/universe/entities").catch(() => []));
       const plans = await api<PlanSummary[]>("/plans").catch(() => []);
       const valid = plans.filter((p) => p.statut === "valide");
@@ -151,6 +155,7 @@ function NewMissionForm({ onCancel, onCreated }: { onCancel: () => void; onCreat
       date_fin: f.date_fin || null,
       budget_jours: f.budget_jours ? Number(f.budget_jours) : null,
       membres: teamPayload(team),
+      template_id: templateId || null,
     };
     try {
       onCreated(await post<Engagement>("/engagements", body));
@@ -195,6 +200,13 @@ function NewMissionForm({ onCancel, onCreated }: { onCancel: () => void; onCreat
           </select>
         </div>
       )}
+      <div className="col-span-2">
+        <label htmlFor="m-modele" className="etiquette">{t("modeles.choisir")}</label>
+        <select id="m-modele" className="champ" value={templateId} onChange={(e) => setTemplateId(e.target.value)}>
+          <option value="">{t("modeles.aucunModele")}</option>
+          {templates.map((m) => <option key={m.id} value={m.id}>{m.nom}</option>)}
+        </select>
+      </div>
       <div className="col-span-2">
         <label htmlFor="m-titre" className="etiquette">{t("missions.intitule")}</label>
         <input id="m-titre" className="champ" required={!fromPlan} value={f.titre} onChange={(e) => set("titre", e.target.value)} />
