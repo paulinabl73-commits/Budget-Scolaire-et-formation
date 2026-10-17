@@ -200,3 +200,73 @@ def test_aud06_droits(client, team, account):
     m = helpers.mission(client, team["chef"].headers)
     assert client.get(f"/api/engagements/{m['id']}", headers=admin.headers).status_code == 200
     assert client.get("/api/engagements?statut=planifiee", headers=admin.headers).json()
+
+
+def test_aud07_cycle_de_vie(client, team):
+    chef = team["chef"]
+    m = helpers.mission(client, chef.headers, membres=[(team["aud"].user, "auditeur")])
+    url = f"/api/engagements/{m['id']}"
+    assert [(t["statut"], t["sens"]) for t in m["transitions"]] == [("preparation", "suivant")]
+
+    # Pas de saut d'étape.
+    resp = client.post(f"{url}/status", json={"statut": "terrain"}, headers=chef.headers)
+    assert resp.status_code == 409
+    for statut in ("preparation", "terrain", "revue"):
+        resp = client.post(f"{url}/status", json={"statut": statut}, headers=chef.headers)
+        assert resp.status_code == 200 and resp.json()["statut"] == statut
+    assert {t["statut"] for t in resp.json()["transitions"]} == {"rapport", "terrain"}
+    # Retour d'un cran possible (compléter les travaux de terrain).
+    resp = client.post(f"{url}/status", json={"statut": "terrain"}, headers=chef.headers)
+    assert resp.json()["statut"] == "terrain"
+
+    history = client.get(f"{url}/status-history", headers=team["aud"].headers).json()
+    assert [(h["avant"], h["apres"]) for h in history] == [
+        ("planifiee", "preparation"),
+        ("preparation", "terrain"),
+        ("terrain", "revue"),
+        ("revue", "terrain"),
+    ]
+    assert history[0]["utilisateur"] == chef.user.nom
+
+    # Seul le chef de mission (ou le Directeur) fait avancer la mission.
+    resp = client.post(f"{url}/status", json={"statut": "revue"}, headers=team["aud"].headers)
+    assert resp.status_code == 403
+    assert client.get(url, headers=team["aud"].headers).json()["transitions"] == []
+    resp = client.post(f"{url}/status", json={"statut": "revue"}, headers=team["dir"].headers)
+    assert resp.status_code == 200
+
+
+def test_aud07_mission_cloturee_figee(client, team):
+    chef = team["chef"]
+    m = helpers.mission(client, chef.headers)
+    url = f"/api/engagements/{m['id']}"
+    for statut in ("preparation", "terrain", "revue", "rapport", "cloturee"):
+        assert (
+            client.post(f"{url}/status", json={"statut": statut}, headers=chef.headers).status_code
+            == 200
+        )
+    detail = client.get(url, headers=chef.headers).json()
+    assert detail["transitions"] == []
+    assert (
+        client.post(f"{url}/status", json={"statut": "rapport"}, headers=chef.headers).status_code
+        == 409
+    )
+    assert client.patch(url, json={"titre": "X"}, headers=chef.headers).status_code == 409
+
+
+def test_aud07_garde_de_passage(client, team):
+    from app.api.engagement_status import GUARDS
+    from app.models import EngagementStatus
+
+    GUARDS[EngagementStatus.PREPARATION].append(lambda db, e: "Programme de travail absent")
+    try:
+        m = helpers.mission(client, team["chef"].headers)
+        assert m["transitions"][0]["motif_blocage"] == "Programme de travail absent"
+        resp = client.post(
+            f"/api/engagements/{m['id']}/status",
+            json={"statut": "preparation"},
+            headers=team["chef"].headers,
+        )
+        assert resp.status_code == 409 and resp.json()["detail"] == "Programme de travail absent"
+    finally:
+        GUARDS[EngagementStatus.PREPARATION].pop()

@@ -5,6 +5,8 @@ import { Link, useLocation, useParams, useSearchParams } from "react-router-dom"
 import { api } from "../api/client";
 import type { Engagement } from "../api/types";
 import Alert from "../components/Alert";
+import StatusBar from "../components/mission/StatusBar";
+import StatusHistory from "../components/mission/StatusHistory";
 import SynthesisTab from "../components/mission/SynthesisTab";
 import { formatDate } from "../lib/format";
 import { STATUS_BADGE } from "../lib/mission";
@@ -55,6 +57,7 @@ export default function MissionPage() {
         </p>
         {!mission.peut_gerer && <p className="text-sm text-slate-600">{t("missions.lectureSeule")}</p>}
       </header>
+      <StatusBar mission={mission} onChange={setMission} />
       <nav aria-label={t("missions.titre")} className="flex gap-1 border-b border-slate-200">
         {MISSION_TABS.map((k) => (
           <button
@@ -70,7 +73,12 @@ export default function MissionPage() {
           </button>
         ))}
       </nav>
-      {tab === "synthese" && <SynthesisTab mission={mission} onChange={setMission} />}
+      {tab === "synthese" && (
+        <>
+          <SynthesisTab mission={mission} onChange={setMission} />
+          <StatusHistory missionId={mission.id} statut={mission.statut} />
+        </>
+      )}
     </div>
   );
 }

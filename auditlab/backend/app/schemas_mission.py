@@ -56,6 +56,19 @@ class StatusIn(BaseModel):
     statut: EngagementStatus
 
 
+class TransitionOut(BaseModel):
+    statut: EngagementStatus
+    sens: str  # "suivant" ou "precedent"
+    motif_blocage: str | None = None
+
+
+class StatusChangeOut(BaseModel):
+    horodatage: datetime
+    utilisateur: str | None
+    avant: EngagementStatus
+    apres: EngagementStatus
+
+
 class EngagementSummary(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -79,6 +92,6 @@ class EngagementOut(EngagementSummary):
     perimetre: str | None
     objectifs: str | None
     membres: list[MemberOut]
-    transitions: list[EngagementStatus] = []
+    transitions: list[TransitionOut] = []
     peut_gerer: bool = False
     created_at: datetime | None = None

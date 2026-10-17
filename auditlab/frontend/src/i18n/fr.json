@@ -359,7 +359,14 @@
       "superviseur": "Superviseur"
     },
     "retour": "← Toutes les missions",
-    "lectureSeule": "Vous consultez cette mission en lecture seule."
+    "lectureSeule": "Vous consultez cette mission en lecture seule.",
+    "avancer": "Passer à « {{statut}} »",
+    "revenir": "Revenir à « {{statut}} »",
+    "confirmerCloture": "Clôturer la mission ? Elle ne sera plus modifiable.",
+    "cycle": "Cycle de vie de la mission",
+    "historique": "Historique des statuts",
+    "aucunChangement": "Aucun changement de statut.",
+    "statutChange": "Statut mis à jour."
   },
   "temps": {
     "budget": "Budget et temps passé",

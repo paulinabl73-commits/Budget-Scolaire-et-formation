@@ -59,6 +59,8 @@ def summary(e: Engagement, user: User, consumed: float) -> dict:
 
 
 def engagement_out(db: DbSession, e: Engagement, user: User) -> EngagementOut:
+    from app.api.engagement_status import allowed_transitions
+
     return EngagementOut.model_validate(
         {
             **summary(e, user, consumed_days(db, [e.id]).get(e.id, 0.0)),
@@ -76,6 +78,7 @@ def engagement_out(db: DbSession, e: Engagement, user: User) -> EngagementOut:
                     e.members, key=lambda m: (m.role_mission != "chef_mission", m.user.nom)
                 )
             ],
+            "transitions": allowed_transitions(db, e, user),
             "peut_gerer": can_manage(e, user),
         }
     )

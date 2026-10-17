@@ -196,6 +196,19 @@ export interface Engagement extends EngagementSummary {
   perimetre: string | null;
   objectifs: string | null;
   membres: Member[];
-  transitions: EngagementStatus[];
+  transitions: Transition[];
   peut_gerer: boolean;
+}
+
+export interface Transition {
+  statut: EngagementStatus;
+  sens: "suivant" | "precedent";
+  motif_blocage: string | null;
+}
+
+export interface StatusChange {
+  horodatage: string;
+  utilisateur: string | null;
+  avant: EngagementStatus;
+  apres: EngagementStatus;
 }

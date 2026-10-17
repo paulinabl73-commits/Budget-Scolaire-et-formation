@@ -10,6 +10,7 @@ import app.audit.listeners  # noqa: F401  (enregistre l'écouteur de journalisat
 from app.api import (
     audit_log,
     auth,
+    engagement_status,
     engagements,
     meta,
     plans,
@@ -73,5 +74,6 @@ for router in (
     plans.router,
     engagements.router,
     engagements.staff_router,
+    engagement_status.router,
 ):
     app.include_router(router, prefix="/api")
