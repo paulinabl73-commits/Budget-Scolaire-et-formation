@@ -8,6 +8,7 @@ opération trie donc explicitement sa sortie.
 """
 
 import datetime as dt
+import secrets
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from decimal import Decimal, InvalidOperation
@@ -29,7 +30,7 @@ class AnalysisError(ValueError):
 @dataclass(frozen=True)
 class Param:
     nom: str
-    # colonne, colonnes, nombre, entier, nombres, texte, expression, choix, date,
+    # colonne, colonnes, nombre, entier, graine, nombres, texte, expression, choix, date,
     # agregats (liste {champ, fonction}), paires (liste {gauche, droite})
     type: str
     requis: bool = True
@@ -108,6 +109,10 @@ def validate(op: Operation, raw: dict[str, Any], rels: list[Relation]) -> dict[s
         raise AnalysisError(f"Paramètre inconnu « {sorted(unknown)[0]} »")
     for p in op.params:
         value = raw.get(p.nom)
+        if p.type == "graine" and (value is None or value == ""):
+            # DAT-22 : graine tirée au lancement puis conservée avec les paramètres.
+            clean[p.nom] = secrets.randbelow(2**31 - 1)
+            continue
         if value is None or value == "" or value == []:
             if p.requis and p.defaut is None:
                 raise AnalysisError(f"{p.nom} : paramètre obligatoire")
@@ -124,7 +129,7 @@ def validate(op: Operation, raw: dict[str, Any], rels: list[Relation]) -> dict[s
             clean[p.nom] = cols
         elif p.type == "nombre":
             clean[p.nom] = str(_bounded(p, _number(value, p.nom)))
-        elif p.type == "entier":
+        elif p.type in ("entier", "graine"):
             number = _bounded(p, _number(value, p.nom))
             if number != number.to_integral_value():
                 raise AnalysisError(f"{p.nom} : nombre entier attendu")

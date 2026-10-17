@@ -440,7 +440,7 @@ export interface Dataset {
 
 export interface AnalysisParam {
   nom: string;
-  type: "colonne" | "colonnes" | "nombre" | "entier" | "nombres" | "texte" | "expression" | "choix" | "date" | "agregats" | "paires";
+  type: "colonne" | "colonnes" | "nombre" | "entier" | "graine" | "nombres" | "texte" | "expression" | "choix" | "date" | "agregats" | "paires";
   requis: boolean;
   defaut: unknown;
   choix: string[];

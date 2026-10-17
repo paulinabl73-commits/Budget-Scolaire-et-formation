@@ -105,3 +105,25 @@ def test_dat20_erreurs(client, ctx, factures):  # noqa: F811
     res = analyse(client, ctx, factures, "echantillon",
                   {"taille": 5, "graine": 1, "methode": "stratifie"})  # fmt: skip
     assert res["statut"] == "erreur" and "champ de strate" in res["erreur"]
+
+
+def test_dat22_graine_enregistree_et_rejouable(client, ctx, factures, db):  # noqa: F811
+    mus = {"taille": 15, "methode": "mus", "champ_montant": "montant"}
+    first = analyse(client, ctx, factures, "echantillon", mus)
+    seed = first["definition"]["parametres"]["graine"]
+    assert isinstance(seed, int) and first["resultat"]["graine"] == seed
+    # Même graine, mêmes paramètres : même échantillon, octet pour octet.
+    again = analyse(client, ctx, factures, "echantillon", {**mus, "graine": seed})
+    assert again["parquet_sha256"] == first["parquet_sha256"]
+    other = analyse(client, ctx, factures, "echantillon",
+                    {"taille": 15, "methode": "aleatoire", "graine": seed + 1})  # fmt: skip
+    assert other["parquet_sha256"] != first["parquet_sha256"]
+    # La graine figure dans le journal d'audit de la création de la table.
+    from sqlalchemy import select
+
+    from app.models import AuditLog
+
+    entry = db.scalar(
+        select(AuditLog).where(AuditLog.object_id == first["id"]).order_by(AuditLog.seq)
+    )
+    assert entry.apres["definition"]["parametres"]["graine"] == seed

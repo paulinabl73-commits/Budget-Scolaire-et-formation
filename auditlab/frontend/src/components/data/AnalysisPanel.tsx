@@ -152,6 +152,7 @@ export default function AnalysisPanel({ ds }: { ds: Dataset }) {
           <div key={p.nom}>
             {label}
             <input id={id} className="champ" inputMode={p.type === "texte" ? undefined : "decimal"} required={p.requis && p.defaut === null}
+              placeholder={p.type === "graine" ? t("analyses.graineAuto") : undefined}
               value={String(v ?? "")} onChange={(e) => set(p.nom, e.target.value)} />
           </div>
         );

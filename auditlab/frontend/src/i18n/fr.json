@@ -971,7 +971,8 @@
         "champ_strate": "Champ de strate",
         "bornes": "Bornes des strates de montant"
       }
-    }
+    },
+    "graineAuto": "Tirée au hasard et enregistrée si vide"
   },
   "constructeur": {
     "titre": "Constructeur de condition",

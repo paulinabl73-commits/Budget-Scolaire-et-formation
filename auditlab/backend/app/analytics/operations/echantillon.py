@@ -130,7 +130,7 @@ register(
                 choix=("aleatoire", "systematique", "stratifie", "mus"),
             ),  # fmt: skip
             Param("taille", "entier", minimum=1, maximum=100_000),
-            Param("graine", "entier", minimum=0, maximum=2**31 - 1),
+            Param("graine", "graine", requis=False, minimum=0, maximum=2**31 - 1),
             Param("champ_montant", "colonne", requis=False, types_colonne=NUMERIC),
             Param("champ_strate", "colonne", requis=False),
             Param("bornes", "nombres", requis=False),
