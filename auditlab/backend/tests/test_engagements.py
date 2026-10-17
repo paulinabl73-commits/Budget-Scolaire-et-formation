@@ -195,7 +195,8 @@ def test_aud06_droits(client, team, account):
         resp = client.post("/api/engagements", json={"titre": "X"}, headers=h)
         assert resp.status_code == 403
     audite = account(Role.AUDITE)
-    assert client.get("/api/engagements", headers=audite.headers).json() == []
+    # CON-09 : l'audité n'a accès qu'à son portail (renforcé au lot 8 : 403 au lieu d'une liste vide).
+    assert client.get("/api/engagements", headers=audite.headers).status_code == 403
     admin = account(Role.ADMIN)
     m = helpers.mission(client, team["chef"].headers)
     assert client.get(f"/api/engagements/{m['id']}", headers=admin.headers).status_code == 200

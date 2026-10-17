@@ -2,14 +2,18 @@ import { useTranslation } from "react-i18next";
 
 import { useAuth } from "../auth/AuthContext";
 import MyProcedures from "../components/MyProcedures";
+import PortalHome from "./portal/PortalHome";
 import { can, PERM } from "../lib/permissions";
 
 const MODULES = ["socle", "m1", "m2", "m3", "m4", "m5", "m6"] as const;
+const AVAILABLE = ["socle", "m1", "m2", "m3"];
 
 export default function HomePage() {
   const { t } = useTranslation();
   const { user } = useAuth();
   if (!user) return null;
+  // CON-09 : l'audité n'a que son portail.
+  if (user.role === "audite") return <PortalHome nom={user.nom} />;
 
   return (
     <div className="space-y-6">
@@ -30,10 +34,10 @@ export default function HomePage() {
               <span>{t(`accueil.${m}`)}</span>
               <span
                 className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                  m === "socle" ? "bg-green-100 text-green-900" : "bg-slate-100 text-slate-700"
+                  AVAILABLE.includes(m) ? "bg-green-100 text-green-900" : "bg-slate-100 text-slate-700"
                 }`}
               >
-                {m === "socle" ? t("accueil.disponible") : t("accueil.bientot")}
+                {AVAILABLE.includes(m) ? t("accueil.disponible") : t("accueil.bientot")}
               </span>
             </li>
           ))}

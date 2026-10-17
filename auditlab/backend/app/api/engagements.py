@@ -28,7 +28,7 @@ from app.schemas_mission import (
     MemberIn,
     MemberOut,
 )
-from app.security.roles import Perm, Role
+from app.security.roles import Perm, Role, has_permission
 
 router = APIRouter(prefix="/engagements", tags=["Missions"])
 Manager = Annotated[User, Depends(require(Perm.MISSIONS_MANAGE))]
@@ -141,6 +141,11 @@ def set_team(db: DbSession, engagement: Engagement, members: list[MemberIn]) -> 
 
 @router.get("", response_model=list[EngagementSummary])
 def list_engagements(user: CurrentUser, db: DbSession, statut: str | None = None) -> list[dict]:
+    if not (
+        has_permission(user.role, Perm.MISSIONS_READ_ALL)
+        or has_permission(user.role, Perm.MISSIONS_READ_OWN)
+    ):  # l'audité n'accède qu'à son portail (CON-09)
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "Droits insuffisants")
     query = visible_engagements(user).options(
         selectinload(Engagement.members).selectinload(EngagementMember.user),
         selectinload(Engagement.entity),

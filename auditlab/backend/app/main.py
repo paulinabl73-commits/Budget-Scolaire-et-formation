@@ -26,6 +26,7 @@ from app.api import (
     meta,
     notifications,
     plans,
+    portal,
     program,
     review_notes,
     risk,
@@ -118,5 +119,6 @@ for router in (
     evidence.router,
     action_plans.router,
     contradictory.router,
+    portal.router,
 ):
     app.include_router(router, prefix="/api")

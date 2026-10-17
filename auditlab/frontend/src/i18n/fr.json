@@ -1285,5 +1285,41 @@
     "motif": "Motif",
     "demander": "Demander le report",
     "ouvrir": "Demander un report d'échéance"
+  },
+  "portail": {
+    "titre": "Bonjour {{nom}}",
+    "intro": "Vous trouverez ici les constats d'audit qui vous sont adressés et vos plans d'action.",
+    "aRepondre": "{{n}} constat(s) attend(ent) votre réponse.",
+    "mesConstats": "Mes constats",
+    "aucun": "Aucun constat ne vous est adressé.",
+    "col": {
+      "mission": "Mission",
+      "constat": "Constat",
+      "criticite": "Criticité",
+      "etat": "État",
+      "plans": "Plans d'action"
+    },
+    "repondreAvant": "À commenter avant le {{date}}",
+    "etats": {
+      "envoye": "En attente de votre réponse",
+      "repondu": "Réponse transmise",
+      "valide": "Constat définitif"
+    },
+    "plansOuverts": "{{n}} ouvert(s)",
+    "enRetard": "{{n}} en retard",
+    "retour": "← Mes constats",
+    "votreReponse": "Votre réponse (avant le {{date}})",
+    "position": "Votre position",
+    "positions": {
+      "accord": "D'accord",
+      "accord_partiel": "Partiellement d'accord",
+      "desaccord": "En désaccord"
+    },
+    "commentaire": "Commentaire (obligatoire en cas de désaccord, même partiel)",
+    "plansProposes": "Plans d'action proposés",
+    "responsable": "Responsable (vous par défaut)",
+    "ajouterPlan": "Proposer un plan d'action",
+    "envoyerReponse": "Envoyer ma réponse",
+    "reponseEnvoyee": "Votre réponse"
   }
 }
