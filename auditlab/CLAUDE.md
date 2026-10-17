@@ -12,11 +12,13 @@ auditlab/
     app/
       api/            routes HTTP ; deps.py = authentification et contrôle d'accès
                       universe.py, risk.py, plans.py = lot 2
+                      engagements.py, engagement_status.py, timesheets.py, library.py,
+                      program.py, templates.py, mission_access.py = lot 3
       audit/          chain.py (chaînage par hash), listeners.py (journalisation automatique)
       models/         modèles SQLAlchemy ; base.py = TrackedMixin
       security/       passwords (Argon2), totp, sessions, roles (matrice des droits)
       risk_scoring.py calcul du score de risque (fonctions pures, testées seules)
-      schemas_plan.py schémas Pydantic du lot 2
+      schemas_plan.py schémas Pydantic du lot 2 ; schemas_mission.py ceux du lot 3
       cli.py          commandes d'exploitation
     alembic/versions/ migrations
     tests/            pytest (base PostgreSQL réelle)
@@ -80,7 +82,7 @@ docker compose up -d --build
   Tant qu'elle n'est pas activée, la session est limitée à l'enrôlement (`mfa_enrollment_only`).
 - **Droits** : la matrice de la section 2 est dans `security/roles.py`. Chaque route vérifie ses
   droits avec `Depends(require(Perm.X))` ; `require(Perm.A, Perm.B)` accepte l'un ou l'autre. Côté interface, les droits ne servent qu'à
-  l'affichage. Les restrictions par mission viendront avec le lot 3.
+  l'affichage. Les restrictions par mission sont dans `api/mission_access.py` (lot 3).
 - **Séparation des tâches** : `roles.can_review(preparateur, reviseur)`, à appliquer aux
   signatures du lot 4.
 - **E-mails** : validation volontairement souple, pour accepter les domaines internes (`.local`).
@@ -112,3 +114,30 @@ docker compose up -d --build
   - une nouvelle version ne part que de la dernière version et en copie les missions.
   - Les missions (`PlanItem`) ont une période comprise dans l'année du plan, et une entité n'y
     figure qu'une fois. Le lot 3 créera les missions (Engagement) à partir de ces lignes.
+
+### Lot 3 — missions et programme de travail
+
+- **Accès par mission** (`api/mission_access.py`) :
+  - `visible_engagements(user)` : tout pour `missions:read_all` (Directeur, Administrateur),
+    sinon les missions dont l'utilisateur est membre ;
+  - `can_manage` : Directeur partout, Chef de mission sur les missions qu'il pilote ;
+  - `ensure_open` refuse toute écriture sur une mission clôturée.
+  Toute nouvelle route rattachée à une mission passe par `get_engagement` (404 si invisible).
+- **Rôles dans la mission** : chef (Chef de mission ou Directeur), superviseur, auditeur
+  (Auditeur ou Chef de mission), data analyst. Un seul chef par mission.
+- **Statuts** (`engagement_status.py`) : un cran à la fois, retour d'un cran possible sauf après
+  clôture. Les contrôles de passage s'ajoutent dans `GUARDS[statut_cible]`, les actions à
+  l'entrée d'un statut dans `ON_ENTER[statut]`. L'historique est lu dans `AuditLog`.
+- **Temps** : saisie en heures (pas de 0,25 h), convertie en jours avec
+  `AUDITLAB_HEURES_PAR_JOUR` (8 par défaut). Jamais de date future ; chacun corrige ses saisies.
+- **Bibliothèque et matrice** :
+  - `Risk`, `Control` et `Procedure` servent à la fois à la bibliothèque (`bibliotheque=True`,
+    `engagement_id` vide) et aux missions (copies avec `source_id`) ;
+  - un contrôle de bibliothèque n'est copié qu'une fois par mission ;
+  - les procédures de mission sont numérotées P-01, P-02… sans réutiliser un numéro.
+- **Modèles** (`EngagementTemplate`) : contenu figé en JSON. `templates.instantiate` recrée la
+  matrice dans une nouvelle mission.
+- **Données de départ** : la migration 0008 installe la bibliothèque (11 risques, 15 contrôles)
+  et la migration 0009 ses 16 procédures types. Les tests partent d'une base vide (troncature
+  avant chaque test) ; `test_migrations.py` vérifie les données de départ.
+- **Tests** : `tests/helpers.py` fournit `entity`, `validated_plan` et `mission`.

@@ -362,7 +362,7 @@
       "superviseur": "Superviseur"
     },
     "retour": "← Toutes les missions",
-    "lectureSeule": "Vous consultez cette mission en lecture seule.",
+    "lectureSeule": "Seuls le chef de mission et le Directeur modifient la fiche, l'équipe et le programme.",
     "avancer": "Passer à « {{statut}} »",
     "revenir": "Revenir à « {{statut}} »",
     "confirmerCloture": "Clôturer la mission ? Elle ne sera plus modifiable.",

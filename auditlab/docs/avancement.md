@@ -4,7 +4,7 @@
 |-----|---------|------|
 | 1 | Socle : dépôt, PostgreSQL, Alembic, authentification, rôles, AuditLog chaîné (NF-01, NF-02), CI | **Livré** |
 | 2 | Univers et plan : AUD-01 à AUD-05 | **Livré** |
-| 3 | Missions et programme : AUD-06 à AUD-12 | À faire |
+| 3 | Missions et programme : AUD-06 à AUD-12 | **Livré** |
 | 4 | Papiers de travail et revue : AUD-13 à AUD-22 | À faire |
 | 5 | Import de données : DAT-01 à DAT-08 | À faire |
 | 6 | Analyses : DAT-09 à DAT-19 | À faire |
@@ -16,6 +16,28 @@
 | 8d | Inventaire, fiscalité et livrables : RCO-11 à RCO-27 | À faire |
 | 9 | Scripts et automatisation : DAT-26 à DAT-29 | À faire |
 | 10 | Reporting et finitions : REP-01 à REP-08, NF-09 à NF-11 | À faire |
+
+## Lot 3 — détail
+
+**Livré** (un commit par exigence)
+- **AUD-06** : missions créées depuis une ligne d'un plan validé (valeurs reprises) ou
+  ponctuellement ; équipe avec rôles de mission ; référence M-AAAA-NNN ; chaque utilisateur ne
+  voit que ses missions.
+- **AUD-07** : cycle de vie en six statuts, contrôles de passage enregistrables, historique tiré
+  du journal d'audit.
+- **AUD-08** : saisie des temps (heures, activité), comparaison au budget, répartition par
+  personne et par activité.
+- **AUD-09** : modèles de mission tirés d'une mission ou de la bibliothèque, utilisés à la
+  création.
+- **AUD-10** : bibliothèque de risques et de contrôles, livrée avec une bibliothèque de départ
+  (5 cycles).
+- **AUD-11** : matrice risques/contrôles de la mission, import depuis la bibliothèque,
+  procédures de test typées.
+- **AUD-12** : affectation des procédures à un membre de l'équipe, avec échéance et
+  avancement ; liste « Mes procédures » sur la page d'accueil.
+- Tests : 152 tests backend (couverture de 99 %). Le scénario de recette, étape 2 (le chef
+  ouvre la mission, construit la matrice et affecte les procédures), a été rejoué dans un
+  navigateur.
 
 ## Lot 2 — détail
 
