@@ -1473,5 +1473,57 @@
     "nbAvertissements": "{{n}} avertissement(s)",
     "historique": "Afficher l'historique (imports rejetés et remplacés)",
     "avertissements": "Avertissements"
+  },
+  "affectation": {
+    "titre": "Affectation des comptes aux postes",
+    "aide": "Chaque compte est affecté automatiquement au poste dont la racine est la plus longue ; les comptes à double sens sont classés selon leur solde. Une affectation manuelle prime et est reprise l'exercice suivant.",
+    "filtre": "Comptes affichés",
+    "filtres": {
+      "non_affectes": "Non affectés",
+      "manuels": "Affectations manuelles",
+      "tous": "Tous"
+    },
+    "recherche": "Compte ou libellé",
+    "aucun": "Aucun compte à afficher.",
+    "col": {
+      "compte": "Compte",
+      "solde": "Solde {{periode}}",
+      "poste": "Poste {{periode}}",
+      "actions": "Actions"
+    },
+    "parRacine": "Affectation automatique (racine {{racine}})",
+    "manuelle": "Manuelle",
+    "nonAffecte": "Non affecté",
+    "modifier": "Modifier",
+    "modifierCompte": "Modifier l'affectation du compte {{compte}}",
+    "edition": "Affectation du compte {{compte}}",
+    "poste": "Poste",
+    "posteCrediteur": "Poste si solde créditeur (facultatif)",
+    "commentaire": "Justification",
+    "automatique": "Revenir à l'automatique",
+    "bandeau_one": "{{count}} compte non affecté : aucun état ne peut être produit tant qu'il n'est pas affecté.",
+    "bandeau_other": "{{count}} comptes non affectés : aucun état ne peut être produit tant qu'ils ne sont pas affectés.",
+    "bandeauOk": "Tous les comptes sont affectés.",
+    "voir": "Voir les comptes",
+    "apercu": "Aperçu des états financiers",
+    "produireApercu": "Produire l'aperçu",
+    "bloque": "Affectez d'abord tous les comptes.",
+    "ecart": "écart",
+    "etats": {
+      "bilan_actif": "Bilan – actif",
+      "bilan_passif": "Bilan – passif",
+      "compte_resultat": "Compte de résultat"
+    }
+  },
+  "dossier": {
+    "vues": {
+      "donnees": "Données comptables",
+      "affectation": "Affectation",
+      "planification": "Seuil de signification",
+      "analytique": "Revue analytique",
+      "ratios": "Ratios",
+      "risques": "Matrice des risques"
+    },
+    "navigation": "Sections du dossier"
   }
 }

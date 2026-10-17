@@ -226,3 +226,22 @@ class ExchangeRate(TrackedMixin, Base):
     date: Mapped[dt.date] = mapped_column(Date)
     taux: Mapped[Decimal] = mapped_column(Numeric(20, 10))
     source: Mapped[str | None] = mapped_column(String(200), nullable=True)
+
+
+class AccountMapping(TrackedMixin, Base):
+    """Affectation manuelle d'un compte à un poste (REV-08), qui prime sur l'affectation
+    automatique par racine. Un compte à double sens peut recevoir un poste distinct pour un
+    solde créditeur (REV-09). Reprise du dossier N-1 à la création du dossier (REV-04)."""
+
+    __tablename__ = "account_mappings"
+    __table_args__ = (
+        Index("uq_account_mappings_dossier_compte", "audit_file_id", "compte", unique=True,
+              postgresql_where=text("deleted_at IS NULL")),
+    )  # fmt: skip
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
+    compte: Mapped[str] = mapped_column(String(30))
+    poste: Mapped[str] = mapped_column(String(20))
+    poste_crediteur: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    commentaire: Mapped[str | None] = mapped_column(Text, nullable=True)

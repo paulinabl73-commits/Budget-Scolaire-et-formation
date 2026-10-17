@@ -30,6 +30,8 @@ class Settings(BaseSettings):
     racine_minimale_plan: int = 2
     classes_bilan: str = "12345"
     classes_resultat: str = "678"
+    # Classes exclues des états financiers (comptabilité analytique, engagements hors bilan).
+    classes_hors_etats: str = "9"
     cors_origins: list[str] = ["http://localhost:5173"]
     # Clé de signature des liens de téléchargement ; à fixer en production (32 octets aléatoires).
     secret_key: str = "dev-change-me-" + "0" * 32
