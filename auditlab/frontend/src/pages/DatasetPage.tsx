@@ -11,6 +11,7 @@ import CalculatedFields from "../components/data/CalculatedFields";
 import ControlSheet from "../components/data/ControlSheet";
 import DataGrid from "../components/data/DataGrid";
 import FieldStats from "../components/data/FieldStats";
+import MusEvaluation from "../components/data/MusEvaluation";
 import type { GridQuery } from "../components/data/FieldStats";
 import { useAuth } from "../auth/AuthContext";
 import { can } from "../lib/permissions";
@@ -54,6 +55,9 @@ export default function DatasetPage() {
         {ds.description && <p className="text-slate-600">{ds.description}</p>}
       </header>
       {ds.kind === "analyse" && <AnalysisResult ds={ds} />}
+      {ds.operation === "echantillon" && ds.statut === "pret" && (ds.definition.parametres as Record<string, unknown>)?.methode === "mus" && (
+        <MusEvaluation ds={ds} canEdit={can(user?.permissions, "data:analyze")} />
+      )}
       {ds.statut === "en_cours" && <Alert kind="succes">{t("analyses.enCours")}</Alert>}
       {ds.statut === "erreur" && <Alert kind="erreur">{ds.erreur}</Alert>}
       {ds.kind !== "vue" && ds.statut === "pret" && <ControlSheet ds={ds} />}

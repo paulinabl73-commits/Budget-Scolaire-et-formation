@@ -1086,5 +1086,29 @@
     "facteur": "facteur de confiance {{f}}",
     "intervalle": "intervalle {{i}}",
     "utiliser": "Utiliser cette taille"
+  },
+  "mus": {
+    "titre": "Évaluation de l'échantillon (MUS)",
+    "erreurs": "Erreurs constatées",
+    "ligne": "Ligne (rang)",
+    "audite": "Montant audité",
+    "commentaire": "Commentaire",
+    "ajouterErreur": "Ajouter une erreur",
+    "evaluer": "Évaluer",
+    "du": "Évaluation du {{date}}",
+    "intervalle": "intervalle {{i}}",
+    "confiance": "confiance {{c}} %",
+    "sens": "Sens",
+    "nb": "Erreurs",
+    "projetee": "Erreur projetée",
+    "base": "Précision de base",
+    "provision": "Provision d'élargissement",
+    "limite": "Limite supérieure",
+    "surevaluations": "Surévaluations",
+    "sousEvaluations": "Sous-évaluations",
+    "conclusions": {
+      "acceptable": "La limite supérieure d'erreur ({{limite}}) ne dépasse pas l'erreur tolérable ({{tolerable}}) : la population peut être acceptée.",
+      "non_acceptable": "La limite supérieure d'erreur ({{limite}}) dépasse l'erreur tolérable ({{tolerable}}) : la population ne peut pas être acceptée en l'état."
+    }
   }
 }

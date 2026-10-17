@@ -1,6 +1,13 @@
 from app.models.audit_log import AuditLog
 from app.models.base import Base, TrackedMixin
-from app.models.data import Dataset, DatasetKind, DatasetStatus, DataSource, Upload
+from app.models.data import (
+    Dataset,
+    DatasetKind,
+    DatasetStatus,
+    DataSource,
+    SampleEvaluation,
+    Upload,
+)
 from app.models.engagement import (
     STATUS_ORDER,
     Engagement,
@@ -45,6 +52,7 @@ from app.models.workpaper import (
 
 __all__ = [
     "Attachment",
+    "SampleEvaluation",
     "AuditLog",
     "AuditPlan",
     "AuditableEntity",

@@ -86,3 +86,16 @@ class DataSource(TrackedMixin, Base):
     # Adresse SQLAlchemy, ex. postgresql+psycopg://lecteur:…@hote/base, mssql+pyodbc://…
     url: Mapped[str] = mapped_column(Text)
     actif: Mapped[bool] = mapped_column(Boolean, default=True)
+
+
+class SampleEvaluation(TrackedMixin, Base):
+    """Évaluation d'un échantillon MUS (DAT-23) : erreurs constatées et projection."""
+
+    __tablename__ = "sample_evaluations"
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    dataset_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("datasets.id"), index=True)
+    confiance: Mapped[str] = mapped_column(String(10))
+    erreur_tolerable: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    erreurs: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
+    resultat: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
