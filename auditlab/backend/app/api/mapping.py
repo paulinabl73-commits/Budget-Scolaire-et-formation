@@ -13,6 +13,7 @@ from sqlalchemy.orm import Session
 from app.api.audit_files import ON_CREATE, get_file, require_work
 from app.api.deps import CurrentUser, DbSession
 from app.models.revision import AccountingFramework, AccountMapping, AuditFile, StatementLine
+from app.revision import statements
 from app.revision.balances import clean_account
 from app.revision.mapping import (
     PERIODS,
@@ -34,8 +35,7 @@ class MappingIn(BaseModel):
 
 
 def assignable(line: StatementLine) -> bool:
-    """Poste de détail (pas un total calculé) : il peut recevoir des comptes."""
-    return bool(line.racines) or not line.formule
+    return statements.assignable(line)
 
 
 def _account_out(a: Any, labels: dict[str, str]) -> dict[str, Any]:
@@ -132,16 +132,11 @@ def preview(file_id: uuid.UUID, user: CurrentUser, db: DbSession) -> dict[str, A
         states.setdefault(ln.etat, []).append({
             "code": ln.code, "libelle": ln.libelle, "niveau": ln.niveau,
             "total": not assignable(ln),
-            **{p: str(values[p].get(ln.code, Decimal(0))) for p in PERIODS},
+            **{p: None if p == "N-1" and ln.etat == "flux_tresorerie"
+               else str(values[p].get(ln.code, Decimal(0))) for p in PERIODS},
         })  # fmt: skip
-    checks = []
-    for rule in db.get(AccountingFramework, file.framework_id).regles:
-        gaps = {p: values[p].get(rule["gauche"], Decimal(0)) - values[p].get(rule["droite"],
-                Decimal(0)) for p in PERIODS}  # fmt: skip
-        checks.append({"code": rule["code"], "libelle": rule["libelle"],
-                       "ecarts": {p: str(v) for p, v in gaps.items()},
-                       "ok": all(v == 0 for v in gaps.values())})  # fmt: skip
-    return {"etats": states, "controles": checks}
+    rules = db.get(AccountingFramework, file.framework_id).regles
+    return {"etats": states, "controles": statements.checks(rules, values)}
 
 
 def carry_over_mappings(db: Session, file: AuditFile, previous: AuditFile) -> None:

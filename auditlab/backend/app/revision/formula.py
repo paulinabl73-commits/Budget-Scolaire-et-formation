@@ -8,6 +8,10 @@ from decimal import Decimal, DivisionByZero, InvalidOperation
 TOKEN = re.compile(r"\s*(?:(\d+(?:\.\d+)?)|([A-Za-z][A-Za-z0-9_]*)|(.))")
 
 
+# Suffixe désignant le montant de l'exercice précédent d'un poste (ex. « BT_N1 »).
+PREVIOUS = "_N1"
+
+
 class FormulaError(ValueError):
     pass
 

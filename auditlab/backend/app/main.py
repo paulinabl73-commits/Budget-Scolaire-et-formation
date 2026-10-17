@@ -42,6 +42,7 @@ from app.api import (
     risk_matrix,
     sampling,
     signoffs,
+    statements,
     teams,
     templates,
     tickmarks,
@@ -142,5 +143,6 @@ for router in (
     risk_matrix.router,
     adjustments.router,
     lead_schedules.router,
+    statements.router,
 ):
     app.include_router(router, prefix="/api")

@@ -116,6 +116,29 @@ L(C,"XH","RÉSULTAT HORS ACTIVITÉS ORDINAIRES","produit",formule="TN+TO-RO-RP",
 L(C,"RQ","Participation des travailleurs","charge",r("87"))
 L(C,"RS","Impôts sur le résultat","charge",r("89"))
 L(C,"XI","RÉSULTAT NET","produit",formule="XG+XH-RQ-RS",niveau=0)
+# Tableau des flux de trésorerie (méthode indirecte, à partir des états N et N-1) : un code
+# suffixé « _N1 » désigne le montant N-1 du poste. Les acquisitions et cessions n'étant pas
+# connues par la balance, les flux d'investissement sont la variation des immobilisations
+# nettes corrigée des dotations et reprises : la trésorerie de clôture du tableau égale celle
+# du bilan dès que les deux bilans sont équilibrés.
+T="flux_tresorerie"
+L(T,"ZA","Trésorerie nette au 1er janvier (A)","flux",formule="BT_N1-DT_N1",niveau=0)
+L(T,"FA","Capacité d'autofinancement globale (CAFG)","flux",formule="XI+RL+RN-TJ-TL")
+L(T,"FB","− Variation de l'actif circulant HAO","flux",formule="BA_N1-BA")
+L(T,"FC","− Variation des stocks","flux",formule="BB_N1-BB")
+L(T,"FD","− Variation des créances","flux",formule="BH_N1+BI_N1+BJ_N1-BH-BI-BJ")
+L(T,"FE","+ Variation du passif circulant","flux",formule="DP-DP_N1")
+L(T,"FM","+ Variation des écarts de conversion","flux",formule="DV-DV_N1-BU+BU_N1")
+L(T,"ZB","Flux de trésorerie provenant des activités opérationnelles (B)","flux",formule="FA+FB+FC+FD+FE+FM",niveau=0)
+L(T,"FF","Investissements nets (variation des immobilisations nettes, dotations et reprises)","flux",formule="AZ_N1-AZ-RL-RN+TJ+TL")
+L(T,"ZC","Flux de trésorerie provenant des activités d'investissement (C)","flux",formule="FF",niveau=0)
+L(T,"FK","Variation des capitaux propres hors résultat (apports, dividendes)","flux",formule="CP-CJ-CP_N1")
+L(T,"ZD","Flux de trésorerie provenant des capitaux propres (D)","flux",formule="FK",niveau=0)
+L(T,"FL","Variation des dettes financières et ressources assimilées","flux",formule="DD-DD_N1")
+L(T,"ZE","Flux de trésorerie provenant des capitaux étrangers (E)","flux",formule="FL",niveau=0)
+L(T,"ZG","VARIATION DE LA TRÉSORERIE NETTE (B+C+D+E)","flux",formule="ZB+ZC+ZD+ZE",niveau=0)
+L(T,"ZH","Trésorerie nette au 31 décembre (A+B+C+D+E)","flux",formule="ZA+ZG",niveau=0)
+L(T,"ZT","Trésorerie nette du bilan (trésorerie-actif − trésorerie-passif)","flux",formule="BT-DT",niveau=0)
 # BI: racines « 411 » et « 491 », plus « 41 » au solde débiteur
 for l in lines:
     if l["code"]=="BI": l["racines"]=r("491")+r("41",sens="debit")
@@ -138,6 +161,7 @@ bases=[
 regles=[
  {"code":"bilan_equilibre","libelle":"Le bilan est équilibré (total actif = total passif)","gauche":"BZ","droite":"DZ"},
  {"code":"resultat_concordant","libelle":"Le résultat du bilan est égal au résultat du compte de résultat","gauche":"CJ","droite":"XI"},
+ {"code":"tresorerie_concordante","libelle":"La trésorerie de clôture du tableau des flux est égale à la trésorerie du bilan","gauche":"ZH","droite":"ZT","periodes":["N"]},
 ]
 doc={"code":"SYSCOHADA","version":"2017","libelle":"SYSCOHADA révisé – Système normal","pays":"OHADA","date_effet":"2018-01-01",
      "source":"Acte uniforme relatif au droit comptable et à l'information financière du 26 janvier 2017 (plan de comptes par racines, modèles du Système normal). Modèle de départ à contrôler et compléter par import du plan détaillé de l'entité.",

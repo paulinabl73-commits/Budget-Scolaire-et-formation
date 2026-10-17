@@ -31,7 +31,7 @@ def test_migrations_aller_retour_et_donnees_de_depart():
         "tickmarks": 6,
         "accounting_frameworks": 2,  # SYSCOHADA révisé et modèle CIPRES
         "framework_accounts": 168,
-        "statement_lines": 103,
+        "statement_lines": 120,
         "normative_frameworks": 3,
         "currencies": 6,
     }

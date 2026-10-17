@@ -29,11 +29,11 @@ from app.models.revision import (
     RegulatoryParameter,
     StatementLine,
 )
-from app.revision.formula import FormulaError, references, tokens
+from app.revision.formula import PREVIOUS, FormulaError, references, tokens
 
 CODES = ("SYSCOHADA", "IFRS", "CIPRES")
 ETATS = ("bilan_actif", "bilan_passif", "compte_resultat", "flux_tresorerie", "notes", "autre")
-NATURES = ("actif", "passif", "charge", "produit")
+NATURES = ("actif", "passif", "charge", "produit", "flux")
 DATA_DIR = Path(__file__).parent / "data"
 
 
@@ -80,7 +80,8 @@ def _check(doc: dict[str, Any]) -> None:
             tokens(formula)
         except FormulaError as exc:
             raise FrameworkError(f"{owner} : {exc}") from exc
-        unknown = references(formula) - known
+        # « CODE_N1 » : montant N-1 du poste (tableau des flux, REV-24).
+        unknown = {r.removesuffix(PREVIOUS) for r in references(formula)} - known
         if unknown:
             raise FrameworkError(
                 f"{owner} : poste inconnu « {sorted(unknown)[0]} » dans la formule"

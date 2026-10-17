@@ -24,7 +24,7 @@ from app.models.revision import (
     StatementLine,
 )
 from app.revision.balances import AMOUNTS, BalanceLine
-from app.revision.formula import evaluate, references
+from app.revision.formula import PREVIOUS, evaluate, references
 from app.revision.imports import active_balance, balance_lines
 
 ZERO = Decimal(0)
@@ -149,9 +149,13 @@ def unmapped(items: list[Assignment]) -> list[Assignment]:
 
 
 def statement_values(
-    lines: list[StatementLine], items: list[Assignment], periode: str
+    lines: list[StatementLine],
+    items: list[Assignment],
+    periode: str,
+    previous: dict[str, Decimal] | None = None,
 ) -> dict[str, Decimal]:
-    """Montant de chaque poste : comptes affectés (signe selon la nature) puis formules."""
+    """Montant de chaque poste : comptes affectés (signe selon la nature) puis formules ; un
+    code suffixé « _N1 » renvoie au montant de l'exercice précédent (`previous`)."""
     by_code = {ln.code: ln for ln in lines}
     raw: dict[str, Decimal] = defaultdict(Decimal)
     for a in items:
@@ -167,7 +171,12 @@ def statement_values(
         line = by_code.get(code)
         total = raw.get(code, ZERO)
         if line is not None and line.formule and code not in stack:
-            deps = {r: value(r, (*stack, code)) for r in references(line.formule)}
+            deps = {
+                r: (previous or {}).get(r.removesuffix(PREVIOUS), ZERO)
+                if r.endswith(PREVIOUS)
+                else value(r, (*stack, code))
+                for r in references(line.formule)
+            }
             total += evaluate(line.formule, deps) or ZERO
         values[code] = total
         return total
@@ -200,4 +209,5 @@ def file_values(
             [a.compte for a in missing],
         )
     lines = postes(db, file.framework_id)
-    return {p: statement_values(lines, items, p) for p in PERIODS}
+    before = statement_values(lines, items, "N-1")
+    return {"N": statement_values(lines, items, "N", before), "N-1": before}

@@ -1512,7 +1512,8 @@
     "etats": {
       "bilan_actif": "Bilan – actif",
       "bilan_passif": "Bilan – passif",
-      "compte_resultat": "Compte de résultat"
+      "compte_resultat": "Compte de résultat",
+      "flux_tresorerie": "Tableau des flux de trésorerie"
     }
   },
   "dossier": {
@@ -1524,7 +1525,8 @@
       "ratios": "Ratios",
       "risques": "Matrice des risques",
       "ajustements": "Ajustements",
-      "cycles": "Feuilles maîtresses"
+      "cycles": "Feuilles maîtresses",
+      "etats": "États financiers"
     },
     "navigation": "Sections du dossier"
   },
@@ -1681,5 +1683,20 @@
       "vigilance": "Cumul des anomalies non corrigées : {{cumul}}, au-delà du seuil de planification ({{plan}}) mais sous le seuil de signification ({{seuil}}) : risque que des anomalies non détectées le portent au-delà.",
       "significatif": "Anomalies non corrigées significatives (cumul {{cumul}} ; seuil {{seuil}}) : à corriger par l'entité, sinon incidence sur l'opinion."
     }
+  },
+  "etats": {
+    "titre": "États financiers révisés",
+    "excel": "Exporter en Excel",
+    "pdf": "Exporter en PDF",
+    "controles": "Contrôles de cohérence",
+    "poste": "Poste",
+    "col": {
+      "N_avant": "N avant ajustements",
+      "ajustements": "Ajustements",
+      "N": "N révisé",
+      "N-1": "N-1"
+    },
+    "exportBloque": "Export impossible tant qu'un contrôle de cohérence est en écart.",
+    "noteFlux": "Tableau des flux établi par différence entre les bilans N et N-1 (méthode indirecte) ; les flux d'investissement sont la variation des immobilisations nettes corrigée des dotations et reprises."
   }
 }

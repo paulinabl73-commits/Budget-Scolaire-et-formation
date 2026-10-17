@@ -2357,6 +2357,176 @@
    "formule": "XG+XH-RQ-RS",
    "ordre": 91,
    "niveau": 0
+  },
+  {
+   "etat": "flux_tresorerie",
+   "code": "ZA",
+   "libelle": "Trésorerie nette au 1er janvier (A)",
+   "nature": "flux",
+   "racines": [],
+   "formule": "BT_N1-DT_N1",
+   "ordre": 92,
+   "niveau": 0
+  },
+  {
+   "etat": "flux_tresorerie",
+   "code": "FA",
+   "libelle": "Capacité d'autofinancement globale (CAFG)",
+   "nature": "flux",
+   "racines": [],
+   "formule": "XI+RL+RN-TJ-TL",
+   "ordre": 93,
+   "niveau": 1
+  },
+  {
+   "etat": "flux_tresorerie",
+   "code": "FB",
+   "libelle": "− Variation de l'actif circulant HAO",
+   "nature": "flux",
+   "racines": [],
+   "formule": "BA_N1-BA",
+   "ordre": 94,
+   "niveau": 1
+  },
+  {
+   "etat": "flux_tresorerie",
+   "code": "FC",
+   "libelle": "− Variation des stocks",
+   "nature": "flux",
+   "racines": [],
+   "formule": "BB_N1-BB",
+   "ordre": 95,
+   "niveau": 1
+  },
+  {
+   "etat": "flux_tresorerie",
+   "code": "FD",
+   "libelle": "− Variation des créances",
+   "nature": "flux",
+   "racines": [],
+   "formule": "BH_N1+BI_N1+BJ_N1-BH-BI-BJ",
+   "ordre": 96,
+   "niveau": 1
+  },
+  {
+   "etat": "flux_tresorerie",
+   "code": "FE",
+   "libelle": "+ Variation du passif circulant",
+   "nature": "flux",
+   "racines": [],
+   "formule": "DP-DP_N1",
+   "ordre": 97,
+   "niveau": 1
+  },
+  {
+   "etat": "flux_tresorerie",
+   "code": "FM",
+   "libelle": "+ Variation des écarts de conversion",
+   "nature": "flux",
+   "racines": [],
+   "formule": "DV-DV_N1-BU+BU_N1",
+   "ordre": 98,
+   "niveau": 1
+  },
+  {
+   "etat": "flux_tresorerie",
+   "code": "ZB",
+   "libelle": "Flux de trésorerie provenant des activités opérationnelles (B)",
+   "nature": "flux",
+   "racines": [],
+   "formule": "FA+FB+FC+FD+FE+FM",
+   "ordre": 99,
+   "niveau": 0
+  },
+  {
+   "etat": "flux_tresorerie",
+   "code": "FF",
+   "libelle": "Investissements nets (variation des immobilisations nettes, dotations et reprises)",
+   "nature": "flux",
+   "racines": [],
+   "formule": "AZ_N1-AZ-RL-RN+TJ+TL",
+   "ordre": 100,
+   "niveau": 1
+  },
+  {
+   "etat": "flux_tresorerie",
+   "code": "ZC",
+   "libelle": "Flux de trésorerie provenant des activités d'investissement (C)",
+   "nature": "flux",
+   "racines": [],
+   "formule": "FF",
+   "ordre": 101,
+   "niveau": 0
+  },
+  {
+   "etat": "flux_tresorerie",
+   "code": "FK",
+   "libelle": "Variation des capitaux propres hors résultat (apports, dividendes)",
+   "nature": "flux",
+   "racines": [],
+   "formule": "CP-CJ-CP_N1",
+   "ordre": 102,
+   "niveau": 1
+  },
+  {
+   "etat": "flux_tresorerie",
+   "code": "ZD",
+   "libelle": "Flux de trésorerie provenant des capitaux propres (D)",
+   "nature": "flux",
+   "racines": [],
+   "formule": "FK",
+   "ordre": 103,
+   "niveau": 0
+  },
+  {
+   "etat": "flux_tresorerie",
+   "code": "FL",
+   "libelle": "Variation des dettes financières et ressources assimilées",
+   "nature": "flux",
+   "racines": [],
+   "formule": "DD-DD_N1",
+   "ordre": 104,
+   "niveau": 1
+  },
+  {
+   "etat": "flux_tresorerie",
+   "code": "ZE",
+   "libelle": "Flux de trésorerie provenant des capitaux étrangers (E)",
+   "nature": "flux",
+   "racines": [],
+   "formule": "FL",
+   "ordre": 105,
+   "niveau": 0
+  },
+  {
+   "etat": "flux_tresorerie",
+   "code": "ZG",
+   "libelle": "VARIATION DE LA TRÉSORERIE NETTE (B+C+D+E)",
+   "nature": "flux",
+   "racines": [],
+   "formule": "ZB+ZC+ZD+ZE",
+   "ordre": 106,
+   "niveau": 0
+  },
+  {
+   "etat": "flux_tresorerie",
+   "code": "ZH",
+   "libelle": "Trésorerie nette au 31 décembre (A+B+C+D+E)",
+   "nature": "flux",
+   "racines": [],
+   "formule": "ZA+ZG",
+   "ordre": 107,
+   "niveau": 0
+  },
+  {
+   "etat": "flux_tresorerie",
+   "code": "ZT",
+   "libelle": "Trésorerie nette du bilan (trésorerie-actif − trésorerie-passif)",
+   "nature": "flux",
+   "racines": [],
+   "formule": "BT-DT",
+   "ordre": 108,
+   "niveau": 0
   }
  ],
  "ratios": [
@@ -2417,7 +2587,36 @@
    "famille": "delais"
   }
  ],
- "bases_seuil": [{"code": "total_bilan", "libelle": "Total du bilan", "formule": "BZ", "pct_min": "1", "pct_max": "2"}, {"code": "chiffre_affaires", "libelle": "Chiffre d'affaires", "formule": "XB", "pct_min": "0.5", "pct_max": "2"}, {"code": "resultat", "libelle": "Résultat net", "formule": "XI", "pct_min": "5", "pct_max": "10"}, {"code": "capitaux_propres", "libelle": "Capitaux propres", "formule": "CP", "pct_min": "1", "pct_max": "5"}],
+ "bases_seuil": [
+  {
+   "code": "total_bilan",
+   "pct_min": "1",
+   "pct_max": "2",
+   "libelle": "Total du bilan",
+   "formule": "BZ"
+  },
+  {
+   "code": "chiffre_affaires",
+   "pct_min": "0.5",
+   "pct_max": "2",
+   "libelle": "Chiffre d'affaires",
+   "formule": "XB"
+  },
+  {
+   "code": "resultat",
+   "pct_min": "5",
+   "pct_max": "10",
+   "libelle": "Résultat net",
+   "formule": "XI"
+  },
+  {
+   "code": "capitaux_propres",
+   "pct_min": "1",
+   "pct_max": "5",
+   "libelle": "Capitaux propres",
+   "formule": "CP"
+  }
+ ],
  "regles": [
   {
    "code": "bilan_equilibre",
@@ -2430,6 +2629,15 @@
    "libelle": "Le résultat du bilan est égal au résultat du compte de résultat",
    "gauche": "CJ",
    "droite": "XI"
+  },
+  {
+   "code": "tresorerie_concordante",
+   "libelle": "La trésorerie de clôture du tableau des flux est égale à la trésorerie du bilan",
+   "gauche": "ZH",
+   "droite": "ZT",
+   "periodes": [
+    "N"
+   ]
   }
  ],
  "parametres": []

@@ -6,7 +6,7 @@ import type { AuditFile } from "../../api/types";
 import { formatNombre } from "../../lib/format";
 import Alert from "../Alert";
 
-interface Line { code: string; libelle: string; niveau: number; total: boolean; N: string; "N-1": string }
+interface Line { code: string; libelle: string; niveau: number; total: boolean; N: string; "N-1": string | null }
 interface Preview {
   etats: Record<string, Line[]>;
   controles: { code: string; libelle: string; ecarts: Record<string, string>; ok: boolean }[];
@@ -57,7 +57,7 @@ export default function StatementsPreview({ file, blocked }: { file: AuditFile; 
                   <tr key={l.code} className={l.total ? "bg-slate-50 font-semibold" : ""}>
                     <td className="py-1 pr-3"><span className="font-mono text-xs">{l.code}</span> {l.libelle}</td>
                     <td className="py-1 pr-3 text-right font-mono">{formatNombre(Number(l.N))}</td>
-                    <td className="py-1 text-right font-mono">{formatNombre(Number(l["N-1"]))}</td>
+                    <td className="py-1 text-right font-mono">{l["N-1"] === null ? "" : formatNombre(Number(l["N-1"]))}</td>
                   </tr>
                 ))}
               </tbody>
