@@ -976,7 +976,26 @@
         "bornes": "Bornes des strates de montant"
       }
     },
-    "graineAuto": "Tirée au hasard et enregistrée si vide"
+    "graineAuto": "Tirée au hasard et enregistrée si vide",
+    "ecritures_journal": {
+      "titre": "Tests des écritures de journal",
+      "description": "Isole les écritures manuelles, passées le week-end ou après la clôture, aux montants ronds, sur des comptes ou par des utilisateurs inhabituels, ou sans libellé.",
+      "params": {
+        "champ_date": "Champ date",
+        "champ_compte": "Champ compte",
+        "champ_debit": "Champ débit",
+        "champ_credit": "Champ crédit",
+        "date_cloture": "Date de clôture de l'exercice",
+        "champ_journal": "Champ journal",
+        "journaux_manuels": "Journaux manuels (séparés par des virgules)",
+        "champ_utilisateur": "Champ utilisateur",
+        "champ_libelle": "Champ libellé",
+        "champ_date_saisie": "Champ date de saisie",
+        "pas_montant_rond": "Montant rond : multiple de",
+        "lignes_max_compte": "Compte inhabituel : lignes au plus",
+        "lignes_max_utilisateur": "Utilisateur inhabituel : lignes au plus"
+      }
+    }
   },
   "constructeur": {
     "titre": "Constructeur de condition",
@@ -1064,7 +1083,9 @@
     "montant_population": "Montant de la population",
     "montant_echantillon": "Montant de l'échantillon",
     "lignes_non_positives": "Lignes nulles ou négatives (hors MUS)",
-    "strates": "Strates"
+    "strates": "Strates",
+    "par_critere": "Lignes par critère",
+    "criteres_non_appliques": "Critères non appliqués (colonne absente)"
   },
   "benford": {
     "graphique": "Distribution observée et attendue",
@@ -1472,7 +1493,9 @@
     "nbAnomalies": "{{n}} anomalie(s)",
     "nbAvertissements": "{{n}} avertissement(s)",
     "historique": "Afficher l'historique (imports rejetés et remplacés)",
-    "avertissements": "Avertissements"
+    "avertissements": "Avertissements",
+    "testsEcritures": "Lancer les tests des écritures de journal",
+    "testsLances": "Tests lancés : ouverture de la table de résultat…"
   },
   "affectation": {
     "titre": "Affectation des comptes aux postes",

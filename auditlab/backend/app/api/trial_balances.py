@@ -7,11 +7,12 @@ from decimal import Decimal
 from typing import Any
 
 from fastapi import APIRouter, Form, HTTPException, UploadFile, status
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy import select
 
 from app.api.audit_files import ON_CREATE, get_file, require_work
 from app.api.deps import CurrentUser, DbSession
+from app.models.data import Dataset
 from app.models.revision import TrialBalance, TrialBalanceLine
 from app.revision import controls, currency  # noqa: F401 - étapes REV-06 et REV-07
 from app.revision.balances import ImportError_
@@ -79,10 +80,14 @@ def upload(
             status.HTTP_422_UNPROCESSABLE_CONTENT, "Correspondance : objet JSON attendu"
         ) from exc
     req = ImportRequest(
-        periode=periode, type=type, logiciel=logiciel, correspondance=mapping,
-        compte_collectif=compte_collectif or None, devise_source=devise_source or None,
+        periode=periode,
+        type=type,
+        logiciel=logiciel,
+        correspondance=mapping,
+        compte_collectif=compte_collectif or None,
+        devise_source=devise_source or None,
         date_cours=date_cours,
-    )  # fmt: skip
+    )
     try:
         tb = import_file(db, audit_file, content, file.filename or "fichier", req, user.id)
     except ImportError_ as exc:
@@ -116,9 +121,66 @@ def read_lines(tb_id: uuid.UUID, user: CurrentUser, db: DbSession) -> list[dict[
         .where(TrialBalanceLine.trial_balance_id == tb.id)
         .order_by(TrialBalanceLine.compte)
     )
-    keys = ("ouverture_debit", "ouverture_credit", "mouvement_debit", "mouvement_credit",
-            "solde_debit", "solde_credit")  # fmt: skip
+    keys = (
+        "ouverture_debit",
+        "ouverture_credit",
+        "mouvement_debit",
+        "mouvement_credit",
+        "solde_debit",
+        "solde_credit",
+    )
     return [
         {"compte": r.compte, "libelle": r.libelle, **{k: str(getattr(r, k)) for k in keys}}
         for r in rows
     ]
+
+
+class JournalTestsIn(BaseModel):
+    journaux_manuels: str = Field(default="OD", max_length=200)
+    pas_montant_rond: Decimal = Field(default=Decimal(100000), gt=0)
+    lignes_max_compte: int = Field(default=3, ge=1)
+    lignes_max_utilisateur: int = Field(default=5, ge=1)
+
+
+@router.post("/audit-files/{file_id}/journal-tests", status_code=status.HTTP_202_ACCEPTED)
+def journal_tests(
+    file_id: uuid.UUID, body: JournalTestsIn, user: CurrentUser, db: DbSession
+) -> dict[str, Any]:
+    """REV-17 : lance les tests d'écritures (Module 2) sur le grand livre N du dossier, clôture
+    au dernier jour de l'exercice ; les colonnes absentes du grand livre sont ignorées."""
+    from app.api.analyses import AnalysisIn, launch
+    from app.revision.imports import active_balance
+
+    file, engagement = get_file(db, file_id, user)
+    require_work(file, engagement, user)
+    gl = active_balance(db, file.id, "N", "grand_livre")
+    if gl is None or gl.dataset_id is None:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Aucun grand livre N accepté")
+    columns = {c["nom"] for c in db.get(Dataset, gl.dataset_id).schema}
+    params: dict[str, Any] = {
+        "champ_date": "date",
+        "champ_compte": "compte",
+        "champ_debit": "debit",
+        "champ_credit": "credit",
+        "date_cloture": file.date_fin.isoformat(),
+        **body.model_dump(mode="json"),
+    }
+    for param, column in (
+        ("champ_journal", "journal"),
+        ("champ_utilisateur", "utilisateur"),
+        ("champ_libelle", "libelle"),
+        ("champ_date_saisie", "date_saisie"),
+    ):
+        if column in columns:
+            params[param] = column
+    ds = launch(
+        gl.dataset_id,
+        AnalysisIn(
+            operation="ecritures_journal",
+            parametres=params,
+            nom=f"Tests des écritures de journal – exercice {file.exercice}",
+        ),
+        user,
+        db,
+    )
+    return {"dataset_id": str(ds.id), "statut": ds.statut}

@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
-import { ApiError, tokenStore } from "../../api/client";
-import { api } from "../../api/client";
+import { api, ApiError, post, tokenStore } from "../../api/client";
 import type { AuditFile } from "../../api/types";
 import { formatDateHeure, formatDecimal, formatNombre } from "../../lib/format";
 import Alert from "../Alert";
@@ -38,6 +38,16 @@ export default function ImportsPanel({ file, onChange }: { file: AuditFile; onCh
   const [error, setError] = useState<string | null>(null);
   const [history, setHistory] = useState(false);
   const input = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
+  const journalTests = async () => {
+    setError(null);
+    try {
+      const r = await post<{ dataset_id: string }>(`/audit-files/${file.id}/journal-tests`, {});
+      navigate(`/missions/${file.engagement_id}/donnees/${r.dataset_id}`);
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  };
   const load = useCallback(() => api<TrialBalance[]>(`/audit-files/${file.id}/imports`).then(setItems), [file.id]);
   useEffect(() => {
     load().catch((e: Error) => setError(e.message));
@@ -159,6 +169,9 @@ export default function ImportsPanel({ file, onChange }: { file: AuditFile; onCh
           </tbody>
         </table>
       </div>
+      {file.peut_travailler && active.some((i) => i.type === "grand_livre" && i.periode === "N") && (
+        <button type="button" className="btn-secondaire" onClick={() => void journalTests()}>{t("balances.testsEcritures")}</button>
+      )}
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" checked={history} onChange={(e) => setHistory(e.target.checked)} />
         {t("balances.historique")}
