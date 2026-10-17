@@ -1,0 +1,29 @@
+import { buildTree, descendantIds } from "../lib/tree";
+import { formatDate } from "../lib/format";
+
+const items = [
+  { id: "b", parent_id: "a", nom: "Ventes" },
+  { id: "a", parent_id: null, nom: "Direction commerciale" },
+  { id: "c", parent_id: "a", nom: "Achats" },
+  { id: "d", parent_id: "c", nom: "ERP" },
+  { id: "e", parent_id: null, nom: "Comptabilité" },
+];
+
+describe("arborescence de l'univers", () => {
+  it("construit et trie l'arbre par nom", () => {
+    const tree = buildTree(items);
+    expect(tree.map((n) => n.item.nom)).toEqual(["Comptabilité", "Direction commerciale"]);
+    expect(tree[1].children.map((n) => n.item.nom)).toEqual(["Achats", "Ventes"]);
+    expect(tree[1].children[0].children[0].item.id).toBe("d");
+  });
+
+  it("liste une entité et ses descendants", () => {
+    expect([...descendantIds(items, "a")].sort()).toEqual(["a", "b", "c", "d"]);
+    expect([...descendantIds(items, "e")]).toEqual(["e"]);
+  });
+
+  it("formate une date seule", () => {
+    expect(formatDate("2024-03-31")).toBe("31/03/2024");
+    expect(formatDate(null)).toBe("");
+  });
+});

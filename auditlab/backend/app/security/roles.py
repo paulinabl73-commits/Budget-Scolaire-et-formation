@@ -35,6 +35,8 @@ class Perm(StrEnum):
     SETTINGS_MANAGE = "settings:manage"
     AUDIT_LOG_READ = "audit_log:read"
     DASHBOARDS_GLOBAL = "dashboards:global"
+    # Univers d'audit et plan annuel (lot 2)
+    PLAN_READ = "plan:read"
     # Missions
     MISSIONS_READ_ALL = "missions:read_all"
     MISSIONS_READ_OWN = "missions:read_own"
@@ -65,6 +67,7 @@ ROLE_PERMISSIONS: dict[Role, frozenset[Perm]] = {
             Perm.USERS_MANAGE,
             Perm.SETTINGS_MANAGE,
             Perm.AUDIT_LOG_READ,
+            Perm.PLAN_READ,
             Perm.MISSIONS_READ_ALL,
             Perm.WORKPAPERS_READ,
             Perm.DATA_READ,
@@ -76,6 +79,7 @@ ROLE_PERMISSIONS: dict[Role, frozenset[Perm]] = {
             Perm.DASHBOARDS_GLOBAL,
             Perm.AUDIT_LOG_READ,
             Perm.MISSIONS_READ_ALL,
+            Perm.PLAN_READ,
             Perm.PLAN_MANAGE,
             Perm.PLAN_VALIDATE,
             Perm.MISSIONS_MANAGE,
@@ -89,6 +93,7 @@ ROLE_PERMISSIONS: dict[Role, frozenset[Perm]] = {
     ),
     Role.CHEF_MISSION: frozenset(
         {
+            Perm.PLAN_READ,
             Perm.MISSIONS_READ_OWN,
             Perm.MISSIONS_MANAGE,
             Perm.WORKPAPERS_READ,

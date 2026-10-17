@@ -24,6 +24,7 @@ from alembic import command  # noqa: E402
 from app.audit.listeners import set_actor  # noqa: E402
 from app.db import SessionLocal, engine  # noqa: E402
 from app.main import app  # noqa: E402
+from app.models import Base  # noqa: E402
 from app.models.user import User  # noqa: E402
 from app.security.passwords import hash_password  # noqa: E402
 from app.security.roles import Role  # noqa: E402
@@ -48,7 +49,8 @@ def _clean() -> Iterator[None]:
     with engine.begin() as conn:
         # Le mode « replica » neutralise le déclencheur d'ajout seul, pour les tests uniquement.
         conn.execute(text("SET LOCAL session_replication_role = replica"))
-        conn.execute(text("TRUNCATE audit_log, user_sessions, user_teams, teams, users CASCADE"))
+        tables = ", ".join(t.name for t in Base.metadata.sorted_tables)
+        conn.execute(text(f"TRUNCATE {tables} CASCADE"))
 
 
 @pytest.fixture

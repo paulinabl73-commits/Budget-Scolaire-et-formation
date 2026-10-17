@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 import app.audit.listeners  # noqa: F401  (enregistre l'écouteur de journalisation)
-from app.api import audit_log, auth, meta, teams, users
+from app.api import audit_log, auth, meta, teams, universe, users
 from app.audit.listeners import AuditIntegrityError
 from app.config import get_settings
 from app.logging_config import configure_logging
@@ -52,5 +52,12 @@ def integrity_error(_: Request, exc: AuditIntegrityError) -> JSONResponse:
     return JSONResponse(status_code=409, content={"detail": str(exc)})
 
 
-for router in (meta.router, auth.router, users.router, teams.router, audit_log.router):
+for router in (
+    meta.router,
+    auth.router,
+    users.router,
+    teams.router,
+    audit_log.router,
+    universe.router,
+):
     app.include_router(router, prefix="/api")

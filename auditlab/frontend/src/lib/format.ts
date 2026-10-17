@@ -2,6 +2,7 @@ const dateHeure = new Intl.DateTimeFormat("fr-FR", {
   dateStyle: "short",
   timeStyle: "medium",
 });
+const dateCourte = new Intl.DateTimeFormat("fr-FR", { dateStyle: "short", timeZone: "UTC" });
 const nombre = new Intl.NumberFormat("fr-FR");
 
 /** Date et heure au format français (jj/mm/aaaa hh:mm:ss). */
@@ -22,4 +23,11 @@ export function resumeJson(value: Record<string, unknown> | null): string {
   return Object.entries(value)
     .map(([k, v]) => `${k} : ${typeof v === "object" && v !== null ? JSON.stringify(v) : String(v)}`)
     .join(" · ");
+}
+
+/** Date seule (aaaa-mm-jj de l'API) au format jj/mm/aaaa. */
+export function formatDate(iso: string | null | undefined): string {
+  if (!iso) return "";
+  const d = new Date(`${iso.slice(0, 10)}T00:00:00Z`);
+  return Number.isNaN(d.getTime()) ? "" : dateCourte.format(d);
 }

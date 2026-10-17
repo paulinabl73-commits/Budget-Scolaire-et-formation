@@ -57,3 +57,16 @@ export interface LoginResult {
   token: string;
   mfa_enrollment_required: boolean;
 }
+
+export type EntityType = "direction" | "filiale" | "processus" | "systeme";
+
+export interface AuditableEntity {
+  id: string;
+  nom: string;
+  type: EntityType;
+  parent_id: string | null;
+  description: string | null;
+  responsable: string | null;
+  date_dernier_audit: string | null;
+  score_risque: number | null;
+}

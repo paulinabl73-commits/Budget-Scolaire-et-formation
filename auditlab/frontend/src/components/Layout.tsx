@@ -36,6 +36,11 @@ export default function Layout() {
           <NavLink to="/" end className={lien}>
             {t("nav.accueil")}
           </NavLink>
+          {can(user?.permissions, PERM.PLAN_READ) && (
+            <NavLink to="/univers" className={lien}>
+              {t("nav.univers")}
+            </NavLink>
+          )}
           {can(user?.permissions, PERM.USERS_MANAGE) && (
             <NavLink to="/utilisateurs" className={lien}>
               {t("nav.utilisateurs")}

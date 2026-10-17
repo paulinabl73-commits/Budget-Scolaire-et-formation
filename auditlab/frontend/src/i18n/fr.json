@@ -10,7 +10,8 @@
     "journal": "Journal d'audit",
     "profil": "Mon profil",
     "deconnexion": "Se déconnecter",
-    "principale": "Navigation principale"
+    "principale": "Navigation principale",
+    "univers": "Univers d'audit"
   },
   "commun": {
     "enregistrer": "Enregistrer",
@@ -19,7 +20,9 @@
     "oui": "Oui",
     "non": "Non",
     "fermer": "Fermer",
-    "erreurInconnue": "Une erreur inattendue est survenue."
+    "erreurInconnue": "Une erreur inattendue est survenue.",
+    "supprimer": "Supprimer",
+    "modifier": "Modifier"
   },
   "connexion": {
     "titre": "Connexion",
@@ -130,5 +133,35 @@
   "erreurs": {
     "403": "Vous n'avez pas les droits nécessaires pour cette page.",
     "404": "Page introuvable."
+  },
+  "univers": {
+    "titre": "Univers d'audit",
+    "intro": "Entités auditables (directions, filiales, processus, systèmes) organisées en arborescence.",
+    "nouvelle": "Nouvelle entité",
+    "nouvelleSous": "Ajouter une sous-entité",
+    "vide": "Aucune entité. Commencez par créer une direction ou une filiale.",
+    "arbre": "Arborescence de l'univers d'audit",
+    "deplier": "Déplier {{nom}}",
+    "replier": "Replier {{nom}}",
+    "nom": "Nom",
+    "type": "Type",
+    "parent": "Entité parente",
+    "racine": "— Aucune (niveau racine) —",
+    "description": "Description",
+    "responsable": "Responsable",
+    "dernierAudit": "Date du dernier audit",
+    "jamaisAudite": "Jamais auditée",
+    "score": "Score de risque",
+    "nonEvalue": "Non évaluée",
+    "enregistree": "Entité enregistrée.",
+    "supprimee": "Entité supprimée.",
+    "confirmerSuppression": "Supprimer l'entité « {{nom}} » ? Elle restera visible dans le journal d'audit.",
+    "selectionner": "Sélectionnez une entité dans l'arborescence ou créez-en une.",
+    "types": {
+      "direction": "Direction",
+      "filiale": "Filiale",
+      "processus": "Processus",
+      "systeme": "Système"
+    }
   }
 }

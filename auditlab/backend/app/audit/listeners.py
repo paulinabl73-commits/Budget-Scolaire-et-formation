@@ -6,7 +6,7 @@ L'auteur est lu dans session.info["actor_id"], posé par l'API après authentifi
 """
 
 import uuid
-from datetime import datetime
+from datetime import date
 from typing import Any
 
 from sqlalchemy import event, inspect
@@ -53,8 +53,10 @@ def record_event(
 def _value(obj: TrackedMixin, key: str, value: Any) -> Any:
     if key in obj.__audit_masked__ and value is not None:
         return MASK
-    if isinstance(value, uuid.UUID | datetime):
-        return str(value) if isinstance(value, uuid.UUID) else value.isoformat()
+    if isinstance(value, uuid.UUID):
+        return str(value)
+    if isinstance(value, date):  # couvre aussi datetime
+        return value.isoformat()
     return value
 
 

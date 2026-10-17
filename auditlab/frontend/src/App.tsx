@@ -13,6 +13,7 @@ import ProfilePage from "./pages/ProfilePage";
 // Pages avec AG Grid chargées à la demande.
 const AuditLogPage = lazy(() => import("./pages/AuditLogPage"));
 const UsersPage = lazy(() => import("./pages/UsersPage"));
+const UniversePage = lazy(() => import("./pages/UniversePage"));
 
 export default function App() {
   const { t } = useTranslation();
@@ -49,6 +50,14 @@ export default function App() {
           element={
             <RequireAuth permission={PERM.AUDIT_LOG_READ}>
               <AuditLogPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="univers"
+          element={
+            <RequireAuth permission={PERM.PLAN_READ}>
+              <UniversePage />
             </RequireAuth>
           }
         />
