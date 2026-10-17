@@ -251,6 +251,20 @@ export interface Procedure {
   reference: string | null;
   description: string;
   type_test: TestType;
+  assigne_a: string | null;
+  assigne_nom: string | null;
+  echeance: string | null;
+  statut: ProcedureStatus;
+  en_retard: boolean;
+}
+
+export type ProcedureStatus = "a_faire" | "en_cours" | "terminee";
+
+export interface MyProcedure extends Procedure {
+  engagement_id: string;
+  engagement_reference: string;
+  engagement_titre: string;
+  controle: string;
 }
 
 export interface Control {

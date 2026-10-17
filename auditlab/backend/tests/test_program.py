@@ -227,3 +227,84 @@ def test_aud11_procedures_de_bibliotheque(client, library):
         ).status_code
         == 404
     )
+
+
+def test_aud12_affectation_et_avancement(client, account, library):
+    chef = library[0]
+    aud = account(Role.AUDITEUR)
+    aud2 = account(Role.AUDITEUR)
+    m = helpers.mission(
+        client,
+        chef.headers,
+        membres=[(aud.user, "auditeur")],
+        date_debut="2026-01-01",
+        date_fin="2027-12-31",
+    )
+    url = f"/api/engagements/{m['id']}"
+    risk = client.post(
+        f"{url}/risks", json={"library_risk_id": library[1]["id"]}, headers=chef.headers
+    ).json()
+    proc = next(c for c in risk["controles"] if c["procedures"])["procedures"][0]
+    p_url = f"{url}/procedures/{proc['id']}"
+
+    resp = client.put(
+        f"{p_url}/assignment",
+        json={"assigne_a": str(aud.user.id), "echeance": "2026-02-15"},
+        headers=chef.headers,
+    )
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["assigne_nom"] == aud.user.nom and body["echeance"] == "2026-02-15"
+    assert body["statut"] == "a_faire" and body["en_retard"] is True
+
+    mine = client.get("/api/me/procedures", headers=aud.headers).json()
+    assert [(p["reference"], p["engagement_reference"]) for p in mine] == [
+        (proc["reference"], m["reference"])
+    ]
+    assert mine[0]["controle"]
+
+    # Avancement par la personne affectée.
+    resp = client.put(f"{p_url}/status", json={"statut": "terminee"}, headers=aud.headers)
+    assert resp.json()["statut"] == "terminee" and resp.json()["en_retard"] is False
+    assert client.get("/api/me/procedures", headers=aud.headers).json() == []
+    assert len(client.get("/api/me/procedures?a_faire=false", headers=aud.headers).json()) == 1
+
+    # Contrôles : membre de l'équipe, échéance pendant la mission, droits.
+    resp = client.put(
+        f"{p_url}/assignment",
+        json={"assigne_a": str(aud2.user.id), "echeance": None},
+        headers=chef.headers,
+    )
+    assert resp.status_code == 422
+    resp = client.put(
+        f"{p_url}/assignment",
+        json={"assigne_a": str(aud.user.id), "echeance": "2030-01-01"},
+        headers=chef.headers,
+    )
+    assert resp.status_code == 422
+    resp = client.put(
+        f"{p_url}/assignment",
+        json={"assigne_a": str(aud.user.id), "echeance": None},
+        headers=aud.headers,
+    )
+    assert resp.status_code == 403
+    others = [p for c in risk["controles"] for p in c["procedures"] if p["id"] != proc["id"]]
+    resp = client.put(
+        f"{url}/procedures/{others[0]['id']}/status",
+        json={"statut": "en_cours"},
+        headers=aud.headers,
+    )
+    assert resp.status_code == 403
+    resp = client.put(
+        f"{url}/procedures/{others[0]['id']}/status",
+        json={"statut": "en_cours"},
+        headers=chef.headers,
+    )
+    assert resp.json()["statut"] == "en_cours"
+    # Désaffectation.
+    resp = client.put(
+        f"{p_url}/assignment", json={"assigne_a": None, "echeance": None}, headers=chef.headers
+    )
+    assert resp.json()["assigne_a"] is None
+    matrix = client.get(f"{url}/matrix", headers=chef.headers).json()
+    assert any(p["statut"] == "terminee" for c in matrix["controles"] for p in c["procedures"])

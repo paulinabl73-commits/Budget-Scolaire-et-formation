@@ -13,6 +13,7 @@ from app.models.program import (
     ControlType,
     Cycle,
     Frequency,
+    ProcedureStatus,
     RiskCategory,
     TestType,
 )
@@ -199,6 +200,27 @@ class ProcedureOut(BaseModel):
     reference: str | None
     description: str
     type_test: TestType
+    assigne_a: uuid.UUID | None = None
+    assigne_nom: str | None = None
+    echeance: date | None = None
+    statut: ProcedureStatus = ProcedureStatus.A_FAIRE
+    en_retard: bool = False
+
+
+class AssignmentIn(BaseModel):
+    assigne_a: uuid.UUID | None
+    echeance: date | None
+
+
+class ProcedureStatusIn(BaseModel):
+    statut: ProcedureStatus
+
+
+class MyProcedureOut(ProcedureOut):
+    engagement_id: uuid.UUID
+    engagement_reference: str
+    engagement_titre: str
+    controle: str
 
 
 class ControlOut(BaseModel):

@@ -15,19 +15,28 @@ from app.api.library import (
     risk_out,
     set_links,
 )
-from app.api.mission_access import ensure_open, get_engagement, require_manager
-from app.models.engagement import Engagement
-from app.models.program import Control, Procedure, Risk, RiskControl
+from app.api.mission_access import (
+    can_manage,
+    ensure_open,
+    get_engagement,
+    require_manager,
+    visible_engagements,
+)
+from app.models.engagement import Engagement, MissionRole
+from app.models.program import Control, Procedure, ProcedureStatus, Risk, RiskControl
 from app.models.user import User
 from app.schemas_mission import (
+    AssignmentIn,
     ControlOut,
     ControlUpdate,
     LinkIn,
     MatrixOut,
     MissionControlIn,
     MissionRiskIn,
+    MyProcedureOut,
     ProcedureIn,
     ProcedureOut,
+    ProcedureStatusIn,
     ProcedureUpdate,
     RiskOut,
     RiskUpdate,
@@ -365,3 +374,91 @@ def delete_procedure(
     procedure.deleted_at = datetime.now(UTC)
     procedure.deleted_by = user.id
     db.commit()
+
+
+ASSIGNABLE = {
+    MissionRole.CHEF,
+    MissionRole.AUDITEUR,
+    MissionRole.DATA_ANALYST,
+    MissionRole.SUPERVISEUR,
+}
+
+
+@router.put("/{engagement_id}/procedures/{procedure_id}/assignment", response_model=ProcedureOut)
+def assign_procedure(
+    engagement_id: uuid.UUID,
+    procedure_id: uuid.UUID,
+    body: AssignmentIn,
+    user: CurrentUser,
+    db: DbSession,
+) -> Procedure:
+    """AUD-12 : affectation à un membre de l'équipe, échéance dans la période de la mission."""
+    engagement = editable(db, engagement_id, user)
+    procedure = mission_procedure(db, engagement, procedure_id)
+    if body.assigne_a is not None:
+        member = next((m for m in engagement.members if m.user_id == body.assigne_a), None)
+        if member is None or MissionRole(member.role_mission) not in ASSIGNABLE:
+            raise HTTPException(422, "La procédure doit être confiée à un membre de l'équipe")
+    if body.echeance is not None and not (
+        engagement.date_debut <= body.echeance <= engagement.date_fin
+    ):
+        raise HTTPException(422, "L'échéance doit tomber pendant la mission")
+    procedure.assigne_a = body.assigne_a
+    procedure.echeance = body.echeance
+    db.commit()
+    db.refresh(procedure)
+    return procedure
+
+
+@router.put("/{engagement_id}/procedures/{procedure_id}/status", response_model=ProcedureOut)
+def procedure_status(
+    engagement_id: uuid.UUID,
+    procedure_id: uuid.UUID,
+    body: ProcedureStatusIn,
+    user: CurrentUser,
+    db: DbSession,
+) -> Procedure:
+    """Avancement déclaré par la personne affectée, ou par le chef de mission."""
+    engagement = get_engagement(db, engagement_id, user)
+    ensure_open(engagement)
+    procedure = mission_procedure(db, engagement, procedure_id)
+    if procedure.assigne_a != user.id and not can_manage(engagement, user):
+        raise HTTPException(
+            status.HTTP_403_FORBIDDEN, "Seule la personne affectée met à jour l'avancement"
+        )
+    procedure.statut = body.statut.value
+    db.commit()
+    db.refresh(procedure)
+    return procedure
+
+
+my_router = APIRouter(prefix="/me", tags=["Programme de travail"])
+
+
+@my_router.get("/procedures", response_model=list[MyProcedureOut])
+def my_procedures(user: CurrentUser, db: DbSession, a_faire: bool = True) -> list[dict]:
+    """Procédures confiées à l'utilisateur, triées par échéance."""
+    query = (
+        select(Procedure, Engagement, Control)
+        .join(Engagement, Engagement.id == Procedure.engagement_id)
+        .join(Control, Control.id == Procedure.control_id)
+        .where(
+            Procedure.assigne_a == user.id,
+            Procedure.deleted_at.is_(None),
+            Engagement.deleted_at.is_(None),
+            Engagement.id.in_(visible_engagements(user).with_only_columns(Engagement.id)),
+        )
+        .order_by(Procedure.echeance.nulls_last(), Procedure.reference)
+    )
+    if a_faire:
+        query = query.where(Procedure.statut != ProcedureStatus.TERMINEE.value)
+    return [
+        {
+            **ProcedureOut.model_validate(p).model_dump(),
+            "engagement_id": e.id,
+            "engagement_reference": e.reference,
+            "engagement_titre": e.titre,
+            "controle": c.libelle,
+        }
+        for p, e, c in db.execute(query)
+    ]

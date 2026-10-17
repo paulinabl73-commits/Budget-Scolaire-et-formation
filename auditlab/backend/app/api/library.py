@@ -6,7 +6,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.api.deps import DbSession, require
 from app.models.program import Control, Procedure, Risk, RiskControl
@@ -55,6 +55,7 @@ def procedures_by_control(
     for p in db.scalars(
         select(Procedure)
         .where(Procedure.control_id.in_(control_ids), Procedure.deleted_at.is_(None))
+        .options(selectinload(Procedure.assignee))
         .order_by(Procedure.reference.nulls_last(), Procedure.created_at)
     ):
         result[p.control_id].append(p)

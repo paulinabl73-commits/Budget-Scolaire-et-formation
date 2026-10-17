@@ -81,5 +81,6 @@ for router in (
     timesheets.router,
     library.router,
     program.router,
+    program.my_router,
 ):
     app.include_router(router, prefix="/api")

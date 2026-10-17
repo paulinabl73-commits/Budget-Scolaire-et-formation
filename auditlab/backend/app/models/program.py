@@ -1,12 +1,14 @@
 """Risques, contrôles et procédures : bibliothèque (AUD-10) et matrice de mission (AUD-11)."""
 
 import uuid
+from datetime import date
 from enum import StrEnum
 
-from sqlalchemy import Boolean, ForeignKey, String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Boolean, Date, ForeignKey, String, Text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, TrackedMixin
+from app.models.user import User
 
 
 class Cycle(StrEnum):
@@ -102,6 +104,12 @@ class TestType(StrEnum):
     SUBSTANTIF = "substantif"  # contrôle de détail ou analytique
 
 
+class ProcedureStatus(StrEnum):
+    A_FAIRE = "a_faire"
+    EN_COURS = "en_cours"
+    TERMINEE = "terminee"
+
+
 class Procedure(TrackedMixin, Base):
     """Procédure de test rattachée à un contrôle (AUD-11) ; type dans la bibliothèque."""
 
@@ -115,3 +123,23 @@ class Procedure(TrackedMixin, Base):
     description: Mapped[str] = mapped_column(Text)
     type_test: Mapped[str] = mapped_column(String(20))
     bibliotheque: Mapped[bool] = mapped_column(Boolean, default=True)
+    # AUD-12 : affectation à un membre de l'équipe avec une échéance.
+    assigne_a: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("users.id"), nullable=True, index=True
+    )
+    echeance: Mapped[date | None] = mapped_column(Date, nullable=True)
+    statut: Mapped[str] = mapped_column(String(20), default=ProcedureStatus.A_FAIRE.value)
+
+    assignee: Mapped[User | None] = relationship(foreign_keys=[assigne_a], viewonly=True)
+
+    @property
+    def en_retard(self) -> bool:
+        return (
+            self.echeance is not None
+            and self.statut != ProcedureStatus.TERMINEE
+            and self.echeance < date.today()
+        )
+
+    @property
+    def assigne_nom(self) -> str | None:
+        return self.assignee.nom if self.assignee else None

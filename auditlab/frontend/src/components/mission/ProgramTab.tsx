@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { api, del, post } from "../../api/client";
 import type { Control, Engagement, Matrix, Procedure, Risk, TestType } from "../../api/types";
 import Alert from "../Alert";
+import ProcedureLine from "./ProcedureLine";
 import { ControlForm, controlPayload, RiskForm, riskPayload } from "../RiskControlForms";
 
 const TEST_TYPES: TestType[] = ["conception", "efficacite", "substantif"];
@@ -105,7 +106,8 @@ export default function ProgramTab({ mission }: { mission: Engagement }) {
           </div>
           <ul className="space-y-3 border-l-2 border-marque-100 pl-4">
             {r.controles.map((c) => (
-              <ControlBlock key={c.id} control={c} editable={editable} onRemove={() => remove(`controls/${c.id}`, c.libelle)}
+              <ControlBlock key={c.id} mission={mission} control={c} editable={editable} onChanged={() => void load()}
+                onError={(text) => setMessage({ kind: "erreur", text })} onRemove={() => remove(`controls/${c.id}`, c.libelle)}
                 onRemoveProcedure={(p) => remove(`procedures/${p.id}`, p.reference ?? p.description)}
                 onAddProcedure={(description, type_test) => run(() => post(`${base}/procedures`, { control_id: c.id, description, type_test }))} />
             ))}
@@ -121,7 +123,8 @@ export default function ProgramTab({ mission }: { mission: Engagement }) {
           <h3 className="font-semibold">{t("programme.controlesOrphelins")}</h3>
           <ul className="space-y-3">
             {orphans.map((c) => (
-              <ControlBlock key={c.id} control={c} editable={editable} onRemove={() => remove(`controls/${c.id}`, c.libelle)}
+              <ControlBlock key={c.id} mission={mission} control={c} editable={editable} onChanged={() => void load()}
+                onError={(text) => setMessage({ kind: "erreur", text })} onRemove={() => remove(`controls/${c.id}`, c.libelle)}
                 onRemoveProcedure={(p) => remove(`procedures/${p.id}`, p.reference ?? p.description)}
                 onAddProcedure={(description, type_test) => run(() => post(`${base}/procedures`, { control_id: c.id, description, type_test }))} />
             ))}
@@ -132,7 +135,10 @@ export default function ProgramTab({ mission }: { mission: Engagement }) {
   );
 }
 
-function ControlBlock({ control, editable, onRemove, onRemoveProcedure, onAddProcedure }: {
+function ControlBlock({ mission, control, editable, onRemove, onRemoveProcedure, onAddProcedure, onChanged, onError }: {
+  mission: Engagement;
+  onChanged: () => void;
+  onError: (message: string) => void;
   control: Control;
   editable: boolean;
   onRemove: () => void;
@@ -167,19 +173,10 @@ function ControlBlock({ control, editable, onRemove, onRemoveProcedure, onAddPro
       {control.procedures.length === 0 ? (
         <p className="text-xs text-slate-500">{t("programme.aucuneProcedure")}</p>
       ) : (
-        <ul className="space-y-0.5 text-sm">
+        <ul className="space-y-1">
           {control.procedures.map((p) => (
-            <li key={p.id} className="flex items-start justify-between gap-3">
-              <span>
-                <span className="font-mono text-xs text-slate-600">{p.reference}</span> {p.description}{" "}
-                <span className="text-xs text-slate-500">— {t(`programme.typesTest.${p.type_test}`)}</span>
-              </span>
-              {editable && (
-                <button type="button" className="text-xs text-red-800 underline" onClick={() => onRemoveProcedure(p)}>
-                  {t("commun.supprimer")}
-                </button>
-              )}
-            </li>
+            <ProcedureLine key={p.id} mission={mission} procedure={p} editable={editable}
+              onRemove={() => onRemoveProcedure(p)} onChanged={onChanged} onError={onError} />
           ))}
         </ul>
       )}

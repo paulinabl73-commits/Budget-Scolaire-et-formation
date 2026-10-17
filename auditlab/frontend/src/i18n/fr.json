@@ -58,7 +58,9 @@
     "m4": "Reporting et tableaux de bord",
     "m5": "Révision des comptes (SYSCOHADA, IFRS, CIPRES)",
     "m6": "Révision comptable (clôture et mission de présentation)",
-    "socle": "Socle : utilisateurs, rôles, double authentification, journal d'audit chaîné"
+    "socle": "Socle : utilisateurs, rôles, double authentification, journal d'audit chaîné",
+    "mesProcedures": "Mes procédures à réaliser",
+    "aucuneProcedure": "Aucune procédure en attente."
   },
   "utilisateurs": {
     "titre": "Utilisateurs",
@@ -485,6 +487,19 @@
     },
     "risques": "{{count}} risque(s)",
     "controles": "{{count}} contrôle(s)",
-    "procedures": "{{count}} procédure(s)"
+    "procedures": "{{count}} procédure(s)",
+    "affecter": "Affecter",
+    "affectation": "Affectation",
+    "assigneA": "Confiée à",
+    "nonAffectee": "Non affectée",
+    "echeance": "Échéance",
+    "enRetard": "En retard",
+    "avancement": "Avancement",
+    "statuts": {
+      "a_faire": "À faire",
+      "en_cours": "En cours",
+      "terminee": "Terminée"
+    },
+    "personne": "— Personne —"
   }
 }
