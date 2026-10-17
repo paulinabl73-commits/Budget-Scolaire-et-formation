@@ -44,7 +44,9 @@ def test_rev05_balance_sage_et_odoo(client, rev):  # noqa: F811
     tb = resp.json()
     assert tb["statut"] == "accepte", tb["anomalies"]
     assert tb["nb_lignes"] == 27 and len(tb["sha256"]) == 64
-    assert tb["totaux"]["solde_debit"] == tb["totaux"]["solde_credit"] == "67600000.00"
+    assert (
+        tb["totaux"]["solde_debit"] == tb["totaux"]["solde_credit"] == "67600000"
+    )  # XOF : sans décimales
     lines = client.get(f"/api/trial-balances/{tb['id']}/lines", headers=rev["da"].headers).json()
     banque = next(x for x in lines if x["compte"] == "521200")
     assert banque["solde_credit"] == "800000.00" and banque["libelle"] == "Banque BICICI"

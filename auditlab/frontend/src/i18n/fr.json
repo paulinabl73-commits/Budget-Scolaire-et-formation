@@ -1399,12 +1399,30 @@
     "precedent": "exercice précédent {{exercice}}"
   },
   "devises": {
-    "XOF": "XOF – franc CFA (UEMOA)",
-    "XAF": "XAF – franc CFA (CEMAC)",
-    "EUR": "EUR – euro",
-    "USD": "USD – dollar",
-    "GNF": "GNF – franc guinéen",
-    "CDF": "CDF – franc congolais"
+    "titre": "Devises et cours de conversion",
+    "decimales_one": "{{count}} décimale",
+    "decimales_other": "{{count}} décimales",
+    "decimales_zero": "sans décimales",
+    "code": "Code ISO",
+    "libelle": "Libellé",
+    "nbDecimales": "Décimales",
+    "ajouterDevise": "Ajouter la devise",
+    "cours": "Cours par date",
+    "source": "Devise d'origine",
+    "cible": "Devise du dossier",
+    "date": "Date du cours",
+    "taux": "1 {{source}} = … {{cible}}",
+    "origine": "Origine du cours",
+    "originePlaceholder": "BCEAO, BEAC, parité fixe…",
+    "ajouterCours": "Enregistrer le cours",
+    "aucunCours": "Aucun cours enregistré.",
+    "col": {
+      "date": "Date",
+      "paire": "Conversion",
+      "taux": "Cours",
+      "origine": "Origine"
+    },
+    "supprimer": "Supprimer"
   },
   "balances": {
     "titre": "Données comptables",

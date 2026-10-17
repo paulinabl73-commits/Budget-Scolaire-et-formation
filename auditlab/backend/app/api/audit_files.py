@@ -151,6 +151,14 @@ def _check_frameworks(db: Session, framework_id: uuid.UUID, ifrs_id: uuid.UUID |
             )
 
 
+def _check_currency(db: Session, code: str) -> None:
+    from app.models.revision import Currency
+
+    known = db.scalar(select(Currency).where(Currency.code == code, Currency.deleted_at.is_(None)))
+    if known is None:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, f"Devise {code} non définie")
+
+
 def _check_normative(db: Session, normative_id: uuid.UUID | None) -> None:
     if normative_id is not None:
         nf = db.get(NormativeFramework, normative_id)
@@ -190,6 +198,7 @@ def create_file(
         )
     _check_frameworks(db, body.framework_id, body.ifrs_framework_id)
     _check_normative(db, body.normative_id)
+    _check_currency(db, body.devise)
     duplicate = db.scalar(
         select(AuditFile).where(
             AuditFile.entity_id == entity_id,

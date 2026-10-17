@@ -1,0 +1,8 @@
+[
+  {"code": "XOF", "libelle": "Franc CFA (UEMOA)", "decimales": 0},
+  {"code": "XAF", "libelle": "Franc CFA (CEMAC)", "decimales": 0},
+  {"code": "GNF", "libelle": "Franc guinéen", "decimales": 0},
+  {"code": "CDF", "libelle": "Franc congolais", "decimales": 2},
+  {"code": "EUR", "libelle": "Euro", "decimales": 2},
+  {"code": "USD", "libelle": "Dollar des États-Unis", "decimales": 2}
+]

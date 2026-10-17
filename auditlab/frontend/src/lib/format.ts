@@ -38,3 +38,9 @@ export function formatTaille(octets: number): string {
   if (octets < 1024 * 1024) return `${formatNombre(Math.round(octets / 102.4) / 10)} Ko`;
   return `${formatNombre(Math.round(octets / (1024 * 102.4)) / 10)} Mo`;
 }
+
+/** Décimal transmis en texte par l'API (« 655.9570000000 ») : virgule, sans zéros inutiles. */
+export function formatDecimal(value: string | null | undefined): string {
+  if (!value) return "";
+  return value.includes(".") ? value.replace(/\.?0+$/, "").replace(".", ",") : value;
+}

@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { api, download, patch, post, upload } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
 import Alert from "../components/Alert";
+import CurrenciesPanel from "../components/revision/CurrenciesPanel";
 import { formatDate, formatNombre } from "../lib/format";
 import { can, PERM } from "../lib/permissions";
 
@@ -36,7 +37,7 @@ interface Normative {
   actif: boolean;
 }
 
-/** Référentiels comptables versionnés (REV-01) et cadres normatifs (REV-03). */
+/** Référentiels comptables versionnés (REV-01), cadres normatifs (REV-03), devises et cours (REV-07). */
 export default function FrameworksPage() {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -190,6 +191,7 @@ export default function FrameworksPage() {
           </form>
         )}
       </section>
+      <CurrenciesPanel />
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { ApiError, tokenStore } from "../../api/client";
 import { api } from "../../api/client";
 import type { AuditFile } from "../../api/types";
-import { formatDateHeure, formatNombre } from "../../lib/format";
+import { formatDateHeure, formatDecimal, formatNombre } from "../../lib/format";
 import Alert from "../Alert";
 
 export interface TrialBalance {
@@ -141,7 +141,7 @@ export default function ImportsPanel({ file, onChange }: { file: AuditFile; onCh
             {shown.map((i) => (
               <tr key={i.id} className={i.deleted_at ? "text-slate-400" : ""}>
                 <td className="py-1 pr-3">{t(`balances.types.${i.type}`)} {i.periode}</td>
-                <td className="py-1 pr-3">{i.nom_fichier}{i.devise_source && ` (${i.devise_source} × ${i.cours})`}</td>
+                <td className="py-1 pr-3">{i.nom_fichier}{i.devise_source && ` (${i.devise_source} × ${formatDecimal(i.cours)})`}</td>
                 <td className="py-1 pr-3 text-right">{formatNombre(i.nb_lignes)}</td>
                 <td className="py-1 pr-3 font-mono text-xs">
                   {i.totaux.solde_debit !== undefined

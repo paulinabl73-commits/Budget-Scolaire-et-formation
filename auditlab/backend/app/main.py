@@ -15,6 +15,7 @@ from app.api import (
     audit_log,
     auth,
     contradictory,
+    currencies,
     data_links,
     datasets,
     engagement_status,
@@ -126,5 +127,6 @@ for router in (
     frameworks.router,
     audit_files.router,
     trial_balances.router,
+    currencies.router,
 ):
     app.include_router(router, prefix="/api")

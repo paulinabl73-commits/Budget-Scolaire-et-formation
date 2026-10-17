@@ -105,19 +105,16 @@ def upgrade() -> None:
     op.create_index(op.f('ix_trial_balance_lines_trial_balance_id'), 'trial_balance_lines', ['trial_balance_id'], unique=False)
     op.drop_index(op.f('uq_audit_files_entite_exercice'), table_name='audit_files', postgresql_where='(deleted_at IS NULL)')
     # ### end Alembic commands ###
-    # Devises de départ (REV-07) : franc CFA sans décimales.
+    # Devises de départ (REV-07) : franc CFA sans décimales (app/revision/data/devises.json).
+    import json
     import uuid
+    from pathlib import Path
 
+    data = Path(__file__).resolve().parents[2] / "app" / "revision" / "data" / "devises.json"
     cur = sa.table("currencies", sa.column("id"), sa.column("code"), sa.column("libelle"),
                    sa.column("decimales"))
-    op.bulk_insert(cur, [
-        {"id": uuid.uuid4(), "code": c, "libelle": lib, "decimales": d}
-        for c, lib, d in (
-            ("XOF", "Franc CFA (UEMOA)", 0), ("XAF", "Franc CFA (CEMAC)", 0),
-            ("GNF", "Franc guinéen", 0), ("CDF", "Franc congolais", 2),
-            ("EUR", "Euro", 2), ("USD", "Dollar des États-Unis", 2),
-        )
-    ])
+    op.bulk_insert(cur, [{"id": uuid.uuid4(), **d}
+                         for d in json.loads(data.read_text(encoding="utf-8"))])
 
 
 def downgrade() -> None:
