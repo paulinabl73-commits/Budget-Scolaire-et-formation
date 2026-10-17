@@ -22,3 +22,17 @@ describe("documents riches", () => {
     expect(toPlainText(doc)).toBe("Total [Σ]\nA\tB\n- point");
   });
 });
+
+describe("images des papiers", () => {
+  it("affiche les pièces jointes par lien signé et n'enregistre que leur référence", async () => {
+    const { resolveImages, unresolveImages } = await import("../lib/richtext");
+    const stored = {
+      type: "doc" as const,
+      content: [{ type: "paragraph", content: [{ type: "image", attrs: { src: "attachment:42", alt: "pièce" } }] }],
+    };
+    const shown = resolveImages(stored, { "42": "/api/attachments/42/content?sig=x" });
+    const img = (shown.content as { content: { attrs: Record<string, unknown> }[] }[])[0].content[0];
+    expect(img.attrs).toEqual({ src: "/api/attachments/42/content?sig=x", alt: "pièce", attachmentId: "42" });
+    expect(unresolveImages(shown)).toEqual(stored);
+  });
+});

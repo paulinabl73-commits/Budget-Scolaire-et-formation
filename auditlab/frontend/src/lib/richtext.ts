@@ -27,3 +27,30 @@ export function fromPlainText(text: string): RichDoc {
       .map((l) => ({ type: "paragraph", content: [{ type: "text", text: l }] })),
   };
 }
+
+type AnyNode = { type?: string; attrs?: Record<string, unknown>; content?: AnyNode[]; [k: string]: unknown };
+
+function mapImages(node: AnyNode, fn: (attrs: Record<string, unknown>) => Record<string, unknown>): AnyNode {
+  const next: AnyNode = { ...node };
+  if (node.type === "image" && node.attrs) next.attrs = fn(node.attrs);
+  if (node.content) next.content = node.content.map((c) => mapImages(c, fn));
+  return next;
+}
+
+/** Remplace les références « attachment:<id> » par des liens signés affichables. */
+export function resolveImages(doc: RichDoc, urls: Record<string, string>): RichDoc {
+  return mapImages(doc as AnyNode, (attrs) => {
+    const src = String(attrs.src ?? "");
+    if (!src.startsWith("attachment:")) return attrs;
+    const id = src.slice("attachment:".length);
+    return { ...attrs, attachmentId: id, src: urls[id] ?? "" };
+  }) as RichDoc;
+}
+
+/** Inverse de resolveImages avant enregistrement : seules les références sont stockées. */
+export function unresolveImages(doc: RichDoc): RichDoc {
+  return mapImages(doc as AnyNode, (attrs) => {
+    const { attachmentId, ...rest } = attrs;
+    return attachmentId ? { ...rest, src: `attachment:${String(attachmentId)}` } : rest;
+  }) as RichDoc;
+}

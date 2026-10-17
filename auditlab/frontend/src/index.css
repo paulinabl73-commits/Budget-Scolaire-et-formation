@@ -21,3 +21,16 @@
   .alerte-info { @apply rounded-md border border-marque-100 bg-marque-50 px-4 py-3 text-sm text-marque-900; }
   .alerte-succes { @apply rounded-md border border-green-300 bg-green-50 px-4 py-3 text-sm text-green-900; }
 }
+
+/* Rendu du contenu riche des papiers de travail. */
+.prose-travaux p { margin: 0.35rem 0; }
+.prose-travaux h3 { font-size: 1.05rem; font-weight: 600; margin: 0.75rem 0 0.25rem; }
+.prose-travaux ul { list-style: disc; padding-left: 1.5rem; }
+.prose-travaux ol { list-style: decimal; padding-left: 1.5rem; }
+.prose-travaux blockquote { border-left: 3px solid #cbd5e1; padding-left: 0.75rem; color: #475569; }
+.prose-travaux a { color: #184c87; text-decoration: underline; }
+.prose-travaux table { border-collapse: collapse; margin: 0.5rem 0; width: 100%; }
+.prose-travaux th, .prose-travaux td { border: 1px solid #94a3b8; padding: 0.25rem 0.5rem; vertical-align: top; }
+.prose-travaux th { background: #f1f5f9; font-weight: 600; text-align: left; }
+.prose-travaux img { max-width: 100%; display: inline-block; border: 1px solid #e2e8f0; }
+.prose-travaux .selectedCell { background: #dbeafe; }

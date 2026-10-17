@@ -4,10 +4,11 @@ import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 
 import { api, patch } from "../api/client";
-import type { Attachment, ControlAssessment, Workpaper } from "../api/types";
+import type { Attachment, ControlAssessment, RichDoc, Workpaper, WorkpaperSummary } from "../api/types";
 import Alert from "../components/Alert";
 import AttachmentsPanel from "../components/workpaper/AttachmentsPanel";
-import { fromPlainText, toPlainText } from "../lib/richtext";
+import RichEditor from "../components/workpaper/RichEditor";
+import { resolveImages, unresolveImages } from "../lib/richtext";
 
 const EVALS: ControlAssessment[] = ["efficace", "partiellement_efficace", "inefficace"];
 
@@ -16,27 +17,31 @@ export default function WorkpaperPage() {
   const { id, wpId } = useParams();
   const [wp, setWp] = useState<Workpaper | null>(null);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
-  const [f, setF] = useState({ titre: "", objectif: "", travaux: "", conclusion: "", evaluation: "" });
+  const [f, setF] = useState({ titre: "", objectif: "", conclusion: "", evaluation: "" });
+  const [travaux, setTravaux] = useState<RichDoc>({ type: "doc", content: [] });
+  const [siblings, setSiblings] = useState<WorkpaperSummary[]>([]);
   const [message, setMessage] = useState<{ kind: "erreur" | "succes"; text: string } | null>(null);
 
-  const apply = (w: Workpaper) => {
+  const apply = (w: Workpaper, files: Attachment[]) => {
     setWp(w);
+    setTravaux(resolveImages(w.travaux, Object.fromEntries(files.map((a) => [a.id, a.url]))));
     setF({
       titre: w.titre,
       objectif: w.objectif ?? "",
-      travaux: toPlainText(w.travaux),
       conclusion: w.conclusion ?? "",
       evaluation: w.evaluation ?? "",
     });
   };
 
-  const loadAttachments = useCallback(
-    async () => setAttachments(await api<Attachment[]>(`/workpapers/${wpId}/attachments`)),
-    [wpId],
-  );
+  const loadAttachments = useCallback(async () => {
+    const files = await api<Attachment[]>(`/workpapers/${wpId}/attachments`);
+    setAttachments(files);
+    return files;
+  }, [wpId]);
   const load = useCallback(async () => {
-    apply(await api<Workpaper>(`/workpapers/${wpId}`));
-    await loadAttachments();
+    const [w, files] = await Promise.all([api<Workpaper>(`/workpapers/${wpId}`), loadAttachments()]);
+    apply(w, files);
+    setSiblings((await api<WorkpaperSummary[]>(`/engagements/${w.engagement_id}/workpapers`)).filter((x) => x.id !== w.id));
   }, [wpId, loadAttachments]);
   useEffect(() => {
     load().catch((e: Error) => setMessage({ kind: "erreur", text: e.message }));
@@ -50,10 +55,11 @@ export default function WorkpaperPage() {
         await patch<Workpaper>(`/workpapers/${wpId}`, {
           titre: f.titre,
           objectif: f.objectif || null,
-          travaux: fromPlainText(f.travaux),
+          travaux: unresolveImages(travaux),
           conclusion: f.conclusion || null,
           evaluation: f.evaluation || null,
         }),
+        attachments,
       );
       setMessage({ kind: "succes", text: t("papiers.enregistre") });
     } catch (err) {
@@ -84,8 +90,9 @@ export default function WorkpaperPage() {
           <textarea id="w-obj" rows={2} className="champ" disabled={ro} value={f.objectif} onChange={(e) => setF({ ...f, objectif: e.target.value })} />
         </div>
         <div>
-          <label htmlFor="w-trav" className="etiquette">{t("papiers.travaux")}</label>
-          <textarea id="w-trav" rows={10} className="champ" disabled={ro} value={f.travaux} onChange={(e) => setF({ ...f, travaux: e.target.value })} />
+          <p className="etiquette mb-1">{t("papiers.travaux")}</p>
+          <RichEditor value={travaux} editable={!ro} onChange={setTravaux} images={attachments}
+            workpapers={siblings} missionId={wp.engagement_id} />
         </div>
         <div>
           <label htmlFor="w-concl" className="etiquette">{t("papiers.conclusion")}</label>

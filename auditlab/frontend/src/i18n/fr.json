@@ -559,5 +559,32 @@
     "empreinte": "Empreinte SHA-256",
     "version": "v{{version}}",
     "confirmerSuppression": "Retirer « {{nom}} » du papier ? Le fichier reste conservé dans l'historique."
+  },
+  "editeur": {
+    "barre": "Mise en forme des travaux",
+    "gras": "Gras",
+    "italique": "Italique",
+    "souligne": "Souligné",
+    "titre": "Titre",
+    "liste": "Liste à puces",
+    "listeNum": "Liste numérotée",
+    "citation": "Citation",
+    "tableau": "Insérer un tableau",
+    "ligne": "Ajouter une ligne",
+    "colonne": "Ajouter une colonne",
+    "supprLigne": "Supprimer la ligne",
+    "supprColonne": "Supprimer la colonne",
+    "supprTableau": "Supprimer le tableau",
+    "image": "Insérer une image",
+    "choisirImage": "— Image jointe au papier —",
+    "aucuneImage": "Déposez d'abord une image en pièce jointe.",
+    "lien": "Lien web",
+    "adresse": "Adresse du lien (https://…)",
+    "lienPapier": "Lien vers un papier",
+    "choisirPapier": "— Papier de la mission —",
+    "annulerLien": "Retirer le lien",
+    "defaire": "Annuler",
+    "refaire": "Rétablir",
+    "zone": "Travaux réalisés"
   }
 }

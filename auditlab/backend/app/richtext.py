@@ -44,3 +44,65 @@ def to_plain_text(node: dict[str, Any] | None) -> str:
     if kind == "listItem":
         return "- " + "\n".join(children)
     return "".join(children)
+
+
+# AUD-14 : seuls ces nœuds et marques sont admis (pas de HTML brut, pas de script).
+ALLOWED_NODES = {
+    "doc",
+    "paragraph",
+    "text",
+    "heading",
+    "bulletList",
+    "orderedList",
+    "listItem",
+    "blockquote",
+    "horizontalRule",
+    "hardBreak",
+    "table",
+    "tableRow",
+    "tableCell",
+    "tableHeader",
+    "image",
+}
+ALLOWED_MARKS = {"bold", "italic", "underline", "strike", "link", "code"}
+LINK_PREFIXES = ("https://", "http://", "mailto:", "/missions/")
+IMAGE_PREFIX = "attachment:"
+
+
+class InvalidDocument(ValueError):
+    pass
+
+
+def validate_doc(doc: Any, allowed_attachments: set[str] | None = None) -> None:
+    """Refuse tout nœud, marque, lien ou image non admis.
+
+    Les images doivent désigner une pièce jointe du papier (`attachment:<id>`) ; les liens
+    pointent vers le web, une adresse e-mail ou un autre papier de l'application.
+    """
+    if not is_valid_doc(doc):
+        raise InvalidDocument("Contenu des travaux invalide")
+    stack = [doc]
+    while stack:
+        node = stack.pop()
+        if not isinstance(node, dict):
+            raise InvalidDocument("Contenu des travaux invalide")
+        kind = node.get("type")
+        if kind not in ALLOWED_NODES:
+            raise InvalidDocument(f"Élément non admis dans les travaux : {kind}")
+        for mark in node.get("marks", []) or []:
+            if mark.get("type") not in ALLOWED_MARKS:
+                raise InvalidDocument(f"Mise en forme non admise : {mark.get('type')}")
+            if mark["type"] == "link":
+                href = str((mark.get("attrs") or {}).get("href", ""))
+                if not href.startswith(LINK_PREFIXES):
+                    raise InvalidDocument("Lien non admis : web, e-mail ou papier de travail")
+        if kind == "image":
+            src = str((node.get("attrs") or {}).get("src", ""))
+            if not src.startswith(IMAGE_PREFIX):
+                raise InvalidDocument("Une image doit être une pièce jointe du papier")
+            if (
+                allowed_attachments is not None
+                and src[len(IMAGE_PREFIX) :] not in allowed_attachments
+            ):
+                raise InvalidDocument("Image inconnue : déposez-la d'abord en pièce jointe")
+        stack.extend(node.get("content", []) or [])

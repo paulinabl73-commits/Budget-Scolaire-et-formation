@@ -233,3 +233,94 @@ def test_richtext():
     assert to_plain_text(doc) == "Total [Σ]\nA\tB\n- point\n[image facture]\n"
     assert to_plain_text(None) == ""
     assert is_valid_doc(doc) and not is_valid_doc({"type": "paragraph"})
+
+
+def _doc(*content):
+    return {"type": "doc", "content": list(content)}
+
+
+def _para(text, marks=None):
+    node = {"type": "text", "text": text}
+    if marks:
+        node["marks"] = marks
+    return {"type": "paragraph", "content": [node]}
+
+
+def test_aud14_contenu_riche(client, ctx):
+    from tests.test_attachments import PNG, upload
+
+    other = create(client, ctx, reference="A-1.2")
+    table = {
+        "type": "table",
+        "content": [
+            {
+                "type": "tableRow",
+                "content": [
+                    {"type": "tableHeader", "content": [_para("Facture")]},
+                    {"type": "tableCell", "content": [_para("1 250 000")]},
+                ],
+            }
+        ],
+    }
+    link = _para(
+        "voir A-1.2",
+        [
+            {
+                "type": "link",
+                "attrs": {"href": f"/missions/{ctx['mission']['id']}/papiers/{other['id']}"},
+            }
+        ],
+    )
+    wp = create(
+        client,
+        ctx,
+        travaux=_doc(
+            {
+                "type": "heading",
+                "attrs": {"level": 2},
+                "content": [{"type": "text", "text": "Échantillon"}],
+            },
+            table,
+            link,
+            _para("gras", [{"type": "bold"}]),
+        ),
+    )
+    assert to_plain_text(wp["travaux"]) == "Échantillon\nFacture\t1 250 000\nvoir A-1.2\ngras"
+
+    # Image : uniquement une pièce jointe du même papier.
+    img = upload(client, wp, ctx["aud"], "capture.png", PNG).json()
+    image = {
+        "type": "paragraph",
+        "content": [
+            {"type": "image", "attrs": {"src": f"attachment:{img['id']}", "alt": "capture"}}
+        ],
+    }
+    resp = client.patch(
+        f"/api/workpapers/{wp['id']}", json={"travaux": _doc(image)}, headers=ctx["aud"].headers
+    )
+    assert resp.status_code == 200
+    foreign = {
+        "type": "paragraph",
+        "content": [{"type": "image", "attrs": {"src": f"attachment:{uuid.uuid4()}"}}],
+    }
+    resp = client.patch(
+        f"/api/workpapers/{wp['id']}", json={"travaux": _doc(foreign)}, headers=ctx["aud"].headers
+    )
+    assert resp.status_code == 422 and "pièce jointe" in resp.json()["detail"]
+
+
+@pytest.mark.parametrize(
+    ("node", "message"),
+    [
+        ({"type": "script"}, "Élément non admis"),
+        (_para("x", [{"type": "highlight"}]), "Mise en forme"),
+        (_para("x", [{"type": "link", "attrs": {"href": "javascript:alert(1)"}}]), "Lien"),
+        ({"type": "image", "attrs": {"src": "https://pistage.example/pixel.gif"}}, "pièce jointe"),
+        ("texte nu", "invalide"),
+    ],
+)
+def test_aud14_contenu_refuse(client, ctx, node, message):
+    resp = client.post(
+        f"{ctx['url']}/workpapers", json={**WP, "travaux": _doc(node)}, headers=ctx["aud"].headers
+    )
+    assert resp.status_code == 422 and message in resp.json()["detail"]

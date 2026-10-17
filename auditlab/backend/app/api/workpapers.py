@@ -14,7 +14,7 @@ from app.models.engagement import Engagement, MissionRole
 from app.models.program import Procedure
 from app.models.user import User
 from app.models.workpaper import Workpaper
-from app.richtext import EMPTY_DOC, is_valid_doc
+from app.richtext import EMPTY_DOC, InvalidDocument, validate_doc
 from app.schemas_workpaper import WorkpaperIn, WorkpaperOut, WorkpaperSummary, WorkpaperUpdate
 from app.security.roles import Perm, has_permission
 
@@ -96,9 +96,25 @@ def workpaper_out(db: Session, wp: Workpaper, engagement: Engagement, user: User
     )
 
 
-def _check_doc(doc: dict | None) -> None:
-    if doc is not None and not is_valid_doc(doc):
-        raise HTTPException(422, "Contenu des travaux invalide")
+def _check_doc(db: Session, doc: dict | None, workpaper_id: uuid.UUID | None = None) -> None:
+    if doc is None:
+        return
+    from app.models.workpaper import Attachment
+
+    allowed: set[str] = set()
+    if workpaper_id:
+        allowed = {
+            str(i)
+            for i in db.scalars(
+                select(Attachment.id).where(
+                    Attachment.workpaper_id == workpaper_id, Attachment.deleted_at.is_(None)
+                )
+            )
+        }
+    try:
+        validate_doc(doc, allowed)
+    except InvalidDocument as exc:
+        raise HTTPException(422, str(exc)) from exc
 
 
 @router.get("/engagements/{engagement_id}/workpapers", response_model=list[WorkpaperSummary])
@@ -126,7 +142,7 @@ def create_workpaper(
     engagement = get_engagement(db, engagement_id, user)
     require_preparer(engagement, user)
     _check_reference(db, engagement, body.reference)
-    _check_doc(body.travaux)
+    _check_doc(db, body.travaux)
     if body.procedure_id:
         mission_procedure(db, engagement, body.procedure_id)
     wp = Workpaper(
@@ -156,7 +172,7 @@ def apply_update(db: Session, wp: Workpaper, engagement: Engagement, body: Workp
     changes = body.model_dump(mode="json", exclude_unset=True)
     if changes.get("reference"):
         _check_reference(db, engagement, changes["reference"], exclude=wp.id)
-    _check_doc(changes.get("travaux"))
+    _check_doc(db, changes.get("travaux"), wp.id)
     if changes.get("procedure_id"):
         mission_procedure(db, engagement, uuid.UUID(changes["procedure_id"]))
     changed = False
