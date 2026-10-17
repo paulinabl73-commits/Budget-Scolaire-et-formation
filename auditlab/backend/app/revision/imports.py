@@ -59,6 +59,8 @@ class Parsed:
     anomalies: list[dict[str, Any]] = field(default_factory=list)
     avertissements: list[dict[str, Any]] = field(default_factory=list)
     cours: Decimal | None = None
+    # Écart supplémentaire toléré par les contrôles (arrondis de conversion, REV-07).
+    tolerance: Decimal = Decimal(0)
 
 
 # Étapes ajoutées par les exigences suivantes : conversion de devise (REV-07), contrôles (REV-06).
@@ -179,6 +181,8 @@ def import_file(
         raise ImportError_("Type, période ou logiciel inconnu")
     if req.type == "grand_livre" and req.periode != "N":
         raise ImportError_("Le grand livre importé est celui de l'exercice N")
+    if req.type.startswith("aux_") and not (req.compte_collectif or "").isdigit():
+        raise ImportError_("Indiquez le compte collectif de la balance auxiliaire (ex. 411)")
     rows = read_rows(content, filename)
     kind = "grand_livre" if req.type == "grand_livre" else "balance"
     table = locate(rows, kind, req.correspondance)

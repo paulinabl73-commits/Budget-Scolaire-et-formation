@@ -13,6 +13,7 @@ from sqlalchemy import select
 from app.api.audit_files import ON_CREATE, get_file, require_work
 from app.api.deps import CurrentUser, DbSession
 from app.models.revision import TrialBalance, TrialBalanceLine
+from app.revision import controls  # noqa: F401 - enregistre les contrôles REV-06
 from app.revision.balances import ImportError_
 from app.revision.imports import ImportRequest, carry_over, import_file
 

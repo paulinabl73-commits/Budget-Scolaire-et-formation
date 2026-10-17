@@ -24,6 +24,12 @@ class Settings(BaseSettings):
     # Relances des plans d'action (CON-06) : J-15, à l'échéance, puis tous les 14 jours de retard.
     relance_avant_echeance_jours: int = 15
     relance_retard_jours: int = 14
+    # Contrôles bloquants des imports comptables (REV-06) : écart toléré (unités monétaires),
+    # longueur minimale de la racine du plan reconnue, classes de bilan et de gestion.
+    tolerance_controles_import: float = 0.01
+    racine_minimale_plan: int = 2
+    classes_bilan: str = "12345"
+    classes_resultat: str = "678"
     cors_origins: list[str] = ["http://localhost:5173"]
     # Clé de signature des liens de téléchargement ; à fixer en production (32 octets aléatoires).
     secret_key: str = "dev-change-me-" + "0" * 32

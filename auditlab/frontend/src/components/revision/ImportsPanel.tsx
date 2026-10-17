@@ -28,7 +28,7 @@ export interface TrialBalance {
 const TYPES = ["balance", "grand_livre", "aux_clients", "aux_fournisseurs", "aux_cotisants", "aux_allocataires"];
 const LOGICIELS = ["generique", "sage", "odoo", "perfecto", "saari"];
 
-/** Import des balances, balances auxiliaires et grand livre (REV-05 à REV-07). */
+/** Import des balances, balances auxiliaires et grand livre (REV-05 à REV-07), avec le résultat des contrôles bloquants (REV-06). */
 export default function ImportsPanel({ file, onChange }: { file: AuditFile; onChange?: () => void }) {
   const { t } = useTranslation();
   const [items, setItems] = useState<TrialBalance[]>([]);
@@ -125,6 +125,11 @@ export default function ImportsPanel({ file, onChange }: { file: AuditFile; onCh
             <ul className="mt-1 list-disc pl-5 text-sm">{result.anomalies.slice(0, 20).map((a, i) => <li key={i}>{a.message}</li>)}</ul>
           )}
           {result.anomalies.length > 20 && <p className="text-sm">{t("balances.autres", { n: result.anomalies.length - 20 })}</p>}
+          {result.avertissements.length > 0 && (
+            <ul className="mt-1 list-disc pl-5 text-sm text-amber-800" aria-label={t("balances.avertissements")}>
+              {result.avertissements.map((a, i) => <li key={i}>{a.message}</li>)}
+            </ul>
+          )}
         </Alert>
       )}
       <div className="overflow-x-auto">

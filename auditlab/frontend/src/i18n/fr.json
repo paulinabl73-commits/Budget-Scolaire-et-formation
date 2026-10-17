@@ -1453,6 +1453,7 @@
     "remplace": "Remplacé",
     "nbAnomalies": "{{n}} anomalie(s)",
     "nbAvertissements": "{{n}} avertissement(s)",
-    "historique": "Afficher l'historique (imports rejetés et remplacés)"
+    "historique": "Afficher l'historique (imports rejetés et remplacés)",
+    "avertissements": "Avertissements"
   }
 }
