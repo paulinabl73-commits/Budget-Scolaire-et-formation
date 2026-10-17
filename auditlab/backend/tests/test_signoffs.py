@@ -336,3 +336,33 @@ def test_envoi_des_emails(db, monkeypatch):
     from app.cli import main
 
     assert main(["send-emails"]) == 0
+
+
+def test_aud21_passage_en_rapport(client, team):
+    url = team["url"]
+    for statut in ("preparation", "terrain", "revue"):
+        client.post(f"{url}/status", json={"statut": statut}, headers=team["chef"].headers)
+    wp = ready_workpaper(client, team)
+    n = note(client, wp, team["chef"]).json()
+    mission = client.get(url, headers=team["chef"].headers).json()
+    nxt = next(t for t in mission["transitions"] if t["statut"] == "rapport")
+    assert nxt["motif_blocage"] == "1 note(s) de revue non clôturée(s) dans la mission"
+    r = client.post(f"{url}/status", json={"statut": "rapport"}, headers=team["chef"].headers)
+    assert r.status_code == 409 and "note(s) de revue" in r.json()["detail"]
+    # Une note répondue ne suffit pas : elle doit être clôturée.
+    client.post(
+        f"/api/review-notes/{n['id']}/replies", json={"texte": "Fait"}, headers=team["aud"].headers
+    )
+    assert (
+        client.post(
+            f"{url}/status", json={"statut": "rapport"}, headers=team["chef"].headers
+        ).status_code
+        == 409
+    )
+    client.post(f"/api/review-notes/{n['id']}/close", headers=team["chef"].headers)
+    assert (
+        client.post(
+            f"{url}/status", json={"statut": "rapport"}, headers=team["chef"].headers
+        ).status_code
+        == 200
+    )

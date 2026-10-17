@@ -9,8 +9,9 @@ from sqlalchemy.orm import Session
 
 from app.api.deps import CurrentUser, DbSession
 from app.api.mission_access import ensure_open, get_engagement, mission_role, sees_all
+from app.api.engagement_status import GUARDS
 from app.api.signoffs import SIGNOFF_GUARDS
-from app.models.engagement import Engagement, MissionRole
+from app.models.engagement import Engagement, EngagementStatus, MissionRole
 from app.models.user import User
 from app.models.workpaper import (
     ReviewNote,
@@ -207,3 +208,12 @@ def close(note_id: uuid.UUID, user: CurrentUser, db: DbSession) -> ReviewNoteOut
 @router.post("/review-notes/{note_id}/reopen", response_model=ReviewNoteOut)
 def reopen(note_id: uuid.UUID, user: CurrentUser, db: DbSession) -> ReviewNoteOut:
     return _set_closed(db, note_id, user, False)
+
+
+def _mission_notes_closed(db: Session, engagement: Engagement) -> str | None:
+    """AUD-21 : une mission ne passe en Rapport que si toutes ses notes sont clôturées."""
+    n = open_notes_count(db, engagement_id=engagement.id)
+    return f"{n} note(s) de revue non clôturée(s) dans la mission" if n else None
+
+
+GUARDS[EngagementStatus.RAPPORT].append(_mission_notes_closed)
