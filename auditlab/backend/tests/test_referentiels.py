@@ -36,7 +36,7 @@ def test_rev01_liste_detail_export_import(client, account, syscohada):
     auditor = account(Role.AUDITEUR)
     listed = client.get("/api/frameworks", headers=auditor.headers).json()
     assert [(f["code"], f["version"], f["nb_comptes"], f["nb_postes"]) for f in listed] == [
-        ("SYSCOHADA", "2017", 160, 91)
+        ("SYSCOHADA", "2017", 160, 108)
     ]
     detail = client.get(f"/api/frameworks/{syscohada.id}", headers=auditor.headers).json()
     bi = next(p for p in detail["postes"] if p["code"] == "BI")
