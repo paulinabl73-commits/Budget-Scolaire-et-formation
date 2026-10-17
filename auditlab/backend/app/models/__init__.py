@@ -19,7 +19,7 @@ from app.models.engagement import (
     TimeActivity,
     TimeEntry,
 )
-from app.models.finding import Criticality, Finding, FindingStatus
+from app.models.finding import Criticality, EvidenceType, Finding, FindingEvidence, FindingStatus
 from app.models.notification import EmailMessage, Notification
 from app.models.plan import AuditPlan, PlanItem, PlanStatus
 from app.models.program import (
@@ -77,7 +77,9 @@ __all__ = [
     "EmailMessage",
     "Criticality",
     "Engagement",
+    "EvidenceType",
     "Finding",
+    "FindingEvidence",
     "FindingStatus",
     "EngagementMember",
     "EngagementStatus",

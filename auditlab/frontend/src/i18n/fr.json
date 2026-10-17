@@ -1192,5 +1192,18 @@
     "papiersSources": "Papiers de travail sources",
     "enregistre": "Constat enregistré.",
     "retour": "← Constats de la mission"
+  },
+  "preuves": {
+    "titre": "Preuves",
+    "aucune": "Aucune preuve rattachée.",
+    "type": "Type de preuve",
+    "ajouter": "Ajouter la preuve",
+    "modifiee": "L'élément a changé depuis son rattachement : l'empreinte actuelle diffère.",
+    "types": {
+      "papier": "Papier de travail",
+      "piece_jointe": "Pièce jointe",
+      "table": "Résultat d'analyse",
+      "lignes": "Lignes d'anomalie"
+    }
   }
 }

@@ -67,3 +67,28 @@ class FindingOut(BaseModel):
     papiers: list[dict[str, Any]] = []
     audite_nom: str | None = None
     peut_modifier: bool = False
+
+
+class EvidenceIn(BaseModel):
+    type: str = Field(pattern="^(papier|piece_jointe|table)$")
+    workpaper_id: uuid.UUID | None = None
+    attachment_id: uuid.UUID | None = None
+    dataset_id: uuid.UUID | None = None
+    commentaire: str | None = Field(default=None, max_length=4000)
+
+
+class EvidenceOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    finding_id: uuid.UUID
+    type: str
+    workpaper_id: uuid.UUID | None
+    attachment_id: uuid.UUID | None
+    dataset_id: uuid.UUID | None
+    empreinte: str | None
+    extrait: dict[str, Any]
+    commentaire: str | None
+    created_at: dt.datetime | None = None
+    libelle: str | None = None
+    empreinte_actuelle: str | None = None

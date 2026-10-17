@@ -7,6 +7,7 @@ import { api, patch } from "../api/client";
 import type { Criticality, Finding, Matrix, WorkpaperSummary } from "../api/types";
 import Alert from "../components/Alert";
 import CriticalityBadge from "../components/finding/CriticalityBadge";
+import EvidencePanel from "../components/finding/EvidencePanel";
 import { CRITICITES } from "../components/mission/FindingsTab";
 
 const VOLETS = ["critere", "constat", "cause", "consequence", "recommandation"] as const;
@@ -114,6 +115,8 @@ export default function FindingPage() {
         </fieldset>
         {!ro && <button type="submit" className="btn-primaire">{t("commun.enregistrer")}</button>}
       </form>
+      <EvidencePanel findingId={finding.id} missionId={finding.engagement_id} papers={papers}
+        editable={finding.peut_modifier} />
     </div>
   );
 }

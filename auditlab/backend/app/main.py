@@ -16,6 +16,7 @@ from app.api import (
     datasets,
     engagement_status,
     engagements,
+    evidence,
     findings,
     imports,
     library,
@@ -112,5 +113,6 @@ for router in (
     macros.router,
     data_links.router,
     findings.router,
+    evidence.router,
 ):
     app.include_router(router, prefix="/api")

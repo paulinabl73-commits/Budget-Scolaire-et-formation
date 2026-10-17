@@ -62,3 +62,30 @@ class Finding(TrackedMixin, Base):
     valide_par: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
     commentaire_validation: Mapped[str | None] = mapped_column(Text, nullable=True)
     extra: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
+
+
+class EvidenceType(StrEnum):
+    PAPIER = "papier"  # papier de travail
+    PIECE_JOINTE = "piece_jointe"  # pièce jointe d'un papier
+    TABLE = "table"  # résultat d'analyse
+    LIGNES = "lignes"  # lignes d'anomalie extraites d'une table (DAT-31)
+
+
+class FindingEvidence(TrackedMixin, Base):
+    """Preuve rattachée à un constat (CON-03), avec l'empreinte de l'élément au moment du lien."""
+
+    __tablename__ = "finding_evidences"
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    finding_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("findings.id"), index=True)
+    type: Mapped[str] = mapped_column(String(20))
+    workpaper_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("workpapers.id"), nullable=True
+    )
+    attachment_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("attachments.id"), nullable=True
+    )
+    dataset_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("datasets.id"), nullable=True)
+    empreinte: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    extrait: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
+    commentaire: Mapped[str | None] = mapped_column(Text, nullable=True)
