@@ -1,0 +1,134 @@
+{
+  "app": {
+    "nom": "AuditLab",
+    "baseline": "Gestion des audits et analyse de données",
+    "allerAuContenu": "Aller au contenu"
+  },
+  "nav": {
+    "accueil": "Accueil",
+    "utilisateurs": "Utilisateurs",
+    "journal": "Journal d'audit",
+    "profil": "Mon profil",
+    "deconnexion": "Se déconnecter",
+    "principale": "Navigation principale"
+  },
+  "commun": {
+    "enregistrer": "Enregistrer",
+    "annuler": "Annuler",
+    "chargement": "Chargement…",
+    "oui": "Oui",
+    "non": "Non",
+    "fermer": "Fermer",
+    "erreurInconnue": "Une erreur inattendue est survenue."
+  },
+  "connexion": {
+    "titre": "Connexion",
+    "email": "Adresse e-mail",
+    "motDePasse": "Mot de passe",
+    "codeTotp": "Code de vérification (application d'authentification)",
+    "codeTotpAide": "Saisissez les 6 chiffres affichés par votre application.",
+    "seConnecter": "Se connecter",
+    "verifier": "Vérifier",
+    "sessionExpiree": "Votre session a expiré après 30 minutes d'inactivité. Reconnectez-vous."
+  },
+  "mfa": {
+    "titre": "Activer la double authentification",
+    "intro": "Votre rôle impose la double authentification. Scannez ce QR code avec une application d'authentification (Microsoft Authenticator, Google Authenticator, FreeOTP…), puis saisissez le code affiché.",
+    "cleManuelle": "Clé à saisir manuellement",
+    "activer": "Activer",
+    "active": "Double authentification activée."
+  },
+  "accueil": {
+    "titre": "Bienvenue, {{nom}}",
+    "role": "Rôle : {{role}}",
+    "modules": "Modules de la plateforme",
+    "bientot": "Lot à venir",
+    "disponible": "Disponible",
+    "m1": "Gestion des audits : univers, plan annuel, missions, papiers de travail, revue",
+    "m2": "Analyse de données : import, analyses, échantillonnage, scripts",
+    "m3": "Constats, recommandations et suivi des plans d'action",
+    "m4": "Reporting et tableaux de bord",
+    "m5": "Révision des comptes (SYSCOHADA, IFRS, CIPRES)",
+    "m6": "Révision comptable (clôture et mission de présentation)",
+    "socle": "Socle : utilisateurs, rôles, double authentification, journal d'audit chaîné"
+  },
+  "utilisateurs": {
+    "titre": "Utilisateurs",
+    "nouveau": "Nouvel utilisateur",
+    "nom": "Nom",
+    "email": "E-mail",
+    "role": "Rôle",
+    "equipes": "Équipes",
+    "actif": "Actif",
+    "mfa": "Double auth.",
+    "verrouille": "Verrouillé",
+    "actions": "Actions",
+    "motDePasseInitial": "Mot de passe initial",
+    "motDePasseAide": "12 caractères minimum, avec majuscule, minuscule et chiffre.",
+    "creer": "Créer l'utilisateur",
+    "cree": "Utilisateur créé.",
+    "modifie": "Utilisateur mis à jour.",
+    "desactiver": "Désactiver",
+    "activer": "Activer",
+    "deverrouiller": "Déverrouiller",
+    "reinitMfa": "Réinitialiser la double auth.",
+    "supprimer": "Supprimer",
+    "confirmerSuppression": "Supprimer {{nom}} ? Le compte sera désactivé et masqué ; son historique reste dans le journal d'audit.",
+    "nouvelleEquipe": "Nouvelle équipe",
+    "creerEquipe": "Créer l'équipe"
+  },
+  "journal": {
+    "titre": "Journal d'audit",
+    "intro": "Chaque action est enregistrée en ajout seul et chaînée par hash : toute altération est détectable.",
+    "verifier": "Vérifier l'intégrité de la chaîne",
+    "integre": "Chaîne intègre : {{count}} entrées vérifiées.",
+    "rompue": "Rupture détectée à l'entrée n° {{seq}} ({{raison}}).",
+    "seq": "N°",
+    "horodatage": "Horodatage",
+    "utilisateur": "Utilisateur",
+    "action": "Action",
+    "objet": "Objet",
+    "avant": "Avant",
+    "apres": "Après",
+    "hash": "Hash",
+    "filtreAction": "Filtrer par action",
+    "toutes": "Toutes",
+    "total": "{{formatted}} entrées"
+  },
+  "actions": {
+    "create": "Création",
+    "update": "Modification",
+    "delete": "Suppression",
+    "restore": "Restauration",
+    "login": "Connexion",
+    "login_failed": "Échec de connexion",
+    "login_refused": "Connexion refusée",
+    "logout": "Déconnexion",
+    "audit_chain_verified": "Vérification du journal",
+    "bootstrap_admin": "Création de l'administrateur initial"
+  },
+  "profil": {
+    "titre": "Mon profil",
+    "changerMotDePasse": "Changer de mot de passe",
+    "actuel": "Mot de passe actuel",
+    "nouveau": "Nouveau mot de passe",
+    "confirmation": "Confirmer le nouveau mot de passe",
+    "differents": "Les deux mots de passe ne correspondent pas.",
+    "change": "Mot de passe modifié. Vos autres sessions ont été fermées.",
+    "mfaActive": "Double authentification : activée",
+    "mfaInactive": "Double authentification : non activée",
+    "activerMfa": "Activer la double authentification"
+  },
+  "roles": {
+    "administrateur": "Administrateur",
+    "directeur_audit": "Directeur d'audit",
+    "chef_mission": "Chef de mission",
+    "auditeur": "Auditeur",
+    "data_analyst": "Data analyst",
+    "audite": "Audité"
+  },
+  "erreurs": {
+    "403": "Vous n'avez pas les droits nécessaires pour cette page.",
+    "404": "Page introuvable."
+  }
+}

@@ -1,0 +1,44 @@
+# AuditLab — lancement complet : docker compose up -d --build
+# Interface : http://localhost:8080   API : http://localhost:8080/api/docs
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: auditlab
+      POSTGRES_USER: auditlab
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-auditlab}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U auditlab -d auditlab"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    environment:
+      AUDITLAB_DATABASE_URL: postgresql+psycopg://auditlab:${POSTGRES_PASSWORD:-auditlab}@db:5432/auditlab
+      AUDITLAB_CORS_ORIGINS: '["http://localhost:8080"]'
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "${AUDITLAB_PORT:-8080}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pgdata:
