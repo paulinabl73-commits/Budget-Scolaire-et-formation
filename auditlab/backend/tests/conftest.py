@@ -78,8 +78,14 @@ def make_user(db: Session) -> Callable[..., User]:
     ) -> User:
         set_actor(db, None)
         mfa = role in (Role.ADMIN, Role.DIRECTEUR) if mfa is None else mfa
+        if email is None:
+            # Adresse par défaut lisible ; suffixée si le rôle a déjà un compte dans le test.
+            from sqlalchemy import func, select
+
+            n = db.scalar(select(func.count()).where(User.role == role.value)) or 0
+            email = f"{role.value}@exemple.org" if n == 0 else f"{role.value}{n + 1}@exemple.org"
         user = User(
-            email=email or f"{role.value}@exemple.org",
+            email=email,
             nom=kw.pop("nom", f"Utilisateur {role.value}"),
             role=role.value,
             password_hash=hash_password(PASSWORD),

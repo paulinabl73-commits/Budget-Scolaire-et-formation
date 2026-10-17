@@ -158,3 +158,44 @@ export interface PlanSummary {
 export interface Plan extends PlanSummary {
   items: PlanItem[];
 }
+
+export type EngagementStatus =
+  | "planifiee"
+  | "preparation"
+  | "terrain"
+  | "revue"
+  | "rapport"
+  | "cloturee";
+export type MissionRole = "chef_mission" | "auditeur" | "data_analyst" | "superviseur";
+
+export interface Member {
+  user_id: string;
+  nom: string;
+  email: string;
+  role_mission: MissionRole;
+}
+
+export interface EngagementSummary {
+  id: string;
+  reference: string;
+  titre: string;
+  statut: EngagementStatus;
+  date_debut: string;
+  date_fin: string;
+  budget_jours: number;
+  jours_consommes: number;
+  entity_id: string | null;
+  entity_nom: string | null;
+  plan_id: string | null;
+  plan_item_id: string | null;
+  chef_nom: string | null;
+  mon_role: MissionRole | null;
+}
+
+export interface Engagement extends EngagementSummary {
+  perimetre: string | null;
+  objectifs: string | null;
+  membres: Member[];
+  transitions: EngagementStatus[];
+  peut_gerer: boolean;
+}

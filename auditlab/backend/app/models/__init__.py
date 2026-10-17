@@ -1,5 +1,12 @@
 from app.models.audit_log import AuditLog
 from app.models.base import Base, TrackedMixin
+from app.models.engagement import (
+    STATUS_ORDER,
+    Engagement,
+    EngagementMember,
+    EngagementStatus,
+    MissionRole,
+)
 from app.models.plan import AuditPlan, PlanItem, PlanStatus
 from app.models.risk import Axis, CriterionMode, RiskAssessment, RiskCriterion
 from app.models.universe import AuditableEntity, EntityType
@@ -12,9 +19,14 @@ __all__ = [
     "Axis",
     "Base",
     "CriterionMode",
+    "Engagement",
+    "EngagementMember",
+    "EngagementStatus",
     "EntityType",
+    "MissionRole",
     "PlanItem",
     "PlanStatus",
+    "STATUS_ORDER",
     "RiskAssessment",
     "RiskCriterion",
     "Team",

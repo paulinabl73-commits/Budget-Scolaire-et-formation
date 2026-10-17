@@ -49,4 +49,6 @@ export const post = <T>(path: string, data?: unknown) =>
   api<T>(path, { method: "POST", body: data === undefined ? undefined : JSON.stringify(data) });
 export const patch = <T>(path: string, data: unknown) =>
   api<T>(path, { method: "PATCH", body: JSON.stringify(data) });
+export const put = <T>(path: string, data: unknown) =>
+  api<T>(path, { method: "PUT", body: JSON.stringify(data) });
 export const del = (path: string) => api<void>(path, { method: "DELETE" });

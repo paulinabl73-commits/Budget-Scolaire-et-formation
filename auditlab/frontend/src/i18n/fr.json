@@ -14,7 +14,8 @@
     "univers": "Univers d'audit",
     "criteres": "Critères de risque",
     "carte": "Carte des risques",
-    "plan": "Plan annuel"
+    "plan": "Plan annuel",
+    "missions": "Missions"
   },
   "commun": {
     "enregistrer": "Enregistrer",
@@ -297,5 +298,71 @@
       "periode_debut": "début",
       "periode_fin": "fin"
     }
+  },
+  "missions": {
+    "titre": "Missions",
+    "nouvelle": "Nouvelle mission",
+    "aucune": "Aucune mission visible.",
+    "reference": "Référence",
+    "intitule": "Intitulé",
+    "entite": "Entité",
+    "statut": "Statut",
+    "periode": "Période",
+    "budget": "Budget (j)",
+    "consomme": "Consommé (j)",
+    "chef": "Chef de mission",
+    "monRole": "Mon rôle",
+    "tous": "Tous les statuts",
+    "source": "Origine",
+    "depuisPlan": "Depuis le plan validé",
+    "ponctuelle": "Mission ponctuelle",
+    "ligneDuPlan": "Mission prévue au plan",
+    "choisirLigne": "— Choisir une mission du plan —",
+    "aucuneLigne": "Aucune mission de plan validé disponible.",
+    "entiteOptionnelle": "Entité de l'univers (facultatif)",
+    "aucuneEntite": "— Aucune —",
+    "perimetre": "Périmètre",
+    "objectifs": "Objectifs",
+    "debut": "Date de début",
+    "fin": "Date de fin",
+    "equipe": "Équipe",
+    "equipeAide": "Le chef de mission est obligatoire. Sans choix, le créateur pilote la mission.",
+    "roleMission": "Rôle dans la mission",
+    "nonMembre": "— Non membre —",
+    "creer": "Créer la mission",
+    "creee": "Mission {{reference}} créée.",
+    "enregistree": "Mission enregistrée.",
+    "equipeEnregistree": "Équipe enregistrée.",
+    "enregistrerEquipe": "Enregistrer l'équipe",
+    "prefill": "Laissez vide pour reprendre les valeurs du plan.",
+    "onglets": {
+      "synthese": "Synthèse",
+      "programme": "Programme de travail",
+      "temps": "Temps",
+      "papiers": "Papiers de travail",
+      "donnees": "Données",
+      "constats": "Constats",
+      "rapport": "Rapport"
+    },
+    "statuts": {
+      "planifiee": "Planifiée",
+      "preparation": "En préparation",
+      "terrain": "Terrain",
+      "revue": "Revue",
+      "rapport": "Rapport",
+      "cloturee": "Clôturée"
+    },
+    "roles": {
+      "chef_mission": "Chef de mission",
+      "auditeur": "Auditeur",
+      "data_analyst": "Data analyst",
+      "superviseur": "Superviseur"
+    },
+    "retour": "← Toutes les missions",
+    "lectureSeule": "Vous consultez cette mission en lecture seule."
+  },
+  "temps": {
+    "budget": "Budget et temps passé",
+    "consommation": "{{consomme}} j consommés sur {{budget}} j budgétés"
   }
 }

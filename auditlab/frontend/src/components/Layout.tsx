@@ -51,6 +51,12 @@ export default function Layout() {
               {t("nav.plan")}
             </NavLink>
           )}
+          {(can(user?.permissions, PERM.MISSIONS_READ_ALL) ||
+            can(user?.permissions, PERM.MISSIONS_READ_OWN)) && (
+            <NavLink to="/missions" className={lien}>
+              {t("nav.missions")}
+            </NavLink>
+          )}
           {(can(user?.permissions, PERM.SETTINGS_MANAGE) ||
             can(user?.permissions, PERM.PLAN_MANAGE)) && (
             <NavLink to="/criteres" className={lien}>

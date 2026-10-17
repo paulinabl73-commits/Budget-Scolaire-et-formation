@@ -5,6 +5,9 @@ export const PERM = {
   PLAN_READ: "plan:read",
   PLAN_MANAGE: "plan:manage",
   PLAN_VALIDATE: "plan:validate",
+  MISSIONS_MANAGE: "missions:manage",
+  MISSIONS_READ_ALL: "missions:read_all",
+  MISSIONS_READ_OWN: "missions:read_own",
 } as const;
 
 export type Role =
