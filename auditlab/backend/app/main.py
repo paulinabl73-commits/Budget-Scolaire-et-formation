@@ -47,6 +47,7 @@ from app.api import (
     sampling,
     signoffs,
     statements,
+    synthesis,
     teams,
     templates,
     third_parties,
@@ -154,5 +155,6 @@ for router in (
     confirmations.router,
     bank_reconciliations.router,
     dsf.router,
+    synthesis.router,
 ):
     app.include_router(router, prefix="/api")

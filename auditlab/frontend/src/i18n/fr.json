@@ -1552,7 +1552,8 @@
       "etats": "États financiers",
       "tiers": "Tiers",
       "circularisation": "Circularisation",
-      "tresorerie": "Rapprochements bancaires"
+      "tresorerie": "Rapprochements bancaires",
+      "synthese": "Note de synthèse"
     },
     "navigation": "Sections du dossier"
   },
@@ -1859,5 +1860,36 @@
     "version": "Version",
     "fichier": "Modèle (Excel : ref, libelle, note, formule)",
     "importer": "Importer le modèle"
+  },
+  "synthese": {
+    "titre": "Note de synthèse",
+    "pdf": "Exporter en PDF",
+    "word": "Exporter en Word",
+    "suspens": "Points en suspens",
+    "aucunSuspens": "Aucun point en suspens.",
+    "cycles": "Travaux par cycle",
+    "col": {
+      "cycle": "Cycle",
+      "N-1": "N-1",
+      "N": "N",
+      "ajustements": "Ajustements",
+      "revise": "Révisé",
+      "papiers": "Papiers"
+    },
+    "statuts": {
+      "brouillon": "brouillon",
+      "prepare": "préparé",
+      "revu": "revu",
+      "approuve": "approuvé"
+    },
+    "anomalies": "Anomalies",
+    "nonCorrigees": "Anomalies non corrigées : cumul de {{cumul}} sur le résultat ({{conclusion}}).",
+    "verdicts": {
+      "non_significatif": "non significatif",
+      "vigilance": "vigilance",
+      "significatif": "significatif"
+    },
+    "conclusion": "Conclusion",
+    "enregistree": "Conclusion enregistrée"
   }
 }

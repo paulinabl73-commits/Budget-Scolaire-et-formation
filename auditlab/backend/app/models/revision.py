@@ -162,6 +162,8 @@ class AuditFile(TrackedMixin, Base):
     # de TVA à retirer des créances TTC pour obtenir la base HT ; vides = valeurs par défaut.
     grille_depreciation: Mapped[list[dict[str, Any]] | None] = mapped_column(JSONB, nullable=True)
     tva_depreciation: Mapped[Decimal | None] = mapped_column(Numeric(7, 4), nullable=True)
+    # REV-26 : conclusion de la note de synthèse, rédigée par le chef de mission.
+    conclusion_synthese: Mapped[str | None] = mapped_column(Text, nullable=True)
 
 
 class TrialBalance(TrackedMixin, Base):
