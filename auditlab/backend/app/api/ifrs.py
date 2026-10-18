@@ -15,7 +15,7 @@ from app.api.audit_files import get_file
 from app.api.deps import CurrentUser, DbSession
 from app.api.mapping import values_or_409
 from app.audit.listeners import record_event
-from app.models.revision import AccountingFramework, AuditFile, StatementLine
+from app.models.revision import AccountingFramework, AuditFile, IfrsChecklistAnswer, StatementLine
 from app.revision import documents, ifrs, ifrs_assistants, statements
 from app.revision.mapping import file_values
 
@@ -257,3 +257,96 @@ def run_assistant(
         )
         result["retraitement"] = create_adjustment(file.id, entry, user, db)
     return result
+
+
+# --- Check-list des informations à fournir (IFR-04) ---------------------------------------------
+
+
+class AnswerIn(BaseModel):
+    reponse: str = Field(pattern="^(oui|non|na)$")
+    commentaire: str | None = Field(default=None, max_length=5000)
+
+
+def _checklist() -> list[dict[str, Any]]:
+    import json
+    from pathlib import Path
+
+    path = Path(ifrs.__file__).parent / "data" / "ifrs_checklist.json"
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    return [
+        {
+            "norme": n["norme"],
+            "toujours": n.get("toujours", False),
+            "points": [
+                {"code": f"{n['norme']}-{i:02d}", "libelle": p}
+                for i, p in enumerate(n["points"], 1)
+            ],
+        }
+        for n in doc["normes"]
+    ]
+
+
+def _answers(db: Session, file_id: uuid.UUID) -> dict[str, IfrsChecklistAnswer]:
+    rows = db.scalars(
+        select(IfrsChecklistAnswer).where(
+            IfrsChecklistAnswer.audit_file_id == file_id, IfrsChecklistAnswer.deleted_at.is_(None)
+        )
+    )
+    return {a.code: a for a in rows}
+
+
+def checklist_out(db: Session, file: AuditFile) -> dict[str, Any]:
+    answers = _answers(db, file.id)
+    used = {a.norme for a in file_adjustments(db, file.id, ifrs=True) if a.statut == "acceptee"}
+    groups, total, done, missing = [], 0, 0, 0
+    for n in _checklist():
+        points = []
+        for p in n["points"]:
+            a = answers.get(p["code"])
+            points.append(
+                {
+                    **p,
+                    "reponse": a.reponse if a else None,
+                    "commentaire": a.commentaire if a else None,
+                }
+            )
+            total += 1
+            done += a is not None
+            missing += a is not None and a.reponse == "non"
+        groups.append(
+            {
+                "norme": n["norme"],
+                "applicable": n["toujours"] or n["norme"] in used,
+                "points": points,
+            }
+        )
+    return {"normes": groups, "total": total, "repondus": done, "informations_manquantes": missing}
+
+
+@router.get("/audit-files/{file_id}/ifrs/checklist")
+def read_checklist(file_id: uuid.UUID, user: CurrentUser, db: DbSession) -> dict[str, Any]:
+    file, _ = get_file(db, file_id, user)
+    return checklist_out(db, file)
+
+
+@router.put("/audit-files/{file_id}/ifrs/checklist/{code}")
+def answer(
+    file_id: uuid.UUID, code: str, body: AnswerIn, user: CurrentUser, db: DbSession
+) -> dict[str, Any]:
+    from app.api.audit_files import require_work
+
+    file, engagement = get_file(db, file_id, user)
+    require_work(file, engagement, user)
+    if code not in {p["code"] for n in _checklist() for p in n["points"]}:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Point de check-list inconnu")
+    if body.reponse == "non" and not (body.commentaire or "").strip():
+        raise HTTPException(422, "Information manquante : précisez-la en commentaire")
+    a = _answers(db, file.id).get(code)
+    if a is None:
+        a = IfrsChecklistAnswer(
+            engagement_id=file.engagement_id, audit_file_id=file.id, code=code, reponse=body.reponse
+        )
+        db.add(a)
+    a.reponse, a.commentaire = body.reponse, body.commentaire
+    db.commit()
+    return checklist_out(db, file)

@@ -1,0 +1,66 @@
+{
+  "_commentaire": "Check-list des informations à fournir en annexe (IFR-04), points essentiels par norme. Bibliothèque adaptable par le cabinet ; elle ne remplace pas les check-lists exhaustives publiées.",
+  "normes": [
+    {"norme": "IAS 1", "toujours": true, "points": [
+      "Déclaration explicite et sans réserve de conformité aux IFRS",
+      "Appréciation de la continuité d'exploitation et incertitudes significatives",
+      "Méthodes comptables significatives",
+      "Jugements de la direction et principales sources d'incertitude des estimations",
+      "Informations comparatives pour tous les montants présentés",
+      "Objectifs, politiques et procédures de gestion du capital"]},
+    {"norme": "IAS 7", "toujours": true, "points": [
+      "Composantes de la trésorerie et des équivalents de trésorerie, rapprochées de l'état de situation financière",
+      "Variation des passifs issus des activités de financement",
+      "Transactions d'investissement et de financement sans effet sur la trésorerie"]},
+    {"norme": "IAS 8", "toujours": true, "points": [
+      "Changements de méthodes comptables et leur effet",
+      "Changements d'estimations comptables significatifs",
+      "Corrections d'erreurs d'exercices antérieurs",
+      "Normes publiées non encore entrées en vigueur et effet attendu"]},
+    {"norme": "IAS 10", "toujours": true, "points": [
+      "Date d'autorisation de publication des états financiers et organe qui l'a donnée",
+      "Événements postérieurs à la clôture ne donnant pas lieu à ajustement"]},
+    {"norme": "IAS 12", "points": [
+      "Principales composantes de la charge d'impôt",
+      "Rapprochement entre la charge d'impôt et le résultat comptable multiplié par le taux applicable",
+      "Impôts différés actifs et passifs par nature de différence temporelle",
+      "Déficits fiscaux non utilisés n'ayant pas donné lieu à un impôt différé actif"]},
+    {"norme": "IAS 16", "points": [
+      "Bases d'évaluation, modes et durées d'amortissement par catégorie",
+      "Tableau de rapprochement des valeurs comptables à l'ouverture et à la clôture",
+      "Restrictions et immobilisations données en garantie",
+      "Engagements contractuels d'acquisition"]},
+    {"norme": "IAS 19", "points": [
+      "Description des régimes à prestations définies",
+      "Rapprochement de l'obligation au titre des prestations définies",
+      "Principales hypothèses actuarielles",
+      "Analyse de sensibilité aux hypothèses actuarielles"]},
+    {"norme": "IAS 24", "toujours": true, "points": [
+      "Relations entre la société mère et ses filiales",
+      "Rémunération des principaux dirigeants par catégorie",
+      "Transactions et soldes avec les parties liées, conditions et garanties"]},
+    {"norme": "IAS 37", "points": [
+      "Tableau de variation des provisions par catégorie",
+      "Nature, échéance et incertitudes de chaque catégorie de provision",
+      "Passifs éventuels et actifs éventuels"]},
+    {"norme": "IFRS 7", "points": [
+      "Valeur comptable des instruments financiers par catégorie",
+      "Nature et ampleur des risques de crédit, de liquidité et de marché",
+      "Échéancier contractuel des passifs financiers",
+      "Juste valeur des instruments financiers et hiérarchie"]},
+    {"norme": "IFRS 9", "points": [
+      "Méthode de détermination des pertes de crédit attendues",
+      "Rapprochement des corrections de valeur pour pertes"]},
+    {"norme": "IFRS 15", "points": [
+      "Ventilation des produits des activités ordinaires (nature, calendrier, zone)",
+      "Soldes d'actifs et de passifs sur contrats",
+      "Obligations de prestation restant à remplir et calendrier attendu",
+      "Jugements significatifs dans l'application de la norme"]},
+    {"norme": "IFRS 16", "points": [
+      "Dotations aux amortissements des droits d'utilisation par catégorie",
+      "Charges d'intérêts sur les dettes de location",
+      "Charges relatives aux contrats de courte durée et de faible valeur",
+      "Valeur comptable des droits d'utilisation par catégorie",
+      "Analyse des échéances des dettes de location"]}
+  ]
+}

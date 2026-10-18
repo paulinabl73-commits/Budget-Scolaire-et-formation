@@ -2059,5 +2059,17 @@
       "produit_ifrs": "Produit IFRS",
       "produit_comptabilise": "Produit comptabilisé"
     }
+  },
+  "checklistIfrs": {
+    "titre": "Informations à fournir en annexe (check-list IFRS)",
+    "avancement": "{{repondus}} point(s) traité(s) sur {{total}} ; {{manquantes}} information(s) manquante(s).",
+    "toutes": "Afficher aussi les normes non applicables",
+    "reponses": {
+      "oui": "Fournie",
+      "non": "Manquante",
+      "na": "Sans objet"
+    },
+    "commentaire": "Commentaire : {{point}}",
+    "commentairePlaceholder": "Commentaire (obligatoire si manquante)"
   }
 }

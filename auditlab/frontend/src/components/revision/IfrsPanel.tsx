@@ -7,6 +7,7 @@ import { formatNombre } from "../../lib/format";
 import Alert from "../Alert";
 import AdjustmentsPanel from "./AdjustmentsPanel";
 import IfrsAssistantsPanel from "./IfrsAssistantsPanel";
+import IfrsChecklistPanel from "./IfrsChecklistPanel";
 
 interface Line { code: string; libelle: string; niveau: number; passage: string | null; total: boolean; N: string; "N-1": string | null }
 interface Rec { lignes: { libelle: string; montant: string }[]; ifrs: string; ecart: string }
@@ -74,6 +75,7 @@ export default function IfrsPanel({ file }: { file: AuditFile }) {
           </div>
         </section>
       )}
+      <IfrsChecklistPanel key={`ck-${version}`} file={file} />
     </div>
   );
 }

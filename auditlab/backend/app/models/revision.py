@@ -464,3 +464,19 @@ class AuditOpinion(TrackedMixin, Base):
     emis_le: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     archive_key: Mapped[str | None] = mapped_column(String(300), nullable=True)
     archive_sha256: Mapped[str | None] = mapped_column(String(64), nullable=True)
+
+
+class IfrsChecklistAnswer(TrackedMixin, Base):
+    """Réponse de l'auditeur à un point de la check-list des informations à fournir (IFR-04)."""
+
+    __tablename__ = "ifrs_checklist_answers"
+    __table_args__ = (
+        Index("uq_ifrs_checklist_point", "audit_file_id", "code", unique=True,
+              postgresql_where=text("deleted_at IS NULL")),
+    )  # fmt: skip
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
+    code: Mapped[str] = mapped_column(String(30))  # ex. « IAS 1-02 »
+    reponse: Mapped[str] = mapped_column(String(10))  # oui, non, na
+    commentaire: Mapped[str | None] = mapped_column(Text, nullable=True)
