@@ -31,6 +31,7 @@ class AuditFileIn(BaseModel):
     normative_id: uuid.UUID | None = None
     devise: str = Field(default="XOF", pattern="^[A-Z]{3}$")
     entity_id: uuid.UUID | None = None
+    pays: str | None = Field(default=None, max_length=40)
 
     @model_validator(mode="after")
     def _dates(self) -> "AuditFileIn":
@@ -42,6 +43,7 @@ class AuditFileIn(BaseModel):
 class AuditFileUpdate(BaseModel):
     ifrs_framework_id: uuid.UUID | None = None
     normative_id: uuid.UUID | None = None
+    pays: str | None = Field(default=None, max_length=40)
 
 
 class AuditFileOut(BaseModel):
@@ -57,6 +59,7 @@ class AuditFileOut(BaseModel):
     ifrs_framework_id: uuid.UUID | None
     normative_id: uuid.UUID | None
     devise: str
+    pays: str | None = None
     precedent_id: uuid.UUID | None
     statut: str
     base_seuil: str | None

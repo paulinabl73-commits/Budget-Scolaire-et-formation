@@ -1,0 +1,19 @@
+{
+  "_commentaire": "Paramètres attendus par les contrôles des organismes de prévoyance sociale (CIP-02 à CIP-07). Aucune valeur n'est livrée : chaque paramètre est saisi par pays et par exercice (CIP-09), éventuellement par branche.",
+  "parametres": [
+    {"code": "taux_cotisation", "libelle": "Taux de cotisation", "unite": "%", "par_branche": true, "controle": "CIP-02"},
+    {"code": "plafond_cotisation", "libelle": "Plafond mensuel de salaire soumis à cotisation", "unite": "montant", "par_branche": false, "controle": "CIP-02"},
+    {"code": "delai_declaration_jours", "libelle": "Délai de déclaration après la fin de la période", "unite": "jours", "par_branche": false, "controle": "CIP-03"},
+    {"code": "taux_majoration_retard", "libelle": "Majoration de retard", "unite": "%", "par_branche": false, "controle": "CIP-03"},
+    {"code": "age_minimum_pension", "libelle": "Âge minimum d'un pensionné", "unite": "ans", "par_branche": false, "controle": "CIP-04"},
+    {"code": "age_maximum_beneficiaire", "libelle": "Âge au-delà duquel un bénéficiaire est jugé anormal", "unite": "ans", "par_branche": false, "controle": "CIP-04"},
+    {"code": "validite_certificat_vie_mois", "libelle": "Validité du certificat de vie", "unite": "mois", "par_branche": false, "controle": "CIP-04"},
+    {"code": "pension_minimum", "libelle": "Pension mensuelle minimale du barème", "unite": "montant", "par_branche": false, "controle": "CIP-04"},
+    {"code": "pension_maximum", "libelle": "Pension mensuelle maximale du barème", "unite": "montant", "par_branche": false, "controle": "CIP-04"},
+    {"code": "age_limite_enfant", "libelle": "Âge limite d'un enfant ouvrant droit aux allocations", "unite": "ans", "par_branche": false, "controle": "CIP-05"},
+    {"code": "nombre_enfants_maximum", "libelle": "Nombre d'enfants indemnisables par allocataire", "unite": "nombre", "par_branche": false, "controle": "CIP-05"},
+    {"code": "plafond_frais_gestion", "libelle": "Plafond des frais de gestion / cotisations encaissées (règles communes de gestion)", "unite": "%", "par_branche": false, "controle": "CIP-06"},
+    {"code": "reserve_technique_mois", "libelle": "Réserve technique minimale en mois de prestations", "unite": "mois", "par_branche": true, "controle": "CIP-07"},
+    {"code": "limite_placement", "libelle": "Part maximale des placements par catégorie", "unite": "%", "par_branche": false, "par_categorie": true, "controle": "CIP-07"}
+  ]
+}

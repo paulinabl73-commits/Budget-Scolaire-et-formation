@@ -7,6 +7,7 @@ import { useAuth } from "../auth/AuthContext";
 import Alert from "../components/Alert";
 import CurrenciesPanel from "../components/revision/CurrenciesPanel";
 import DsfModelsPanel from "../components/revision/DsfModelsPanel";
+import RegulatoryParametersPanel from "../components/revision/RegulatoryParametersPanel";
 import ReportTemplatesPanel from "../components/revision/ReportTemplatesPanel";
 import ProgramsLibraryPanel from "../components/revision/ProgramsLibraryPanel";
 import { formatDate, formatNombre } from "../lib/format";
@@ -195,6 +196,7 @@ export default function FrameworksPage() {
         )}
       </section>
       <CurrenciesPanel />
+      <RegulatoryParametersPanel />
       <ProgramsLibraryPanel />
       <DsfModelsPanel />
       <ReportTemplatesPanel />

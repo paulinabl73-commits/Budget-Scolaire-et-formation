@@ -2071,5 +2071,24 @@
     },
     "commentaire": "Commentaire : {{point}}",
     "commentairePlaceholder": "Commentaire (obligatoire si manquante)"
+  },
+  "parametres": {
+    "titre": "Paramètres réglementaires",
+    "aide": "Taux, plafonds et limites par pays, par exercice (valables jusqu'au suivant) et, le cas échéant, par branche. Aucune valeur n'est livrée.",
+    "referentiel": "Référentiel",
+    "col": {
+      "parametre": "Paramètre",
+      "valeur": "Valeur",
+      "pays": "Pays",
+      "exercice": "Exercice",
+      "branche": "Branche"
+    },
+    "tous": "tous",
+    "toutes": "Toutes",
+    "supprimer": "Supprimer",
+    "aucun": "Aucun paramètre saisi.",
+    "categorie": "Catégorie de placement",
+    "aPartirDe": "À partir de l'exercice",
+    "ajouter": "Ajouter le paramètre"
   }
 }

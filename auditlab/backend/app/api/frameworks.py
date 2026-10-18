@@ -3,6 +3,7 @@
 import hashlib
 import uuid
 from datetime import date
+from decimal import Decimal
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, status
@@ -220,3 +221,84 @@ def update_normative(
         setattr(nf, key, value)
     db.commit()
     return nf
+
+
+# --- Paramètres réglementaires (CIP-09) ----------------------------------------------------------
+
+
+class ParameterIn(BaseModel):
+    code: str = Field(min_length=2, max_length=80)
+    libelle: str = Field(min_length=2, max_length=300)
+    valeur: Decimal
+    unite: str | None = Field(default=None, max_length=30)
+    pays: str | None = Field(default=None, max_length=40)
+    exercice: int | None = Field(default=None, ge=1990, le=2100)
+    branche: str | None = Field(default=None, max_length=20)
+
+
+def parameter_out(p: RegulatoryParameter) -> dict[str, Any]:
+    return {
+        "id": str(p.id),
+        "code": p.code,
+        "libelle": p.libelle,
+        "valeur": str(p.valeur),
+        "unite": p.unite,
+        "pays": p.pays,
+        "exercice": p.exercice,
+        "branche": p.branche,
+    }
+
+
+@router.get("/frameworks/{framework_id}/parameters")
+def list_parameters(framework_id: uuid.UUID, user: Reader, db: DbSession) -> dict[str, Any]:
+    from app.revision.parameters import catalog
+
+    get_framework(db, framework_id)
+    rows = db.scalars(
+        select(RegulatoryParameter)
+        .where(
+            RegulatoryParameter.framework_id == framework_id,
+            RegulatoryParameter.deleted_at.is_(None),
+        )
+        .order_by(RegulatoryParameter.code, RegulatoryParameter.pays, RegulatoryParameter.exercice)
+    )
+    return {"catalogue": catalog(), "parametres": [parameter_out(p) for p in rows]}
+
+
+@router.post("/frameworks/{framework_id}/parameters", status_code=status.HTTP_201_CREATED)
+def create_parameter(
+    framework_id: uuid.UUID, body: ParameterIn, user: Manager, db: DbSession
+) -> dict[str, Any]:
+    fw = get_framework(db, framework_id)
+    if body.branche and body.branche not in {b["code"] for b in fw.branches}:
+        raise HTTPException(422, "Branche inconnue du référentiel")
+    duplicate = db.scalar(
+        select(RegulatoryParameter).where(
+            RegulatoryParameter.framework_id == fw.id,
+            RegulatoryParameter.code == body.code,
+            RegulatoryParameter.pays.is_not_distinct_from(body.pays),
+            RegulatoryParameter.exercice.is_not_distinct_from(body.exercice),
+            RegulatoryParameter.branche.is_not_distinct_from(body.branche),
+            RegulatoryParameter.deleted_at.is_(None),
+        )
+    )
+    if duplicate is not None:
+        raise HTTPException(
+            status.HTTP_409_CONFLICT,
+            "Paramètre déjà défini pour ce pays, cet exercice et cette branche",
+        )
+    p = RegulatoryParameter(framework_id=fw.id, **body.model_dump())
+    db.add(p)
+    db.commit()
+    return parameter_out(p)
+
+
+@router.delete("/regulatory-parameters/{parameter_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_parameter(parameter_id: uuid.UUID, user: Manager, db: DbSession) -> None:
+    import datetime as dt
+
+    p = db.get(RegulatoryParameter, parameter_id)
+    if p is None or p.deleted_at is not None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Paramètre introuvable")
+    p.deleted_at, p.deleted_by = dt.datetime.now(dt.UTC), user.id
+    db.commit()
