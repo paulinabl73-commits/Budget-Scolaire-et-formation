@@ -42,11 +42,12 @@ export default function BranchesPanel({ file }: { file: AuditFile }) {
       <section className="carte space-y-3" aria-labelledby="branches-etats">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 id="branches-etats" className="text-base font-semibold">{t("branches.etats")}</h2>
-          <label className="text-sm">{t("branches.branche")}{" "}
-            <select value={branch} onChange={(e) => setBranch(e.target.value)} className="rounded border px-1 py-0.5">
+          <div className="text-sm">
+            <label htmlFor="branches-choix">{t("branches.branche")}</label>{" "}
+            <select id="branches-choix" value={branch} onChange={(e) => setBranch(e.target.value)} className="rounded border px-1 py-0.5">
               {data.branches.map((b) => <option key={b.code} value={b.code}>{b.code} – {b.libelle}</option>)}
             </select>
-          </label>
+          </div>
         </div>
         <table className="w-full text-left text-sm">
           <thead className="text-xs text-slate-600">
