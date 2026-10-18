@@ -90,6 +90,19 @@ def list_controls(file_id: uuid.UUID, user: CurrentUser, db: DbSession) -> dict[
     return {"pays": file.pays, "exercice": file.exercice, "controles": out}
 
 
+@router.get("/audit-files/{file_id}/ops-indicators")
+def read_indicators(file_id: uuid.UUID, user: CurrentUser, db: DbSession) -> dict[str, Any]:
+    """CIP-06 et CIP-07 : indicateurs calculés sur les soldes révisés du dossier."""
+    from app.revision.ops_indicators import NotMapped, indicators
+
+    file, _ = get_file(db, file_id, user)
+    cipres(db, file)
+    try:
+        return indicators(db, file)
+    except NotMapped as exc:
+        raise HTTPException(status.HTTP_409_CONFLICT, str(exc)) from exc
+
+
 @router.post("/audit-files/{file_id}/ops-controls/{code}", status_code=status.HTTP_202_ACCEPTED)
 def launch_control(
     file_id: uuid.UUID, code: str, body: OpsLaunchIn, user: CurrentUser, db: DbSession

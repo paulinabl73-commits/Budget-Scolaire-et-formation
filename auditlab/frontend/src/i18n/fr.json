@@ -2210,5 +2210,24 @@
     "executions": "Dernières exécutions",
     "lignes_one": "{{count}} ligne",
     "lignes_other": "{{count}} lignes"
+  },
+  "indicateursOps": {
+    "nonEvaluable": "Non évaluable",
+    "conforme": "Conforme",
+    "depassement": "Dépassement",
+    "parametresManquants": "Paramètres réglementaires à saisir dans le référentiel : {{liste}}.",
+    "postesManquants": "Postes à prévoir dans les états du référentiel CIPRES : {{liste}}.",
+    "exercice": "Exercice",
+    "plafond": "Plafond",
+    "verdict": "Appréciation",
+    "frais": {
+      "titre": "CIP-06 · Frais de gestion / cotisations encaissées",
+      "frais": "Frais de gestion (FGE)",
+      "emises": "Cotisations émises (COT)",
+      "variation": "Variation des créances (CCO)",
+      "encaissees": "Cotisations encaissées",
+      "ratio": "Ratio",
+      "note": "Cotisations encaissées = cotisations émises − variation des créances sur cotisants. L'exercice précédent est repris du dossier N-1 lorsqu'il existe."
+    }
   }
 }

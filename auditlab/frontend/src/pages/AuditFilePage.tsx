@@ -8,6 +8,7 @@ import Alert from "../components/Alert";
 import AdjustmentsPanel from "../components/revision/AdjustmentsPanel";
 import BranchesPanel from "../components/revision/BranchesPanel";
 import OpsControlsPanel from "../components/revision/OpsControlsPanel";
+import OpsIndicatorsPanel from "../components/revision/OpsIndicatorsPanel";
 import AnalyticalPanel from "../components/revision/AnalyticalPanel";
 import BankReconciliationsPanel from "../components/revision/BankReconciliationsPanel";
 import ConfirmationsPanel from "../components/revision/ConfirmationsPanel";
@@ -108,7 +109,7 @@ export default function AuditFilePage() {
       {view === "synthese" && <SynthesisPanel file={file} onNavigate={(vue) => setParams({ vue })} />}
       {view === "ifrs" && <IfrsPanel file={file} />}
       {view === "branches" && <BranchesPanel file={file} />}
-      {view === "ops" && <OpsControlsPanel file={file} />}
+      {view === "ops" && <><OpsIndicatorsPanel file={file} /><OpsControlsPanel file={file} /></>}
       {view === "rapport" && <OpinionPanel file={file} onLocked={() => void load()} />}
       {view === "etats" && (unmapped > 0 ? <Alert kind="info">{t("affectation.bloque")}</Alert> : <><FinancialStatementsPanel file={file} /><DsfPanel file={file} /></>)}
     </div>

@@ -10,6 +10,9 @@ Classeur Excel attendu (une feuille par rubrique, en-têtes en première ligne) 
   pct_min, pct_max (fourchette indicative du pourcentage de seuil, REV-11) ;
 - « Règles » : code, libelle, gauche, droite ; « Paramètres » : code, libelle, valeur, unite,
   pays, exercice, branche ; « Branches » : code, libelle (CIPRES).
+
+CIPRES : les indicateurs CIP-06 et CIP-07 lisent des postes aux codes réservés (COT, CCO, FGE,
+RTE, PRE, PPL, PLA_<catégorie>), à prévoir dans les états importés (voir ops_indicators).
 """
 
 import datetime as dt
