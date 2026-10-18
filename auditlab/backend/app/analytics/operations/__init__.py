@@ -4,6 +4,7 @@ from app.analytics.operations import (  # noqa: F401
     aberrantes,
     anciennete,
     benford,
+    cipres,
     doublons,
     echantillon,
     ecritures,

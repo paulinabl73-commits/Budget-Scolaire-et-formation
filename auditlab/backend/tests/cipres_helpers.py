@@ -55,3 +55,26 @@ def ops_file(client, rev, ops, **kw):  # noqa: F811
     tb = upload(client, rev, f["id"], "balance.csv", ("\n".join(lines) + "\n").encode()).json()
     assert tb["statut"] == "accepte", tb["anomalies"]
     return f
+
+
+def set_params(db, fw, *rows):
+    """Paramètres réglementaires (code, valeur, branche) pour la Côte d'Ivoire, à partir de 2026."""
+    from decimal import Decimal
+
+    from app.models.revision import RegulatoryParameter
+
+    for code, valeur, branche in rows:
+        db.add(RegulatoryParameter(framework_id=fw.id, code=code, libelle=code, valeur=Decimal(valeur),
+                                   pays="CI", exercice=2026, branche=branche))  # fmt: skip
+    db.commit()
+
+
+def launch_ops(client, rev, file, code, table, second=None, status=202, **params):
+    body = {"table_id": str(table.id), "parametres": params}
+    if second is not None:
+        body["seconde_table_id"] = str(second.id)
+    resp = client.post(
+        f"/api/audit-files/{file['id']}/ops-controls/{code}", json=body, headers=rev["aud"].headers
+    )
+    assert resp.status_code == status, resp.text
+    return resp.json()

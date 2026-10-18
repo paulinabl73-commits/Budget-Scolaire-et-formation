@@ -39,6 +39,7 @@ from app.api import (
     meta,
     notifications,
     opinion,
+    ops_controls,
     plans,
     portal,
     program,
@@ -162,5 +163,6 @@ for router in (
     opinion.router,
     ifrs.router,
     branches.router,
+    ops_controls.router,
 ):
     app.include_router(router, prefix="/api")

@@ -997,6 +997,21 @@
         "lignes_max_compte": "Compte inhabituel : lignes au plus",
         "lignes_max_utilisateur": "Utilisateur inhabituel : lignes au plus"
       }
+    },
+    "cip_cotisations": {
+      "titre": "Recalcul des cotisations (CIP-02)",
+      "description": "Recalcule par employeur la cotisation théorique (masse salariale déclarée plafonnée × taux par branche) et la compare aux cotisations émises et encaissées.",
+      "params": {
+        "champ_employeur": "Déclarations : champ employeur",
+        "champ_salaire": "Déclarations : champ salaire",
+        "champ_employeur_emission": "Émissions : champ employeur",
+        "champ_emis": "Émissions : champ cotisations émises",
+        "champ_encaisse": "Émissions : champ cotisations encaissées",
+        "taux": "Taux par branche en % (ex. PF=7; PV=8)",
+        "plafonds": "Plafond mensuel par branche (ex. PF=70000 ; 0 = sans plafond)",
+        "mois_par_ligne": "Mois couverts par une ligne de déclaration",
+        "tolerance": "Écart toléré"
+      }
     }
   },
   "constructeur": {
@@ -1558,7 +1573,8 @@
       "synthese": "Note de synthèse",
       "rapport": "Opinion et rapport",
       "ifrs": "IFRS",
-      "branches": "Branches"
+      "branches": "Branches",
+      "ops": "Contrôles OPS"
     },
     "navigation": "Sections du dossier",
     "verrouille": "Rapport émis : dossier verrouillé et archivé, consultation uniquement."
@@ -2111,5 +2127,15 @@
     "brancheDe": "Branche de {{compte}}",
     "controles": "Contrôles de la mission par branche",
     "aucunControle": "Aucun contrôle défini dans la mission."
+  },
+  "ops": {
+    "intro": "Contrôles des organismes de prévoyance sociale : les taux, plafonds et limites sont lus dans le référentiel du dossier pour {{pays}} et l'exercice {{exercice}} ; ils ne sont pas modifiables ici.",
+    "paysNonPrecise": "le pays non précisé du dossier",
+    "manquants": "Paramètres réglementaires à saisir dans le référentiel avant de lancer ce contrôle : {{liste}}.",
+    "reglementaires": "Valeurs réglementaires retenues",
+    "lancer": "Lancer le contrôle",
+    "executions": "Dernières exécutions",
+    "lignes_one": "{{count}} ligne",
+    "lignes_other": "{{count}} lignes"
   }
 }

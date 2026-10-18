@@ -31,7 +31,8 @@ class AnalysisError(ValueError):
 class Param:
     nom: str
     # colonne, colonnes, nombre, entier, graine, nombres, texte, expression, choix, date,
-    # agregats (liste {champ, fonction}), paires (liste {gauche, droite})
+    # agregats (liste {champ, fonction}), paires (liste {gauche, droite}),
+    # bareme (valeur par code, ex. taux par branche : {"PF": 7} ou « PF=7; RP=2 »)
     type: str
     requis: bool = True
     defaut: Any = None
@@ -158,6 +159,8 @@ def validate(op: Operation, raw: dict[str, Any], rels: list[Relation]) -> dict[s
             clean[p.nom] = _aggregates(value, schemas, p)
         elif p.type == "paires":
             clean[p.nom] = _pairs(value, schemas, p)
+        elif p.type == "bareme":
+            clean[p.nom] = _scale(value, p)
         else:  # pragma: no cover - déclaration erronée
             raise AssertionError(p.type)
     return clean
@@ -193,6 +196,22 @@ def _pairs(value: Any, schemas: list[dict[str, str]], p: Param) -> list[dict[str
         left = _column(item.get("gauche"), Param(p.nom, "colonne", table=0), schemas, p.nom)
         right = _column(item.get("droite"), Param(p.nom, "colonne", table=1), schemas, p.nom)
         out.append({"gauche": left, "droite": right})
+    return out
+
+
+def _scale(value: Any, p: Param) -> dict[str, str]:
+    if isinstance(value, str):
+        items = [part.partition("=") for part in value.split(";") if part.strip()]
+        if any(not sep for _, sep, _ in items):
+            raise AnalysisError(f"{p.nom} : forme « CODE=valeur; CODE=valeur » attendue")
+        value = {k.strip(): v.strip() for k, _, v in items}
+    if not isinstance(value, dict) or not 1 <= len(value) <= 20:
+        raise AnalysisError(f"{p.nom} : 1 à 20 valeurs attendues")
+    out = {}
+    for code, number in value.items():
+        if not isinstance(code, str) or not code.isalnum() or len(code) > 20:
+            raise AnalysisError(f"{p.nom} : code « {code} » invalide")
+        out[code] = str(_bounded(p, _number(number, p.nom)))
     return out
 
 
