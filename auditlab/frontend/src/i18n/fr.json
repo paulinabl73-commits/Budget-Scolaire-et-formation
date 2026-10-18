@@ -2413,5 +2413,19 @@
       "decalage_mois": "Mois après la clôture",
       "regimes": "Régimes concernés (aucun coché : tous)"
     }
+  },
+  "tableauPortefeuille": {
+    "avancement": "Avancement des clôtures",
+    "dossier": "Dossier",
+    "etape": "Clôture en cours",
+    "prochaine": "Prochaine échéance",
+    "retard": "Retard",
+    "avancementDe": "Avancement de la clôture de {{client}}",
+    "enRetard_one": "En retard ({{count}} échéance)",
+    "enRetard_other": "En retard ({{count}} échéances)",
+    "aVenir": "Échéances des {{jours}} prochains jours",
+    "changerEtape": "Étape",
+    "passerA": "Passer à « {{etape}} »",
+    "revenirA": "Revenir à « {{etape}} »"
   }
 }

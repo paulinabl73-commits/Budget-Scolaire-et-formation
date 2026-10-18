@@ -3,10 +3,11 @@ import type { FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 
-import { api, post } from "../api/client";
+import { api, post, put } from "../api/client";
 import type { PortfolioClient } from "../api/portfolio";
 import Alert from "../components/Alert";
 import DeadlinesPanel from "../components/portfolio/DeadlinesPanel";
+import { STAGES } from "../components/portfolio/PortfolioDashboard";
 
 /** Dossier client permanent et ses clôtures (Module 6). */
 export default function ClientPage() {
@@ -25,6 +26,15 @@ export default function ClientPage() {
     setError(null);
     try {
       await post(`/clients/${c.id}/closings`, { exercice: Number(exercice) });
+      await load();
+    } catch (err) {
+      setError((err as Error).message);
+    }
+  };
+  const stage = async (id: string, etape: string) => {
+    setError(null);
+    try {
+      await put(`/closings/${id}/stage`, { etape });
       await load();
     } catch (err) {
       setError((err as Error).message);
@@ -64,6 +74,16 @@ export default function ClientPage() {
             <li key={x.id} className="flex flex-wrap items-center gap-3 py-2">
               <span className="font-medium">{t("portefeuille.exercice")} {x.exercice}</span>
               <span>{t(`portefeuille.etapes.${x.etape}`)}</span>
+              {STAGES.indexOf(x.etape as (typeof STAGES)[number]) > 0 && (
+                <button type="button" className="underline" onClick={() => void stage(x.id, STAGES[STAGES.indexOf(x.etape as (typeof STAGES)[number]) - 1])}>
+                  {t("tableauPortefeuille.revenirA", { etape: t(`portefeuille.etapes.${STAGES[STAGES.indexOf(x.etape as (typeof STAGES)[number]) - 1]}`) })}
+                </button>
+              )}
+              {x.etape !== "termine" && (
+                <button type="button" className="btn-secondaire" onClick={() => void stage(x.id, STAGES[STAGES.indexOf(x.etape as (typeof STAGES)[number]) + 1])}>
+                  {t("tableauPortefeuille.passerA", { etape: t(`portefeuille.etapes.${STAGES[STAGES.indexOf(x.etape as (typeof STAGES)[number]) + 1]}`) })}
+                </button>
+              )}
               <Link className="text-marque-700 underline" to={`/missions/${x.engagement_id}/revision/${x.audit_file_id}`}>{t("portefeuille.dossierRevision")}</Link>
               <Link className="text-marque-700 underline" to={`/missions/${x.engagement_id}`}>{t("portefeuille.mission")}</Link>
             </li>

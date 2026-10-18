@@ -10,6 +10,7 @@ import type { FrameworkSummary } from "../api/types";
 import { useAuth } from "../auth/AuthContext";
 import Alert from "../components/Alert";
 import CalendarRulesPanel from "../components/portfolio/CalendarRulesPanel";
+import PortfolioDashboard from "../components/portfolio/PortfolioDashboard";
 import { can, PERM } from "../lib/permissions";
 
 /** Portefeuille de dossiers clients du cabinet (RCO-01). */
@@ -31,6 +32,7 @@ export default function PortfolioPage() {
         {manager && <button type="button" className="btn-primaire" onClick={() => setShowForm((v) => !v)}>{t("portefeuille.nouveau")}</button>}
       </div>
       {error && <Alert kind="erreur">{error}</Alert>}
+      <PortfolioDashboard />
       {showForm && <ClientForm onCreated={() => { setShowForm(false); void load(); }} />}
       {clients && (clients.length === 0 ? <p className="text-sm text-slate-600">{t("portefeuille.aucun")}</p> : (
         <div className="carte overflow-x-auto p-0">
