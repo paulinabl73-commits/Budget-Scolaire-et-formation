@@ -69,10 +69,12 @@ def cmd_send_emails(_: argparse.Namespace) -> int:
 
 
 def cmd_send_reminders(_: argparse.Namespace) -> int:
+    from app.cabinet.calendar import send_calendar_alerts
     from app.followup import send_reminders
 
     with SessionLocal() as db:
         print(f"{send_reminders(db)} relance(s) de plans d'action.")
+        print(f"{send_calendar_alerts(db)} alerte(s) d'échéances fiscales et sociales.")
     return 0
 
 
@@ -84,7 +86,9 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--email", required=True)
     p.add_argument("--nom", default="Administrateur")
     sub.add_parser("send-emails", help="Envoie les e-mails en attente (SMTP)")
-    sub.add_parser("send-reminders", help="Relance les plans d'action (CON-06), chaque jour")
+    sub.add_parser(
+        "send-reminders", help="Relances des plans d'action et alertes d'échéances, chaque jour"
+    )
     args = parser.parse_args(argv)
     commands = {
         "verify-audit-chain": cmd_verify,

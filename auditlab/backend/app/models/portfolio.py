@@ -57,3 +57,41 @@ class Closing(TrackedMixin, Base):
     # Date de franchissement de chaque étape (RCO-02).
     etapes: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
     date_depot: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
+
+
+class CalendarRule(TrackedMixin, Base):
+    """Échéance fiscale, sociale ou juridique d'un pays (RCO-03), saisie par le cabinet.
+
+    Périodicité : « mensuelle » et « trimestrielle » (jour J du mois qui suit la période),
+    « annuelle » (jour et mois fixes), « cloture » (N mois après la clôture, au jour J ou au
+    même quantième). `regimes` vide : tous les régimes fiscaux.
+    """
+
+    __tablename__ = "calendar_rules"
+
+    pays: Mapped[str] = mapped_column(String(40), index=True)
+    code: Mapped[str] = mapped_column(String(40))
+    libelle: Mapped[str] = mapped_column(String(300))
+    nature: Mapped[str] = mapped_column(String(20))  # fiscal, social, juridique
+    periodicite: Mapped[str] = mapped_column(String(20))
+    jour: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    mois: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    decalage_mois: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    regimes: Mapped[list[str]] = mapped_column(JSONB, default=list)
+    actif: Mapped[bool] = mapped_column(Boolean, default=True)
+
+
+class ClientDeadline(TrackedMixin, Base):
+    """Suivi d'une échéance d'un client : faite, alertes envoyées (une par délai)."""
+
+    __tablename__ = "client_deadlines"
+    __table_args__ = (
+        Index("uq_client_deadlines", "client_id", "rule_id", "echeance", unique=True,
+              postgresql_where=text("deleted_at IS NULL")),
+    )  # fmt: skip
+
+    client_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("clients.id"), index=True)
+    rule_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("calendar_rules.id"), index=True)
+    echeance: Mapped[dt.date] = mapped_column(Date)
+    fait_le: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
+    alertes: Mapped[list[int]] = mapped_column(JSONB, default=list)

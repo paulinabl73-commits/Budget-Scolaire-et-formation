@@ -2366,5 +2366,52 @@
       "depot": "Dépôt",
       "termine": "Terminé"
     }
+  },
+  "calendrier": {
+    "titre": "Calendrier fiscal et social",
+    "aide": "Échéances saisies par pays (aucune n'est livrée) ; alertes à l'expert-comptable et au collaborateur à J-15 et J-5.",
+    "echeances": "Échéances fiscales et sociales",
+    "aucune": "Aucune échéance pour le pays et le régime de ce dossier.",
+    "echeance": "Échéance",
+    "obligation": "Obligation",
+    "periode": "Période",
+    "statut": "Statut",
+    "marquerFait": "Marquer fait",
+    "rouvrir": "Rouvrir",
+    "supprimer": "Supprimer",
+    "ajouter": "Ajouter l'échéance",
+    "statuts": {
+      "fait": "Fait",
+      "en_retard": "En retard",
+      "a_venir": "À venir"
+    },
+    "natures": {
+      "fiscal": "fiscal",
+      "social": "social",
+      "juridique": "juridique"
+    },
+    "periodicites": {
+      "mensuelle": "Mensuelle",
+      "trimestrielle": "Trimestrielle",
+      "annuelle": "Annuelle",
+      "cloture": "Après la clôture"
+    },
+    "regles": {
+      "mensuelle": "le {{jour}} du mois suivant",
+      "trimestrielle": "le {{jour}} du mois suivant le trimestre",
+      "annuelle": "le {{jour}}/{{mois}}",
+      "cloture": "{{n}} mois après la clôture (jour {{jour}})"
+    },
+    "champs": {
+      "pays": "Pays",
+      "code": "Code",
+      "libelle": "Libellé",
+      "nature": "Nature",
+      "periodicite": "Périodicité",
+      "jour": "Jour",
+      "mois": "Mois",
+      "decalage_mois": "Mois après la clôture",
+      "regimes": "Régimes concernés (aucun coché : tous)"
+    }
   }
 }

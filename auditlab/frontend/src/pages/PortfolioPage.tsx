@@ -9,6 +9,7 @@ import type { PortfolioClient, PortfolioStaff } from "../api/portfolio";
 import type { FrameworkSummary } from "../api/types";
 import { useAuth } from "../auth/AuthContext";
 import Alert from "../components/Alert";
+import CalendarRulesPanel from "../components/portfolio/CalendarRulesPanel";
 import { can, PERM } from "../lib/permissions";
 
 /** Portefeuille de dossiers clients du cabinet (RCO-01). */
@@ -61,6 +62,7 @@ export default function PortfolioPage() {
           </table>
         </div>
       ))}
+      {manager && <CalendarRulesPanel />}
     </div>
   );
 }

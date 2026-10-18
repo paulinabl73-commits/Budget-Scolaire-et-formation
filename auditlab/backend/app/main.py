@@ -18,6 +18,7 @@ from app.api import (
     auth,
     bank_reconciliations,
     branches,
+    calendar,
     confirmations,
     contradictory,
     currencies,
@@ -167,6 +168,7 @@ for router in (
     opinion.router,
     ifrs.router,
     branches.router,
+    calendar.router,
     ops_controls.router,
 ):
     app.include_router(router, prefix="/api")

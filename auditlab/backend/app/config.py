@@ -50,6 +50,8 @@ class Settings(BaseSettings):
     adresse_cabinet: str = ""
     # Rapprochements bancaires (REV-20) : suspens ancien au-delà de N jours avant la clôture.
     anciennete_suspens_jours: int = 90
+    # Alertes avant les échéances du calendrier fiscal et social (RCO-03), en jours.
+    alertes_echeances_jours: list[int] = [15, 5]
     # Classes exclues des états financiers (comptabilité analytique, engagements hors bilan).
     classes_hors_etats: str = "9"
     cors_origins: list[str] = ["http://localhost:5173"]

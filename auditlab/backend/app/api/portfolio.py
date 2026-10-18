@@ -5,7 +5,6 @@ collaborateur auditeur, superviseur facultatif) portant un dossier de révision 
 import des balances, affectation et états y sont repris tels quels.
 """
 
-import calendar
 import datetime as dt
 import uuid
 from typing import Any, Literal
@@ -20,6 +19,7 @@ from app.api.audit_files import create_file as create_audit_file
 from app.api.deps import CurrentUser, DbSession
 from app.api.engagements import _next_reference, _validate_team
 from app.api.mission_access import sees_all
+from app.cabinet.dates import add_months, exercise_end
 from app.models.engagement import Engagement, EngagementMember, MissionRole
 from app.models.portfolio import Client, Closing
 from app.models.revision import AccountingFramework
@@ -71,17 +71,6 @@ class ClientUpdate(BaseModel):
 class ClosingIn(BaseModel):
     exercice: int = Field(ge=1990, le=2100)
     budget_jours: float | None = Field(default=None, gt=0, le=1000)
-
-
-def exercise_end(client: Client, year: int) -> dt.date:
-    last = calendar.monthrange(year, client.mois_cloture)[1]
-    return dt.date(year, client.mois_cloture, min(client.jour_cloture, last))
-
-
-def add_months(day: dt.date, months: int) -> dt.date:
-    month = day.month - 1 + months
-    year, month = day.year + month // 12, month % 12 + 1
-    return dt.date(year, month, min(day.day, calendar.monthrange(year, month)[1]))
 
 
 def visible_clients(user: User) -> Any:

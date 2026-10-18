@@ -6,6 +6,7 @@ import { Link, useParams } from "react-router-dom";
 import { api, post } from "../api/client";
 import type { PortfolioClient } from "../api/portfolio";
 import Alert from "../components/Alert";
+import DeadlinesPanel from "../components/portfolio/DeadlinesPanel";
 
 /** Dossier client permanent et ses clôtures (Module 6). */
 export default function ClientPage() {
@@ -55,6 +56,7 @@ export default function ClientPage() {
           ))}
         </dl>
       </section>
+      <DeadlinesPanel clientId={c.id} canWork />
       <section className="carte space-y-3" aria-labelledby="cl-clotures">
         <h2 id="cl-clotures" className="text-base font-semibold">{t("portefeuille.clotures")}</h2>
         <ul className="divide-y divide-slate-100 text-sm">

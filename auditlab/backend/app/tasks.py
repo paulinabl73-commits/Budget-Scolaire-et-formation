@@ -26,13 +26,15 @@ celery.autodiscover_tasks(["app.analytics"], related_name="jobs")
 
 @celery.task(name="auditlab.daily_followup")
 def daily_followup() -> int:
-    """Relances des plans d'action (CON-06) puis envoi des e-mails en file."""
+    """Relances des plans d'action (CON-06), alertes du calendrier fiscal et social (RCO-03),
+    puis envoi des e-mails en file."""
+    from app.cabinet.calendar import send_calendar_alerts
     from app.db import SessionLocal
     from app.followup import send_reminders
     from app.notify import send_pending
 
     with SessionLocal() as db:
-        count = send_reminders(db)
+        count = send_reminders(db) + send_calendar_alerts(db)
         send_pending(db)
     return count
 
