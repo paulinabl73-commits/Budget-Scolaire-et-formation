@@ -6,6 +6,7 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query, status
 from fastapi.responses import Response
+from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -15,7 +16,7 @@ from app.api.deps import CurrentUser, DbSession
 from app.api.mapping import values_or_409
 from app.audit.listeners import record_event
 from app.models.revision import AccountingFramework, AuditFile, StatementLine
-from app.revision import documents, ifrs, statements
+from app.revision import documents, ifrs, ifrs_assistants, statements
 from app.revision.mapping import file_values
 
 router = APIRouter(tags=["Révision – IFRS"])
@@ -174,3 +175,85 @@ def export_ifrs(
             "Content-Disposition": f'attachment; filename="etats_ifrs_{file.exercice}.{format}"'
         },
     )
+
+
+# --- Assistants de calcul (IFR-02) --------------------------------------------------------------
+
+
+class AssistantIn(BaseModel):
+    parametres: dict[str, Any] = Field(default_factory=dict)
+    creer: bool = False
+
+
+@router.get("/ifrs/assistants")
+def list_assistants(user: CurrentUser) -> list[dict[str, Any]]:
+    return [
+        {
+            "code": code,
+            "norme": spec["norme"],
+            "params": [{"nom": p.nom, "type": p.type, "defaut": p.defaut} for p in spec["params"]],
+        }
+        for code, spec in ifrs_assistants.ASSISTANTS.items()
+    ]
+
+
+def _prefill(
+    db: Session, file: AuditFile, code: str, params: dict[str, Any], user: Any
+) -> dict[str, Any]:
+    params = dict(params)
+    if code == "ias12" and ("effet_resultat" not in params or "effet_capitaux" not in params):
+        others = [
+            a
+            for a in file_adjustments(db, file.id, ifrs=True)
+            if a.statut == "acceptee" and a.norme != "IAS 12"
+        ]
+        effects = ifrs.effects_by_standard(others, lines_of(db, [a.id for a in others]))
+        params.setdefault(
+            "effet_resultat", str(sum((e["resultat"] for e in effects.values()), ZERO))
+        )
+        params.setdefault(
+            "effet_capitaux", str(sum((e["capitaux"] for e in effects.values()), ZERO))
+        )
+    if code == "ifrs9" and not params.get("tranches") and params.get("taux_perte"):
+        from app.api.third_parties import receivables_aging
+
+        aging = receivables_aging(file.id, user, db)
+        params["tranches"] = [
+            {"libelle": b["libelle"], "montant": total, "taux_perte": rate}
+            for b, total, rate in zip(
+                aging["tranches"], aging["totaux"], params["taux_perte"], strict=False
+            )
+        ]
+        params.setdefault("depreciation_comptabilisee", aging["depreciation_comptabilisee"])
+    return params
+
+
+@router.post("/audit-files/{file_id}/ifrs/assistants/{code}")
+def run_assistant(
+    file_id: uuid.UUID, code: str, body: AssistantIn, user: CurrentUser, db: DbSession
+) -> dict[str, Any]:
+    from app.api.adjustments import AdjustmentIn, create_adjustment
+    from app.revision.currency import decimals, quantum
+
+    file, engagement = get_file(db, file_id, user)
+    params = _prefill(db, file, code, body.parametres, user)
+    try:
+        result = ifrs_assistants.run(code, params, quantum(decimals(db, file.devise)))
+    except ifrs_assistants.AssistantError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    if body.creer:
+        if not result["lignes"]:
+            raise HTTPException(status.HTTP_409_CONFLICT, "Aucun écart : pas d'écriture à proposer")
+        entry = AdjustmentIn(
+            type="retraitement_ifrs",
+            norme=result["norme"],
+            date_ecriture=file.date_fin,
+            libelle=result["libelle"],
+            justification=f"Calcul de l'assistant {result['norme']} (IFR-02) : "
+            + ", ".join(
+                f"{k} = {v}" for k, v in result["calcul"].items() if not isinstance(v, list)
+            ),
+            lignes=result["lignes"],
+        )
+        result["retraitement"] = create_adjustment(file.id, entry, user, db)
+    return result

@@ -6,6 +6,7 @@ import type { AuditFile } from "../../api/types";
 import { formatNombre } from "../../lib/format";
 import Alert from "../Alert";
 import AdjustmentsPanel from "./AdjustmentsPanel";
+import IfrsAssistantsPanel from "./IfrsAssistantsPanel";
 
 interface Line { code: string; libelle: string; niveau: number; passage: string | null; total: boolean; N: string; "N-1": string | null }
 interface Rec { lignes: { libelle: string; montant: string }[]; ifrs: string; ecart: string }
@@ -22,6 +23,7 @@ export default function IfrsPanel({ file }: { file: AuditFile }) {
   const [data, setData] = useState<Ifrs | null>(null);
   const [etat, setEtat] = useState("ifrs_situation");
   const [error, setError] = useState<string | null>(null);
+  const [version, setVersion] = useState(0);
   const load = useCallback(async () => {
     try {
       setData(await api<Ifrs>(`/audit-files/${file.id}/ifrs`));
@@ -37,7 +39,8 @@ export default function IfrsPanel({ file }: { file: AuditFile }) {
 
   return (
     <div className="space-y-4">
-      <AdjustmentsPanel file={file} ifrs onChange={() => void load()} />
+      <AdjustmentsPanel key={version} file={file} ifrs onChange={() => void load()} />
+      <IfrsAssistantsPanel file={file} onCreated={() => { setVersion((v) => v + 1); void load(); }} />
       {error && <Alert kind="info">{error}</Alert>}
       {data && (
         <section className="carte space-y-3" aria-labelledby="ifrs-titre">
