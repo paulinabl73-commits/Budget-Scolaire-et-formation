@@ -11,11 +11,54 @@
 | 7 | Échantillonnage et lignée : DAT-20 à DAT-25 | **Livré** |
 | 8 | Liaison audit et analyse, constats : DAT-30 à DAT-32, CON-01 à CON-09 | **Livré** |
 | 8a | Référentiels et balance : REV-01 à REV-14 | **Livré** |
-| 8b | Révision et états : REV-15 à REV-28, CIP-01 à CIP-09, IFR-01 à IFR-04 | À faire |
+| 8b | Révision et états : REV-15 à REV-28, CIP-01 à CIP-09, IFR-01 à IFR-04 | **Livré** |
 | 8c | Portefeuille et contrôles : RCO-01 à RCO-10 | À faire |
 | 8d | Inventaire, fiscalité et livrables : RCO-11 à RCO-27 | À faire |
 | 9 | Scripts et automatisation : DAT-26 à DAT-29 | À faire |
 | 10 | Reporting et finitions : REP-01 à REP-08, NF-09 à NF-11 | À faire |
+
+## Lot 8b — détail
+
+**Livré** (un commit par exigence ; REV-23/24 et IFR-01/03 ensemble : mêmes états)
+- **REV-15** : feuilles maîtresses par cycle (N-1, N, ajustements, révisé, papiers liés).
+- **REV-16** : programmes de travail types par cycle (50 procédures), propres au référentiel.
+- **REV-17** : tests des écritures de journal (ISA 240), analyse du Module 2 lancée sur le
+  grand livre N.
+- **REV-18** : lettrage, justification des tiers, balance âgée et dépréciation proposée.
+- **REV-19** : circularisation (banques, clients, fournisseurs, avocats) en PDF et Word,
+  suivi des réponses, rapprochement automatique des écarts.
+- **REV-20** : rapprochements bancaires importés et contrôlés.
+- **REV-21 / REV-22** : écritures d'ajustement, décision de l'entité, soldes révisés ;
+  tableau des anomalies non corrigées (ISA 450).
+- **REV-23 / REV-24** : états financiers révisés (dont tableau des flux), contrôles de
+  cohérence, exports Excel et PDF.
+- **REV-25** : aide à la liasse (DSF) par pays, modèle générique OHADA, export Excel.
+- **REV-26** : note de synthèse générée, points en suspens renvoyant à leur écran.
+- **REV-27** : modèles de rapports (opinion ISA 700/705/706, rapport spécial, lettre
+  d'affirmation) ; rôles Associé signataire et Inspecteur CIPRES.
+- **REV-28** : signature, émission, archivage et verrouillage du dossier.
+- **IFR-01 / IFR-03** : retraitements IFRS, table de passage, états IFRS et réconciliations.
+- **IFR-02** : six assistants de calcul (IFRS 16, IAS 19, IFRS 9, IAS 16, IAS 12, IFRS 15).
+- **IFR-04** : check-list des informations à fournir en annexe (48 points, 13 normes).
+- **CIP-01** : suivi par branche (comptes, contrôles, états et ratios par branche).
+- **CIP-02 à CIP-05** : contrôles sur les fichiers des organismes (cotisations, recouvrement
+  et créances, prestations et pensions, allocations familiales), opérations du Module 2
+  lancées depuis le dossier avec les paramètres du référentiel.
+- **CIP-06 / CIP-07** : frais de gestion, réserves techniques par branche, placements et
+  rendement, sur les soldes révisés.
+- **CIP-08** : mission d'inspection CIPRES (rapports provisoire et définitif figés, réponses
+  de l'organisme, suivi des recommandations d'une inspection à l'autre).
+- **CIP-09** : paramètres réglementaires par pays, exercice et branche ; aucune valeur livrée.
+- Changements signalés d'exigences livrées : programme généré depuis la matrice des risques
+  enrichi des procédures types (REV-14) ; deux rôles ajoutés à la matrice des droits ;
+  colonne `Control.branche` (Module 1, migration 0053) ; colonne `Engagement.mode`
+  (AUD-06, migration 0054), « audit » par défaut.
+- Correctifs : nombre de postes du référentiel livré dans le test REV-01 ; style d'un bouton
+  (CIP-02) et libellé du choix de branche (CIP-01) relevés au parcours navigateur.
+- Tests : 444 tests backend, couverture 98 %. Parcours navigateur rejoués : ajustements,
+  feuilles maîtresses, états, tiers, circularisation, synthèse, opinion et signature, IFRS ;
+  pour un organisme de prévoyance sociale : branches, indicateurs, contrôle CIP-05 lancé
+  depuis l'écran, inspection jusqu'au rapport provisoire.
 
 ## Lot 8a — détail
 

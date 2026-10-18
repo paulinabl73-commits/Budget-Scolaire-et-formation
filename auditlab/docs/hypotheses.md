@@ -18,6 +18,61 @@ Le document de synthèse partageable reprend ce fichier.
 
 ## Module 5 — révision des comptes
 
+### Lot 8b
+- Écritures d'ajustement (ISA 450) : la décision de l'entité est enregistrée par l'équipe et
+  fige l'écriture ; seules les écritures acceptées entrent dans les soldes révisés ; les
+  écritures proposées ou refusées forment les anomalies non corrigées, cumulées hors
+  anomalies manifestement insignifiantes, appréciées par rapport aux seuils de planification
+  et de signification.
+- Tableau des flux SYSCOHADA établi par différence entre bilans ; contrôle de trésorerie
+  limité à N ; export des états refusé tant qu'un contrôle de cohérence est en écart.
+- Tests des écritures (ISA 240) : journaux OD considérés manuels par défaut, montant rond =
+  multiple de 100 000, compte ou utilisateur inhabituel = au plus 3 ou 5 lignes ; tous
+  modifiables au lancement.
+- Dépréciation des créances : grille par défaut 0 / 25 / 50 / 100 % à 180 jours, un an et
+  deux ans, modifiable par dossier ; base hors taxes si un taux de TVA est saisi.
+- Circularisation : sélection au-delà du seuil de planification par défaut ; confirmation
+  positive avec solde pour les clients, demande de relevé sans montant pour les fournisseurs
+  (pratique recommandée pour détecter les passifs omis) ; réponses adressées au cabinet.
+- Rapprochements bancaires : suspens anciens au-delà de 90 jours (paramétrable).
+- Liasse (DSF) : modèle générique OHADA livré, modèles par pays importés en Excel ; les
+  informations non comptables restent à saisir.
+- Opinion : rédigée par le chef de mission, suggérée par le tableau des anomalies non
+  corrigées ; signée par l'associé signataire membre de la mission ou par le chef de mission ;
+  points bloquants avant signature ; rapport émis archivé avec son empreinte, dossier verrouillé.
+- Rôles ajoutés : Associé signataire (droits du Directeur sur ses dossiers, double
+  authentification) et Inspecteur CIPRES (droits du Chef de mission, missions d'inspection
+  seulement).
+- IFRS : un retraitement est une écriture d'ajustement d'un type dédié, jamais reprise dans
+  les états SYSCOHADA ; la table de passage est un référentiel de restitution dont les postes
+  sont des formules sur les postes SYSCOHADA retraités ; comparatifs N-1 non retraités ;
+  subventions d'investissement en produits différés (IAS 20). Assistants : aucune donnée
+  conventionnelle supposée (taux d'actualisation, mois d'indemnité, taux d'impôt saisis).
+- Check-list IFRS : normes générales toujours affichées, autres normes affichées quand un
+  retraitement validé les mobilise ; information manquante = commentaire obligatoire.
+- CIPRES (CIP-09) : aucune valeur réglementaire livrée ; un paramètre vaut à partir de son
+  exercice jusqu'à son remplacement ; le plus précis l'emporte (branche, pays, exercice) ;
+  un contrôle dont un paramètre manque est refusé avec la liste à saisir. Taux en
+  pourcentage ; plafond de cotisation nul = sans plafond ; mode de majoration de retard
+  (par mois entamé, mois de 30 jours, ou forfaitaire) saisi comme paramètre.
+- Branches (CIP-01) : rattachement par la racine la plus longue du plan portant une branche,
+  rattachement manuel possible par dossier ; comptes non rattachés signalés et exclus des
+  états par branche.
+- Contrôles sur fichiers (CIP-02 à CIP-05) : opérations du Module 2 (traçables, rejouables) ;
+  déclarations nominatives (une ligne par salarié et par période) ; fichier des pensionnés à
+  raison d'une ligne par pension servie ; noms proches recherchés entre bénéficiaires nés le
+  même jour (Jaro-Winkler ≥ 0,9 par défaut, choix de l'auditeur) ; droit aux allocations
+  jusqu'à la veille de l'âge limite ; enfant rattaché à plusieurs allocataires signalé ;
+  critère dont la colonne n'est pas fournie non appliqué et signalé.
+- Indicateurs (CIP-06, CIP-07) : agrégats lus dans des postes du référentiel aux codes
+  réservés (COT, CCO, FGE, RTE, PRE, PPL, PLA_<catégorie>), à prévoir dans les états du plan
+  CIPRES importé ; cotisations encaissées = émises − variation des créances sur cotisants ;
+  réserves exprimées en mois de prestations ; rendement sur l'encours moyen N et N-1.
+- Inspection CIPRES (CIP-08) : rapport provisoire émis quand tous les constats ont été soumis
+  à l'organisme ; rapport définitif quand ils sont validés et que le suivi de chaque
+  recommandation antérieure est renseigné ; destinataire par défaut « Commission de
+  surveillance de la CIPRES » (modifiable) ; rapports figés et horodatés avec empreinte.
+
 ### Lot 8a
 - Référentiels : données versionnées, jamais écrites dans le programme. SYSCOHADA révisé 2017
   livré pour le Système normal ; le plan CIPRES n'étant pas public, un modèle de structure est

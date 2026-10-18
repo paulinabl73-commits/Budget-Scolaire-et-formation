@@ -22,7 +22,11 @@ auditlab/
                       action_plans.py, portal.py = lot 8 ;
                       frameworks.py, audit_files.py, trial_balances.py, currencies.py,
                       mapping.py, materiality.py, analytical.py, ratios.py,
-                      risk_matrix.py = lot 8a
+                      risk_matrix.py = lot 8a ;
+                      adjustments.py, lead_schedules.py, statements.py, programs.py,
+                      third_parties.py, confirmations.py, bank_reconciliations.py, dsf.py,
+                      synthesis.py, opinion.py, ifrs.py, branches.py, ops_controls.py,
+                      inspection.py = lot 8b
       analytics/      Module 2 : store.py (Parquet, DuckDB), formats.py, detect.py, pdf.py,
                       sql_source.py, jobs.py (tâches Celery), expr.py (expressions),
                       relation.py (relation SQL d'une table ou d'une vue), grid.py,
@@ -32,6 +36,10 @@ auditlab/
                       Excel), balances.py (lecture des fichiers), imports.py (import et
                       reprise N-1), controls.py (REV-06), currency.py (REV-07),
                       mapping.py (affectation, états), cycles.py (REV-14) ;
+                      lot 8b : statements.py, programs.py, third_parties.py,
+                      confirmations.py, bank.py, dsf.py, reports.py, documents.py
+                      (PDF/Word), ifrs.py, ifrs_assistants.py, parameters.py (CIP-09),
+                      ops.py (contrôles OPS), ops_indicators.py (CIP-06/07) ;
                       data/ = référentiels, synonymes, devises, cycles (JSON)
       audit/          chain.py (chaînage par hash), listeners.py (journalisation automatique)
       models/         modèles SQLAlchemy ; base.py = TrackedMixin
@@ -313,3 +321,27 @@ docker compose up -d --build
 - **Tests** : `tests/revision_helpers.py` (fixture `rev`, `create_file`),
   `tests/revision_data.py` (société de référence : total du bilan 31,7 M, CA 40 M, résultat
   7,1 M), `test_affectation.load` (balances N-1 puis N).
+
+### Lot 8b — révision, états, IFRS et CIPRES (Module 5)
+
+- **Soldes révisés** : `mapping.assignments(db, file, adjusted=True)` ; les retraitements
+  IFRS (`Adjustment.type == mapping.IFRS`) n'y entrent qu'avec `ifrs=True`.
+- **Verrouillage** : `require_work` / `require_direct` refusent tout dossier dont le statut
+  n'est pas « ouvert » (archivé après émission, REV-28).
+- **Documents** : `revision/documents.render(fmt, titre, blocs)` (blocs `titre`, `texte`,
+  `liste`, `tableau`, `saut`) pour tout PDF ou Word.
+- **Paramètres réglementaires** : `revision/parameters.resolve/values` ; jamais de valeur
+  réglementaire dans le code ; nouveau paramètre = entrée dans `data/cipres_parametres.json`.
+- **Contrôles OPS** : une opération du Module 2 (`analytics/operations/cipres.py`) + une
+  entrée de `revision/ops.CONTROLS` qui fournit ses valeurs réglementaires (`Context.value`)
+  et ses valeurs fixées par le dossier ; l'utilisateur ne peut pas les surcharger.
+- **Indicateurs CIPRES** : postes aux codes réservés (COT, CCO, FGE, RTE, PRE, PPL,
+  PLA_<catégorie>) ; un compte n'est affecté qu'à un poste, ces codes sont donc des postes de
+  détail des états (les totaux en formule).
+- **Inspection** : `Engagement.mode == "inspection_cipres"` ; `api/inspection.py` ; rapports
+  figés (`InspectionReport.blocs`, `sha256`).
+- **Écrans** : vues du dossier `cycles, etats, tiers, circularisation, tresorerie, synthese,
+  ifrs, rapport`, plus `branches` et `ops` pour un référentiel CIPRES ; onglet `inspection`
+  de la mission en mode inspection.
+- **Tests** : `tests/cipres_helpers.py` (fixtures `ops` et `ops_detail`, `set_params`,
+  `launch_ops`, `detail_file`), `tests/data_helpers.make_dataset` pour les tables du Module 2.
