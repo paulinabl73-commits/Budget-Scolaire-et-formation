@@ -2228,6 +2228,23 @@
       "encaissees": "Cotisations encaissées",
       "ratio": "Ratio",
       "note": "Cotisations encaissées = cotisations émises − variation des créances sur cotisants. L'exercice précédent est repris du dossier N-1 lorsqu'il existe."
+    },
+    "reserves": {
+      "titre": "CIP-07 · Réserves techniques par branche",
+      "reserves": "Réserves (RTE)",
+      "prestations": "Prestations (PRE)",
+      "mois": "Mois de prestations couverts",
+      "minimum": "Minimum (mois)",
+      "note": "Mois couverts = réserves techniques / (prestations de l'exercice / 12). Les comptes sans branche sont exclus (vue « Branches »)."
+    },
+    "placements": {
+      "titre": "CIP-07 · Placements par catégorie",
+      "categorie": "Catégorie",
+      "montant": "Montant N",
+      "part": "Part",
+      "limite": "Limite",
+      "rendement": "Rendement des placements : {{taux}} (produits {{produits}} / encours moyen N et N-1).",
+      "note": "Catégories = postes PLA_<catégorie> du référentiel ; limites saisies comme paramètres « limite_placement:<catégorie> »."
     }
   }
 }

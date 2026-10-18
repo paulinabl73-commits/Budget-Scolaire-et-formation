@@ -16,8 +16,12 @@ interface FeesYear {
   plafond: string | null;
   conforme: boolean | null;
 }
+interface Reserve { code: string; libelle: string; reserves: string; prestations: string; mois_couverts: string | null; minimum_mois: string | null; conforme: boolean | null }
+interface Category { categorie: string; libelle: string; montant: string; part: string | null; limite: string | null; conforme: boolean | null }
 export interface Indicators {
   frais_gestion: { postes_manquants: string[]; exercices: FeesYear[] };
+  reserves: { postes_manquants: string[]; branches: Reserve[] };
+  placements: { postes_manquants: string[]; categories: Category[]; total?: string; total_n1?: string; produits?: string | null; rendement: string | null };
   parametres_manquants: string[];
 }
 
@@ -75,6 +79,68 @@ export default function OpsIndicatorsPanel({ file }: { file: AuditFile }) {
           </table>
         )}
         <p className="text-xs text-slate-500">{t("indicateursOps.frais.note")}</p>
+      </section>
+      <section className="carte space-y-2" aria-labelledby="ops-reserves">
+        <h2 id="ops-reserves" className="text-base font-semibold">{t("indicateursOps.reserves.titre")}</h2>
+        {data.reserves.postes_manquants.length > 0 ? <p className="text-sm text-slate-600">{t("indicateursOps.postesManquants", { liste: data.reserves.postes_manquants.join(", ") })}</p> : (
+          <table className="w-full text-left text-sm">
+            <thead className="text-xs text-slate-600">
+              <tr>
+                <th scope="col" className="py-1 pr-3">{t("branches.branche")}</th>
+                <th scope="col" className="py-1 pr-3 text-right">{t("indicateursOps.reserves.reserves")}</th>
+                <th scope="col" className="py-1 pr-3 text-right">{t("indicateursOps.reserves.prestations")}</th>
+                <th scope="col" className="py-1 pr-3 text-right">{t("indicateursOps.reserves.mois")}</th>
+                <th scope="col" className="py-1 pr-3 text-right">{t("indicateursOps.reserves.minimum")}</th>
+                <th scope="col" className="py-1 pr-3">{t("indicateursOps.verdict")}</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {data.reserves.branches.map((b) => (
+                <tr key={b.code}>
+                  <th scope="row" className="py-1 pr-3 font-normal">{b.code} – {b.libelle}</th>
+                  <td className="py-1 pr-3 text-right font-mono">{formatDecimal(b.reserves)}</td>
+                  <td className="py-1 pr-3 text-right font-mono">{formatDecimal(b.prestations)}</td>
+                  <td className="py-1 pr-3 text-right font-mono">{b.mois_couverts === null ? "—" : formatDecimal(b.mois_couverts)}</td>
+                  <td className="py-1 pr-3 text-right font-mono">{b.minimum_mois ?? "—"}</td>
+                  <td className="py-1 pr-3"><Verdict ok={b.conforme} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        <p className="text-xs text-slate-500">{t("indicateursOps.reserves.note")}</p>
+      </section>
+      <section className="carte space-y-2" aria-labelledby="ops-placements">
+        <h2 id="ops-placements" className="text-base font-semibold">{t("indicateursOps.placements.titre")}</h2>
+        {data.placements.postes_manquants.length > 0 && <p className="text-sm text-slate-600">{t("indicateursOps.postesManquants", { liste: data.placements.postes_manquants.join(", ") })}</p>}
+        {data.placements.categories.length > 0 && (
+          <>
+            <table className="w-full text-left text-sm">
+              <thead className="text-xs text-slate-600">
+                <tr>
+                  <th scope="col" className="py-1 pr-3">{t("indicateursOps.placements.categorie")}</th>
+                  <th scope="col" className="py-1 pr-3 text-right">{t("indicateursOps.placements.montant")}</th>
+                  <th scope="col" className="py-1 pr-3 text-right">{t("indicateursOps.placements.part")}</th>
+                  <th scope="col" className="py-1 pr-3 text-right">{t("indicateursOps.placements.limite")}</th>
+                  <th scope="col" className="py-1 pr-3">{t("indicateursOps.verdict")}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {data.placements.categories.map((c) => (
+                  <tr key={c.categorie}>
+                    <th scope="row" className="py-1 pr-3 font-normal">{c.libelle} <span className="font-mono text-xs text-slate-500">({c.categorie})</span></th>
+                    <td className="py-1 pr-3 text-right font-mono">{formatDecimal(c.montant)}</td>
+                    <td className="py-1 pr-3 text-right font-mono">{pct(c.part)}</td>
+                    <td className="py-1 pr-3 text-right font-mono">{pct(c.limite)}</td>
+                    <td className="py-1 pr-3"><Verdict ok={c.conforme} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p className="text-sm">{t("indicateursOps.placements.rendement", { taux: pct(data.placements.rendement), produits: data.placements.produits ? formatDecimal(data.placements.produits) : "—" })}</p>
+          </>
+        )}
+        <p className="text-xs text-slate-500">{t("indicateursOps.placements.note")}</p>
       </section>
     </div>
   );
