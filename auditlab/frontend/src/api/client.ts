@@ -4,6 +4,8 @@ export class ApiError extends Error {
   constructor(
     public status: number,
     message: string,
+    /** Liste de points bloquants renvoyée par certaines routes (detail.points). */
+    public points?: string[],
   ) {
     super(message);
   }
@@ -43,7 +45,8 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
       tokenStore.clear();
       window.dispatchEvent(new Event(UNAUTHORIZED_EVENT));
     }
-    throw new ApiError(resp.status, detail(body, resp.statusText));
+    const points = (body as { detail?: { points?: string[] } } | null)?.detail?.points;
+    throw new ApiError(resp.status, detail(body, resp.statusText), Array.isArray(points) ? points : undefined);
   }
   return body as T;
 }

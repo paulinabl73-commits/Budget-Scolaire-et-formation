@@ -77,6 +77,7 @@ class AuditFileOut(BaseModel):
     precedent_exercice: int | None = None
     peut_travailler: bool = False
     peut_gerer: bool = False
+    peut_signer: bool = False
 
 
 def can_work(engagement: Engagement, user: User) -> bool:
@@ -133,6 +134,11 @@ def file_out(db: Session, f: AuditFile, engagement: Engagement, user: User) -> A
     open_ = f.statut == "ouvert" and engagement.statut != "cloturee"
     out.peut_travailler = open_ and (can_work(engagement, user) or can_direct(engagement, user))
     out.peut_gerer = open_ and can_direct(engagement, user)
+    # REV-28 : l'associé signataire membre de la mission, ou le chef de mission.
+    signer = (
+        has_permission(user.role, Perm.OPINION_SIGN) and mission_role(engagement, user) is not None
+    )
+    out.peut_signer = open_ and (signer or can_direct(engagement, user))
     return out
 
 

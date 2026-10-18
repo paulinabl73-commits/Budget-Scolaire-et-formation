@@ -563,6 +563,7 @@ export interface AuditFile {
   precedent_exercice: number | null;
   peut_travailler: boolean;
   peut_gerer: boolean;
+  peut_signer: boolean;
 }
 
 export interface FrameworkSummary {

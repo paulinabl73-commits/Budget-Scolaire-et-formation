@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { api, download, put } from "../../api/client";
+import { api, download, post, put } from "../../api/client";
+import type { ApiError } from "../../api/client";
 import type { AuditFile } from "../../api/types";
 import { formatDateHeure } from "../../lib/format";
 import Alert from "../Alert";
@@ -16,11 +17,12 @@ const TYPES = ["sans_reserve", "avec_reserve", "defavorable", "impossibilite"];
 const DOCS = ["opinion", "conventions", "affirmation"];
 
 /** Opinion et rapports paramétrables (REV-27). */
-export default function OpinionPanel({ file, children, onLoaded }: { file: AuditFile; children?: React.ReactNode; onLoaded?: (o: Opinion) => void }) {
+export default function OpinionPanel({ file, onLoaded, onLocked }: { file: AuditFile; onLoaded?: (o: Opinion) => void; onLocked?: () => void }) {
   const { t } = useTranslation();
   const [o, setO] = useState<Opinion | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  const [points, setPoints] = useState<string[]>([]);
   const url = `/audit-files/${file.id}/opinion`;
   const fill = (x: Opinion) => { setO(x); onLoaded?.(x); };
   useEffect(() => {
@@ -35,6 +37,19 @@ export default function OpinionPanel({ file, children, onLoaded }: { file: Audit
       setSaved(true);
     } catch (e) {
       setError((e as Error).message);
+    }
+  };
+  const act = async (action: "sign" | "unsign" | "emit") => {
+    setError(null);
+    setPoints([]);
+    try {
+      const r = await post<Opinion>(`${url}/${action}`);
+      fill(r);
+      if (action === "emit") onLocked?.();
+    } catch (e) {
+      const err = e as ApiError;
+      setError(err.message);
+      setPoints(err.points ?? []);
     }
   };
   const set = (patch: Partial<Opinion>) => { setO({ ...o, ...patch }); setSaved(false); };
@@ -74,7 +89,24 @@ export default function OpinionPanel({ file, children, onLoaded }: { file: Audit
           )))}
         </div>
       )}
-      {children}
+      {(file.peut_signer || o.statut === "emis") && o.statut !== "a_rediger" && (
+        <div className="space-y-2 border-t border-slate-100 pt-2">
+          <h3 className="font-semibold">{t("opinion.signature")}</h3>
+          {o.empreinte && <p className="break-all text-xs text-slate-600">{t("opinion.empreinte", { valeur: o.empreinte })}</p>}
+          {points.length > 0 && <ul className="list-disc pl-5 text-sm text-red-700">{points.map((p) => <li key={p}>{p}</li>)}</ul>}
+          <div className="flex flex-wrap gap-2">
+            {file.peut_signer && o.statut === "brouillon" && <button type="button" className="btn-primaire" onClick={() => void act("sign")}>{t("opinion.signer")}</button>}
+            {file.peut_signer && o.statut === "signe" && (
+              <>
+                <button type="button" className="btn-primaire" onClick={() => { if (window.confirm(t("opinion.confirmerEmission"))) void act("emit"); }}>{t("opinion.emettre")}</button>
+                <button type="button" className="btn-secondaire" onClick={() => void act("unsign")}>{t("opinion.annulerSignature")}</button>
+              </>
+            )}
+            {o.statut === "emis" && <button type="button" className="btn-secondaire" onClick={() => void download(`${url}/archive`, undefined, "rapport_emis.pdf").catch((e: Error) => setError(e.message))}>{t("opinion.archive")}</button>}
+          </div>
+          {o.archive_sha256 && <p className="break-all text-xs text-slate-600">{t("opinion.empreinteArchive", { valeur: o.archive_sha256 })}</p>}
+        </div>
+      )}
     </section>
   );
 }

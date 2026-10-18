@@ -1558,7 +1558,8 @@
       "synthese": "Note de synthèse",
       "rapport": "Opinion et rapport"
     },
-    "navigation": "Sections du dossier"
+    "navigation": "Sections du dossier",
+    "verrouille": "Rapport émis : dossier verrouillé et archivé, consultation uniquement."
   },
   "seuil": {
     "titre": "Seuil de signification",
@@ -1929,7 +1930,15 @@
       "opinion": "Rapport sur les états financiers",
       "conventions": "Rapport spécial",
       "affirmation": "Lettre d'affirmation"
-    }
+    },
+    "signature": "Signature et émission",
+    "empreinte": "Empreinte du contenu signé : {{valeur}}",
+    "signer": "Signer l'opinion",
+    "emettre": "Émettre le rapport",
+    "annulerSignature": "Annuler la signature",
+    "confirmerEmission": "Émettre le rapport ? Le dossier sera verrouillé et archivé ; plus aucune modification ne sera possible.",
+    "archive": "Télécharger le rapport émis (archive)",
+    "empreinteArchive": "Empreinte SHA-256 de l'archive : {{valeur}}"
   },
   "modelesRapports": {
     "titre": "Modèles de rapports",

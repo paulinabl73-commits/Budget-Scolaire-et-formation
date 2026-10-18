@@ -60,6 +60,7 @@ export default function AuditFilePage() {
           {file.precedent_exercice && ` · ${t("revision.precedent", { exercice: file.precedent_exercice })}`}
         </p>
       </header>
+      {file.statut === "archive" && <Alert kind="info">{t("dossier.verrouille")}</Alert>}
       {/* REV-10 : liste des comptes non affectés signalée en permanence. */}
       {mapping.comptes.length > 0 && (
         <div role="status" className={`flex flex-wrap items-center justify-between gap-2 rounded border px-3 py-2 text-sm ${unmapped ? "border-red-300 bg-red-50 text-red-800" : "border-emerald-200 bg-emerald-50 text-emerald-800"}`}>
@@ -102,7 +103,7 @@ export default function AuditFilePage() {
       {view === "circularisation" && <ConfirmationsPanel file={file} />}
       {view === "tresorerie" && <BankReconciliationsPanel file={file} />}
       {view === "synthese" && <SynthesisPanel file={file} onNavigate={(vue) => setParams({ vue })} />}
-      {view === "rapport" && <OpinionPanel file={file} />}
+      {view === "rapport" && <OpinionPanel file={file} onLocked={() => void load()} />}
       {view === "etats" && (unmapped > 0 ? <Alert kind="info">{t("affectation.bloque")}</Alert> : <><FinancialStatementsPanel file={file} /><DsfPanel file={file} /></>)}
     </div>
   );
