@@ -27,8 +27,11 @@ from app.models.finding import (
     Finding,
     FindingEvidence,
     FindingStatus,
+    FollowUpStatus,
+    InspectionReport,
     PlanEvidence,
     Postponement,
+    RecommendationFollowUp,
 )
 from app.models.notification import EmailMessage, Notification
 from app.models.plan import AuditPlan, PlanItem, PlanStatus
@@ -132,6 +135,9 @@ __all__ = [
     "Engagement",
     "EvidenceType",
     "Finding",
+    "FollowUpStatus",
+    "InspectionReport",
+    "RecommendationFollowUp",
     "FrameworkAccount",
     "IfrsChecklistAnswer",
     "LeadScheduleReference",

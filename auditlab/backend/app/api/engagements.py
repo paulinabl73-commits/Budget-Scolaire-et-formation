@@ -86,7 +86,7 @@ def engagement_out(db: DbSession, e: Engagement, user: User) -> EngagementOut:
     )
 
 
-def _validate_team(db: DbSession, members: list[MemberIn]) -> list[MemberIn]:
+def _validate_team(db: DbSession, members: list[MemberIn], mode: str = "audit") -> list[MemberIn]:
     if len({m.user_id for m in members}) != len(members):
         raise HTTPException(422, "Un membre figure deux fois dans l'équipe")
     if sum(m.role_mission == MissionRole.CHEF for m in members) != 1:
@@ -108,6 +108,11 @@ def _validate_team(db: DbSession, members: list[MemberIn]) -> list[MemberIn]:
         if Role(user.role) not in ALLOWED_ROLES[m.role_mission]:
             raise HTTPException(
                 422, f"{user.nom} ne peut pas tenir le rôle « {m.role_mission.value} »"
+            )
+        if user.role == Role.INSPECTEUR_CIPRES and mode != "inspection_cipres":
+            raise HTTPException(
+                422,
+                f"{user.nom} (inspecteur CIPRES) n'intervient que sur les missions d'inspection",
             )
     return members
 
@@ -169,6 +174,7 @@ def create_engagement(body: EngagementIn, user: Manager, db: DbSession) -> Engag
         "date_fin": body.date_fin,
         "budget_jours": body.budget_jours,
         "entity_id": body.entity_id,
+        "mode": body.mode,
     }
     template = None
     if body.template_id:
@@ -220,7 +226,7 @@ def create_engagement(body: EngagementIn, user: Manager, db: DbSession) -> Engag
         # Le créateur pilote la mission si personne d'autre n'est désigné.
         members = [m for m in members if m.user_id != user.id]
         members.insert(0, MemberIn(user_id=user.id, role_mission=MissionRole.CHEF))
-    _validate_team(db, members)
+    _validate_team(db, members, body.mode)
 
     engagement = Engagement(
         reference=_next_reference(db, values["date_debut"].year), statut="planifiee", **values
@@ -272,7 +278,7 @@ def replace_team(
     engagement = get_engagement(db, engagement_id, user)
     require_manager(engagement, user)
     ensure_open(engagement)
-    set_team(db, engagement, _validate_team(db, members))
+    set_team(db, engagement, _validate_team(db, members, engagement.mode))
     db.commit()
     return engagement_out(db, get_engagement(db, engagement.id, user), user)
 

@@ -5,7 +5,7 @@ import uuid
 from enum import StrEnum
 from typing import Any
 
-from sqlalchemy import Date, DateTime, ForeignKey, String, Text
+from sqlalchemy import Date, DateTime, ForeignKey, Index, String, Text, text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -157,3 +157,49 @@ class Postponement(TrackedMixin, Base):
     decide_le: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     commentaire_decision: Mapped[str | None] = mapped_column(Text, nullable=True)
     relances_precedentes: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
+
+
+class InspectionReport(TrackedMixin, Base):
+    """Rapport d'une mission d'inspection CIPRES (CIP-08) : provisoire puis définitif. Son
+    contenu est figé à l'émission (blocs et empreinte) ; les exports en sont tirés."""
+
+    __tablename__ = "inspection_reports"
+    __table_args__ = (
+        Index("uq_inspection_reports_version", "engagement_id", "version", unique=True,
+              postgresql_where=text("deleted_at IS NULL")),
+    )  # fmt: skip
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    version: Mapped[str] = mapped_column(String(20))  # provisoire, definitif
+    titre: Mapped[str] = mapped_column(String(300))
+    blocs: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
+    sha256: Mapped[str] = mapped_column(String(64))
+    emis_le: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True))
+    emis_par: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
+    destinataire: Mapped[str | None] = mapped_column(String(300), nullable=True)
+    date_limite_reponse: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
+    # Réponse générale de l'organisme contrôlé au rapport provisoire.
+    reponse_organisme: Mapped[str | None] = mapped_column(Text, nullable=True)
+    reponse_recue_le: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
+
+
+class FollowUpStatus(StrEnum):
+    MISE_EN_OEUVRE = "mise_en_oeuvre"
+    PARTIELLE = "partielle"
+    NON_MISE_EN_OEUVRE = "non_mise_en_oeuvre"
+    SANS_OBJET = "sans_objet"
+
+
+class RecommendationFollowUp(TrackedMixin, Base):
+    """Suivi, lors d'une inspection, d'une recommandation d'une inspection précédente."""
+
+    __tablename__ = "recommendation_follow_ups"
+    __table_args__ = (
+        Index("uq_recommendation_follow_ups", "engagement_id", "finding_id", unique=True,
+              postgresql_where=text("deleted_at IS NULL")),
+    )  # fmt: skip
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    finding_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("findings.id"), index=True)
+    statut: Mapped[str] = mapped_column(String(30))
+    commentaire: Mapped[str | None] = mapped_column(Text, nullable=True)

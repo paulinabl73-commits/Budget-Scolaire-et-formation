@@ -190,6 +190,7 @@ export interface EngagementSummary {
   plan_item_id: string | null;
   chef_nom: string | null;
   mon_role: MissionRole | null;
+  mode: "audit" | "inspection_cipres";
 }
 
 export interface Engagement extends EngagementSummary {

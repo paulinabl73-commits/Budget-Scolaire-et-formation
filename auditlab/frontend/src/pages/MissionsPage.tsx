@@ -124,7 +124,7 @@ function NewMissionForm({ onCancel, onCreated }: { onCancel: () => void; onCreat
   const [templateId, setTemplateId] = useState("");
   const [f, setF] = useState({
     plan_item_id: "", entity_id: "", titre: "", perimetre: "", objectifs: "",
-    date_debut: "", date_fin: "", budget_jours: "",
+    date_debut: "", date_fin: "", budget_jours: "", mode: "audit",
   });
   const [error, setError] = useState<string | null>(null);
   const set = (k: keyof typeof f, v: string) => setF((x) => ({ ...x, [k]: v }));
@@ -156,6 +156,7 @@ function NewMissionForm({ onCancel, onCreated }: { onCancel: () => void; onCreat
       budget_jours: f.budget_jours ? Number(f.budget_jours) : null,
       membres: teamPayload(team),
       template_id: templateId || null,
+      mode: f.mode,
     };
     try {
       onCreated(await post<Engagement>("/engagements", body));
@@ -200,6 +201,13 @@ function NewMissionForm({ onCancel, onCreated }: { onCancel: () => void; onCreat
           </select>
         </div>
       )}
+      <div className="col-span-2">
+        <label htmlFor="m-mode" className="etiquette">{t("missions.mode")}</label>
+        <select id="m-mode" className="champ" value={f.mode} onChange={(e) => set("mode", e.target.value)}>
+          <option value="audit">{t("missions.modes.audit")}</option>
+          <option value="inspection_cipres">{t("missions.modes.inspection_cipres")}</option>
+        </select>
+      </div>
       <div className="col-span-2">
         <label htmlFor="m-modele" className="etiquette">{t("modeles.choisir")}</label>
         <select id="m-modele" className="champ" value={templateId} onChange={(e) => setTemplateId(e.target.value)}>

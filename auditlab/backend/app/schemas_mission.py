@@ -3,7 +3,7 @@
 import datetime as dt
 import uuid
 from datetime import date, datetime
-from typing import Self
+from typing import Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -52,6 +52,7 @@ class EngagementIn(_Dates):
     date_fin: date | None = None
     budget_jours: float | None = Field(default=None, gt=0, le=10000)
     membres: list[MemberIn] = []
+    mode: Literal["audit", "inspection_cipres"] = "audit"
 
 
 class EngagementUpdate(_Dates):
@@ -97,6 +98,7 @@ class EngagementSummary(BaseModel):
     plan_item_id: uuid.UUID | None
     chef_nom: str | None = None
     mon_role: MissionRole | None = None
+    mode: str = "audit"
 
 
 class EngagementOut(EngagementSummary):

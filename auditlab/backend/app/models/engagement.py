@@ -43,6 +43,8 @@ class Engagement(TrackedMixin, Base):
     date_debut: Mapped[date] = mapped_column(Date)
     date_fin: Mapped[date] = mapped_column(Date)
     statut: Mapped[str] = mapped_column(String(20), default=EngagementStatus.PLANIFIEE.value)
+    # « audit » ou « inspection_cipres » (CIP-08 : rapports provisoire et définitif d'inspection).
+    mode: Mapped[str] = mapped_column(String(30), default="audit", server_default="audit")
     budget_jours: Mapped[float] = mapped_column(Float)
     entity_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("auditable_entities.id"), nullable=True, index=True

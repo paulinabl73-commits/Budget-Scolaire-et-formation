@@ -350,7 +350,8 @@
       "donnees": "Données",
       "constats": "Constats",
       "rapport": "Rapport",
-      "revision": "Révision des comptes"
+      "revision": "Révision des comptes",
+      "inspection": "Inspection CIPRES"
     },
     "statuts": {
       "planifiee": "Planifiée",
@@ -375,7 +376,12 @@
     "historique": "Historique des statuts",
     "aucunChangement": "Aucun changement de statut.",
     "statutChange": "Statut mis à jour.",
-    "clotureeLe": "Mission clôturée le {{date}} : consultation uniquement."
+    "clotureeLe": "Mission clôturée le {{date}} : consultation uniquement.",
+    "mode": "Nature de la mission",
+    "modes": {
+      "audit": "Mission d'audit",
+      "inspection_cipres": "Mission d'inspection CIPRES"
+    }
   },
   "temps": {
     "budget": "Budget et temps passé",
@@ -1001,7 +1007,7 @@
       }
     },
     "cip_cotisations": {
-      "titre": "Recalcul des cotisations (CIP-02)",
+      "titre": "Recalcul des cotisations",
       "description": "Recalcule par employeur la cotisation théorique (masse salariale déclarée plafonnée × taux par branche) et la compare aux cotisations émises et encaissées.",
       "params": {
         "champ_employeur": "Déclarations : champ employeur",
@@ -1016,7 +1022,7 @@
       }
     },
     "cip_recouvrement": {
-      "titre": "Recouvrement des cotisations (CIP-03)",
+      "titre": "Recouvrement des cotisations",
       "description": "Rapproche les déclarations du registre des employeurs : employeurs actifs sans déclaration, déclarations tardives, majorations de retard non appliquées, déclarants non immatriculés.",
       "params": {
         "champ_employeur": "Déclarations : champ employeur",
@@ -1041,7 +1047,7 @@
       }
     },
     "cip_creances": {
-      "titre": "Créances anciennes sur cotisants (CIP-03)",
+      "titre": "Créances anciennes sur cotisants",
       "description": "Retient les créances exigibles depuis au moins l'ancienneté réglementaire et dépréciées à moins du taux exigé.",
       "params": {
         "champ_montant": "Champ montant",
@@ -1054,7 +1060,7 @@
       }
     },
     "cip_prestations": {
-      "titre": "Prestations et pensions (CIP-04)",
+      "titre": "Prestations et pensions",
       "description": "Isole les bénéficiaires en double (identifiant, nom proche, compte bancaire), d'âge anormal, payés après leur décès, sans certificat de vie à jour ou servis hors barème.",
       "params": {
         "champ_identifiant": "Champ identifiant du bénéficiaire",
@@ -1075,7 +1081,7 @@
       }
     },
     "cip_allocations": {
-      "titre": "Allocations familiales (CIP-05)",
+      "titre": "Allocations familiales",
       "description": "Isole les enfants ayant atteint l'âge limite, les allocataires déclarant plus d'enfants que le nombre indemnisable et les enfants rattachés à plusieurs allocataires.",
       "params": {
         "champ_allocataire": "Champ allocataire",
@@ -1175,7 +1181,19 @@
     "lignes_non_positives": "Lignes nulles ou négatives (hors MUS)",
     "strates": "Strates",
     "par_critere": "Lignes par critère",
-    "criteres_non_appliques": "Critères non appliqués (colonne absente)"
+    "criteres_non_appliques": "Critères non appliqués (colonne absente)",
+    "employeurs": "Employeurs",
+    "en_anomalie": "Employeurs en anomalie",
+    "par_anomalie": "Anomalies par nature",
+    "totaux": "Totaux",
+    "taux": "Taux par branche (%)",
+    "plafonds": "Plafonds par branche",
+    "anomalies": "Anomalies",
+    "employeurs_concernes": "Employeurs concernés",
+    "creances_retenues": "Créances retenues",
+    "insuffisance_totale": "Insuffisance de dépréciation",
+    "creances_source": "Créances examinées",
+    "allocataires_concernes": "Allocataires concernés"
   },
   "benford": {
     "graphique": "Distribution observée et attendue",
@@ -2245,6 +2263,41 @@
       "limite": "Limite",
       "rendement": "Rendement des placements : {{taux}} (produits {{produits}} / encours moyen N et N-1).",
       "note": "Catégories = postes PLA_<catégorie> du référentiel ; limites saisies comme paramètres « limite_placement:<catégorie> »."
+    }
+  },
+  "inspection": {
+    "destinataireDefaut": "Commission de surveillance de la CIPRES",
+    "constats": "Constats de l'inspection",
+    "rapports": "Rapports d'inspection",
+    "emisLe": "Émis le {{date}}",
+    "limite": "observations attendues avant le {{date}}",
+    "export": {
+      "pdf": "PDF",
+      "docx": "Word"
+    },
+    "reponseRecue": "Réponse générale de l'organisme reçue le {{date}} :",
+    "dateLimite": "Date limite des observations de l'organisme",
+    "emettreProvisoire": "Émettre le rapport provisoire",
+    "reponseGenerale": "Réponse générale de l'organisme au rapport provisoire",
+    "reponse": "Réponse",
+    "recueLe": "Reçue le",
+    "enregistrerReponse": "Enregistrer la réponse",
+    "definitif": "Rapport définitif",
+    "destinataire": "Destinataire",
+    "emettreDefinitif": "Émettre le rapport définitif",
+    "blocages": "Avant l'émission :",
+    "suivi": {
+      "titre": "Suivi des recommandations des inspections précédentes",
+      "aucune": "Première inspection de l'organisme : aucune recommandation antérieure.",
+      "plans": "plans d'action : {{liste}}",
+      "statut": "Suivi",
+      "commentaire": "Commentaire",
+      "statuts": {
+        "mise_en_oeuvre": "Mise en œuvre",
+        "partielle": "Partiellement mise en œuvre",
+        "non_mise_en_oeuvre": "Non mise en œuvre",
+        "sans_objet": "Devenue sans objet"
+      }
     }
   }
 }
