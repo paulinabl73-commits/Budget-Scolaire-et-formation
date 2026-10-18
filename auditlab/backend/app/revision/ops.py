@@ -89,6 +89,13 @@ def _prestations(ctx: Context) -> dict[str, Any]:
     }
 
 
+def _allocations(ctx: Context) -> dict[str, Any]:
+    return {
+        "age_limite": ctx.value("age_limite_enfant"),
+        "nombre_maximum": ctx.value("nombre_enfants_maximum"),
+    }
+
+
 def _exercice(file: AuditFile) -> dict[str, Any]:
     return {"debut": file.date_debut.isoformat(), "fin": file.date_fin.isoformat()}
 
@@ -133,6 +140,15 @@ CONTROLS: dict[str, OpsControl] = {
             "cip_prestations",
             ("Fichier des bénéficiaires",),
             _prestations,
+            _cloture,
+        ),
+        OpsControl(
+            "allocations",
+            "CIP-05",
+            "Allocations familiales : âge limite et nombre d'enfants",
+            "cip_allocations",
+            ("Enfants ouvrant droit aux allocations",),
+            _allocations,
             _cloture,
         ),
     )

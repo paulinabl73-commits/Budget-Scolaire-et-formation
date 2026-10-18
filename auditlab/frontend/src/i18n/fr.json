@@ -1073,6 +1073,18 @@
         "montant_maximum": "Montant maximum du barème",
         "seuil_similarite": "Noms proches : similarité minimale (0,5 à 1)"
       }
+    },
+    "cip_allocations": {
+      "titre": "Allocations familiales (CIP-05)",
+      "description": "Isole les enfants ayant atteint l'âge limite, les allocataires déclarant plus d'enfants que le nombre indemnisable et les enfants rattachés à plusieurs allocataires.",
+      "params": {
+        "champ_allocataire": "Champ allocataire",
+        "champ_enfant": "Champ identifiant de l'enfant",
+        "champ_date_naissance": "Champ date de naissance de l'enfant",
+        "date_reference": "Date de référence",
+        "age_limite": "Âge limite",
+        "nombre_maximum": "Nombre d'enfants indemnisables"
+      }
     }
   },
   "constructeur": {

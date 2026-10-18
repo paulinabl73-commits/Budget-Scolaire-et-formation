@@ -21,6 +21,10 @@ un dossier CIPRES, ils sont lus dans le référentiel (CIP-09) et ne sont pas mo
   par plusieurs bénéficiaires, âge hors des bornes à la date de référence, paiement postérieur
   au décès, certificat de vie absent ou périmé (bénéficiaire non décédé), montant hors barème.
   Un critère dont la colonne n'est pas fournie n'est pas appliqué.
+- cip_allocations (CIP-05) : fichier des enfants ouvrant droit (une ligne par enfant et par
+  allocataire) ; enfant ayant atteint l'âge limite à la date de référence (le droit court
+  jusqu'à la veille), allocataire déclarant plus d'enfants que le nombre indemnisable, même
+  enfant rattaché à plusieurs allocataires.
 """
 
 from decimal import Decimal
@@ -413,5 +417,49 @@ register(
             Param("seuil_similarite", "nombre", requis=False, defaut="0.9", minimum=0.5, maximum=1),
         ),
         prestations,
+    )
+)
+
+
+CHILD_CRITERIA = ("age_limite", "nombre_anormal", "enfant_multiple")
+
+
+def allocations(rels: list[Relation], p: dict[str, Any]) -> OpResult:
+    parent, child = quote_ident(p["champ_allocataire"]), quote_ident(p["champ_enfant"])
+    birth = f"CAST({quote_ident(p['champ_date_naissance'])} AS DATE)"
+    tests = {
+        "age_limite": f"date_sub('year', {birth}, CAST(? AS DATE)) >= CAST(? AS INTEGER)",
+        "nombre_anormal": (
+            f"count(DISTINCT {child}) OVER (PARTITION BY {parent}) > CAST(? AS INTEGER)"
+        ),
+        "enfant_multiple": f"count(DISTINCT {parent}) OVER (PARTITION BY {child}) > 1",
+    }
+    params = [p["date_reference"], p["age_limite"], p["nombre_maximum"]]
+    df = _flags(rels[0], tests, params, f"{parent}, {child}")
+    return OpResult(
+        df,
+        {
+            "lignes_source": evaluate(rels[0], "SELECT count(*) FROM t").item(),
+            "lignes_retenues": df.height,
+            "par_critere": _by_criterion(df, CHILD_CRITERIA),
+            "allocataires_concernes": df[p["champ_allocataire"]].n_unique(),
+        },
+    )
+
+
+register(
+    Operation(
+        "cip_allocations",
+        "CIP-05",
+        1,
+        (
+            Param("champ_allocataire", "colonne"),
+            Param("champ_enfant", "colonne"),
+            Param("champ_date_naissance", "colonne", types_colonne=DATES),
+            Param("date_reference", "date"),
+            Param("age_limite", "entier", minimum=0, maximum=30),
+            Param("nombre_maximum", "entier", minimum=1),
+        ),
+        allocations,
     )
 )
