@@ -33,11 +33,37 @@ from app.security.roles import Perm, Role, has_permission
 router = APIRouter(prefix="/engagements", tags=["Missions"])
 Manager = Annotated[User, Depends(require(Perm.MISSIONS_MANAGE))]
 
+# Rôles applicatifs réservés à un mode de mission.
+MODE_ROLES: dict[Role, str] = {
+    Role.INSPECTEUR_CIPRES: "inspection_cipres",
+    Role.EXPERT_COMPTABLE: "revision_comptable",
+    Role.COLLABORATEUR: "revision_comptable",
+}
+MODE_LABELS = {
+    "inspection_cipres": "les missions d'inspection",
+    "revision_comptable": "les dossiers clients du cabinet",
+}
+
 # Rôles applicatifs admis pour chaque rôle dans la mission.
 ALLOWED_ROLES: dict[MissionRole, set[Role]] = {
-    MissionRole.CHEF: {Role.CHEF_MISSION, Role.DIRECTEUR, Role.INSPECTEUR_CIPRES},
-    MissionRole.SUPERVISEUR: {Role.DIRECTEUR, Role.CHEF_MISSION, Role.ASSOCIE},
-    MissionRole.AUDITEUR: {Role.AUDITEUR, Role.CHEF_MISSION, Role.INSPECTEUR_CIPRES},
+    MissionRole.CHEF: {
+        Role.CHEF_MISSION,
+        Role.DIRECTEUR,
+        Role.INSPECTEUR_CIPRES,
+        Role.EXPERT_COMPTABLE,
+    },
+    MissionRole.SUPERVISEUR: {
+        Role.DIRECTEUR,
+        Role.CHEF_MISSION,
+        Role.ASSOCIE,
+        Role.EXPERT_COMPTABLE,
+    },
+    MissionRole.AUDITEUR: {
+        Role.AUDITEUR,
+        Role.CHEF_MISSION,
+        Role.INSPECTEUR_CIPRES,
+        Role.COLLABORATEUR,
+    },
     MissionRole.DATA_ANALYST: {Role.DATA_ANALYST},
 }
 
@@ -109,11 +135,9 @@ def _validate_team(db: DbSession, members: list[MemberIn], mode: str = "audit") 
             raise HTTPException(
                 422, f"{user.nom} ne peut pas tenir le rôle « {m.role_mission.value} »"
             )
-        if user.role == Role.INSPECTEUR_CIPRES and mode != "inspection_cipres":
-            raise HTTPException(
-                422,
-                f"{user.nom} (inspecteur CIPRES) n'intervient que sur les missions d'inspection",
-            )
+        reserved = MODE_ROLES.get(Role(user.role))
+        if reserved and mode != reserved:
+            raise HTTPException(422, f"{user.nom} n'intervient que sur {MODE_LABELS[reserved]}")
     return members
 
 
@@ -145,7 +169,9 @@ def set_team(db: DbSession, engagement: Engagement, members: list[MemberIn]) -> 
 
 
 @router.get("", response_model=list[EngagementSummary])
-def list_engagements(user: CurrentUser, db: DbSession, statut: str | None = None) -> list[dict]:
+def list_engagements(
+    user: CurrentUser, db: DbSession, statut: str | None = None, mode: str | None = None
+) -> list[dict]:
     if not (
         has_permission(user.role, Perm.MISSIONS_READ_ALL)
         or has_permission(user.role, Perm.MISSIONS_READ_OWN)
@@ -157,6 +183,10 @@ def list_engagements(user: CurrentUser, db: DbSession, statut: str | None = None
     )
     if statut:
         query = query.where(Engagement.statut == statut)
+    # Les clôtures des dossiers clients (Module 6) se consultent depuis le portefeuille.
+    query = query.where(
+        Engagement.mode == mode if mode else Engagement.mode != "revision_comptable"
+    )
     engagements = list(
         db.scalars(query.order_by(Engagement.date_debut.desc(), Engagement.reference))
     )

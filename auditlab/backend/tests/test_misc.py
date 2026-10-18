@@ -29,7 +29,7 @@ def test_separation_des_taches():
 
 def test_route_des_roles(client, account):
     roles = client.get("/api/roles", headers=account(Role.AUDITEUR).headers).json()
-    assert len(roles) == 8  # dont les deux rôles du Module 5
+    assert len(roles) == 10  # dont les rôles des Modules 5 et 6
     admin = next(r for r in roles if r["code"] == "administrateur")
     assert admin["mfa_obligatoire"] is True and admin["libelle"] == "Administrateur"
     associe = next(r for r in roles if r["code"] == "associe_signataire")

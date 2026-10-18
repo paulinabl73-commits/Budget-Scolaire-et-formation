@@ -1,0 +1,59 @@
+"""Module 6 : portefeuille de dossiers clients d'un cabinet d'expertise comptable."""
+
+import datetime as dt
+import uuid
+from typing import Any
+
+from sqlalchemy import Boolean, Date, Float, ForeignKey, Index, Integer, String, text
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.orm import Mapped, mapped_column
+
+from app.models.base import Base, TrackedMixin
+
+
+class Client(TrackedMixin, Base):
+    """Dossier client permanent (RCO-01) ; l'entité de rattachement est de type « client »."""
+
+    __tablename__ = "clients"
+
+    entity_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("auditable_entities.id"), index=True)
+    raison_sociale: Mapped[str] = mapped_column(String(200))
+    forme_juridique: Mapped[str] = mapped_column(String(30))
+    regime_fiscal: Mapped[str] = mapped_column(String(40))
+    framework_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("accounting_frameworks.id"))
+    pays: Mapped[str] = mapped_column(String(40))
+    devise: Mapped[str] = mapped_column(String(3), default="XOF")
+    # Date de clôture de l'exercice (jour et mois), 31 décembre le plus souvent.
+    jour_cloture: Mapped[int] = mapped_column(Integer, default=31)
+    mois_cloture: Mapped[int] = mapped_column(Integer, default=12)
+    taille: Mapped[str] = mapped_column(String(20), default="pme")  # tpe, pme, grande (RCO-07)
+    identifiant_fiscal: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    rccm: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    expert_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), index=True)
+    collaborateur_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("users.id"), nullable=True, index=True
+    )
+    superviseur_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    contact_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    budget_jours: Mapped[float] = mapped_column(Float, default=5)
+    actif: Mapped[bool] = mapped_column(Boolean, default=True)
+
+
+class Closing(TrackedMixin, Base):
+    """Clôture d'un exercice d'un client : mission (mode « revision_comptable ») et dossier de
+    révision du Module 5 qui en porte la balance, l'affectation et les états."""
+
+    __tablename__ = "closings"
+    __table_args__ = (
+        Index("uq_closings_exercice", "client_id", "exercice", unique=True,
+              postgresql_where=text("deleted_at IS NULL")),
+    )  # fmt: skip
+
+    client_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("clients.id"), index=True)
+    exercice: Mapped[int] = mapped_column(Integer)
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
+    etape: Mapped[str] = mapped_column(String(20), default="pieces")
+    # Date de franchissement de chaque étape (RCO-02).
+    etapes: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
+    date_depot: Mapped[dt.date | None] = mapped_column(Date, nullable=True)

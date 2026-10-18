@@ -17,6 +17,9 @@ class Role(StrEnum):
     # Module 5 : commissaire aux comptes signataire ; inspecteur de la CIPRES.
     ASSOCIE = "associe_signataire"
     INSPECTEUR_CIPRES = "inspecteur_cipres"
+    # Module 6 : cabinet d'expertise comptable.
+    EXPERT_COMPTABLE = "expert_comptable"
+    COLLABORATEUR = "collaborateur_comptable"
 
 
 ROLE_LABELS: dict[Role, str] = {
@@ -28,10 +31,14 @@ ROLE_LABELS: dict[Role, str] = {
     Role.AUDITE: "Audité",
     Role.ASSOCIE: "Associé signataire",
     Role.INSPECTEUR_CIPRES: "Inspecteur CIPRES",
+    Role.EXPERT_COMPTABLE: "Expert-comptable",
+    Role.COLLABORATEUR: "Collaborateur comptable",
 }
 
 # Double authentification obligatoire.
-MFA_REQUIRED: frozenset[Role] = frozenset({Role.ADMIN, Role.DIRECTEUR, Role.ASSOCIE})
+MFA_REQUIRED: frozenset[Role] = frozenset(
+    {Role.ADMIN, Role.DIRECTEUR, Role.ASSOCIE, Role.EXPERT_COMPTABLE}
+)
 
 
 class Perm(StrEnum):
@@ -69,6 +76,8 @@ class Perm(StrEnum):
     REVISION_WORK = "revision:work"  # importer les balances, affecter, justifier
     REVISION_MANAGE = "revision:manage"  # ouvrir un dossier, fixer le seuil
     OPINION_SIGN = "revision:sign"  # signer et émettre l'opinion (REV-28)
+    # Module 6 : portefeuille de dossiers clients (RCO-01)
+    PORTFOLIO_MANAGE = "portfolio:manage"
 
 
 # Transcription de la matrice de la section 2.
@@ -105,6 +114,7 @@ ROLE_PERMISSIONS: dict[Role, frozenset[Perm]] = {
             Perm.FRAMEWORKS_MANAGE,
             Perm.REVISION_READ,
             Perm.REVISION_MANAGE,
+            Perm.PORTFOLIO_MANAGE,
         }
     ),
     Role.CHEF_MISSION: frozenset(
@@ -164,6 +174,22 @@ ROLE_PERMISSIONS[Role.ASSOCIE] = (
 ) | {Perm.MISSIONS_READ_OWN, Perm.WORKPAPERS_REVIEW, Perm.REVISION_WORK, Perm.OPINION_SIGN}
 # Inspecteur CIPRES : droits du Chef de mission sur les missions d'inspection confiées.
 ROLE_PERMISSIONS[Role.INSPECTEUR_CIPRES] = ROLE_PERMISSIONS[Role.CHEF_MISSION]
+
+
+# Expert-comptable : droits du Directeur sur son seul portefeuille (Module 6).
+ROLE_PERMISSIONS[Role.EXPERT_COMPTABLE] = (
+    ROLE_PERMISSIONS[Role.DIRECTEUR]
+    - {
+        Perm.MISSIONS_READ_ALL,
+        Perm.PLAN_MANAGE,
+        Perm.PLAN_VALIDATE,
+        Perm.DASHBOARDS_GLOBAL,
+        Perm.FRAMEWORKS_MANAGE,
+        Perm.AUDIT_LOG_READ,
+    }
+) | {Perm.MISSIONS_READ_OWN, Perm.WORKPAPERS_REVIEW, Perm.REVISION_WORK, Perm.DATA_ANALYZE}
+# Collaborateur comptable : droits de l'Auditeur sur les dossiers clients qui lui sont affectés.
+ROLE_PERMISSIONS[Role.COLLABORATEUR] = ROLE_PERMISSIONS[Role.AUDITEUR]
 
 
 def has_permission(role: str, perm: Perm) -> bool:

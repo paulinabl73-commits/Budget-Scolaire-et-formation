@@ -58,6 +58,11 @@ export default function Layout() {
               {t("nav.missions")}
             </NavLink>
           )}
+          {(can(user?.permissions, PERM.PORTFOLIO_MANAGE) || user?.role === "collaborateur_comptable") && (
+            <NavLink to="/portefeuille" className={lien}>
+              {t("nav.portefeuille")}
+            </NavLink>
+          )}
           {(can(user?.permissions, PERM.MISSIONS_READ_ALL) ||
             can(user?.permissions, PERM.MISSIONS_READ_OWN)) && (
             <NavLink to="/bibliotheque" className={lien}>

@@ -13,6 +13,7 @@ export const PERM = {
   REVISION_WORK: "revision:work",
   REVISION_MANAGE: "revision:manage",
   OPINION_SIGN: "revision:sign",
+  PORTFOLIO_MANAGE: "portfolio:manage",
 } as const;
 
 export type Role =
@@ -23,7 +24,9 @@ export type Role =
   | "data_analyst"
   | "audite"
   | "associe_signataire"
-  | "inspecteur_cipres";
+  | "inspecteur_cipres"
+  | "expert_comptable"
+  | "collaborateur_comptable";
 
 export const ROLES: Role[] = [
   "administrateur",
@@ -34,6 +37,8 @@ export const ROLES: Role[] = [
   "audite",
   "associe_signataire",
   "inspecteur_cipres",
+  "expert_comptable",
+  "collaborateur_comptable",
 ];
 
 /** Affichage seulement : le serveur reste seul juge des droits sur chaque requête. */

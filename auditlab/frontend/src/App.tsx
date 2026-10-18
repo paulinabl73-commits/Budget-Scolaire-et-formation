@@ -25,6 +25,8 @@ const TickmarksPage = lazy(() => import("./pages/TickmarksPage"));
 const DatasetPage = lazy(() => import("./pages/DatasetPage"));
 const FrameworksPage = lazy(() => import("./pages/FrameworksPage"));
 const AuditFilePage = lazy(() => import("./pages/AuditFilePage"));
+const PortfolioPage = lazy(() => import("./pages/PortfolioPage"));
+const ClientPage = lazy(() => import("./pages/ClientPage"));
 const FindingPage = lazy(() => import("./pages/FindingPage"));
 const PortalFindingPage = lazy(() => import("./pages/portal/PortalFindingPage"));
 
@@ -151,6 +153,22 @@ export default function App() {
           element={
             <RequireAuth permission="data:read">
               <DatasetPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="portefeuille"
+          element={
+            <RequireAuth permission={PERM.REVISION_READ}>
+              <PortfolioPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="portefeuille/:cid"
+          element={
+            <RequireAuth permission={PERM.REVISION_READ}>
+              <ClientPage />
             </RequireAuth>
           }
         />

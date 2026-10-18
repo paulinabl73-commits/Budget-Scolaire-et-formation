@@ -20,7 +20,9 @@ Manager = Annotated[User, Depends(require(Perm.PLAN_MANAGE))]
 
 
 def active_entities() -> Select[tuple[AuditableEntity]]:
-    return select(AuditableEntity).where(AuditableEntity.deleted_at.is_(None))
+    return select(AuditableEntity).where(
+        AuditableEntity.deleted_at.is_(None), AuditableEntity.type != "client"
+    )
 
 
 def get_entity(db: DbSession, entity_id: uuid.UUID) -> AuditableEntity:

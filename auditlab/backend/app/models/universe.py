@@ -13,6 +13,7 @@ class EntityType(StrEnum):
     FILIALE = "filiale"
     PROCESSUS = "processus"
     SYSTEME = "systeme"
+    CLIENT = "client"  # client d'un cabinet (Module 6), hors univers d'audit
 
 
 class AuditableEntity(TrackedMixin, Base):

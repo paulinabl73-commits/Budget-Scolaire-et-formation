@@ -2,18 +2,28 @@
 
 import uuid
 from datetime import date, datetime
-from typing import Any, Self
+from typing import Annotated, Any, Self
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import AfterValidator, BaseModel, ConfigDict, Field, model_validator
 
 from app.models.plan import PlanStatus
 from app.models.risk import Axis, CriterionMode
 from app.models.universe import EntityType
 
 
+def _not_client(value: EntityType | None) -> EntityType | None:
+    """Le type « client » est réservé aux dossiers du Module 6."""
+    if value == EntityType.CLIENT:
+        raise ValueError("Type réservé aux dossiers clients du cabinet")
+    return value
+
+
+UniverseType = Annotated[EntityType, AfterValidator(_not_client)]
+
+
 class EntityIn(BaseModel):
     nom: str = Field(min_length=1, max_length=200)
-    type: EntityType
+    type: UniverseType
     parent_id: uuid.UUID | None = None
     description: str | None = None
     responsable: str | None = Field(default=None, max_length=200)
@@ -22,7 +32,7 @@ class EntityIn(BaseModel):
 
 class EntityUpdate(BaseModel):
     nom: str | None = Field(default=None, min_length=1, max_length=200)
-    type: EntityType | None = None
+    type: UniverseType | None = None
     parent_id: uuid.UUID | None = None
     description: str | None = None
     responsable: str | None = Field(default=None, max_length=200)

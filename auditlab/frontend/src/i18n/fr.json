@@ -18,7 +18,8 @@
     "missions": "Missions",
     "bibliotheque": "Bibliothèque",
     "marques": "Marques de révision",
-    "referentiels": "Référentiels"
+    "referentiels": "Référentiels",
+    "portefeuille": "Portefeuille clients"
   },
   "commun": {
     "enregistrer": "Enregistrer",
@@ -139,7 +140,9 @@
     "data_analyst": "Data analyst",
     "audite": "Audité",
     "associe_signataire": "Associé signataire",
-    "inspecteur_cipres": "Inspecteur CIPRES"
+    "inspecteur_cipres": "Inspecteur CIPRES",
+    "expert_comptable": "Expert-comptable",
+    "collaborateur_comptable": "Collaborateur comptable"
   },
   "erreurs": {
     "403": "Vous n'avez pas les droits nécessaires pour cette page.",
@@ -2298,6 +2301,70 @@
         "non_mise_en_oeuvre": "Non mise en œuvre",
         "sans_objet": "Devenue sans objet"
       }
+    }
+  },
+  "portefeuille": {
+    "titre": "Portefeuille de dossiers clients",
+    "nouveau": "Nouveau dossier client",
+    "creer": "Créer le dossier",
+    "aucun": "Aucun dossier client.",
+    "raison": "Raison sociale",
+    "forme": "Forme juridique",
+    "regime": "Régime fiscal",
+    "referentiel": "Référentiel",
+    "pays": "Pays",
+    "devise": "Devise",
+    "cloture": "Date de clôture",
+    "jour": "Jour de clôture",
+    "mois": "Mois de clôture",
+    "taille": "Taille du dossier",
+    "nif": "Identifiant fiscal",
+    "rccm": "Registre du commerce",
+    "expert": "Expert-comptable",
+    "collaborateur": "Collaborateur",
+    "superviseur": "Superviseur",
+    "contact": "Contact du client (portail)",
+    "budget": "Budget par clôture (jours)",
+    "aucunChoix": "—",
+    "inactif": "inactif",
+    "clotures": "Clôtures",
+    "exercice": "Exercice",
+    "ouvrir": "Ouvrir la clôture",
+    "dossierRevision": "Dossier de révision",
+    "mission": "Mission",
+    "etape": "Étape",
+    "retour": "Portefeuille",
+    "formes": {
+      "SA": "SA",
+      "SARL": "SARL",
+      "SAS": "SAS",
+      "SNC": "SNC",
+      "SCS": "SCS",
+      "GIE": "GIE",
+      "EI": "Entreprise individuelle",
+      "association": "Association",
+      "OPS": "Organisme de prévoyance sociale",
+      "autre": "Autre"
+    },
+    "regimes": {
+      "reel_normal": "Réel normal",
+      "reel_simplifie": "Réel simplifié",
+      "entreprenant": "Entreprenant / impôt synthétique",
+      "exonere": "Exonéré",
+      "autre": "Autre"
+    },
+    "tailles": {
+      "tpe": "Très petite entreprise",
+      "pme": "PME",
+      "grande": "Grande entreprise"
+    },
+    "etapes": {
+      "pieces": "Pièces",
+      "saisie": "Saisie",
+      "revision": "Révision",
+      "revue": "Revue",
+      "depot": "Dépôt",
+      "termine": "Terminé"
     }
   }
 }
