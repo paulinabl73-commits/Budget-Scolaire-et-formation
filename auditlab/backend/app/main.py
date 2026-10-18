@@ -28,6 +28,7 @@ from app.api import (
     evidence,
     findings,
     frameworks,
+    ifrs,
     imports,
     lead_schedules,
     library,
@@ -158,5 +159,6 @@ for router in (
     dsf.router,
     synthesis.router,
     opinion.router,
+    ifrs.router,
 ):
     app.include_router(router, prefix="/api")

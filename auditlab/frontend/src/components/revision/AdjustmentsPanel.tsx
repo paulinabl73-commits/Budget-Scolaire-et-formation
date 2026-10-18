@@ -12,7 +12,9 @@ export interface AdjustmentLine { compte: string; libelle: string | null; debit:
 export interface Adjustment {
   id: string;
   numero: number;
-  type: "correction" | "reclassement";
+  type: "correction" | "reclassement" | "retraitement_ifrs";
+  norme: string | null;
+  date_ecriture: string | null;
   libelle: string;
   justification: string;
   workpaper_id: string | null;
@@ -25,11 +27,12 @@ export interface Adjustment {
   effet_resultat: string;
 }
 
-const EMPTY = { type: "correction", libelle: "", justification: "", workpaper_id: "", lignes: [{ compte: "", libelle: "", debit: "", credit: "" }, { compte: "", libelle: "", debit: "", credit: "" }] };
+export const NORMES = ["IFRS 1", "IFRS 9", "IFRS 15", "IFRS 16", "IAS 2", "IAS 12", "IAS 16", "IAS 19", "IAS 20", "IAS 21", "IAS 36", "IAS 37", "IAS 38", "IAS 40"];
+const EMPTY = { type: "correction", norme: "", date_ecriture: "", libelle: "", justification: "", workpaper_id: "", lignes: [{ compte: "", libelle: "", debit: "", credit: "" }, { compte: "", libelle: "", debit: "", credit: "" }] };
 const num = (v: string) => v.replace(/\s/g, "").replace(",", ".");
 
 /** Propositions d'écritures d'ajustement (REV-21). */
-export default function AdjustmentsPanel({ file, onChange }: { file: AuditFile; onChange?: () => void }) {
+export default function AdjustmentsPanel({ file, onChange, ifrs = false }: { file: AuditFile; onChange?: () => void; ifrs?: boolean }) {
   const { t } = useTranslation();
   const [items, setItems] = useState<Adjustment[]>([]);
   const [papers, setPapers] = useState<WorkpaperSummary[]>([]);
@@ -38,7 +41,8 @@ export default function AdjustmentsPanel({ file, onChange }: { file: AuditFile; 
   const [showForm, setShowForm] = useState(false);
   const [motifs, setMotifs] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
-  const load = useCallback(async () => setItems(await api<Adjustment[]>(`/audit-files/${file.id}/adjustments`)), [file.id]);
+  const empty = ifrs ? { ...EMPTY, type: "retraitement_ifrs", norme: "IFRS 16", date_ecriture: file.date_fin } : EMPTY;
+  const load = useCallback(async () => setItems(await api<Adjustment[]>(`/audit-files/${file.id}/adjustments${ifrs ? "?ifrs=true" : ""}`)), [file.id, ifrs]);
   useEffect(() => {
     load().catch((e: Error) => setError(e.message));
     api<WorkpaperSummary[]>(`/engagements/${file.engagement_id}/workpapers`).then(setPapers).catch(() => setPapers([]));
@@ -61,11 +65,13 @@ export default function AdjustmentsPanel({ file, onChange }: { file: AuditFile; 
     const body = {
       ...form,
       workpaper_id: form.workpaper_id || null,
+      norme: ifrs ? form.norme : null,
+      date_ecriture: ifrs ? form.date_ecriture : null,
       lignes: form.lignes.filter((l) => l.compte).map((l) => ({ compte: l.compte, libelle: l.libelle || null, debit: num(l.debit) || "0", credit: num(l.credit) || "0" })),
     };
     const ok = await run(() => (editing ? put(`/adjustments/${editing}`, body) : post(`/audit-files/${file.id}/adjustments`, body)));
     if (ok) {
-      setForm(EMPTY);
+      setForm(empty);
       setEditing(null);
       setShowForm(false);
     }
@@ -73,7 +79,7 @@ export default function AdjustmentsPanel({ file, onChange }: { file: AuditFile; 
   const edit = (a: Adjustment) => {
     setEditing(a.id);
     setShowForm(true);
-    setForm({ type: a.type, libelle: a.libelle, justification: a.justification, workpaper_id: a.workpaper_id ?? "", lignes: a.lignes.map((l) => ({ compte: l.compte, libelle: l.libelle ?? "", debit: l.debit === "0.00" ? "" : l.debit, credit: l.credit === "0.00" ? "" : l.credit })) });
+    setForm({ type: a.type, norme: a.norme ?? "", date_ecriture: a.date_ecriture ?? "", libelle: a.libelle, justification: a.justification, workpaper_id: a.workpaper_id ?? "", lignes: a.lignes.map((l) => ({ compte: l.compte, libelle: l.libelle ?? "", debit: l.debit === "0.00" ? "" : l.debit, credit: l.credit === "0.00" ? "" : l.credit })) });
   };
   const setLine = (i: number, k: keyof AdjustmentLine, v: string) => setForm({ ...form, lignes: form.lignes.map((l, j) => (j === i ? { ...l, [k]: v } : l)) });
   const sum = (k: "debit" | "credit") => form.lignes.reduce((s, l) => s + (Number(num(l[k])) || 0), 0);
@@ -82,14 +88,21 @@ export default function AdjustmentsPanel({ file, onChange }: { file: AuditFile; 
   return (
     <section className="carte space-y-3" aria-labelledby="aje-titre">
       <div className="flex items-center justify-between gap-2">
-        <h2 id="aje-titre" className="text-base font-semibold">{t("ajustements.titre")}</h2>
-        {file.peut_travailler && !showForm && <button type="button" className="btn-primaire" onClick={() => { setForm(EMPTY); setEditing(null); setShowForm(true); }}>{t("ajustements.nouvelle")}</button>}
+        <h2 id="aje-titre" className="text-base font-semibold">{ifrs ? t("ifrs.retraitements") : t("ajustements.titre")}</h2>
+        {file.peut_travailler && !showForm && <button type="button" className="btn-primaire" onClick={() => { setForm(empty); setEditing(null); setShowForm(true); }}>{ifrs ? t("ifrs.nouveau") : t("ajustements.nouvelle")}</button>}
       </div>
       {error && <Alert kind="erreur">{error}</Alert>}
       {showForm && (
         <form onSubmit={submit} className="space-y-2 rounded border border-slate-200 p-3">
           <div className="grid gap-2 md:grid-cols-4">
-            <div><label htmlFor="aje-type" className="etiquette">{t("ajustements.type")}</label><select id="aje-type" className="champ" value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}><option value="correction">{t("ajustements.types.correction")}</option><option value="reclassement">{t("ajustements.types.reclassement")}</option></select></div>
+            {ifrs ? (
+              <>
+                <div><label htmlFor="aje-norme" className="etiquette">{t("ifrs.norme")}</label><select id="aje-norme" className="champ" value={form.norme} onChange={(e) => setForm({ ...form, norme: e.target.value })}>{NORMES.map((n) => <option key={n} value={n}>{n}</option>)}</select></div>
+                <div><label htmlFor="aje-date" className="etiquette">{t("ifrs.date")}</label><input id="aje-date" type="date" className="champ" required value={form.date_ecriture} onChange={(e) => setForm({ ...form, date_ecriture: e.target.value })} /></div>
+              </>
+            ) : (
+              <div><label htmlFor="aje-type" className="etiquette">{t("ajustements.type")}</label><select id="aje-type" className="champ" value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}><option value="correction">{t("ajustements.types.correction")}</option><option value="reclassement">{t("ajustements.types.reclassement")}</option></select></div>
+            )}
             <div className="md:col-span-2"><label htmlFor="aje-lib" className="etiquette">{t("ajustements.libelle")}</label><input id="aje-lib" className="champ" required value={form.libelle} onChange={(e) => setForm({ ...form, libelle: e.target.value })} /></div>
             <div><label htmlFor="aje-wp" className="etiquette">{t("ajustements.papier")}</label><select id="aje-wp" className="champ" value={form.workpaper_id} onChange={(e) => setForm({ ...form, workpaper_id: e.target.value })}><option value="">—</option>{papers.map((p) => <option key={p.id} value={p.id}>{p.reference} – {p.titre}</option>)}</select></div>
             <div className="md:col-span-4"><label htmlFor="aje-just" className="etiquette">{t("ajustements.justification")}</label><textarea id="aje-just" rows={2} className="champ" required minLength={10} value={form.justification} onChange={(e) => setForm({ ...form, justification: e.target.value })} /></div>
@@ -120,7 +133,7 @@ export default function AdjustmentsPanel({ file, onChange }: { file: AuditFile; 
           {items.map((a) => (
             <li key={a.id} className="space-y-1 py-2 text-sm">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <p><strong>AJE {a.numero}</strong> · {t(`ajustements.types.${a.type}`)} · {a.libelle}</p>
+                <p><strong>{ifrs ? "RIF" : "AJE"} {a.numero}</strong> · {a.norme ?? t(`ajustements.types.${a.type}`)}{a.date_ecriture && ` · ${a.date_ecriture.split("-").reverse().join("/")}`} · {a.libelle}</p>
                 <span className={`rounded px-2 text-xs ${a.statut === "acceptee" ? "bg-emerald-100 text-emerald-800" : a.statut === "refusee" ? "bg-red-100 text-red-800" : "bg-slate-100"}`}>{t(`ajustements.statuts.${a.statut}`)}</span>
               </div>
               <p className="text-slate-600">{a.justification}{paper(a.workpaper_id) && <> · <Link className="underline" to={`/missions/${file.engagement_id}/papiers/${a.workpaper_id}`}>{paper(a.workpaper_id)?.reference}</Link></>}</p>

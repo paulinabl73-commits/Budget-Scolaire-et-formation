@@ -32,7 +32,10 @@ from app.models.revision import (
 from app.revision.formula import PREVIOUS, FormulaError, references, tokens
 
 CODES = ("SYSCOHADA", "IFRS", "CIPRES")
-ETATS = ("bilan_actif", "bilan_passif", "compte_resultat", "flux_tresorerie", "notes", "autre")
+ETATS = ("bilan_actif", "bilan_passif", "compte_resultat", "flux_tresorerie", "notes", "autre",
+         "ifrs_situation", "ifrs_resultat", "ifrs_capitaux", "ifrs_flux")  # fmt: skip
+# Référentiel de restitution (IFR-01) : ses formules portent aussi sur les postes de la source.
+SOURCES = {"SYSCOHADA": "syscohada_2017"}
 NATURES = ("actif", "passif", "charge", "produit", "flux")
 DATA_DIR = Path(__file__).parent / "data"
 
@@ -59,6 +62,10 @@ def _check(doc: dict[str, Any]) -> None:
     if len(set(codes)) != len(codes):
         raise FrameworkError("Code de poste en double")
     known = set(codes)
+    if doc.get("passage_depuis"):
+        if doc["passage_depuis"] not in SOURCES:
+            raise FrameworkError(f"Référentiel source inconnu « {doc['passage_depuis']} »")
+        known |= {p["code"] for p in builtin(SOURCES[doc["passage_depuis"]])["postes"]}
     for p in doc.get("postes", []):
         if p.get("etat") not in ETATS or p.get("nature") not in NATURES:
             raise FrameworkError(f"Poste {p.get('code')} : état ou nature invalide")

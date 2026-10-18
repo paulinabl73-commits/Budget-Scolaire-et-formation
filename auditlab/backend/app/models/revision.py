@@ -302,8 +302,11 @@ class Adjustment(TrackedMixin, Base):
     engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
     audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
     numero: Mapped[int] = mapped_column(Integer)
-    type: Mapped[str] = mapped_column(String(20))  # correction, reclassement
+    type: Mapped[str] = mapped_column(String(20))  # correction, reclassement, retraitement_ifrs
     libelle: Mapped[str] = mapped_column(String(300))
+    # IFR-01 : un retraitement IFRS est daté et rattaché à la norme qui le fonde.
+    norme: Mapped[str | None] = mapped_column(String(30), nullable=True)
+    date_ecriture: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
     justification: Mapped[str] = mapped_column(Text)
     workpaper_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("workpapers.id"), nullable=True

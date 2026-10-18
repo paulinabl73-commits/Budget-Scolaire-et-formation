@@ -29,9 +29,9 @@ def test_migrations_aller_retour_et_donnees_de_depart():
         "risk_controls": 15,
         "procedures": 16,
         "tickmarks": 6,
-        "accounting_frameworks": 2,  # SYSCOHADA révisé et modèle CIPRES
+        "accounting_frameworks": 3,  # SYSCOHADA révisé, modèle CIPRES, restitution IFRS
         "framework_accounts": 168,
-        "statement_lines": 120,
+        "statement_lines": 173,
         "normative_frameworks": 3,
         "currencies": 6,
         "program_steps": 50,

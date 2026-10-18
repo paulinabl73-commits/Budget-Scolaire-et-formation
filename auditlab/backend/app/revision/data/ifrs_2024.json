@@ -1,0 +1,568 @@
+{
+ "code": "IFRS",
+ "version": "2024",
+ "libelle": "IFRS – états de restitution (table de passage depuis le SYSCOHADA révisé)",
+ "pays": "IFRS",
+ "date_effet": "2024-01-01",
+ "source": "Table de passage AuditLab : postes IFRS (IAS 1, IAS 7) exprimés à partir des postes SYSCOHADA retraités des écritures IFRS (IFR-01). À adapter par le cabinet.",
+ "passage_depuis": "SYSCOHADA",
+ "comptes": [],
+ "postes": [
+  {
+   "etat": "ifrs_situation",
+   "code": "IA1",
+   "libelle": "Immobilisations incorporelles",
+   "nature": "actif",
+   "racines": [],
+   "formule": "AD",
+   "ordre": 1,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IA2",
+   "libelle": "Immobilisations corporelles (y compris droits d'utilisation, IFRS 16)",
+   "nature": "actif",
+   "racines": [],
+   "formule": "AJ+AK+AM+AN",
+   "ordre": 2,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IA4",
+   "libelle": "Avances et acomptes sur immobilisations",
+   "nature": "actif",
+   "racines": [],
+   "formule": "AP",
+   "ordre": 3,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IA5",
+   "libelle": "Actifs financiers non courants",
+   "nature": "actif",
+   "racines": [],
+   "formule": "AR+AS",
+   "ordre": 4,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IAZ",
+   "libelle": "TOTAL ACTIFS NON COURANTS",
+   "nature": "actif",
+   "racines": [],
+   "formule": "IA1+IA2+IA4+IA5",
+   "ordre": 5,
+   "niveau": 0
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IB1",
+   "libelle": "Stocks",
+   "nature": "actif",
+   "racines": [],
+   "formule": "BB",
+   "ordre": 6,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IB2",
+   "libelle": "Clients et autres débiteurs",
+   "nature": "actif",
+   "racines": [],
+   "formule": "BH+BI+BJ",
+   "ordre": 7,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IB3",
+   "libelle": "Actifs détenus en vue de la vente et autres actifs hors activités ordinaires",
+   "nature": "actif",
+   "racines": [],
+   "formule": "BA",
+   "ordre": 8,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IB4",
+   "libelle": "Trésorerie et équivalents de trésorerie",
+   "nature": "actif",
+   "racines": [],
+   "formule": "BT",
+   "ordre": 9,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IB5",
+   "libelle": "Écarts de conversion actif (à retraiter en résultat, IAS 21)",
+   "nature": "actif",
+   "racines": [],
+   "formule": "BU",
+   "ordre": 10,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IBZ",
+   "libelle": "TOTAL ACTIFS COURANTS",
+   "nature": "actif",
+   "racines": [],
+   "formule": "IB1+IB2+IB3+IB4+IB5",
+   "ordre": 11,
+   "niveau": 0
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IZZ",
+   "libelle": "TOTAL DES ACTIFS",
+   "nature": "actif",
+   "racines": [],
+   "formule": "IAZ+IBZ",
+   "ordre": 12,
+   "niveau": 0
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IC1",
+   "libelle": "Capital émis",
+   "nature": "passif",
+   "racines": [],
+   "formule": "CA+CB",
+   "ordre": 13,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IC2",
+   "libelle": "Primes, réserves et report à nouveau (provisions réglementées comprises)",
+   "nature": "passif",
+   "racines": [],
+   "formule": "CD+CE+CF+CG+CH+CM",
+   "ordre": 14,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IC3",
+   "libelle": "Résultat de l'exercice",
+   "nature": "passif",
+   "racines": [],
+   "formule": "CJ",
+   "ordre": 15,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "ICZ",
+   "libelle": "TOTAL DES CAPITAUX PROPRES",
+   "nature": "passif",
+   "racines": [],
+   "formule": "IC1+IC2+IC3",
+   "ordre": 16,
+   "niveau": 0
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "ID1",
+   "libelle": "Emprunts et dettes financières non courants",
+   "nature": "passif",
+   "racines": [],
+   "formule": "DA",
+   "ordre": 17,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "ID2",
+   "libelle": "Dettes de location",
+   "nature": "passif",
+   "racines": [],
+   "formule": "DB",
+   "ordre": 18,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "ID3",
+   "libelle": "Provisions non courantes",
+   "nature": "passif",
+   "racines": [],
+   "formule": "DC",
+   "ordre": 19,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "ID4",
+   "libelle": "Produits différés – subventions d'investissement (IAS 20)",
+   "nature": "passif",
+   "racines": [],
+   "formule": "CL",
+   "ordre": 20,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IDZ",
+   "libelle": "TOTAL PASSIFS NON COURANTS",
+   "nature": "passif",
+   "racines": [],
+   "formule": "ID1+ID2+ID3+ID4",
+   "ordre": 21,
+   "niveau": 0
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IE1",
+   "libelle": "Fournisseurs et autres créditeurs",
+   "nature": "passif",
+   "racines": [],
+   "formule": "DI+DJ+DK+DM",
+   "ordre": 22,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IE2",
+   "libelle": "Dettes hors activités ordinaires",
+   "nature": "passif",
+   "racines": [],
+   "formule": "DH",
+   "ordre": 23,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IE3",
+   "libelle": "Provisions courantes",
+   "nature": "passif",
+   "racines": [],
+   "formule": "DN",
+   "ordre": 24,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IE4",
+   "libelle": "Concours bancaires courants",
+   "nature": "passif",
+   "racines": [],
+   "formule": "DT",
+   "ordre": 25,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IE5",
+   "libelle": "Écarts de conversion passif (à retraiter en résultat, IAS 21)",
+   "nature": "passif",
+   "racines": [],
+   "formule": "DV",
+   "ordre": 26,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IEZ",
+   "libelle": "TOTAL PASSIFS COURANTS",
+   "nature": "passif",
+   "racines": [],
+   "formule": "IE1+IE2+IE3+IE4+IE5",
+   "ordre": 27,
+   "niveau": 0
+  },
+  {
+   "etat": "ifrs_situation",
+   "code": "IPZ",
+   "libelle": "TOTAL DES CAPITAUX PROPRES ET PASSIFS",
+   "nature": "passif",
+   "racines": [],
+   "formule": "ICZ+IDZ+IEZ",
+   "ordre": 28,
+   "niveau": 0
+  },
+  {
+   "etat": "ifrs_resultat",
+   "code": "IR1",
+   "libelle": "Produits des activités ordinaires (IFRS 15)",
+   "nature": "produit",
+   "racines": [],
+   "formule": "XB",
+   "ordre": 29,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_resultat",
+   "code": "IR2",
+   "libelle": "Autres produits d'exploitation",
+   "nature": "produit",
+   "racines": [],
+   "formule": "TE+TF+TG+TH+TI",
+   "ordre": 30,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_resultat",
+   "code": "IR3",
+   "libelle": "Achats consommés",
+   "nature": "charge",
+   "racines": [],
+   "formule": "RA+RB+RC+RD+RE+RF",
+   "ordre": 31,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_resultat",
+   "code": "IR4",
+   "libelle": "Services extérieurs et autres charges",
+   "nature": "charge",
+   "racines": [],
+   "formule": "RG+RH+RJ",
+   "ordre": 32,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_resultat",
+   "code": "IR5",
+   "libelle": "Impôts et taxes",
+   "nature": "charge",
+   "racines": [],
+   "formule": "RI",
+   "ordre": 33,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_resultat",
+   "code": "IR6",
+   "libelle": "Charges de personnel (participation comprise, IAS 19)",
+   "nature": "charge",
+   "racines": [],
+   "formule": "RK+RQ",
+   "ordre": 34,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_resultat",
+   "code": "IR7",
+   "libelle": "Dotations nettes aux amortissements, provisions et dépréciations",
+   "nature": "charge",
+   "racines": [],
+   "formule": "RL-TJ",
+   "ordre": 35,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_resultat",
+   "code": "IR9",
+   "libelle": "Autres produits et charges opérationnels",
+   "nature": "produit",
+   "racines": [],
+   "formule": "XH",
+   "ordre": 36,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_resultat",
+   "code": "IRO",
+   "libelle": "RÉSULTAT OPÉRATIONNEL",
+   "nature": "produit",
+   "racines": [],
+   "formule": "IR1+IR2-IR3-IR4-IR5-IR6-IR7+IR9",
+   "ordre": 37,
+   "niveau": 0
+  },
+  {
+   "etat": "ifrs_resultat",
+   "code": "IR8",
+   "libelle": "Résultat financier",
+   "nature": "produit",
+   "racines": [],
+   "formule": "XF",
+   "ordre": 38,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_resultat",
+   "code": "IRT",
+   "libelle": "Impôt sur le résultat (IAS 12)",
+   "nature": "charge",
+   "racines": [],
+   "formule": "RS",
+   "ordre": 39,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_resultat",
+   "code": "IRN",
+   "libelle": "RÉSULTAT NET",
+   "nature": "produit",
+   "racines": [],
+   "formule": "IRO+IR8-IRT",
+   "ordre": 40,
+   "niveau": 0
+  },
+  {
+   "etat": "ifrs_resultat",
+   "code": "IRI",
+   "libelle": "Autres éléments du résultat global",
+   "nature": "produit",
+   "racines": [],
+   "formule": "0",
+   "ordre": 41,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_resultat",
+   "code": "IRG",
+   "libelle": "RÉSULTAT GLOBAL",
+   "nature": "produit",
+   "racines": [],
+   "formule": "IRN+IRI",
+   "ordre": 42,
+   "niveau": 0
+  },
+  {
+   "etat": "ifrs_capitaux",
+   "code": "IV1",
+   "libelle": "Capitaux propres à l'ouverture",
+   "nature": "passif",
+   "racines": [],
+   "formule": "ICZ_N1",
+   "ordre": 43,
+   "niveau": 0
+  },
+  {
+   "etat": "ifrs_capitaux",
+   "code": "IV2",
+   "libelle": "Résultat global de l'exercice",
+   "nature": "passif",
+   "racines": [],
+   "formule": "IRG",
+   "ordre": 44,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_capitaux",
+   "code": "IV3",
+   "libelle": "Apports, distributions et autres mouvements",
+   "nature": "passif",
+   "racines": [],
+   "formule": "ICZ-ICZ_N1-IRG",
+   "ordre": 45,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_capitaux",
+   "code": "IV4",
+   "libelle": "Capitaux propres à la clôture",
+   "nature": "passif",
+   "racines": [],
+   "formule": "ICZ",
+   "ordre": 46,
+   "niveau": 0
+  },
+  {
+   "etat": "ifrs_flux",
+   "code": "IFO",
+   "libelle": "Trésorerie nette à l'ouverture",
+   "nature": "flux",
+   "racines": [],
+   "formule": "ZA",
+   "ordre": 47,
+   "niveau": 0
+  },
+  {
+   "etat": "ifrs_flux",
+   "code": "IF1",
+   "libelle": "Flux de trésorerie liés aux activités opérationnelles",
+   "nature": "flux",
+   "racines": [],
+   "formule": "ZB",
+   "ordre": 48,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_flux",
+   "code": "IF2",
+   "libelle": "Flux de trésorerie liés aux activités d'investissement",
+   "nature": "flux",
+   "racines": [],
+   "formule": "ZC",
+   "ordre": 49,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_flux",
+   "code": "IF3",
+   "libelle": "Flux de trésorerie liés aux activités de financement",
+   "nature": "flux",
+   "racines": [],
+   "formule": "ZD+ZE",
+   "ordre": 50,
+   "niveau": 1
+  },
+  {
+   "etat": "ifrs_flux",
+   "code": "IFV",
+   "libelle": "VARIATION DE LA TRÉSORERIE NETTE",
+   "nature": "flux",
+   "racines": [],
+   "formule": "IF1+IF2+IF3",
+   "ordre": 51,
+   "niveau": 0
+  },
+  {
+   "etat": "ifrs_flux",
+   "code": "IFC",
+   "libelle": "Trésorerie nette à la clôture",
+   "nature": "flux",
+   "racines": [],
+   "formule": "IFO+IFV",
+   "ordre": 52,
+   "niveau": 0
+  },
+  {
+   "etat": "ifrs_flux",
+   "code": "ITZ",
+   "libelle": "Trésorerie nette de l'état de situation financière",
+   "nature": "flux",
+   "racines": [],
+   "formule": "IB4-IE4",
+   "ordre": 53,
+   "niveau": 0
+  }
+ ],
+ "ratios": [],
+ "bases_seuil": [],
+ "regles": [
+  {
+   "code": "ifrs_equilibre",
+   "libelle": "L'état de situation financière est équilibré",
+   "gauche": "IZZ",
+   "droite": "IPZ"
+  },
+  {
+   "code": "ifrs_resultat",
+   "libelle": "Le résultat net est égal au résultat des capitaux propres",
+   "gauche": "IRN",
+   "droite": "IC3"
+  },
+  {
+   "code": "ifrs_tresorerie",
+   "libelle": "La trésorerie de clôture du tableau des flux est égale à celle de l'état de situation financière",
+   "gauche": "IFC",
+   "droite": "ITZ",
+   "periodes": [
+    "N"
+   ]
+  }
+ ],
+ "parametres": []
+}

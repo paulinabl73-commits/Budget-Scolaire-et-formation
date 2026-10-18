@@ -11,7 +11,7 @@ from decimal import Decimal
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, status
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
@@ -24,6 +24,7 @@ from app.models.workpaper import Workpaper
 from app.revision.balances import clean_account
 from app.revision.controls import plan_roots
 from app.revision.currency import decimals, quantum
+from app.revision.mapping import IFRS
 
 router = APIRouter(tags=["Révision – ajustements"])
 ZERO = Decimal(0)
@@ -38,11 +39,19 @@ class LineIn(BaseModel):
 
 
 class AdjustmentIn(BaseModel):
-    type: str = Field(pattern="^(correction|reclassement)$")
+    type: str = Field(pattern="^(correction|reclassement|retraitement_ifrs)$")
     libelle: str = Field(min_length=3, max_length=300)
     justification: str = Field(min_length=10, max_length=5000)
     workpaper_id: uuid.UUID | None = None
     lignes: list[LineIn] = Field(min_length=2, max_length=200)
+    norme: str | None = Field(default=None, max_length=30)
+    date_ecriture: dt.date | None = None
+
+    @model_validator(mode="after")
+    def _ifrs(self) -> "AdjustmentIn":
+        if self.type == IFRS and not (self.norme and self.date_ecriture):
+            raise ValueError("Un retraitement IFRS est daté et rattaché à une norme")
+        return self
 
 
 class DecisionIn(BaseModel):
@@ -72,6 +81,8 @@ def adjustment_out(adj: Adjustment, lines: list[AdjustmentLine], db: Session) ->
     decider = db.get(User, adj.decision_par) if adj.decision_par else None
     return {
         "id": str(adj.id), "numero": adj.numero, "type": adj.type, "libelle": adj.libelle,
+        "norme": adj.norme,
+        "date_ecriture": adj.date_ecriture.isoformat() if adj.date_ecriture else None,
         "justification": adj.justification,
         "workpaper_id": str(adj.workpaper_id) if adj.workpaper_id else None,
         "statut": adj.statut, "motif_decision": adj.motif_decision,
@@ -84,11 +95,13 @@ def adjustment_out(adj: Adjustment, lines: list[AdjustmentLine], db: Session) ->
     }  # fmt: skip
 
 
-def file_adjustments(db: Session, file_id: uuid.UUID) -> list[Adjustment]:
+def file_adjustments(db: Session, file_id: uuid.UUID, ifrs: bool = False) -> list[Adjustment]:
+    """Écritures d'ajustement du dossier ; avec `ifrs`, les retraitements IFRS (IFR-01)."""
+    kind = (Adjustment.type == IFRS) if ifrs else (Adjustment.type != IFRS)
     return list(
         db.scalars(
             select(Adjustment)
-            .where(Adjustment.audit_file_id == file_id, Adjustment.deleted_at.is_(None))
+            .where(Adjustment.audit_file_id == file_id, Adjustment.deleted_at.is_(None), kind)
             .order_by(Adjustment.numero)
         )
     )
@@ -136,9 +149,11 @@ def _write_lines(db: Session, adj: Adjustment, lines: list[LineIn]) -> None:
 
 
 @router.get("/audit-files/{file_id}/adjustments")
-def list_adjustments(file_id: uuid.UUID, user: CurrentUser, db: DbSession) -> list[dict[str, Any]]:
+def list_adjustments(
+    file_id: uuid.UUID, user: CurrentUser, db: DbSession, ifrs: bool = False
+) -> list[dict[str, Any]]:
     file, _ = get_file(db, file_id, user)
-    items = file_adjustments(db, file.id)
+    items = file_adjustments(db, file.id, ifrs)
     lines = lines_of(db, [a.id for a in items])
     return [adjustment_out(a, lines[a.id], db) for a in items]
 

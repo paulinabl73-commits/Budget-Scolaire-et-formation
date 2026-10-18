@@ -11,6 +11,7 @@ import BankReconciliationsPanel from "../components/revision/BankReconciliations
 import ConfirmationsPanel from "../components/revision/ConfirmationsPanel";
 import DsfPanel from "../components/revision/DsfPanel";
 import FinancialStatementsPanel from "../components/revision/FinancialStatementsPanel";
+import IfrsPanel from "../components/revision/IfrsPanel";
 import ImportsPanel from "../components/revision/ImportsPanel";
 import LeadSchedulesPanel from "../components/revision/LeadSchedulesPanel";
 import MappingPanel from "../components/revision/MappingPanel";
@@ -25,7 +26,7 @@ import ThirdPartiesPanel from "../components/revision/ThirdPartiesPanel";
 import UnadjustedPanel from "../components/revision/UnadjustedPanel";
 import { formatDate } from "../lib/format";
 
-const VIEWS = ["donnees", "affectation", "planification", "analytique", "ratios", "risques", "ajustements", "cycles", "etats", "tiers", "circularisation", "tresorerie", "synthese", "rapport"] as const;
+const VIEWS = ["donnees", "affectation", "planification", "analytique", "ratios", "risques", "ajustements", "cycles", "etats", "tiers", "circularisation", "tresorerie", "synthese", "ifrs", "rapport"] as const;
 type View = (typeof VIEWS)[number];
 
 /** Dossier de révision (Module 5) : balances, affectation, seuils, revue analytique. */
@@ -103,6 +104,7 @@ export default function AuditFilePage() {
       {view === "circularisation" && <ConfirmationsPanel file={file} />}
       {view === "tresorerie" && <BankReconciliationsPanel file={file} />}
       {view === "synthese" && <SynthesisPanel file={file} onNavigate={(vue) => setParams({ vue })} />}
+      {view === "ifrs" && <IfrsPanel file={file} />}
       {view === "rapport" && <OpinionPanel file={file} onLocked={() => void load()} />}
       {view === "etats" && (unmapped > 0 ? <Alert kind="info">{t("affectation.bloque")}</Alert> : <><FinancialStatementsPanel file={file} /><DsfPanel file={file} /></>)}
     </div>

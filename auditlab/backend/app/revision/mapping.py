@@ -90,10 +90,14 @@ def _significant(line: BalanceLine) -> bool:
     return any(line.amounts[k] for k in AMOUNTS)
 
 
+IFRS = "retraitement_ifrs"
+
+
 def adjustment_nets(
-    db: Session, file_id: uuid.UUID, statuses: tuple[str, ...] = ("acceptee",)
+    db: Session, file_id: uuid.UUID, statuses: tuple[str, ...] = ("acceptee",), ifrs: bool = False
 ) -> dict[str, Decimal]:
-    """Effet net (débit − crédit) par compte des écritures d'ajustement retenues (REV-21)."""
+    """Effet net (débit − crédit) par compte des écritures d'ajustement retenues (REV-21) ou,
+    avec `ifrs`, des retraitements IFRS validés (IFR-01)."""
     rows = db.execute(
         select(AdjustmentLine.compte, AdjustmentLine.debit - AdjustmentLine.credit)
         .join(Adjustment, Adjustment.id == AdjustmentLine.adjustment_id)
@@ -101,6 +105,7 @@ def adjustment_nets(
             Adjustment.audit_file_id == file_id,
             Adjustment.deleted_at.is_(None),
             Adjustment.statut.in_(statuses),
+            (Adjustment.type == IFRS) if ifrs else (Adjustment.type != IFRS),
         )
     )
     out: dict[str, Decimal] = defaultdict(Decimal)
@@ -109,9 +114,12 @@ def adjustment_nets(
     return out
 
 
-def assignments(db: Session, file: AuditFile, adjusted: bool = False) -> list[Assignment]:
+def assignments(
+    db: Session, file: AuditFile, adjusted: bool = False, ifrs: bool = False
+) -> list[Assignment]:
     """Affectation de chaque compte mouvementé des balances N et N-1 actives ; avec
-    `adjusted`, le solde N inclut les écritures d'ajustement acceptées (solde révisé)."""
+    `adjusted`, le solde N inclut les écritures d'ajustement acceptées (solde révisé) ; avec
+    `ifrs`, il inclut en plus les retraitements IFRS validés (IFR-01)."""
     all_rules = rules(postes(db, file.framework_id))
     manual = overrides(db, file.id)
     excluded = get_settings().classes_hors_etats
@@ -122,8 +130,9 @@ def assignments(db: Session, file: AuditFile, adjusted: bool = False) -> list[As
                 continue
             item = accounts.setdefault(ln.compte, Assignment(ln.compte, ln.libelle))
             item.soldes[periode] = item.soldes.get(periode, ZERO) + ln.net("solde")
-    if adjusted and accounts:
-        for compte, net in adjustment_nets(db, file.id).items():
+    layers = ([False] if adjusted else []) + ([True] if ifrs else [])
+    for layer in layers if accounts else []:
+        for compte, net in adjustment_nets(db, file.id, ifrs=layer).items():
             item = accounts.setdefault(compte, Assignment(compte, None))
             item.soldes["N"] = item.soldes.get("N", ZERO) + net
     for item in accounts.values():
@@ -195,11 +204,11 @@ class UnmappedError(Exception):
 
 
 def file_values(
-    db: Session, file: AuditFile, adjusted: bool = False
+    db: Session, file: AuditFile, adjusted: bool = False, ifrs: bool = False
 ) -> dict[str, dict[str, Decimal]]:
     """Montants des postes N et N-1 du dossier (N révisé avec `adjusted`) ; UnmappedError si
     un état ne peut être produit."""
-    items = assignments(db, file, adjusted)
+    items = assignments(db, file, adjusted, ifrs)
     if not any("N" in a.soldes for a in items):
         raise UnmappedError("Aucune balance N acceptée")
     missing = unmapped(items)

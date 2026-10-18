@@ -1556,7 +1556,8 @@
       "circularisation": "Circularisation",
       "tresorerie": "Rapprochements bancaires",
       "synthese": "Note de synthèse",
-      "rapport": "Opinion et rapport"
+      "rapport": "Opinion et rapport",
+      "ifrs": "IFRS"
     },
     "navigation": "Sections du dossier",
     "verrouille": "Rapport émis : dossier verrouillé et archivé, consultation uniquement."
@@ -1946,5 +1947,30 @@
     "enregistre": "Modèle enregistré (version {{version}}).",
     "sansTitre": "Section sans titre",
     "si": "uniquement si : {{condition}}"
+  },
+  "ifrs": {
+    "retraitements": "Retraitements IFRS (table de passage)",
+    "nouveau": "Saisir un retraitement",
+    "norme": "Norme",
+    "date": "Date de l'écriture",
+    "titre": "États financiers IFRS",
+    "export": {
+      "pdf": "Exporter en PDF",
+      "docx": "Exporter en Word"
+    },
+    "poste": "Poste",
+    "passage": "Passage (postes SYSCOHADA)",
+    "etats": {
+      "ifrs_situation": "Situation financière",
+      "ifrs_resultat": "Résultat global",
+      "ifrs_capitaux": "Variation des capitaux propres",
+      "ifrs_flux": "Flux de trésorerie"
+    },
+    "reconciliation": {
+      "capitaux": "Réconciliation des capitaux propres",
+      "resultat": "Réconciliation du résultat"
+    },
+    "montantIfrs": "Montant IFRS",
+    "ecart": "Écart non expliqué"
   }
 }
