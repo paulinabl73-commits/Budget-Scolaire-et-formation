@@ -1052,6 +1052,27 @@
         "taux_depreciation": "Dépréciation exigée (%)",
         "tolerance": "Écart toléré"
       }
+    },
+    "cip_prestations": {
+      "titre": "Prestations et pensions (CIP-04)",
+      "description": "Isole les bénéficiaires en double (identifiant, nom proche, compte bancaire), d'âge anormal, payés après leur décès, sans certificat de vie à jour ou servis hors barème.",
+      "params": {
+        "champ_identifiant": "Champ identifiant du bénéficiaire",
+        "champ_nom": "Champ nom",
+        "champ_date_naissance": "Champ date de naissance",
+        "champ_compte_bancaire": "Champ compte bancaire",
+        "champ_date_deces": "Champ date de décès",
+        "champ_dernier_paiement": "Champ date du dernier paiement",
+        "champ_certificat_vie": "Champ date du dernier certificat de vie",
+        "champ_montant": "Champ montant mensuel",
+        "date_reference": "Date de référence",
+        "age_minimum": "Âge minimum",
+        "age_maximum": "Âge maximum",
+        "validite_certificat_mois": "Validité du certificat de vie (mois)",
+        "montant_minimum": "Montant minimum du barème",
+        "montant_maximum": "Montant maximum du barème",
+        "seuil_similarite": "Noms proches : similarité minimale (0,5 à 1)"
+      }
     }
   },
   "constructeur": {

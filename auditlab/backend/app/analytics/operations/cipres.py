@@ -15,6 +15,12 @@ un dossier CIPRES, ils sont lus dans le référentiel (CIP-09) et ne sont pas mo
   nombre de mois de retard entamés (mois de 30 jours) si le régime l'applique par mois.
 - cip_creances (CIP-03) : créances sur cotisants exigibles depuis au moins l'ancienneté fixée
   et dépréciées à moins du taux exigé.
+- cip_prestations (CIP-04) : fichier des bénéficiaires (une ligne par pension servie) ; lignes
+  remplissant au moins un critère : identifiant en double, nom proche d'un autre bénéficiaire
+  né le même jour (similarité de Jaro-Winkler, noms sans accents), compte bancaire partagé
+  par plusieurs bénéficiaires, âge hors des bornes à la date de référence, paiement postérieur
+  au décès, certificat de vie absent ou périmé (bénéficiaire non décédé), montant hors barème.
+  Un critère dont la colonne n'est pas fournie n'est pas appliqué.
 """
 
 from decimal import Decimal
@@ -275,5 +281,137 @@ register(
             Param("tolerance", "nombre", requis=False, defaut="0", minimum=0),
         ),
         creances,
+    )
+)
+
+
+BENEFICIARY_CRITERIA = (
+    "doublon_identifiant",
+    "nom_proche",
+    "meme_compte",
+    "age_anormal",
+    "paye_apres_deces",
+    "certificat_vie",
+    "hors_bareme",
+)
+
+
+def _flags(rel: Relation, tests: dict[str, str], params: list[Any], order: str) -> Any:
+    """Lignes remplissant au moins un critère, avec la liste et le nombre de critères."""
+    flags = ", ".join(f'coalesce({sql}, FALSE) AS "__{name}"' for name, sql in tests.items())
+    names = list(tests)
+    listed = " || ".join(f"CASE WHEN \"__{n}\" THEN '{n}, ' ELSE '' END" for n in names)
+    count = " + ".join(f'CAST("__{n}" AS INTEGER)' for n in names)
+    exclude = ", ".join(f'"__{n}"' for n in names)
+    return evaluate(
+        rel,
+        f"WITH base AS (SELECT row_number() OVER () AS __rang, * FROM t), "  # noqa: S608
+        f"marked AS (SELECT *, {flags} FROM base) "
+        f"SELECT * EXCLUDE (__rang, {exclude}), rtrim({listed}, ', ') AS criteres, "
+        f"{count} AS nb_criteres FROM marked WHERE {count} > 0 "
+        f"ORDER BY nb_criteres DESC, {order}, __rang",
+        params,
+    )
+
+
+def _by_criterion(df: Any, criteria: tuple[str, ...]) -> dict[str, int]:
+    out = {n: 0 for n in criteria}
+    for value in df["criteres"].to_list():
+        for name in value.split(", "):
+            out[name] += 1
+    return out
+
+
+def prestations(rels: list[Relation], p: dict[str, Any]) -> OpResult:
+    ident = quote_ident(p["champ_identifiant"])
+    col = {
+        k: quote_ident(p[k]) if p.get(k) else None
+        for k in (
+            "champ_date_naissance",
+            "champ_compte_bancaire",
+            "champ_date_deces",
+            "champ_dernier_paiement",
+            "champ_certificat_vie",
+            "champ_montant",
+        )
+    }
+    ref = "CAST(? AS DATE)"
+    tests: dict[str, str] = {"doublon_identifiant": f"count(*) OVER (PARTITION BY {ident}) > 1"}
+    params: list[Any] = []
+    birth = f"CAST({col['champ_date_naissance']} AS DATE)" if col["champ_date_naissance"] else None
+    if birth:
+        # Références qualifiées : dans la sous-requête, un nom nu désignerait la ligne « o ».
+        def norm(alias: str) -> str:
+            nom = quote_ident(p["champ_nom"])
+            return f"lower(strip_accents(trim(CAST({alias}.{nom} AS VARCHAR))))"
+
+        dob = col["champ_date_naissance"]
+        tests["nom_proche"] = (
+            f"EXISTS (SELECT 1 FROM base o WHERE CAST(o.{dob} AS DATE) = CAST(base.{dob} AS DATE) "
+            f"AND o.{ident} IS DISTINCT FROM base.{ident} "
+            f"AND jaro_winkler_similarity({norm('o')}, {norm('base')}) >= CAST(? AS DOUBLE))"
+        )
+        params.append(p["seuil_similarite"])
+    if col["champ_compte_bancaire"]:
+        account = f"nullif(trim(CAST({col['champ_compte_bancaire']} AS VARCHAR)), '')"
+        tests["meme_compte"] = (
+            f"{account} IS NOT NULL AND count(DISTINCT {ident}) OVER (PARTITION BY {account}) > 1"
+        )
+    if birth:
+        tests["age_anormal"] = (
+            f"date_sub('year', {birth}, {ref}) "
+            f"NOT BETWEEN CAST(? AS INTEGER) AND CAST(? AS INTEGER)"
+        )
+        params += [p["date_reference"], p["age_minimum"], p["age_maximum"]]
+    death = f"CAST({col['champ_date_deces']} AS DATE)" if col["champ_date_deces"] else None
+    if death and col["champ_dernier_paiement"]:
+        tests["paye_apres_deces"] = f"CAST({col['champ_dernier_paiement']} AS DATE) > {death}"
+    if col["champ_certificat_vie"]:
+        alive = f"{death} IS NULL AND " if death else ""
+        tests["certificat_vie"] = (
+            f"{alive}(CAST({col['champ_certificat_vie']} AS DATE) IS NULL OR "
+            f"CAST({col['champ_certificat_vie']} AS DATE) + INTERVAL (CAST(? AS INTEGER)) MONTH "
+            f"< {ref})"
+        )
+        params += [p["validite_certificat_mois"], p["date_reference"]]
+    if col["champ_montant"]:
+        amount = f"CAST({col['champ_montant']} AS {AMOUNT})"
+        tests["hors_bareme"] = f"{amount} < CAST(? AS {AMOUNT}) OR {amount} > CAST(? AS {AMOUNT})"
+        params += [p["montant_minimum"], p["montant_maximum"]]
+    df = _flags(rels[0], tests, params, ident)
+    return OpResult(
+        df,
+        {
+            "lignes_source": evaluate(rels[0], "SELECT count(*) FROM t").item(),
+            "lignes_retenues": df.height,
+            "par_critere": _by_criterion(df, BENEFICIARY_CRITERIA),
+            "criteres_non_appliques": [n for n in BENEFICIARY_CRITERIA if n not in tests],
+        },
+    )
+
+
+register(
+    Operation(
+        "cip_prestations",
+        "CIP-04",
+        1,
+        (
+            Param("champ_identifiant", "colonne"),
+            Param("champ_nom", "colonne"),
+            Param("champ_date_naissance", "colonne", requis=False, types_colonne=DATES),
+            Param("champ_compte_bancaire", "colonne", requis=False),
+            Param("champ_date_deces", "colonne", requis=False, types_colonne=DATES),
+            Param("champ_dernier_paiement", "colonne", requis=False, types_colonne=DATES),
+            Param("champ_certificat_vie", "colonne", requis=False, types_colonne=DATES),
+            Param("champ_montant", "colonne", requis=False, types_colonne=NUMERIC),
+            Param("date_reference", "date"),
+            Param("age_minimum", "entier", minimum=0, maximum=150),
+            Param("age_maximum", "entier", minimum=0, maximum=150),
+            Param("validite_certificat_mois", "entier", minimum=1),
+            Param("montant_minimum", "nombre", minimum=0),
+            Param("montant_maximum", "nombre", minimum=0),
+            Param("seuil_similarite", "nombre", requis=False, defaut="0.9", minimum=0.5, maximum=1),
+        ),
+        prestations,
     )
 )

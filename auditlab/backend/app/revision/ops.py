@@ -79,6 +79,16 @@ def _creances(ctx: Context) -> dict[str, Any]:
     }
 
 
+def _prestations(ctx: Context) -> dict[str, Any]:
+    return {
+        "age_minimum": ctx.value("age_minimum_pension"),
+        "age_maximum": ctx.value("age_maximum_beneficiaire"),
+        "validite_certificat_mois": ctx.value("validite_certificat_vie_mois"),
+        "montant_minimum": ctx.value("pension_minimum"),
+        "montant_maximum": ctx.value("pension_maximum"),
+    }
+
+
 def _exercice(file: AuditFile) -> dict[str, Any]:
     return {"debut": file.date_debut.isoformat(), "fin": file.date_fin.isoformat()}
 
@@ -114,6 +124,15 @@ CONTROLS: dict[str, OpsControl] = {
             "cip_creances",
             ("Créances sur cotisants à la clôture",),
             _creances,
+            _cloture,
+        ),
+        OpsControl(
+            "prestations",
+            "CIP-04",
+            "Prestations et pensions : doublons, âges, décès, certificats de vie, barème",
+            "cip_prestations",
+            ("Fichier des bénéficiaires",),
+            _prestations,
             _cloture,
         ),
     )
