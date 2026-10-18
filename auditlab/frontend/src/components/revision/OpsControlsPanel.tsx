@@ -103,7 +103,7 @@ function ControlCard({ file, control: c, tables }: { file: AuditFile; control: O
               )}
             </div>
           ))}
-          <div className="md:col-span-2"><button type="submit" className="bouton-primaire">{t("ops.lancer")}</button></div>
+          <div className="md:col-span-2"><button type="submit" className="btn-primaire">{t("ops.lancer")}</button></div>
         </form>
       )}
       {c.executions.length > 0 && (
