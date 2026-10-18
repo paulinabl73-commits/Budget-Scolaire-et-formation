@@ -47,6 +47,7 @@ from app.models.program import (
     TestType,
 )
 from app.models.revision import (
+    AccountBranch,
     AccountingFramework,
     AccountMapping,
     Adjustment,
@@ -89,6 +90,7 @@ from app.models.workpaper import (
 )
 
 __all__ = [
+    "AccountBranch",
     "AccountingFramework",
     "AccountMapping",
     "Adjustment",

@@ -1557,7 +1557,8 @@
       "tresorerie": "Rapprochements bancaires",
       "synthese": "Note de synthèse",
       "rapport": "Opinion et rapport",
-      "ifrs": "IFRS"
+      "ifrs": "IFRS",
+      "branches": "Branches"
     },
     "navigation": "Sections du dossier",
     "verrouille": "Rapport émis : dossier verrouillé et archivé, consultation uniquement."
@@ -2090,5 +2091,25 @@
     "categorie": "Catégorie de placement",
     "aPartirDe": "À partir de l'exercice",
     "ajouter": "Ajouter le paramètre"
+  },
+  "branches": {
+    "aucune": "— Non rattaché —",
+    "nonRattaches": "{{count}} compte(s) sans branche : {{comptes}}. Rattachez-les pour compléter les états par branche.",
+    "etats": "États par branche (soldes révisés)",
+    "branche": "Branche",
+    "poste": "Poste",
+    "ratios": "Ratios de la branche",
+    "comptes": "Rattachement des comptes",
+    "aide": "Le rattachement vient du plan de comptes CIPRES (racine la plus longue) ; un rattachement manuel le remplace pour ce dossier. Choisir « Non rattaché » revient au plan.",
+    "compte": "Compte",
+    "solde": "Solde N",
+    "origine": "Origine",
+    "origines": {
+      "plan": "Plan de comptes",
+      "manuelle": "Manuel"
+    },
+    "brancheDe": "Branche de {{compte}}",
+    "controles": "Contrôles de la mission par branche",
+    "aucunControle": "Aucun contrôle défini dans la mission."
   }
 }

@@ -482,3 +482,19 @@ class IfrsChecklistAnswer(TrackedMixin, Base):
     code: Mapped[str] = mapped_column(String(30))  # ex. « IAS 1-02 »
     reponse: Mapped[str] = mapped_column(String(10))  # oui, non, na
     commentaire: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+
+class AccountBranch(TrackedMixin, Base):
+    """Rattachement manuel d'un compte à une branche d'un organisme de prévoyance sociale
+    (CIP-01) ; à défaut, la branche vient du plan de comptes du référentiel."""
+
+    __tablename__ = "account_branches"
+    __table_args__ = (
+        Index("uq_account_branches_compte", "audit_file_id", "compte", unique=True,
+              postgresql_where=text("deleted_at IS NULL")),
+    )  # fmt: skip
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
+    compte: Mapped[str] = mapped_column(String(30))
+    branche: Mapped[str] = mapped_column(String(20))

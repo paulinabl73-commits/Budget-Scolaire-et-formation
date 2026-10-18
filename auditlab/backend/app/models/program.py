@@ -83,6 +83,8 @@ class Control(TrackedMixin, Base):
     nature: Mapped[str] = mapped_column(String(20))
     frequence: Mapped[str] = mapped_column(String(20))
     bibliotheque: Mapped[bool] = mapped_column(Boolean, default=True)
+    # CIP-01 : branche d'un organisme de prévoyance sociale à laquelle le contrôle se rattache.
+    branche: Mapped[str | None] = mapped_column(String(20), nullable=True)
     engagement_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("engagements.id"), nullable=True, index=True
     )
