@@ -43,6 +43,11 @@ class Settings(BaseSettings):
     compte_dotation_creances: str = "691000"
     compte_reprise_creances: str = "791000"
     compte_depreciation_clients: str = "491000"
+    # Circularisation (REV-19) : nom et adresse du cabinet, destinataire des réponses.
+    nom_cabinet: str = "Cabinet d'audit"
+    racines_banques: list[str] = ["52", "53", "56"]
+    max_confirmations: int = 50
+    adresse_cabinet: str = ""
     # Classes exclues des états financiers (comptabilité analytique, engagements hors bilan).
     classes_hors_etats: str = "9"
     cors_origins: list[str] = ["http://localhost:5173"]

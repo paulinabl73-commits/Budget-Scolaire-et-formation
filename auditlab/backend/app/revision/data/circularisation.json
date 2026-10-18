@@ -1,0 +1,43 @@
+{
+  "_commentaire": "Modèles de demandes de confirmation directe (ISA 505), adaptables par le cabinet. Variables : {entite}, {date}, {cabinet}, {adresse_cabinet}, {tiers}, {compte}, {solde}, {reference}.",
+  "banque": {
+    "objet": "Demande de confirmation bancaire au {date}",
+    "corps": [
+      "Madame, Monsieur,",
+      "Dans le cadre de l'audit de nos comptes de l'exercice clos le {date}, nous vous prions de bien vouloir communiquer directement à nos auditeurs, {cabinet}, les informations suivantes arrêtées à cette date : soldes de tous les comptes ouverts ou clos au cours de l'exercice, emprunts et concours de toute nature, intérêts courus, effets à l'escompte non échus, garanties et engagements donnés ou reçus, titres en dépôt, ainsi que la liste des personnes habilitées à faire fonctionner nos comptes.",
+      "Cette demande ne constitue pas une demande de paiement. Votre réponse, rappelant la référence {reference}, est à adresser directement à {cabinet}, {adresse_cabinet}.",
+      "Nous vous remercions de votre diligence et vous prions d'agréer, Madame, Monsieur, nos salutations distinguées."
+    ],
+    "coupon": "Réservé à la banque : informations jointes au {date} — cachet et signature autorisée."
+  },
+  "client": {
+    "objet": "Confirmation de solde au {date}",
+    "corps": [
+      "Madame, Monsieur,",
+      "Nos auditeurs, {cabinet}, procèdent à l'audit de nos comptes de l'exercice clos le {date}. Nos livres font apparaître à cette date un solde de {solde} en notre faveur sur votre compte {compte}.",
+      "Nous vous prions de bien vouloir confirmer ce solde, ou indiquer le détail des différences, directement à nos auditeurs à l'adresse suivante : {cabinet}, {adresse_cabinet}, en rappelant la référence {reference}.",
+      "Cette demande ne constitue pas une demande de paiement. Veuillez agréer, Madame, Monsieur, nos salutations distinguées."
+    ],
+    "coupon": "□ Nous confirmons le solde de {solde} au {date}.   □ Nous ne confirmons pas ; notre solde est de ……………… (détail joint).   Date, cachet et signature :"
+  },
+  "fournisseur": {
+    "objet": "Demande de relevé de compte au {date}",
+    "corps": [
+      "Madame, Monsieur,",
+      "Nos auditeurs, {cabinet}, procèdent à l'audit de nos comptes de l'exercice clos le {date}. Nous vous prions de bien vouloir leur adresser directement le relevé de notre compte dans vos livres à cette date, avec le détail des factures non réglées, des avoirs et des effets en circulation.",
+      "Votre réponse, rappelant la référence {reference}, est à adresser à {cabinet}, {adresse_cabinet}.",
+      "Veuillez agréer, Madame, Monsieur, nos salutations distinguées."
+    ],
+    "coupon": "Solde de votre compte dans nos livres au {date} : ……………… (relevé détaillé joint). Date, cachet et signature :"
+  },
+  "avocat": {
+    "objet": "Demande d'informations sur les litiges au {date}",
+    "corps": [
+      "Maître,",
+      "Dans le cadre de l'audit de nos comptes de l'exercice clos le {date}, nous vous prions d'adresser directement à nos auditeurs, {cabinet}, la description des litiges, contentieux et réclamations dont vous avez la charge pour notre compte, leur état d'avancement, votre appréciation de leur issue probable et de leur incidence financière, ainsi que le montant de vos honoraires non facturés ou non réglés à cette date.",
+      "Votre réponse, rappelant la référence {reference}, est à adresser à {cabinet}, {adresse_cabinet}.",
+      "Veuillez agréer, Maître, l'expression de nos salutations distinguées."
+    ],
+    "coupon": "Réponse jointe. Date et signature :"
+  }
+}

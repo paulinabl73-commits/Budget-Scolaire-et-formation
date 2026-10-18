@@ -1550,7 +1550,8 @@
       "ajustements": "Ajustements",
       "cycles": "Feuilles maîtresses",
       "etats": "États financiers",
-      "tiers": "Tiers"
+      "tiers": "Tiers",
+      "circularisation": "Circularisation"
     },
     "navigation": "Sections du dossier"
   },
@@ -1768,5 +1769,51 @@
     "grille": "Grille (jours:taux %, séparés par « ; »)",
     "tva": "TVA à retirer (%)",
     "appliquerGrille": "Appliquer la grille"
+  },
+  "circularisation": {
+    "titre": "Circularisation (confirmations directes)",
+    "types": {
+      "banque": "Banques",
+      "client": "Clients",
+      "fournisseur": "Fournisseurs",
+      "avocat": "Avocats"
+    },
+    "stats": "{{envoyees}} envoyée(s), {{recues}} reçue(s) – taux de réponse {{taux}} %",
+    "ecarts": "{{n}} écart(s), dont {{restant}} à expliquer",
+    "type": "Tiers à circulariser",
+    "seuil": "Solde minimum",
+    "seuilDefaut": "Seuil de planification",
+    "selectionner": "Sélectionner",
+    "ajoutees": "{{n}} demande(s) ajoutée(s).",
+    "lettresPdf": "Lettres à envoyer (PDF)",
+    "lettresWord": "Lettres à envoyer (Word)",
+    "ajoutManuel": "Ajouter une demande",
+    "destinataire": "Destinataire",
+    "adresse": "Adresse",
+    "ajouter": "Ajouter",
+    "col": {
+      "ref": "Réf.",
+      "tiers": "Tiers",
+      "comptable": "Solde comptable",
+      "statut": "Statut",
+      "confirme": "Solde confirmé",
+      "ecart": "Écart",
+      "actions": "Actions"
+    },
+    "statuts": {
+      "a_envoyer": "À envoyer",
+      "envoyee": "Envoyée",
+      "relancee": "Relancée",
+      "recue": "Réponse reçue",
+      "sans_reponse": "Sans réponse (procédures alternatives)"
+    },
+    "lettre": "Lettre (Word)",
+    "envoyee": "Marquer envoyée",
+    "supprimer": "Supprimer",
+    "saisirReponse": "Solde confirmé pour {{ref}}",
+    "enregistrer": "Enregistrer",
+    "rapprocher": "Rapprocher l'écart",
+    "rapproche": "Écart expliqué par les écritures en suspens.",
+    "sansReponse": "Sans réponse"
   }
 }

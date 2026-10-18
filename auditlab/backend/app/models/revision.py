@@ -353,3 +353,28 @@ class ProgramStep(TrackedMixin, Base):
     description: Mapped[str] = mapped_column(Text)
     ordre: Mapped[int] = mapped_column(Integer, default=0)
     actif: Mapped[bool] = mapped_column(Boolean, default=True)
+
+
+class Confirmation(TrackedMixin, Base):
+    """Demande de confirmation directe (REV-19, ISA 505) : banque, client, fournisseur ou
+    avocat ; suivi de l'envoi, de la réponse et du rapprochement de l'écart."""
+
+    __tablename__ = "confirmations"
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
+    numero: Mapped[int] = mapped_column(Integer)
+    type: Mapped[str] = mapped_column(String(20))  # banque, client, fournisseur, avocat
+    tiers: Mapped[str] = mapped_column(String(200))
+    compte: Mapped[str | None] = mapped_column(String(30), nullable=True)
+    adresse: Mapped[str | None] = mapped_column(Text, nullable=True)
+    email: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    solde_comptable: Mapped[Decimal | None] = mapped_column(MONEY, nullable=True)
+    statut: Mapped[str] = mapped_column(String(20), default="a_envoyer")
+    envoyee_le: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
+    relancee_le: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
+    reponse_le: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
+    solde_confirme: Mapped[Decimal | None] = mapped_column(MONEY, nullable=True)
+    reponse: Mapped[str | None] = mapped_column(Text, nullable=True)
+    explication: Mapped[str | None] = mapped_column(Text, nullable=True)
+    procedure_alternative: Mapped[str | None] = mapped_column(Text, nullable=True)
