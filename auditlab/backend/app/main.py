@@ -22,6 +22,7 @@ from app.api import (
     currencies,
     data_links,
     datasets,
+    dsf,
     engagement_status,
     engagements,
     evidence,
@@ -152,5 +153,6 @@ for router in (
     third_parties.router,
     confirmations.router,
     bank_reconciliations.router,
+    dsf.router,
 ):
     app.include_router(router, prefix="/api")

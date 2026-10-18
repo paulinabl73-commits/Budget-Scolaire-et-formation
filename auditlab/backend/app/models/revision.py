@@ -410,3 +410,17 @@ class BankReconciliationItem(Base):
     reference: Mapped[str | None] = mapped_column(String(60), nullable=True)
     origine: Mapped[str] = mapped_column(String(20))
     montant: Mapped[Decimal] = mapped_column(MONEY)
+
+
+class DsfModel(TrackedMixin, Base):
+    """Modèle de liasse fiscale et statistique (DSF) d'un pays (REV-25) : feuilles et lignes
+    (référence, libellé, formule sur les postes des états révisés)."""
+
+    __tablename__ = "dsf_models"
+
+    pays: Mapped[str] = mapped_column(String(10))
+    nom: Mapped[str] = mapped_column(String(200))
+    version: Mapped[str] = mapped_column(String(40))
+    referentiel: Mapped[str] = mapped_column(String(20), default="SYSCOHADA")
+    contenu: Mapped[dict[str, Any]] = mapped_column(JSONB)
+    actif: Mapped[bool] = mapped_column(Boolean, default=True)

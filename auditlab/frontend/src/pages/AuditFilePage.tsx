@@ -9,6 +9,7 @@ import AdjustmentsPanel from "../components/revision/AdjustmentsPanel";
 import AnalyticalPanel from "../components/revision/AnalyticalPanel";
 import BankReconciliationsPanel from "../components/revision/BankReconciliationsPanel";
 import ConfirmationsPanel from "../components/revision/ConfirmationsPanel";
+import DsfPanel from "../components/revision/DsfPanel";
 import FinancialStatementsPanel from "../components/revision/FinancialStatementsPanel";
 import ImportsPanel from "../components/revision/ImportsPanel";
 import LeadSchedulesPanel from "../components/revision/LeadSchedulesPanel";
@@ -98,7 +99,7 @@ export default function AuditFilePage() {
       {view === "tiers" && <ThirdPartiesPanel file={file} />}
       {view === "circularisation" && <ConfirmationsPanel file={file} />}
       {view === "tresorerie" && <BankReconciliationsPanel file={file} />}
-      {view === "etats" && (unmapped > 0 ? <Alert kind="info">{t("affectation.bloque")}</Alert> : <FinancialStatementsPanel file={file} />)}
+      {view === "etats" && (unmapped > 0 ? <Alert kind="info">{t("affectation.bloque")}</Alert> : <><FinancialStatementsPanel file={file} /><DsfPanel file={file} /></>)}
     </div>
   );
 }

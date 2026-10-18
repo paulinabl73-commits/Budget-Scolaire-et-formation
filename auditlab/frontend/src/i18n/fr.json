@@ -1838,5 +1838,26 @@
       "releve": "Relevé",
       "comptabilite": "Comptabilité"
     }
+  },
+  "dsf": {
+    "titre": "Liasse fiscale et statistique (aide)",
+    "aide": "Montants issus des états révisés selon le modèle du pays ; les informations non comptables restent à saisir dans la liasse.",
+    "modele": "Modèle",
+    "feuille": "Feuille",
+    "exporter": "Exporter la liasse (Excel)",
+    "col": {
+      "ref": "Réf.",
+      "libelle": "Libellé",
+      "note": "Note",
+      "N": "Exercice N",
+      "N-1": "Exercice N-1"
+    },
+    "modeles": "Modèles de liasse par pays",
+    "gabarit": "Gabarit Excel",
+    "pays": "Pays",
+    "nom": "Nom",
+    "version": "Version",
+    "fichier": "Modèle (Excel : ref, libelle, note, formule)",
+    "importer": "Importer le modèle"
   }
 }
