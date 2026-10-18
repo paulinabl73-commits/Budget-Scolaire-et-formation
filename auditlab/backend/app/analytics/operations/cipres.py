@@ -7,13 +7,28 @@ un dossier CIPRES, ils sont lus dans le référentiel (CIP-09) et ne sont pas mo
   par période) et cotisations émises et encaissées par employeur. Cotisation théorique par
   branche = Σ min(salaire, plafond × mois de la période) × taux ; un plafond nul signifie
   « sans plafond ». Une ligne par employeur, anomalie indiquée.
+- cip_recouvrement (CIP-03) : déclarations et registre des employeurs ; une ligne par
+  anomalie : employeur actif sans déclaration pour une période attendue (non_declarant),
+  déclaration déposée après la fin de la période augmentée du délai (declaration_tardive),
+  majoration de retard inférieure à la majoration due (majoration_non_appliquee), déclarant
+  absent du registre (non_immatricule). Majoration due = cotisations × taux, multipliée par le
+  nombre de mois de retard entamés (mois de 30 jours) si le régime l'applique par mois.
+- cip_creances (CIP-03) : créances sur cotisants exigibles depuis au moins l'ancienneté fixée
+  et dépréciées à moins du taux exigé.
 """
 
 from decimal import Decimal
 from typing import Any
 
-from app.analytics.operations.base import NUMERIC, Operation, OpResult, Param, register
-from app.analytics.relation import Relation, evaluate_many
+from app.analytics.operations.base import (
+    DATES,
+    NUMERIC,
+    Operation,
+    OpResult,
+    Param,
+    register,
+)
+from app.analytics.relation import Relation, evaluate, evaluate_many
 from app.analytics.store import quote_ident
 
 AMOUNT = "DECIMAL(18,2)"
@@ -99,5 +114,166 @@ register(
             Param("tolerance", "nombre", requis=False, defaut="0", minimum=0),
         ),
         cotisations,
+    )
+)
+
+
+UNITS = {"mensuelle": ("month", 1), "trimestrielle": ("quarter", 3)}
+
+
+def recouvrement(rels: list[Relation], p: dict[str, Any]) -> OpResult:
+    q = {k: quote_ident(p[k]) for k in ("champ_employeur", "champ_periode", "champ_date_depot")}
+    reg = quote_ident(p["champ_employeur_registre"])
+    unit, months = UNITS[p["periodicite"]]
+    aff = (
+        f"CAST(b.{quote_ident(p['champ_date_affiliation'])} AS DATE)"
+        if p.get("champ_date_affiliation")
+        else "NULL"
+    )
+    ces = (
+        f"CAST(b.{quote_ident(p['champ_date_cessation'])} AS DATE)"
+        if p.get("champ_date_cessation")
+        else "NULL"
+    )
+    cot = _amount(f"a.{quote_ident(p['champ_cotisations'])}")
+    applied = (
+        _amount(f"a.{quote_ident(p['champ_majoration'])}") if p.get("champ_majoration") else None
+    )
+    start = f"CAST(date_trunc('{unit}', CAST(a.{q['champ_periode']} AS DATE)) AS DATE)"
+    late_days = (
+        f"date_diff('day', CAST(d.debut_periode + INTERVAL {months} MONTH - INTERVAL 1 DAY "
+        f"+ INTERVAL (CAST(? AS INTEGER)) DAY AS DATE), d.date_depot)"
+    )
+    factor = "ceil(d.jours_retard / 30.0)" if int(p["par_mois"]) else "1"
+    sql = (
+        f"WITH d AS (SELECT CAST(a.{q['champ_employeur']} AS VARCHAR) AS employeur, "
+        f"{start} AS debut_periode, CAST(a.{q['champ_date_depot']} AS DATE) AS date_depot, "
+        f"{cot} AS cotisations, {applied or 'NULL'} AS majoration_appliquee FROM a "
+        f"WHERE a.{q['champ_employeur']} IS NOT NULL AND a.{q['champ_periode']} IS NOT NULL), "
+        f"r AS (SELECT DISTINCT CAST(b.{reg} AS VARCHAR) AS employeur, {aff} AS affiliation, "
+        f"{ces} AS cessation FROM b WHERE b.{reg} IS NOT NULL), "
+        f"periodes AS (SELECT CAST(x AS DATE) AS debut_periode FROM generate_series("
+        f"CAST(date_trunc('{unit}', CAST(? AS DATE)) AS TIMESTAMP), CAST(? AS TIMESTAMP), "
+        f"INTERVAL {months} MONTH) g(x)), "
+        f"dd AS (SELECT *, {late_days} AS jours_retard FROM d "
+        f"WHERE d.debut_periode BETWEEN CAST(date_trunc('{unit}', CAST(? AS DATE)) AS DATE) "
+        f"AND CAST(? AS DATE)), "
+        f"dm AS (SELECT *, CAST(round(cotisations * CAST(? AS DECIMAL(9,4)) / 100 * {factor}, 2) "
+        f"AS {AMOUNT}) AS majoration_due FROM dd d WHERE jours_retard > 0), "
+        f"anomalies AS ("
+        f"SELECT r.employeur, p.debut_periode, 'non_declarant' AS anomalie, "
+        f"NULL::DATE AS date_depot, "
+        f"NULL::BIGINT AS jours_retard, NULL::{AMOUNT} AS cotisations, "
+        f"NULL::{AMOUNT} AS majoration_due, NULL::{AMOUNT} AS majoration_appliquee "
+        f"FROM r CROSS JOIN periodes p "
+        f"WHERE (r.affiliation IS NULL "
+        f"OR r.affiliation < p.debut_periode + INTERVAL {months} MONTH) "
+        f"AND (r.cessation IS NULL OR r.cessation >= p.debut_periode) "
+        f"AND NOT EXISTS (SELECT 1 FROM d WHERE d.employeur = r.employeur "
+        f"AND d.debut_periode = p.debut_periode) "
+        f"UNION ALL SELECT employeur, debut_periode, 'declaration_tardive', date_depot, "
+        f"jours_retard, cotisations, majoration_due, majoration_appliquee FROM dm "
+    )
+    # Dans l'ordre des « ? » : périodes attendues, retard, déclarations de l'exercice, taux.
+    params: list[Any] = [p["debut"], p["fin"], p["delai_jours"], p["debut"], p["fin"]]
+    params.append(p["taux_majoration"])
+    if applied:
+        sql += (
+            "UNION ALL SELECT employeur, debut_periode, 'majoration_non_appliquee', date_depot, "
+            "jours_retard, cotisations, majoration_due, majoration_appliquee FROM dm "
+            f"WHERE coalesce(majoration_appliquee, 0) < majoration_due - CAST(? AS {AMOUNT}) "
+        )
+        params.append(p["tolerance"])
+    sql += (
+        "UNION ALL SELECT DISTINCT employeur, NULL, 'non_immatricule', NULL, NULL, NULL, NULL, "
+        "NULL FROM d WHERE employeur NOT IN (SELECT employeur FROM r)) "
+        "SELECT employeur, debut_periode AS periode, anomalie, date_depot, jours_retard, "
+        "cotisations, majoration_due, majoration_appliquee FROM anomalies "
+        "ORDER BY anomalie, employeur, periode NULLS FIRST"
+    )
+    df = evaluate_many({"a": rels[0], "b": rels[1]}, sql, params)
+    counts = df["anomalie"].value_counts(sort=True)
+    return OpResult(
+        df,
+        {
+            "anomalies": df.height,
+            "par_anomalie": dict(zip(counts["anomalie"], counts["count"], strict=True)),
+            "employeurs_concernes": df["employeur"].n_unique(),
+            "criteres_non_appliques": [] if applied else ["majoration_non_appliquee"],
+        },
+    )
+
+
+register(
+    Operation(
+        "cip_recouvrement",
+        "CIP-03",
+        2,
+        (
+            Param("champ_employeur", "colonne"),
+            Param("champ_periode", "colonne", types_colonne=DATES),
+            Param("champ_date_depot", "colonne", types_colonne=DATES),
+            Param("champ_cotisations", "colonne", types_colonne=NUMERIC),
+            Param("champ_majoration", "colonne", requis=False, types_colonne=NUMERIC),
+            Param("champ_employeur_registre", "colonne", table=1),
+            Param("champ_date_affiliation", "colonne", requis=False, table=1, types_colonne=DATES),
+            Param("champ_date_cessation", "colonne", requis=False, table=1, types_colonne=DATES),
+            Param("debut", "date"),
+            Param("fin", "date"),
+            Param("periodicite", "choix", requis=False, defaut="mensuelle", choix=tuple(UNITS)),
+            Param("delai_jours", "entier", minimum=0),
+            Param("taux_majoration", "nombre", minimum=0, maximum=100),
+            Param("par_mois", "entier", minimum=0, maximum=1),
+            Param("tolerance", "nombre", requis=False, defaut="0", minimum=0),
+        ),
+        recouvrement,
+    )
+)
+
+
+def creances(rels: list[Relation], p: dict[str, Any]) -> OpResult:
+    montant = _amount(quote_ident(p["champ_montant"]))
+    due = f"CAST({quote_ident(p['champ_date_exigibilite'])} AS DATE)"
+    dep = _amount(quote_ident(p["champ_depreciation"])) if p.get("champ_depreciation") else "0"
+    ref = "CAST(? AS DATE)"
+    expected = f"CAST(round({montant} * CAST(? AS DECIMAL(9,4)) / 100, 2) AS {AMOUNT})"
+    sql = (
+        f"WITH c AS (SELECT *, date_diff('day', {due}, {ref}) AS anciennete_jours, "
+        f"{expected} AS depreciation_exigee, CAST({dep} AS {AMOUNT}) AS depreciation_constatee "
+        f"FROM t WHERE {due} + INTERVAL (CAST(? AS INTEGER)) MONTH <= {ref}) "
+        f"SELECT *, CAST(depreciation_exigee - depreciation_constatee AS {AMOUNT}) "
+        f"AS insuffisance FROM c "
+        f"WHERE depreciation_constatee < depreciation_exigee - CAST(? AS {AMOUNT}) "
+        f"ORDER BY insuffisance DESC, anciennete_jours DESC"
+    )
+    ref_date = p["date_reference"]
+    params = [ref_date, p["taux_depreciation"], p["anciennete_mois"], ref_date]
+    params.append(p["tolerance"])
+    df = evaluate(rels[0], sql, params)
+    return OpResult(
+        df,
+        {
+            "creances_retenues": df.height,
+            "insuffisance_totale": str(df["insuffisance"].sum() if df.height else Decimal(0)),
+            "creances_source": evaluate(rels[0], "SELECT count(*) FROM t").item(),
+        },
+    )
+
+
+register(
+    Operation(
+        "cip_creances",
+        "CIP-03",
+        1,
+        (
+            Param("champ_montant", "colonne", types_colonne=NUMERIC),
+            Param("champ_date_exigibilite", "colonne", types_colonne=DATES),
+            Param("champ_depreciation", "colonne", requis=False, types_colonne=NUMERIC),
+            Param("date_reference", "date"),
+            Param("anciennete_mois", "entier", minimum=0),
+            Param("taux_depreciation", "nombre", minimum=0, maximum=100),
+            Param("tolerance", "nombre", requis=False, defaut="0", minimum=0),
+        ),
+        creances,
     )
 )

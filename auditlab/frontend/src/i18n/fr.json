@@ -868,7 +868,9 @@
       "aleatoire": "Aléatoire simple",
       "systematique": "Systématique",
       "stratifie": "Stratifié",
-      "mus": "Unités monétaires (MUS)"
+      "mus": "Unités monétaires (MUS)",
+      "mensuelle": "Mensuelle",
+      "trimestrielle": "Trimestrielle"
     },
     "extraction": {
       "titre": "Extraction par critère",
@@ -1010,6 +1012,44 @@
         "taux": "Taux par branche en % (ex. PF=7; PV=8)",
         "plafonds": "Plafond mensuel par branche (ex. PF=70000 ; 0 = sans plafond)",
         "mois_par_ligne": "Mois couverts par une ligne de déclaration",
+        "tolerance": "Écart toléré"
+      }
+    },
+    "cip_recouvrement": {
+      "titre": "Recouvrement des cotisations (CIP-03)",
+      "description": "Rapproche les déclarations du registre des employeurs : employeurs actifs sans déclaration, déclarations tardives, majorations de retard non appliquées, déclarants non immatriculés.",
+      "params": {
+        "champ_employeur": "Déclarations : champ employeur",
+        "champ_periode": "Déclarations : champ période (date)",
+        "champ_date_depot": "Déclarations : champ date de dépôt",
+        "champ_cotisations": "Déclarations : champ cotisations",
+        "champ_majoration": "Déclarations : champ majoration appliquée",
+        "champ_employeur_registre": "Registre : champ employeur",
+        "champ_date_affiliation": "Registre : champ date d'affiliation",
+        "champ_date_cessation": "Registre : champ date de cessation",
+        "debut": "Début de l'exercice",
+        "fin": "Fin de l'exercice",
+        "periodicite": "Périodicité des déclarations",
+        "delai_jours": "Délai de déclaration (jours)",
+        "taux_majoration": "Majoration de retard (%)",
+        "par_mois": "Majoration par mois de retard (1) ou forfaitaire (0)",
+        "tolerance": "Écart toléré"
+      },
+      "choix": {
+        "mensuelle": "Mensuelle",
+        "trimestrielle": "Trimestrielle"
+      }
+    },
+    "cip_creances": {
+      "titre": "Créances anciennes sur cotisants (CIP-03)",
+      "description": "Retient les créances exigibles depuis au moins l'ancienneté réglementaire et dépréciées à moins du taux exigé.",
+      "params": {
+        "champ_montant": "Champ montant",
+        "champ_date_exigibilite": "Champ date d'exigibilité",
+        "champ_depreciation": "Champ dépréciation constatée",
+        "date_reference": "Date de référence",
+        "anciennete_mois": "Ancienneté (mois)",
+        "taux_depreciation": "Dépréciation exigée (%)",
         "tolerance": "Écart toléré"
       }
     }

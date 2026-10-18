@@ -64,6 +64,29 @@ def _cotisations(ctx: Context) -> dict[str, Any]:
     return {"taux": rates, "plafonds": {b: v for b, v in ceilings.items() if v is not None}}
 
 
+def _recouvrement(ctx: Context) -> dict[str, Any]:
+    return {
+        "delai_jours": ctx.value("delai_declaration_jours"),
+        "taux_majoration": ctx.value("taux_majoration_retard"),
+        "par_mois": ctx.value("majoration_par_mois_retard"),
+    }
+
+
+def _creances(ctx: Context) -> dict[str, Any]:
+    return {
+        "anciennete_mois": ctx.value("anciennete_depreciation_creances_mois"),
+        "taux_depreciation": ctx.value("taux_depreciation_creances"),
+    }
+
+
+def _exercice(file: AuditFile) -> dict[str, Any]:
+    return {"debut": file.date_debut.isoformat(), "fin": file.date_fin.isoformat()}
+
+
+def _cloture(file: AuditFile) -> dict[str, Any]:
+    return {"date_reference": file.date_fin.isoformat()}
+
+
 CONTROLS: dict[str, OpsControl] = {
     c.code: c
     for c in (
@@ -74,6 +97,24 @@ CONTROLS: dict[str, OpsControl] = {
             "cip_cotisations",
             ("Déclarations nominatives des salaires", "Cotisations émises et encaissées"),
             _cotisations,
+        ),
+        OpsControl(
+            "recouvrement",
+            "CIP-03",
+            "Recouvrement : déclarations manquantes ou tardives, majorations",
+            "cip_recouvrement",
+            ("Déclarations des employeurs", "Registre des employeurs"),
+            _recouvrement,
+            _exercice,
+        ),
+        OpsControl(
+            "creances",
+            "CIP-03",
+            "Créances anciennes sur cotisants non dépréciées",
+            "cip_creances",
+            ("Créances sur cotisants à la clôture",),
+            _creances,
+            _cloture,
         ),
     )
 }
