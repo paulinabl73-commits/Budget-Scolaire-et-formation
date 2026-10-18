@@ -137,7 +137,9 @@
     "chef_mission": "Chef de mission",
     "auditeur": "Auditeur",
     "data_analyst": "Data analyst",
-    "audite": "Audité"
+    "audite": "Audité",
+    "associe_signataire": "Associé signataire",
+    "inspecteur_cipres": "Inspecteur CIPRES"
   },
   "erreurs": {
     "403": "Vous n'avez pas les droits nécessaires pour cette page.",
@@ -1553,7 +1555,8 @@
       "tiers": "Tiers",
       "circularisation": "Circularisation",
       "tresorerie": "Rapprochements bancaires",
-      "synthese": "Note de synthèse"
+      "synthese": "Note de synthèse",
+      "rapport": "Opinion et rapport"
     },
     "navigation": "Sections du dossier"
   },
@@ -1891,5 +1894,48 @@
     },
     "conclusion": "Conclusion",
     "enregistree": "Conclusion enregistrée"
+  },
+  "opinion": {
+    "titre": "Opinion et rapports",
+    "statuts": {
+      "a_rediger": "Opinion à rédiger",
+      "brouillon": "Projet",
+      "signe": "Signée",
+      "emis": "Émise – dossier archivé"
+    },
+    "signeePar": "signée par {{nom}} le {{date}}",
+    "emisePar": "émise par {{nom}} le {{date}}",
+    "suggestion": "Opinion suggérée par les anomalies non corrigées : {{type}}.",
+    "type": "Type d'opinion",
+    "types": {
+      "sans_reserve": "Sans réserve",
+      "avec_reserve": "Avec réserve",
+      "defavorable": "Défavorable",
+      "impossibilite": "Impossibilité d'exprimer une opinion"
+    },
+    "lieu": "Lieu de signature",
+    "fondement": "Fondement de l'opinion modifiée",
+    "observations": "Observations (paragraphe d'observation, facultatif)",
+    "conventions": "Conventions réglementées",
+    "convention": {
+      "objet": "Objet (convention {{n}})",
+      "parties": "Parties (convention {{n}})",
+      "modalites": "Modalités (convention {{n}})",
+      "montant": "Montant (convention {{n}})"
+    },
+    "ajouterConvention": "Ajouter une convention",
+    "enregistree": "Opinion enregistrée",
+    "docs": {
+      "opinion": "Rapport sur les états financiers",
+      "conventions": "Rapport spécial",
+      "affirmation": "Lettre d'affirmation"
+    }
+  },
+  "modelesRapports": {
+    "titre": "Modèles de rapports",
+    "aide": "Variables utilisables : {entite}, {exercice}, {date_cloture}, {referentiel}, {total_bilan}, {capitaux_propres}, {resultat}, {devise}, {fondement}, {observations}, {conventions}, {signataire}, {cabinet}, {date}, {lieu}.",
+    "enregistre": "Modèle enregistré (version {{version}}).",
+    "sansTitre": "Section sans titre",
+    "si": "uniquement si : {{condition}}"
   }
 }

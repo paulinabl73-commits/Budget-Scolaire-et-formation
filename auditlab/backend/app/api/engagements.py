@@ -35,9 +35,9 @@ Manager = Annotated[User, Depends(require(Perm.MISSIONS_MANAGE))]
 
 # Rôles applicatifs admis pour chaque rôle dans la mission.
 ALLOWED_ROLES: dict[MissionRole, set[Role]] = {
-    MissionRole.CHEF: {Role.CHEF_MISSION, Role.DIRECTEUR},
-    MissionRole.SUPERVISEUR: {Role.DIRECTEUR, Role.CHEF_MISSION},
-    MissionRole.AUDITEUR: {Role.AUDITEUR, Role.CHEF_MISSION},
+    MissionRole.CHEF: {Role.CHEF_MISSION, Role.DIRECTEUR, Role.INSPECTEUR_CIPRES},
+    MissionRole.SUPERVISEUR: {Role.DIRECTEUR, Role.CHEF_MISSION, Role.ASSOCIE},
+    MissionRole.AUDITEUR: {Role.AUDITEUR, Role.CHEF_MISSION, Role.INSPECTEUR_CIPRES},
     MissionRole.DATA_ANALYST: {Role.DATA_ANALYST},
 }
 
@@ -291,6 +291,8 @@ def team_candidates(db: DbSession) -> list[MemberOut]:
         Role.DIRECTEUR: MissionRole.SUPERVISEUR,
         Role.AUDITEUR: MissionRole.AUDITEUR,
         Role.DATA_ANALYST: MissionRole.DATA_ANALYST,
+        Role.ASSOCIE: MissionRole.SUPERVISEUR,
+        Role.INSPECTEUR_CIPRES: MissionRole.CHEF,
     }
     users = db.scalars(
         select(User)

@@ -36,6 +36,7 @@ from app.api import (
     materiality,
     meta,
     notifications,
+    opinion,
     plans,
     portal,
     program,
@@ -156,5 +157,6 @@ for router in (
     bank_reconciliations.router,
     dsf.router,
     synthesis.router,
+    opinion.router,
 ):
     app.include_router(router, prefix="/api")

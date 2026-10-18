@@ -32,7 +32,7 @@ from app.main import app  # noqa: E402
 from app.models import Base  # noqa: E402
 from app.models.user import User  # noqa: E402
 from app.security.passwords import hash_password  # noqa: E402
-from app.security.roles import Role  # noqa: E402
+from app.security.roles import MFA_REQUIRED, Role  # noqa: E402
 
 PASSWORD = "MotDePasse-Solide-2026"
 BACKEND = Path(__file__).resolve().parents[1]
@@ -91,7 +91,7 @@ def make_user(db: Session) -> Callable[..., User]:
         role: Role = Role.AUDITEUR, email: str | None = None, mfa: bool | None = None, **kw: object
     ) -> User:
         set_actor(db, None)
-        mfa = role in (Role.ADMIN, Role.DIRECTEUR) if mfa is None else mfa
+        mfa = role in MFA_REQUIRED if mfa is None else mfa
         if email is None:
             # Adresse par défaut lisible ; suffixée si le rôle a déjà un compte dans le test.
             from sqlalchemy import func, select
@@ -162,12 +162,13 @@ def criteria(db: Session) -> list:
 @pytest.fixture
 def syscohada(db: Session):
     """Référentiel SYSCOHADA livré (la troncature des tests efface les données de départ)."""
-    from app.revision import programs
+    from app.revision import programs, reports
     from app.revision.currency import seed_currencies
     from app.revision.frameworks import builtin, load_framework
 
     fw = load_framework(db, builtin("syscohada_2017"))
     seed_currencies(db)
     programs.seed(db)
+    reports.seed(db)
     db.commit()
     return fw

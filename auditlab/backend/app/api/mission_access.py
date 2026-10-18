@@ -13,7 +13,7 @@ from app.models.engagement import (
     MissionRole,
 )
 from app.models.user import User
-from app.security.roles import Perm, has_permission
+from app.security.roles import Perm, Role, has_permission
 
 
 def sees_all(user: User) -> bool:
@@ -55,10 +55,14 @@ def mission_role(engagement: Engagement, user: User) -> MissionRole | None:
 
 
 def can_manage(engagement: Engagement, user: User) -> bool:
-    """Directeur sur toutes les missions ; Chef de mission sur celles qu'il pilote."""
+    """Directeur sur toutes les missions ; Chef de mission sur celles qu'il pilote ; Associé
+    signataire sur celles qu'il supervise (droits du Directeur sur ses dossiers)."""
     if not has_permission(user.role, Perm.MISSIONS_MANAGE):
         return False
-    return sees_all(user) or mission_role(engagement, user) == MissionRole.CHEF
+    role = mission_role(engagement, user)
+    if user.role == Role.ASSOCIE.value and role == MissionRole.SUPERVISEUR:
+        return True
+    return sees_all(user) or role == MissionRole.CHEF
 
 
 def require_manager(engagement: Engagement, user: User) -> None:

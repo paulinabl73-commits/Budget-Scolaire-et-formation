@@ -14,6 +14,9 @@ class Role(StrEnum):
     AUDITEUR = "auditeur"
     DATA_ANALYST = "data_analyst"
     AUDITE = "audite"
+    # Module 5 : commissaire aux comptes signataire ; inspecteur de la CIPRES.
+    ASSOCIE = "associe_signataire"
+    INSPECTEUR_CIPRES = "inspecteur_cipres"
 
 
 ROLE_LABELS: dict[Role, str] = {
@@ -23,10 +26,12 @@ ROLE_LABELS: dict[Role, str] = {
     Role.AUDITEUR: "Auditeur",
     Role.DATA_ANALYST: "Data analyst",
     Role.AUDITE: "Audité",
+    Role.ASSOCIE: "Associé signataire",
+    Role.INSPECTEUR_CIPRES: "Inspecteur CIPRES",
 }
 
 # Double authentification obligatoire.
-MFA_REQUIRED: frozenset[Role] = frozenset({Role.ADMIN, Role.DIRECTEUR})
+MFA_REQUIRED: frozenset[Role] = frozenset({Role.ADMIN, Role.DIRECTEUR, Role.ASSOCIE})
 
 
 class Perm(StrEnum):
@@ -63,6 +68,7 @@ class Perm(StrEnum):
     REVISION_READ = "revision:read"
     REVISION_WORK = "revision:work"  # importer les balances, affecter, justifier
     REVISION_MANAGE = "revision:manage"  # ouvrir un dossier, fixer le seuil
+    OPINION_SIGN = "revision:sign"  # signer et émettre l'opinion (REV-28)
 
 
 # Transcription de la matrice de la section 2.
@@ -144,6 +150,20 @@ ROLE_PERMISSIONS: dict[Role, frozenset[Perm]] = {
     ),
     Role.AUDITE: frozenset({Perm.FINDINGS_RESPOND}),
 }
+# Associé signataire : droits du Directeur, mais sur ses seuls dossiers, et signature.
+ROLE_PERMISSIONS[Role.ASSOCIE] = (
+    ROLE_PERMISSIONS[Role.DIRECTEUR]
+    - {
+        Perm.MISSIONS_READ_ALL,
+        Perm.PLAN_MANAGE,
+        Perm.PLAN_VALIDATE,
+        Perm.DASHBOARDS_GLOBAL,
+        Perm.FRAMEWORKS_MANAGE,
+        Perm.AUDIT_LOG_READ,
+    }
+) | {Perm.MISSIONS_READ_OWN, Perm.WORKPAPERS_REVIEW, Perm.REVISION_WORK, Perm.OPINION_SIGN}
+# Inspecteur CIPRES : droits du Chef de mission sur les missions d'inspection confiées.
+ROLE_PERMISSIONS[Role.INSPECTEUR_CIPRES] = ROLE_PERMISSIONS[Role.CHEF_MISSION]
 
 
 def has_permission(role: str, perm: Perm) -> bool:

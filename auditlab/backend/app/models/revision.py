@@ -426,3 +426,38 @@ class DsfModel(TrackedMixin, Base):
     referentiel: Mapped[str] = mapped_column(String(20), default="SYSCOHADA")
     contenu: Mapped[dict[str, Any]] = mapped_column(JSONB)
     actif: Mapped[bool] = mapped_column(Boolean, default=True)
+
+
+class ReportTemplate(TrackedMixin, Base):
+    """Modèle de rapport paramétrable (REV-27) : sections conditionnelles à variables."""
+
+    __tablename__ = "report_templates"
+
+    code: Mapped[str] = mapped_column(String(40), unique=True)  # opinion, conventions, affirmation
+    nom: Mapped[str] = mapped_column(String(200))
+    sections: Mapped[list[dict[str, Any]]] = mapped_column(JSONB)
+    version: Mapped[int] = mapped_column(Integer, default=1)
+
+
+class AuditOpinion(TrackedMixin, Base):
+    """Opinion du dossier (REV-27, REV-28) : type, fondement, observations et conventions
+    réglementées ; signée par l'associé ou le chef de mission, puis émise (dossier verrouillé
+    et rapport archivé avec son empreinte)."""
+
+    __tablename__ = "audit_opinions"
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), unique=True)
+    type_opinion: Mapped[str] = mapped_column(String(20), default="sans_reserve")
+    fondement: Mapped[str | None] = mapped_column(Text, nullable=True)
+    observations: Mapped[str | None] = mapped_column(Text, nullable=True)
+    conventions: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
+    lieu: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    statut: Mapped[str] = mapped_column(String(20), default="brouillon")  # signe, emis
+    signe_par: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    signe_le: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    empreinte: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    emis_par: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    emis_le: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    archive_key: Mapped[str | None] = mapped_column(String(300), nullable=True)
+    archive_sha256: Mapped[str | None] = mapped_column(String(64), nullable=True)

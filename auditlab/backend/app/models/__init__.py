@@ -54,6 +54,7 @@ from app.models.revision import (
     AnalyticalJustification,
     AssertionRisk,
     AuditFile,
+    AuditOpinion,
     BankReconciliation,
     BankReconciliationItem,
     Confirmation,
@@ -65,6 +66,7 @@ from app.models.revision import (
     NormativeFramework,
     ProgramStep,
     RegulatoryParameter,
+    ReportTemplate,
     StatementLine,
 )
 from app.models.risk import Axis, CriterionMode, RiskAssessment, RiskCriterion
@@ -92,6 +94,7 @@ __all__ = [
     "AdjustmentLine",
     "AnalyticalJustification",
     "AssertionRisk",
+    "AuditOpinion",
     "AuditFile",
     "BankReconciliation",
     "BankReconciliationItem",
@@ -130,6 +133,7 @@ __all__ = [
     "LeadScheduleReference",
     "NormativeFramework",
     "ProgramStep",
+    "ReportTemplate",
     "RegulatoryParameter",
     "StatementLine",
     "PlanEvidence",
