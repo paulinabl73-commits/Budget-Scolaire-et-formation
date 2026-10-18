@@ -1551,7 +1551,8 @@
       "cycles": "Feuilles maîtresses",
       "etats": "États financiers",
       "tiers": "Tiers",
-      "circularisation": "Circularisation"
+      "circularisation": "Circularisation",
+      "tresorerie": "Rapprochements bancaires"
     },
     "navigation": "Sections du dossier"
   },
@@ -1815,5 +1816,27 @@
     "rapprocher": "Rapprocher l'écart",
     "rapproche": "Écart expliqué par les écritures en suspens.",
     "sansReponse": "Sans réponse"
+  },
+  "rapprochements": {
+    "titre": "Rapprochements bancaires",
+    "aide": "Fichier des suspens : date, libellé, référence, origine (relevé ou comptabilité) et montant à ajouter au solde du relevé pour retrouver le solde comptable.",
+    "manquants": "Comptes de trésorerie sans rapprochement : {{comptes}}",
+    "compte": "Compte",
+    "soldeReleve": "Solde du relevé",
+    "dateReleve": "Date du relevé (clôture par défaut)",
+    "fichier": "Suspens (CSV ou Excel)",
+    "importer": "Importer le rapprochement",
+    "col": {
+      "compte": "Compte",
+      "releve": "Solde relevé",
+      "comptable": "Solde comptable",
+      "nonRapproche": "Non rapproché",
+      "controles": "Contrôles"
+    },
+    "suspens": "Suspens (en rouge : anciens)",
+    "origines": {
+      "releve": "Relevé",
+      "comptabilite": "Comptabilité"
+    }
   }
 }

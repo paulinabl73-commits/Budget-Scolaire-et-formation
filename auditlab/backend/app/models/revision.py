@@ -378,3 +378,35 @@ class Confirmation(TrackedMixin, Base):
     reponse: Mapped[str | None] = mapped_column(Text, nullable=True)
     explication: Mapped[str | None] = mapped_column(Text, nullable=True)
     procedure_alternative: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+
+class BankReconciliation(TrackedMixin, Base):
+    """État de rapprochement bancaire d'un compte de trésorerie à la clôture (REV-20) ; un
+    nouvel import remplace le précédent du même compte."""
+
+    __tablename__ = "bank_reconciliations"
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
+    compte: Mapped[str] = mapped_column(String(30))
+    date_releve: Mapped[dt.date] = mapped_column(Date)
+    solde_releve: Mapped[Decimal] = mapped_column(MONEY)
+    nom_fichier: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    sha256: Mapped[str | None] = mapped_column(String(64), nullable=True)
+
+
+class BankReconciliationItem(Base):
+    """Suspens d'un rapprochement : montant à ajouter au solde du relevé pour retrouver le
+    solde comptable ; origine « releve » (passé par la banque seule) ou « comptabilite »."""
+
+    __tablename__ = "bank_reconciliation_items"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    reconciliation_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("bank_reconciliations.id"), index=True
+    )
+    date: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
+    libelle: Mapped[str | None] = mapped_column(String(300), nullable=True)
+    reference: Mapped[str | None] = mapped_column(String(60), nullable=True)
+    origine: Mapped[str] = mapped_column(String(20))
+    montant: Mapped[Decimal] = mapped_column(MONEY)

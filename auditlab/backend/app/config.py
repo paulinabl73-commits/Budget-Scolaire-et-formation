@@ -48,6 +48,8 @@ class Settings(BaseSettings):
     racines_banques: list[str] = ["52", "53", "56"]
     max_confirmations: int = 50
     adresse_cabinet: str = ""
+    # Rapprochements bancaires (REV-20) : suspens ancien au-delà de N jours avant la clôture.
+    anciennete_suspens_jours: int = 90
     # Classes exclues des états financiers (comptabilité analytique, engagements hors bilan).
     classes_hors_etats: str = "9"
     cors_origins: list[str] = ["http://localhost:5173"]
