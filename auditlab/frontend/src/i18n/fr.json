@@ -2968,5 +2968,16 @@
     "defautFait": "Modèle par défaut modifié.",
     "supprimer": "Supprimer",
     "supprime": "Modèle supprimé."
+  },
+  "rapportMission": {
+    "titre": "Rapport de mission",
+    "modele": "Modèle de rapport",
+    "synthese": "Synthèse (appréciation générale de l'audit)",
+    "conclusion": "Conclusion",
+    "aide": "Le rapport reprend les constats validés, les réponses des audités et les plans d'action ; les constats encore en phase contradictoire sont signalés dans le projet.",
+    "enregistrer": "Enregistrer",
+    "enregistre": "Rapport enregistré.",
+    "pdf": "Générer en PDF",
+    "word": "Générer en Word"
   }
 }

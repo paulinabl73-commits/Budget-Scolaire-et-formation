@@ -1,8 +1,9 @@
 """Rapport de mission (Module 4, REP-01 à REP-03)."""
 
+import uuid
 from typing import Any
 
-from sqlalchemy import Boolean, String, Text
+from sqlalchemy import Boolean, ForeignKey, String, Text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -32,3 +33,17 @@ class MissionReportTemplate(TrackedMixin, Base):
     pied_de_page: Mapped[str | None] = mapped_column(Text, nullable=True)
     actif: Mapped[bool] = mapped_column(Boolean, default=True)
     logo_sha256: Mapped[str | None] = mapped_column(String(64), nullable=True)
+
+
+class MissionReport(TrackedMixin, Base):
+    """Rapport d'une mission (REP-02) : modèle choisi et synthèse rédigée par l'équipe ; le
+    contenu (constats, réponses, plans d'action) est lu dans la mission à la génération."""
+
+    __tablename__ = "mission_reports"
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("engagements.id"), unique=True, index=True
+    )
+    template_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("mission_report_templates.id"))
+    synthese: Mapped[str | None] = mapped_column(Text, nullable=True)
+    conclusion: Mapped[str | None] = mapped_column(Text, nullable=True)

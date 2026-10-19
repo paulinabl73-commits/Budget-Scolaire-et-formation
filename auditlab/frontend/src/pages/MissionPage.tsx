@@ -9,6 +9,7 @@ import DataTab from "../components/mission/DataTab";
 import InspectionTab from "../components/mission/InspectionTab";
 import FindingsTab from "../components/mission/FindingsTab";
 import RevisionTab from "../components/mission/RevisionTab";
+import ReportTab from "../components/mission/ReportTab";
 import ScriptsTab from "../components/mission/ScriptsTab";
 import ProgramTab from "../components/mission/ProgramTab";
 import StatusBar from "../components/mission/StatusBar";
@@ -20,7 +21,7 @@ import { formatDate, formatDateHeure } from "../lib/format";
 import { STATUS_BADGE } from "../lib/mission";
 
 /** Onglets de la fiche mission ; chaque lot ajoute les siens. */
-export const MISSION_TABS = ["synthese", "programme", "papiers", "donnees", "constats", "scripts", "inspection", "revision", "temps"] as const;
+export const MISSION_TABS = ["synthese", "programme", "papiers", "donnees", "constats", "rapport", "scripts", "inspection", "revision", "temps"] as const;
 type Tab = (typeof MISSION_TABS)[number];
 
 export default function MissionPage() {
@@ -94,6 +95,7 @@ export default function MissionPage() {
       {tab === "papiers" && <WorkpapersTab mission={mission} />}
       {tab === "donnees" && <DataTab mission={mission} />}
       {tab === "constats" && <FindingsTab mission={mission} />}
+      {tab === "rapport" && <ReportTab mission={mission} />}
       {tab === "scripts" && <ScriptsTab mission={mission} />}
       {tab === "inspection" && mission.mode === "inspection_cipres" && <InspectionTab mission={mission} />}
       {tab === "revision" && <RevisionTab mission={mission} />}
