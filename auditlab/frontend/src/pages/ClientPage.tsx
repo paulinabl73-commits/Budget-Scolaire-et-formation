@@ -7,6 +7,7 @@ import { api, post, put } from "../api/client";
 import type { PortfolioClient } from "../api/portfolio";
 import Alert from "../components/Alert";
 import ClosingDocumentsPanel from "../components/portfolio/ClosingDocumentsPanel";
+import ClosingIndicatorsPanel from "../components/portfolio/ClosingIndicatorsPanel";
 import ClosingReviewPanel from "../components/portfolio/ClosingReviewPanel";
 import ChecklistPanel from "../components/portfolio/ChecklistPanel";
 import DeadlinesPanel from "../components/portfolio/DeadlinesPanel";
@@ -109,6 +110,12 @@ export default function ClientPage() {
           key={`doc-${c.clotures[0].id}-${Object.keys(c.clotures[0].revues ?? {}).join()}`}
           closingId={c.clotures[0].id}
           exercice={c.clotures[0].exercice}
+        />
+      )}
+      {c.clotures[0] && (
+        <ClosingIndicatorsPanel
+          key={`ind-${c.clotures[0].id}`}
+          closingId={c.clotures[0].id}
         />
       )}
       {c.clotures[0] && (

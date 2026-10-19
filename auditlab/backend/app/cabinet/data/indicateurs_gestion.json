@@ -1,0 +1,19 @@
+{
+  "_commentaire": "Indicateurs de gestion remis au client (RCO-26), par référentiel : formules sur les codes de postes des états (mêmes règles que les ratios REV-13). unite : montant, pourcentage, ratio. Un référentiel absent n'a pas d'indicateurs paramétrés.",
+  "referentiels": {
+    "SYSCOHADA": [
+      {"code": "chiffre_affaires", "libelle": "Chiffre d'affaires", "famille": "activite", "unite": "montant", "formule": "XB"},
+      {"code": "marge_commerciale", "libelle": "Marge commerciale", "famille": "marge", "unite": "montant", "formule": "XA"},
+      {"code": "taux_marge", "libelle": "Taux de marge commerciale (marge / ventes de marchandises)", "famille": "marge", "unite": "pourcentage", "formule": "XA/TA"},
+      {"code": "valeur_ajoutee", "libelle": "Valeur ajoutée", "famille": "marge", "unite": "montant", "formule": "XC"},
+      {"code": "excedent_brut", "libelle": "Excédent brut d'exploitation", "famille": "marge", "unite": "montant", "formule": "XD"},
+      {"code": "resultat_net", "libelle": "Résultat net", "famille": "marge", "unite": "montant", "formule": "XI"},
+      {"code": "fonds_roulement", "libelle": "Fonds de roulement (ressources stables − actif immobilisé)", "famille": "tresorerie", "unite": "montant", "formule": "DF-AZ"},
+      {"code": "besoin_fonds_roulement", "libelle": "Besoin en fonds de roulement (actif circulant − passif circulant)", "famille": "tresorerie", "unite": "montant", "formule": "BK-DP"},
+      {"code": "tresorerie_nette", "libelle": "Trésorerie nette (trésorerie actif − trésorerie passif)", "famille": "tresorerie", "unite": "montant", "formule": "BT-DT"},
+      {"code": "dettes_financieres", "libelle": "Dettes financières", "famille": "endettement", "unite": "montant", "formule": "DD"},
+      {"code": "endettement", "libelle": "Taux d'endettement (dettes financières / capitaux propres)", "famille": "endettement", "unite": "ratio", "formule": "DD/CP"},
+      {"code": "capacite_remboursement", "libelle": "Capacité de remboursement (dettes financières / EBE, en années)", "famille": "endettement", "unite": "ratio", "formule": "DD/XD"}
+    ]
+  }
+}

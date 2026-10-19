@@ -2810,5 +2810,16 @@
     "visaAttendu": "Le visa de revue de l'expert-comptable est requis avant la signature.",
     "signer": "Signer l'attestation",
     "annuler": "Annuler la signature"
+  },
+  "indicateursCloture": {
+    "titre": "Comparatif N/N-1 et indicateurs de gestion",
+    "ns": "n.s.",
+    "sansN1": "Balance N-1 non importée : seules les valeurs de l'exercice sont présentées.",
+    "pdf": "Exporter en PDF",
+    "word": "Exporter en Word",
+    "indicateur": "Indicateur",
+    "variation": "Variation",
+    "comparatif": "Comparatif des états révisés (montants en {{devise}})",
+    "poste": "Poste"
   }
 }
