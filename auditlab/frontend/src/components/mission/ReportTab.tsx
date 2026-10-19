@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { api, download, put } from "../../api/client";
+import { api, download, post, put } from "../../api/client";
+import { formatDateHeure } from "../../lib/format";
 import type { Engagement } from "../../api/types";
 import Alert from "../Alert";
 
@@ -12,6 +13,17 @@ export interface MissionReportInfo {
   synthese: string | null;
   conclusion: string | null;
   peut_rediger: boolean;
+  statut: "projet" | "revu" | "valide" | "diffuse";
+  historique: {
+    de: string;
+    vers: string;
+    par: string;
+    le: string;
+    commentaire: string | null;
+  }[];
+  diffuse_le: string | null;
+  empreintes: Record<string, string>;
+  transitions: string[];
 }
 
 /** Rapport de mission (REP-02) : modèle, synthèse et conclusion, génération PDF et Word. */
@@ -26,6 +38,7 @@ export default function ReportTab({ mission }: { mission: Engagement }) {
     synthese: "",
     conclusion: "",
   });
+  const [motif, setMotif] = useState("");
   const [message, setMessage] = useState<{
     kind: "erreur" | "succes";
     text: string;
@@ -65,6 +78,21 @@ export default function ReportTab({ mission }: { mission: Engagement }) {
         }),
       );
       setMessage({ kind: "succes", text: t("rapportMission.enregistre") });
+    } catch (e) {
+      setMessage({ kind: "erreur", text: (e as Error).message });
+    }
+  };
+  const move = async (statut: string) => {
+    setMessage(null);
+    try {
+      apply(
+        await post<MissionReportInfo>(`${url}/transition`, {
+          statut,
+          commentaire: motif || null,
+        }),
+      );
+      setMotif("");
+      setMessage({ kind: "succes", text: t(`rapportMission.fait.${statut}`) });
     } catch (e) {
       setMessage({ kind: "erreur", text: (e as Error).message });
     }
@@ -147,6 +175,66 @@ export default function ReportTab({ mission }: { mission: Engagement }) {
             {t("rapportMission.word")}
           </button>
         </div>
+      </section>
+      <section className="carte space-y-3" aria-labelledby="rapport-circuit">
+        <h2 id="rapport-circuit" className="text-base font-semibold">
+          {t("rapportMission.circuit")}
+        </h2>
+        <ol className="flex flex-wrap gap-2 text-sm">
+          {(["projet", "revu", "valide", "diffuse"] as const).map((s) => (
+            <li
+              key={s}
+              aria-current={s === report.statut ? "step" : undefined}
+              className={`rounded px-2 py-1 ${s === report.statut ? "bg-marque-600 text-white" : "bg-slate-100 text-slate-700"}`}
+            >
+              {t(`rapportMission.statuts.${s}`)}
+            </li>
+          ))}
+        </ol>
+        {report.statut === "diffuse" && report.diffuse_le && (
+          <p className="text-sm">
+            {t("rapportMission.fige", {
+              le: formatDateHeure(report.diffuse_le),
+              sha: (report.empreintes.pdf ?? "").slice(0, 16),
+            })}
+          </p>
+        )}
+        {report.transitions.length > 0 && (
+          <div className="flex flex-wrap items-end gap-2">
+            {report.transitions.includes("projet") && (
+              <label className="etiquette">
+                {t("rapportMission.motif")}
+                <input
+                  className="champ"
+                  value={motif}
+                  onChange={(e) => setMotif(e.target.value)}
+                />
+              </label>
+            )}
+            {report.transitions.map((s) => (
+              <button
+                key={s}
+                type="button"
+                className={s === "projet" ? "btn-secondaire" : "btn-primaire"}
+                onClick={() => void move(s)}
+              >
+                {t(`rapportMission.actions.${s}`)}
+              </button>
+            ))}
+          </div>
+        )}
+        {report.historique.length > 0 && (
+          <ul className="space-y-1 text-sm text-slate-700">
+            {report.historique.map((h) => (
+              <li key={h.le}>
+                {formatDateHeure(h.le)} · {h.par} :{" "}
+                {t(`rapportMission.statuts.${h.de}`)} →{" "}
+                {t(`rapportMission.statuts.${h.vers}`)}
+                {h.commentaire && ` (${h.commentaire})`}
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </div>
   );

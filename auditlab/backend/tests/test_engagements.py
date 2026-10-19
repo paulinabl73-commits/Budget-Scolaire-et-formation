@@ -237,10 +237,11 @@ def test_aud07_cycle_de_vie(client, team):
     assert resp.status_code == 200
 
 
-def test_aud07_mission_cloturee_figee(client, team):
+def test_aud07_mission_cloturee_figee(client, team, db):
     chef = team["chef"]
     m = helpers.mission(client, chef.headers)
     url = f"/api/engagements/{m['id']}"
+    helpers.diffused_report(db, m["id"])  # REP-03 : la clôture exige le rapport diffusé
     for statut in ("preparation", "terrain", "revue", "rapport", "cloturee"):
         assert (
             client.post(f"{url}/status", json={"statut": statut}, headers=chef.headers).status_code

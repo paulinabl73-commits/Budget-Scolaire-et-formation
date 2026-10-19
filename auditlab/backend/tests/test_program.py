@@ -199,6 +199,7 @@ def test_aud11_droits_et_cloture(client, account, library, db):
     url = f"/api/engagements/{m['id']}"
     assert client.post(f"{url}/risks", json=RISK, headers=aud.headers).status_code == 403
     assert client.get(f"{url}/matrix", headers=aud.headers).status_code == 200
+    helpers.diffused_report(db, m["id"])  # REP-03
     for statut in ("preparation", "terrain", "revue", "rapport", "cloturee"):
         client.post(f"{url}/status", json={"statut": statut}, headers=chef.headers)
     assert client.post(f"{url}/risks", json=RISK, headers=chef.headers).status_code == 409

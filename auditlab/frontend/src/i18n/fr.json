@@ -2978,6 +2978,27 @@
     "enregistrer": "Enregistrer",
     "enregistre": "Rapport enregistré.",
     "pdf": "Générer en PDF",
-    "word": "Générer en Word"
+    "word": "Générer en Word",
+    "circuit": "Circuit du rapport",
+    "statuts": {
+      "projet": "Projet",
+      "revu": "Revu",
+      "valide": "Validé par le Directeur",
+      "diffuse": "Diffusé"
+    },
+    "actions": {
+      "projet": "Renvoyer en projet",
+      "revu": "Marquer comme revu",
+      "valide": "Valider le rapport",
+      "diffuse": "Diffuser le rapport"
+    },
+    "fait": {
+      "projet": "Rapport renvoyé en projet.",
+      "revu": "Rapport revu.",
+      "valide": "Rapport validé.",
+      "diffuse": "Rapport diffusé : version figée."
+    },
+    "motif": "Motif du renvoi",
+    "fige": "Version diffusée le {{le}}, figée (empreinte du PDF {{sha}}…)."
   }
 }

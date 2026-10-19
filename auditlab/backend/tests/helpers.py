@@ -44,3 +44,14 @@ def mission(client: TestClient, headers: dict, membres: list[tuple] = (), **kw) 
     resp = client.post("/api/engagements", json=body, headers=headers)
     assert resp.status_code == 201, resp.text
     return resp.json()
+
+
+def diffused_report(db, engagement_id) -> None:
+    """Rapport de mission diffusé (REP-03), condition de la clôture d'une mission d'audit."""
+    from app.models import MissionReport
+    from app.reporting import templates
+
+    template = templates.seed(db)
+    db.flush()
+    db.add(MissionReport(engagement_id=engagement_id, template_id=template.id, statut="diffuse"))
+    db.commit()

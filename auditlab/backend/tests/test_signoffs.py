@@ -393,6 +393,7 @@ def test_aud22_cloture_et_verrouillage(client, team, db):
     )
     _to_rapport(client, team)
 
+    helpers.diffused_report(db, team["mission"]["id"])  # REP-03
     # Clôture refusée tant que les papiers ne sont pas approuvés.
     mission = client.get(team["url"], headers=team["chef"].headers).json()
     blocked = next(t for t in mission["transitions"] if t["statut"] == "cloturee")
@@ -454,6 +455,7 @@ def test_aud22_verrou_au_niveau_des_donnees(client, team, db):
     sign(client, wp, team["chef"], "revu")
     sign(client, wp, team["chef"], "approuve")
     _to_rapport(client, team)
+    helpers.diffused_report(db, team["mission"]["id"])  # REP-03
     client.post(f"{team['url']}/status", json={"statut": "cloturee"}, headers=team["chef"].headers)
     set_actor(db, team["chef"].user.id)
     paper = db.get(Workpaper, wp["id"])

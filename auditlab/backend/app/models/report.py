@@ -1,9 +1,10 @@
 """Rapport de mission (Module 4, REP-01 à REP-03)."""
 
+import datetime as dt
 import uuid
 from typing import Any
 
-from sqlalchemy import Boolean, ForeignKey, String, Text
+from sqlalchemy import Boolean, DateTime, ForeignKey, String, Text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -47,3 +48,12 @@ class MissionReport(TrackedMixin, Base):
     template_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("mission_report_templates.id"))
     synthese: Mapped[str | None] = mapped_column(Text, nullable=True)
     conclusion: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # REP-03 : projet → revu → valide (Directeur) → diffuse ; la version diffusée est figée.
+    statut: Mapped[str] = mapped_column(String(20), default="projet", server_default="projet")
+    historique: Mapped[list[dict[str, Any]]] = mapped_column(
+        JSONB, default=list, server_default="[]"
+    )
+    diffuse_le: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    diffuse_par: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    # Fichiers diffusés : {"pdf": {"key", "sha256"}, "docx": {...}}.
+    fichiers: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict, server_default="{}")
