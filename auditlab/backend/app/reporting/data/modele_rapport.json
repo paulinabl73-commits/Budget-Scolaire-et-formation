@@ -1,0 +1,19 @@
+{
+  "_commentaire": "Modèle de rapport de mission livré (REP-01), selon la norme IIA 2400 (communication des résultats : objectifs, périmètre, résultats, conclusions, recommandations et plans d'action). Modifiable par le Directeur ou l'administrateur. Variables de la page de garde : {mission}, {reference}, {entite}, {date}.",
+  "nom": "Rapport d'audit interne (modèle livré)",
+  "page_garde": {
+    "organisation": "Direction de l'audit interne",
+    "titre": "Rapport d'audit interne",
+    "sous_titre": "{mission} ({reference})",
+    "mention": "Diffusion restreinte – document confidentiel"
+  },
+  "sections": [
+    {"code": "synthese", "titre": "Synthèse", "actif": true},
+    {"code": "contexte", "titre": "Contexte, objectifs et périmètre", "actif": true},
+    {"code": "constats", "titre": "Constats, recommandations et réponses des audités", "actif": true},
+    {"code": "plans_action", "titre": "Plans d'action", "actif": true},
+    {"code": "annexes", "titre": "Annexes : équipe et travaux réalisés", "actif": true}
+  ],
+  "ordre_constats": "criticite_decroissante",
+  "pied_de_page": "Ce rapport est destiné aux seuls destinataires désignés ; toute diffusion requiert l'accord de la Direction de l'audit interne."
+}

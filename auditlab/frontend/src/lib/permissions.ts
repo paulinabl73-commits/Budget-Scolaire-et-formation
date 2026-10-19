@@ -14,6 +14,8 @@ export const PERM = {
   REVISION_MANAGE: "revision:manage",
   OPINION_SIGN: "revision:sign",
   PORTFOLIO_MANAGE: "portfolio:manage",
+  REPORT_PUBLISH: "report:publish",
+  DASHBOARDS_GLOBAL: "dashboards:global",
 } as const;
 
 export type Role =

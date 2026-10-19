@@ -19,7 +19,8 @@
     "bibliotheque": "Bibliothèque",
     "marques": "Marques de révision",
     "referentiels": "Référentiels",
-    "portefeuille": "Portefeuille clients"
+    "portefeuille": "Portefeuille clients",
+    "modelesRapport": "Modèles de rapport"
   },
   "commun": {
     "enregistrer": "Enregistrer",
@@ -2921,5 +2922,51 @@
     "enregistrer": "Planifier",
     "retirer": "Retirer la planification",
     "aide": "Le chef de mission et l'auteur du script sont alertés quand l'indicateur franchit le seuil, quand il n'est pas produit ou quand l'exécution échoue. Les missions clôturées ne sont plus exécutées."
+  },
+  "modelesRapport": {
+    "titre": "Modèles de rapport de mission",
+    "defaut": "par défaut",
+    "dupliquer": "Dupliquer ce modèle",
+    "copie": "Copie créée.",
+    "nom": "Nom du modèle",
+    "garde": "Page de garde",
+    "champs": {
+      "organisation": "Organisation",
+      "titre": "Titre",
+      "sous_titre": "Sous-titre",
+      "mention": "Mention de confidentialité"
+    },
+    "variables": "Variables : {mission}, {reference}, {entite}, {date}.",
+    "sections": "Sections, dans l'ordre du rapport (les constats sont obligatoires)",
+    "inclure": "Inclure la section {{section}}",
+    "titreSection": "Titre de la section {{code}}",
+    "codes": {
+      "synthese": "synthèse",
+      "contexte": "contexte",
+      "constats": "constats",
+      "plans_action": "plans d'action",
+      "annexes": "annexes"
+    },
+    "monter": "Monter {{section}}",
+    "descendre": "Descendre {{section}}",
+    "ordre": "Ordre des constats",
+    "ordres": {
+      "criticite_decroissante": "Criticité décroissante",
+      "criticite_croissante": "Criticité croissante",
+      "reference": "Référence"
+    },
+    "pied": "Pied de page",
+    "logoPresent": "Logo chargé.",
+    "sansLogo": "Aucun logo.",
+    "choisirLogo": "Charger un logo (PNG, JPEG)",
+    "logoCharge": "Logo chargé.",
+    "retirerLogo": "Retirer le logo",
+    "logoRetire": "Logo retiré.",
+    "enregistrer": "Enregistrer",
+    "enregistre": "Modèle enregistré.",
+    "rendreDefaut": "Utiliser par défaut",
+    "defautFait": "Modèle par défaut modifié.",
+    "supprimer": "Supprimer",
+    "supprime": "Modèle supprimé."
   }
 }

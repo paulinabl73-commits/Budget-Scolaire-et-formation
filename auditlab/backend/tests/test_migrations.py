@@ -10,6 +10,7 @@ SEEDED = (
     "risk_criteria", "risks", "controls", "risk_controls", "procedures", "tickmarks",
     "accounting_frameworks", "framework_accounts", "statement_lines", "normative_frameworks",
     "currencies", "program_steps", "dsf_models", "report_templates", "script_templates",
+    "mission_report_templates",
 )  # fmt: skip
 
 
@@ -38,6 +39,7 @@ def test_migrations_aller_retour_et_donnees_de_depart():
         "dsf_models": 1,
         "report_templates": 7,  # 3 rapports (REV-27) et 4 documents de clôture (RCO-25)
         "script_templates": 10,  # tests livrés de la bibliothèque (DAT-28)
+        "mission_report_templates": 1,  # modèle de rapport livré (REP-01)
     }
     # Les valeurs JSONB des référentiels sont des tableaux, pas des chaînes ré-encodées.
     with engine.connect() as conn:

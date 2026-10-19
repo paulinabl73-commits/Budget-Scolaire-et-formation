@@ -73,6 +73,7 @@ from app.models.program import (
     RiskControl,
     TestType,
 )
+from app.models.report import MissionReportTemplate
 from app.models.revision import (
     AccountBranch,
     AccountingFramework,
@@ -216,6 +217,7 @@ __all__ = [
     "RiskAssessment",
     "RiskCategory",
     "RiskControl",
+    "MissionReportTemplate",
     "RiskCriterion",
     "Script",
     "ScriptRun",

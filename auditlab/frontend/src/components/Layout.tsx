@@ -81,6 +81,12 @@ export default function Layout() {
               {t("nav.marques")}
             </NavLink>
           )}
+          {(can(user?.permissions, PERM.SETTINGS_MANAGE) ||
+            can(user?.permissions, PERM.REPORT_PUBLISH)) && (
+            <NavLink to="/modeles-rapport" className={lien}>
+              {t("nav.modelesRapport")}
+            </NavLink>
+          )}
           {can(user?.permissions, PERM.USERS_MANAGE) && (
             <NavLink to="/utilisateurs" className={lien}>
               {t("nav.utilisateurs")}
