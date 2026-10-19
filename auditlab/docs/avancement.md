@@ -15,7 +15,47 @@
 | 8c | Portefeuille et contrôles : RCO-01 à RCO-10 | **Livré** |
 | 8d | Inventaire, fiscalité et livrables : RCO-11 à RCO-27 | **Livré** |
 | 9 | Scripts et automatisation : DAT-26 à DAT-29 | **Livré** |
-| 10 | Reporting et finitions : REP-01 à REP-08, NF-09 à NF-11 | À faire |
+| 10 | Reporting et finitions : REP-01 à REP-08, NF-06, NF-08 à NF-12, NF-14, recette | **Livré** |
+
+## Lot 10 — détail
+
+**Livré** (un commit par exigence ; Module 4, exigences non fonctionnelles, recette)
+- **REP-01** : modèles de rapport de mission (IIA 2400) : logo, page de garde, sections et
+  ordre, mention de confidentialité ; modèle par défaut ; page « Modèles de rapport ».
+- **REP-02** : rapport de mission en PDF et Word : page de garde, synthèse et répartition des
+  constats par criticité, conclusion, contexte, constats validés (critère, faits, cause,
+  conséquence, recommandation, réponse, plans d'action), annexes ; pied de page numéroté.
+- **REP-03** : circuit Projet → Revu → Validé → Diffusé, séparation des tâches, renvoi
+  motivé ; version diffusée générée une fois, stockée avec son empreinte, figée.
+- **REP-04 à REP-06** : tableaux de bord Direction (plan annuel, missions par statut, jours
+  contre budget), Recommandations (criticité, statut, taux de mise en œuvre, retards par
+  direction) et Mission (papiers par état, notes ouvertes, temps contre budget).
+- **REP-07** : rapport trimestriel au comité d'audit (PDF et Word).
+- **REP-08** : export Excel de chaque tableau de bord, filtres période, entité (avec ses
+  sous-entités) et criticité.
+- **NF-06** : TLS 1.2/1.3, HSTS, redirection HTTP (surcouche `docker-compose.tls.yml`).
+- **NF-08** : registre des traitements (`docs/rgpd.md`), purge quotidienne des données
+  analysées après la durée de conservation (60 mois après la clôture), simulation.
+- **NF-09** : 50 utilisateurs simultanés, 95e centile de 0,13 à 0,66 s (`perf/nf09_charge.py`).
+- **NF-10** : import d'un million de lignes en 0,56 s, doublons en 0,17 s (`perf/nf10_import.py`).
+- **NF-11** : grille sur 10 millions de lignes, tout bloc en moins de 0,2 s, tri compris
+  (`perf/nf11_grille.py`).
+- **NF-12** : sauvegarde quotidienne chiffrée (age) de la base et du stockage, restauration
+  testée automatiquement et par exercice (`docs/exploitation.md`).
+- **NF-14** : audit axe-core (WCAG 2.1 AA) de 28 écrans, contrastes corrigés
+  (`docs/accessibilite.md`).
+- **DAT-27 (correctif)** : sorties du bac à sable confinées au répertoire `out/` (faille
+  d'import du Parquet d'une autre mission corrigée) ; tests de sécurité (injection SQL,
+  évasion du bac à sable) dans `tests/test_securite.py`.
+- **Recette** : scénario de bout en bout de la section 13 automatisé (`tests/test_recette.py`).
+- **Documentation** : `docs/installation.md`, `exploitation.md`, `performance.md`,
+  `accessibilite.md`, `rgpd.md`.
+- Changements signalés d'exigences livrées : une mission d'audit ne se clôture qu'après
+  diffusion de son rapport (AUD-07) ; le verrou des missions clôturées admet la seule purge
+  des données (AUD-22) ; l'inactivité de session est mesurée à une minute près (NF-07) ;
+  copie triée en cache pour la grille (DAT-07) ; moteur de documents étendu (logo, page de
+  garde, pied de page, REV-27).
+- Tests : suite backend complète (pytest, PostgreSQL réelle), Vitest, mesures de performance dans `backend/perf/`.
 
 ## Lot 9 — détail
 

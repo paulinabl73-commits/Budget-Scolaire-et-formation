@@ -36,6 +36,7 @@ auditlab/
                       fiscal_parameters.py, tax_review.py, tax_bridge.py, payroll_review.py,
                       closing_review.py, closing_documents.py, closing_indicators.py,
                       closing_transfer.py = lot 8d (Module 6)
+                      report_templates.py, mission_reports.py, dashboards.py = lot 10
       analytics/      Module 2 : store.py (Parquet, DuckDB), formats.py, detect.py, pdf.py,
                       sql_source.py, jobs.py (tâches Celery), expr.py (expressions),
                       relation.py (relation SQL d'une table ou d'une vue), grid.py,
@@ -59,6 +60,9 @@ auditlab/
                       stock.py, fiscal.py (RCO-22) ; data/ = pièces types, check-lists,
                       soldes anormaux, comptes des assistants, formats d'export, paramètres
                       fiscaux attendus, documents de clôture, indicateurs (JSON)
+      reporting/      lot 10 (Module 4) : templates.py (modèles de rapport), mission_report.py,
+                      dashboards.py, committee.py (comité d'audit), excel.py ;
+                      data/modele_rapport.json
       audit/          chain.py (chaînage par hash), listeners.py (journalisation automatique)
       models/         modèles SQLAlchemy ; base.py = TrackedMixin
       security/       passwords (Argon2), totp, sessions, roles (matrice des droits)
@@ -68,6 +72,8 @@ auditlab/
       storage.py      stockage des fichiers (local ou S3) ; signing.py (liens signés)
       notify.py       notifications et file d'e-mails ; followup.py (relances des plans, lot 8)
       cli.py          commandes d'exploitation
+    perf/             mesures NF-09 à NF-11
+  ops/                sauvegarde et restauration (NF-12)
     alembic/versions/ migrations
     tests/            pytest (base PostgreSQL réelle)
   frontend/           React 18, TypeScript, Vite, Tailwind, AG Grid
@@ -414,3 +420,29 @@ docker compose up -d --build
   sur le dossier repris (`api/closing_transfer.py`).
 - **Tests** : `tests/test_revue_cloture.BALANCE` (balance minimale cohérente) ; un visa
   d'expert exige la revue des comptes de bilan signalés.
+
+### Lot 10 — reporting, performance, exploitation
+
+- **Rapport de mission** : `MissionReportTemplate` (modèles, `reporting/templates.seed`),
+  `MissionReport` (un par mission) ; `reporting/mission_report.build` produit les blocs de
+  `revision/documents.render` (blocs `image` et `garde`, pied de page). Circuit par
+  `POST /engagements/{id}/report/transition` ; à la diffusion, fichiers figés dans
+  `MissionReport.fichiers`. `GUARDS[CLOTUREE]` exige un rapport diffusé (mode audit) : dans
+  les tests, `helpers.diffused_report(db, id)`.
+- **Tableaux de bord** : calculs dans `reporting/dashboards.py` (filtres `Filters`), comité
+  dans `reporting/committee.py`, Excel dans `reporting/excel.py` ; routes `api/dashboards.py`
+  (`*/export` pour l'Excel). Droits `dashboards:global`, `report:publish`.
+- **Performance** : session réécrite au plus toutes les `session_touch_seconds` (60) ; pool
+  `db_pool_size` + `db_max_overflow` ; grille : copie triée en cache au-delà de
+  `grille_cache_rang`. Scripts de mesure dans `backend/perf/`, résultats dans
+  `docs/performance.md`.
+- **Conservation (NF-08)** : `analytics/retention.purge` (tâche quotidienne, commande
+  `purge-donnees [--simulation]`) ; une table purgée a le statut `purge` (lecture 409). La
+  purge pose `session.info["purge_conservation"]`, seule exception au verrou des missions
+  clôturées.
+- **Exploitation** : `ops/sauvegarde.sh`, `ops/restauration.sh` (services Compose
+  `sauvegarde` et `restauration`), surcouche `docker-compose.tls.yml` ; voir
+  `docs/installation.md` et `docs/exploitation.md`.
+- **Sécurité** : `tests/test_securite.py` (injection, évasion du bac à sable) ; une sortie de
+  script doit être un fichier régulier de `out/` (`runner._output_file`).
+- **Recette** : `tests/test_recette.py` déroule le scénario de la section 13.

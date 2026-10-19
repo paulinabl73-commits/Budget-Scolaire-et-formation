@@ -15,6 +15,37 @@ Le document de synthèse partageable reprend ce fichier.
 - Adresses e-mail : validation souple pour accepter les domaines internes (.local).
 - Fichiers stockés hors base, dans un stockage compatible S3 (SeaweedFS ; MinIO n'étant plus distribué en image publique) chiffré au repos.
   Téléchargements journalisés ; liens signés valides une heure pour l'affichage des images.
+- Rétention (NF-08) : données analysées (tables, fichiers importés, sorties de scripts)
+  conservées 60 mois après la clôture de la mission, puis purgées ; restent le schéma, le
+  nombre de lignes, l'empreinte et les totaux de contrôle (trace de la preuve). Le journal
+  d'audit, les papiers de travail et les rapports ne sont jamais purgés (archives d'audit).
+- Sauvegarde (NF-12) : quotidienne, chiffrée par clé publique (age), clé privée hors du
+  serveur, rétention 30 jours, restauration testée chaque trimestre.
+- Chiffrement en transit (NF-06) : TLS 1.2 minimum, profil « intermediate » de Mozilla, HSTS
+  d'un an ; au repos : stockage S3 chiffré et disques chiffrés par l'hôte.
+- Performance (NF-09 à NF-11) : mesurée sur un serveur de 4 processus d'API ; activité de
+  session enregistrée une fois par minute (l'expiration est donc précise à une minute près).
+- Accessibilité (NF-14) : RGAA 4 niveau AA visé, contrôlé par axe-core (WCAG 2.1 AA) et au
+  clavier ; pas d'audit RGAA certifié par un tiers.
+
+## Module 4 — reporting
+
+### Lot 10
+- Modèle de rapport livré selon la norme IIA 2400 (communication des résultats) : synthèse,
+  conclusion, contexte, constats en cinq attributs (critère, faits, cause, conséquence,
+  recommandation), réponse de l'audité et plans d'action, annexes. Seuls les constats validés
+  figurent dans le rapport.
+- Circuit : revue par le superviseur ou le Directeur (jamais par le seul chef de mission),
+  validation par le Directeur, diffusion une fois la mission au statut « Rapport » ; la
+  version diffusée est figée avec son empreinte. Une mission d'audit ne se clôture qu'après
+  diffusion de son rapport.
+- Taux de mise en œuvre des recommandations = plans vérifiés par l'audit / plans retenus
+  (hors risque accepté), global et sur les plans échus ; un plan est en retard quand son
+  échéance est passée et qu'il n'est ni réalisé ni clos ; il est rattaché à la direction de
+  l'entité auditée (premier ancêtre de type « direction »).
+- Rapport au comité d'audit : trimestre civil ; avancement du plan à la fin du trimestre.
+- Tableaux de bord Direction et comité réservés au Directeur et à l'Administrateur ; tableau
+  de bord Mission ouvert à l'équipe de la mission.
 
 ## Module 6 — révision comptable
 
