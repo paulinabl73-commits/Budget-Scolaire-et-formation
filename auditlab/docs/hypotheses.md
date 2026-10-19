@@ -18,6 +18,48 @@ Le document de synthèse partageable reprend ce fichier.
 
 ## Module 6 — révision comptable
 
+### Lot 8d
+- Écritures d'inventaire : chaque assistant propose une écriture « inventaire » marquée de son
+  origine, remplacée tant qu'elle n'est pas décidée ; seules les écritures acceptées entrent
+  dans les soldes révisés et l'export vers le logiciel du client (l'outil ne tient pas la
+  comptabilité).
+- Amortissements : linéaire au prorata en jours (année de 360 jours), du jour de mise en
+  service au jour de cession ; dégressif à partir du mois de mise en service, avec passage au
+  linéaire ; le coefficient dégressif, propre à chaque pays, est saisi. Un composant est une
+  immobilisation rattachée à son ensemble.
+- Stocks : inventaire intermittent (le compte de stock porte le stock initial jusqu'à
+  l'écriture de variation) ; coût moyen pondéré de la période ou PEPS ; dépréciation à la
+  valeur nette de réalisation.
+- Constatés d'avance : au prorata des jours postérieurs à la clôture ; la reprise est la
+  contre-passation, proposée à l'ouverture de N+1, de l'écriture acceptée en N.
+- Créances douteuses : calcul de la balance âgée du Module 5 (REV-18) et grille du dossier ;
+  litiges et risques saisis ; comptes proposés modifiables.
+- Devises : écart = montant en devise × cours de clôture − valeur comptable ; perte latente
+  provisionnée sans compensation avec les gains (prudence SYSCOHADA).
+- OPS : provision technique d'une branche = minimum réglementaire en mois de prestations
+  (CIP-09) × prestations de l'exercice / 12 ; comptes saisis, le plan CIPRES étant propre à
+  chaque organisme.
+- Fiscalité : aucun taux, barème ni règle livrés ; chaque paramètre est saisi par pays et
+  vaut à partir de son exercice jusqu'à son remplacement. Montants comptables tirés du grand
+  livre ; déclarations importées, une ligne par mois ; écart signalé au-delà de la tolérance
+  paramétrée. Impôt dû = le plus élevé de l'IS et de l'impôt minimum (borné par le plancher et
+  le plafond).
+- Revue : le superviseur vise sur les papiers revus, l'expert sur les papiers approuvés,
+  sans note ouverte, compte signalé, écriture en attente ni anomalie de check-list, et sur des
+  états produits et cohérents ; le dépôt exige le visa de l'expert.
+- Documents : attestation de présentation selon ISRS 4410 (mission de compilation, sans
+  assurance) ; modèles modifiables par l'administrateur ; documents marqués « PROJET » tant
+  que l'attestation n'est pas signée ; une modification du dossier après signature est
+  signalée par l'empreinte et impose une nouvelle signature.
+- Indicateurs : formules par référentiel en données (SYSCOHADA livré) ; écart relatif non
+  significatif quand N-1 est nul ; écart en points pour les taux.
+- Transmission au Module 5 : l'entité du portefeuille et celle de l'univers d'audit sont
+  distinctes, et l'auditeur est indépendant du cabinet qui présente les comptes. L'expert
+  transmet donc le dossier à une mission désignée par sa référence, sans voir les missions
+  d'audit. L'auditeur reprend une copie dans son propre dossier : balance N révisée, balance
+  N-1, balances auxiliaires, affectations et justificatifs. Ses travaux ne modifient pas les
+  comptes présentés ; il obtient le grand livre directement de l'entité.
+
 ### Lot 8c
 - Outil de révision branché sur le logiciel du client, sans saisie comptable complète
   (hypothèse du cahier des charges) : balances et grand livre importés comme au Module 5.

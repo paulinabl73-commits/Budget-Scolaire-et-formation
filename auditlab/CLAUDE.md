@@ -30,6 +30,11 @@ auditlab/
                       portfolio.py, portfolio_dashboard.py, calendar.py, pieces.py,
                       permanent.py, closing_checklist.py, accounting_controls.py,
                       justifications.py, reconciliations.py = lot 8c (Module 6)
+                      fixed_assets.py, stock.py, accruals.py, provisions.py,
+                      currency_positions.py, ops_closing.py, entries_export.py,
+                      fiscal_parameters.py, tax_review.py, tax_bridge.py, payroll_review.py,
+                      closing_review.py, closing_documents.py, closing_indicators.py,
+                      closing_transfer.py = lot 8d (Module 6)
       analytics/      Module 2 : store.py (Parquet, DuckDB), formats.py, detect.py, pdf.py,
                       sql_source.py, jobs.py (tâches Celery), expr.py (expressions),
                       relation.py (relation SQL d'une table ou d'une vue), grid.py,
@@ -45,8 +50,11 @@ auditlab/
                       ops.py (contrôles OPS), ops_indicators.py (CIP-06/07) ;
                       data/ = référentiels, synonymes, devises, cycles (JSON)
       cabinet/        Module 6 : dates.py, calendar.py (RCO-03), pieces.py (RCO-04), files.py
-                      (fichiers des dossiers clients) ; data/ = pièces types, check-lists,
-                      soldes anormaux (JSON)
+                      (fichiers des dossiers clients) ; lot 8d : entries.py (écritures
+                      d'inventaire), tables.py (fichiers de travail), depreciation.py,
+                      stock.py, fiscal.py (RCO-22) ; data/ = pièces types, check-lists,
+                      soldes anormaux, comptes des assistants, formats d'export, paramètres
+                      fiscaux attendus, documents de clôture, indicateurs (JSON)
       audit/          chain.py (chaînage par hash), listeners.py (journalisation automatique)
       models/         modèles SQLAlchemy ; base.py = TrackedMixin
       security/       passwords (Argon2), totp, sessions, roles (matrice des droits)
@@ -365,3 +373,19 @@ docker compose up -d --build
   plans, alertes d'échéances, relances de pièces.
 - **Tests** : `tests/portfolio_helpers.py` (fixture `cabinet`, `new_client`, `open_closing`),
   `tests/test_controles_comptables.files()` (balance et grand livre cohérents).
+
+### Lot 8d — inventaire, fiscalité et livrables (Module 6)
+
+- **Écritures d'inventaire** : `cabinet/entries.propose(db, file, user, origine, …)` crée ou
+  remplace l'écriture `type="inventaire"` de l'assistant (`Adjustment.origine`) ; 409 si
+  elle est déjà décidée. Un nouvel assistant = un module `api/` + ses comptes en données.
+- **Fichiers de travail** : `cabinet/tables.read_table` (synonymes de colonnes, montants).
+- **Fiscalité** : `cabinet/fiscal.resolve` / `values` (409 avec la liste des paramètres
+  manquants) ; paramètres attendus dans `cabinet/data/fiscal_parametres.json`.
+- **Revue et livrables** : `closing_review.blockers` (visas) ; documents de clôture =
+  `ReportTemplate` aux codes de `cabinet/data/documents_cloture.json`, rendus par
+  `revision/documents.render` ; paramètres et signature dans `Closing.documents`.
+- **Transmission** : `Closing.transmis_a` (mission d'audit) ; `AuditFile.source_file_id`
+  sur le dossier repris (`api/closing_transfer.py`).
+- **Tests** : `tests/test_revue_cloture.BALANCE` (balance minimale cohérente) ; un visa
+  d'expert exige la revue des comptes de bilan signalés.

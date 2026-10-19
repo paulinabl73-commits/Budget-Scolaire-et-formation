@@ -13,9 +13,48 @@
 | 8a | Référentiels et balance : REV-01 à REV-14 | **Livré** |
 | 8b | Révision et états : REV-15 à REV-28, CIP-01 à CIP-09, IFR-01 à IFR-04 | **Livré** |
 | 8c | Portefeuille et contrôles : RCO-01 à RCO-10 | **Livré** |
-| 8d | Inventaire, fiscalité et livrables : RCO-11 à RCO-27 | À faire |
+| 8d | Inventaire, fiscalité et livrables : RCO-11 à RCO-27 | **Livré** |
 | 9 | Scripts et automatisation : DAT-26 à DAT-29 | À faire |
 | 10 | Reporting et finitions : REP-01 à REP-08, NF-09 à NF-11 | À faire |
+
+## Lot 8d — détail
+
+**Livré** (un commit par exigence ; Module 6, travaux d'inventaire, fiscalité et livrables)
+- **RCO-11** : tableau des immobilisations (acquisitions, cessions, composants),
+  amortissements linéaire et dégressif, écriture de dotation.
+- **RCO-12** : stocks (inventaire physique importé, coût moyen pondéré ou PEPS, dépréciation
+  à la valeur nette de réalisation, écriture de variation).
+- **RCO-13** : charges à payer, produits à recevoir, charges et produits constatés d'avance ;
+  contre-passation proposée à l'ouverture de N+1.
+- **RCO-14** : provisions pour créances douteuses (balance âgée, grille du dossier), litiges
+  et risques ; dotations et reprises.
+- **RCO-15** : écarts de conversion au cours de clôture et provision pour perte de change.
+- **RCO-16** : clôture d'un OPS (cotisations à recevoir, prestations à payer, provisions
+  techniques par branche selon le paramètre CIP-09).
+- **RCO-17** : export des écritures acceptées au format du logiciel du client (Sage, Odoo,
+  générique).
+- **RCO-18 / RCO-19** : rapprochement mensuel du chiffre d'affaires et de la TVA
+  (collectée, déductible, crédit) avec les déclarations ; TVA théorique.
+- **RCO-20** : tableau de passage au résultat fiscal, impôt sur les sociétés et impôt minimum.
+- **RCO-21** : rapprochement des salaires avec les déclarations sociales et fiscales.
+- **RCO-22** : paramètres fiscaux par pays et par exercice (aucune valeur livrée).
+- **RCO-23** : revue du dossier (visa du superviseur puis de l'expert-comptable) ; le dépôt
+  exige le visa de l'expert.
+- **RCO-24** : états financiers et liasse du Module 5 sur les soldes révisés ; visa de
+  l'expert subordonné à des états produits et cohérents.
+- **RCO-25** : attestation de présentation (ISRS 4410), lettre de mission, lettre de
+  recommandations, note de synthèse ; modèles modifiables, PDF et Word ; attestation signée
+  par l'expert, empreinte du contenu signé.
+- **RCO-26** : comparatif N/N-1 des états révisés et indicateurs de gestion (chiffre
+  d'affaires, marges, EBE, fonds de roulement, BFR, trésorerie nette, endettement), export.
+- **RCO-27** : transmission du dossier à une mission d'audit désignée par sa référence ;
+  reprise de la balance révisée, de la balance N-1, des affectations et des justificatifs dans
+  un dossier d'audit distinct.
+- Changements signalés d'exigences livrées : séquences groupées et valeurs distinctes
+  (DAT-11) ; dépôt soumis au visa de l'expert (RCO-02) ; visa de l'expert non retirable tant
+  que l'attestation est signée (RCO-23) ; modèles de rapports élargis aux documents de
+  clôture (REV-27).
+- Tests : 475 tests backend, couverture 97 %.
 
 ## Lot 8c — détail
 
