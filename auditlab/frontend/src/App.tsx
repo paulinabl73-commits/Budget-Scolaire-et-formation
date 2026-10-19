@@ -23,6 +23,7 @@ const LibraryPage = lazy(() => import("./pages/LibraryPage"));
 const WorkpaperPage = lazy(() => import("./pages/WorkpaperPage"));
 const TickmarksPage = lazy(() => import("./pages/TickmarksPage"));
 const ReportTemplatesPage = lazy(() => import("./pages/ReportTemplatesPage"));
+const DashboardsPage = lazy(() => import("./pages/DashboardsPage"));
 const DatasetPage = lazy(() => import("./pages/DatasetPage"));
 const ScriptPage = lazy(() => import("./pages/ScriptPage"));
 const FrameworksPage = lazy(() => import("./pages/FrameworksPage"));
@@ -187,6 +188,14 @@ export default function App() {
           element={
             <RequireAuth permission={[PERM.MISSIONS_READ_ALL, PERM.MISSIONS_READ_OWN]}>
               <LibraryPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="tableaux-de-bord"
+          element={
+            <RequireAuth permission={PERM.DASHBOARDS_GLOBAL}>
+              <DashboardsPage />
             </RequireAuth>
           }
         />

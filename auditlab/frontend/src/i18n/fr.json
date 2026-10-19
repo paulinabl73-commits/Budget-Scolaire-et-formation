@@ -20,7 +20,8 @@
     "marques": "Marques de révision",
     "referentiels": "Référentiels",
     "portefeuille": "Portefeuille clients",
-    "modelesRapport": "Modèles de rapport"
+    "modelesRapport": "Modèles de rapport",
+    "tableauxDeBord": "Tableaux de bord"
   },
   "commun": {
     "enregistrer": "Enregistrer",
@@ -3000,5 +3001,37 @@
     },
     "motif": "Motif du renvoi",
     "fige": "Version diffusée le {{le}}, figée (empreinte du PDF {{sha}}…)."
+  },
+  "tableauxDeBord": {
+    "titre": "Tableaux de bord",
+    "vues": {
+      "direction": "Direction"
+    },
+    "filtres": "Filtres",
+    "debut": "Du",
+    "fin": "Au",
+    "entite": "Entité (et ses sous-entités)",
+    "criticite": "Criticité",
+    "toutes": "Toutes",
+    "reinitialiser": "Réinitialiser les filtres",
+    "col": {
+      "mission": "Mission",
+      "entite": "Entité",
+      "statut": "Statut",
+      "budget": "Budget (j)",
+      "consommes": "Consommés (j)",
+      "ecart": "Écart (j)"
+    },
+    "direction": {
+      "plan": "Réalisation du plan annuel",
+      "planDetail": "Plan {{annee}} v{{version}} : {{missions_cloturees}} clôturée(s), {{missions_lancees}} lancée(s) sur {{missions_prevues}} prévue(s)",
+      "sansPlan": "Aucun plan validé pour l'année",
+      "missions": "Missions",
+      "jours": "Jours consommés / budget",
+      "consommation": "{{taux}} % du budget",
+      "ecart": "Jours restants",
+      "parStatut": "Missions par statut",
+      "budget": "Jours consommés et budget par mission"
+    }
   }
 }
