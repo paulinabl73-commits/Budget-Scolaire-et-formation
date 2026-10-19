@@ -45,3 +45,23 @@ Commande :
 python perf/nf09_charge.py --url http://127.0.0.1:8000 --utilisateurs 50 --duree 60 \
     --pause 5 --compte <adresse>:<mot de passe> --mission <id> --table <id de table>
 ```
+
+## NF-10 — import d'un million de lignes en moins de 30 s, doublons en moins de 10 s
+
+Script : `perf/nf10_import.py`. Fichier généré de façon déterministe : 1 000 000 de lignes,
+4 colonnes (pièce, fournisseur, date jj/mm/aaaa, montant à virgule décimale), 39 Mo. L'import
+suit la chaîne de la tâche d'import : lecture (Polars), typage des dates et des montants,
+écriture Parquet en lecture seule, totaux de contrôle et empreinte SHA-256 (DAT-04).
+
+| Mesure | Résultat (machine au repos) | Objectif |
+|---|---|---|
+| Import complet | 0,56 s | < 30 s |
+| Doublons exacts sur (fournisseur, montant) | 0,17 s | < 10 s |
+
+**Objectif atteint** avec une marge d'un facteur 50. La recherche approchée (DAT-10, mode
+« approchée ») compare des paires de noms et reste bornée à 50 millions de paires : elle est
+destinée aux tables de tiers, pas au million de lignes d'écritures.
+
+```
+AUDITLAB_DATA_DIR=/tmp/perf python perf/nf10_import.py --dossier /tmp/perf --lignes 1000000
+```
