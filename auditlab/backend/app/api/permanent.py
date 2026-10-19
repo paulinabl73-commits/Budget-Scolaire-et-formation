@@ -37,7 +37,13 @@ def documents(db: Session, client: Client) -> list[PermanentDocument]:
     )
 
 
+def expired(db: Session, client: Client, ref: dt.date) -> list[PermanentDocument]:
+    """Documents dont la date de validité est dépassée à la date de référence (RCO-06)."""
+    return [d for d in documents(db, client) if d.date_validite and d.date_validite < ref]
+
+
 def listing(db: Session, client: Client) -> list[dict[str, Any]]:
+    today = dt.date.today()
     docs = documents(db, client)
     files = _files(db, "permanent", [d.id for d in docs])
     return [
@@ -48,6 +54,7 @@ def listing(db: Session, client: Client) -> list[dict[str, Any]]:
             "date_document": d.date_document.isoformat() if d.date_document else None,
             "date_validite": d.date_validite.isoformat() if d.date_validite else None,
             "commentaire": d.commentaire,
+            "expire": bool(d.date_validite and d.date_validite < today),
             "fichiers": [file_out(f) for f in files[d.id]],
         }
         for d in docs

@@ -17,6 +17,7 @@ export default function ClientPage() {
   const { cid } = useParams();
   const [c, setC] = useState<PortfolioClient | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [stale, setStale] = useState<{ libelle: string; date_validite: string }[]>([]);
   const [exercice, setExercice] = useState(String(new Date().getFullYear()));
   const load = useCallback(() => api<PortfolioClient>(`/clients/${cid}`).then(setC), [cid]);
   useEffect(() => {
@@ -27,7 +28,8 @@ export default function ClientPage() {
     e.preventDefault();
     setError(null);
     try {
-      await post(`/clients/${c.id}/closings`, { exercice: Number(exercice) });
+      const r = await post<{ documents_expires: { libelle: string; date_validite: string }[] }>(`/clients/${c.id}/closings`, { exercice: Number(exercice) });
+      setStale(r.documents_expires);
       await load();
     } catch (err) {
       setError((err as Error).message);
@@ -61,6 +63,7 @@ export default function ClientPage() {
       <Link to="/portefeuille" className="text-sm text-marque-700 underline">← {t("portefeuille.retour")}</Link>
       <h1 className="text-2xl font-semibold">{c.raison_sociale}</h1>
       {error && <Alert kind="erreur">{error}</Alert>}
+      {stale.length > 0 && <Alert kind="info">{t("permanent.expiresOuverture", { liste: stale.map((d) => d.libelle).join(", ") })}</Alert>}
       <section className="carte" aria-label={t("portefeuille.raison")}>
         <dl className="grid gap-x-6 gap-y-2 text-sm md:grid-cols-3">
           {facts.map(([k, v]) => (

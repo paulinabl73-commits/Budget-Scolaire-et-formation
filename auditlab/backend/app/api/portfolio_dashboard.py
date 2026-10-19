@@ -9,6 +9,7 @@ from pydantic import BaseModel
 from sqlalchemy import select
 
 from app.api.deps import CurrentUser, DbSession
+from app.api.permanent import expired
 from app.api.portfolio import can_manage_client, closing_out, get_client, visible_clients
 from app.cabinet.calendar import client_deadlines
 from app.models.portfolio import Client, Closing
@@ -115,6 +116,7 @@ def dashboard(user: CurrentUser, db: DbSession) -> dict[str, Any]:
                 "prochaine_echeance": nxt[0] if nxt else None,
                 "echeances_en_retard": len(late),
                 "en_retard": bool(late) or filing_late,
+                "documents_expires": len(expired(db, client, today)),
             }
         )
     return {

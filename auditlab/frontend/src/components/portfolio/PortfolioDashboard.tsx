@@ -10,7 +10,7 @@ import Alert from "../Alert";
 export const STAGES = ["pieces", "saisie", "revision", "revue", "depot", "termine"] as const;
 interface Deadline { code: string; libelle: string; echeance: string; periode: string; client?: string; client_id?: string }
 interface Board {
-  dossiers: { client_id: string; client: string; cloture: ClosingSummary | null; avancement: number; prochaine_echeance: Deadline | null; echeances_en_retard: number; en_retard: boolean }[];
+  dossiers: { client_id: string; client: string; cloture: ClosingSummary | null; avancement: number; prochaine_echeance: Deadline | null; echeances_en_retard: number; en_retard: boolean; documents_expires: number }[];
   par_etape: Record<string, number>;
   echeances_a_venir: Deadline[];
   dossiers_en_retard: string[];
@@ -51,7 +51,10 @@ export default function PortfolioDashboard() {
                   ) : "—"}
                 </td>
                 <td className="py-1 pr-3">{d.prochaine_echeance ? `${formatDate(d.prochaine_echeance.echeance)} · ${d.prochaine_echeance.libelle}` : "—"}</td>
-                <td className="py-1 pr-3">{d.en_retard ? <span className="font-medium text-red-700">{t("tableauPortefeuille.enRetard", { count: d.echeances_en_retard })}</span> : "—"}</td>
+                <td className="py-1 pr-3">
+                  {d.en_retard ? <span className="font-medium text-red-700">{t("tableauPortefeuille.enRetard", { count: d.echeances_en_retard })}</span> : "—"}
+                  {d.documents_expires > 0 && <span className="ml-2 text-xs text-red-700">{t("tableauPortefeuille.documentsExpires", { count: d.documents_expires })}</span>}
+                </td>
               </tr>
             ))}
           </tbody>

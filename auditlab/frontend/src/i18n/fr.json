@@ -2441,7 +2441,9 @@
     "aVenir": "Échéances des {{jours}} prochains jours",
     "changerEtape": "Étape",
     "passerA": "Passer à « {{etape}} »",
-    "revenirA": "Revenir à « {{etape}} »"
+    "revenirA": "Revenir à « {{etape}} »",
+    "documentsExpires_one": "{{count}} document expiré",
+    "documentsExpires_other": "{{count}} documents expirés"
   },
   "permanent": {
     "titre": "Dossier permanent",
@@ -2465,6 +2467,7 @@
       "credit_bail": "Crédit-bail",
       "caution": "Acte de caution",
       "autre": "Autre"
-    }
+    },
+    "expiresOuverture": "Documents du dossier permanent expirés à l'ouverture de cet exercice : {{liste}}."
   }
 }

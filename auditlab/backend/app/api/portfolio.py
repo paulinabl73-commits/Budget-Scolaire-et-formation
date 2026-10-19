@@ -25,6 +25,7 @@ from app.models.portfolio import Client, Closing
 from app.models.revision import AccountingFramework
 from app.models.universe import AuditableEntity
 from app.models.user import User
+from app.notify import notify
 from app.schemas_mission import MemberIn
 from app.security.roles import Perm, Role, has_permission
 
@@ -308,8 +309,29 @@ def open_closing(
         etapes={"pieces": dt.date.today().isoformat()},
     )
     db.add(closing)
+    # RCO-06 : documents permanents expirés signalés à l'ouverture de l'exercice.
+    from app.api.permanent import expired
+
+    stale = expired(db, client, max(dt.date.today(), end))
+    if stale:
+        notify(
+            db,
+            {client.expert_id, client.collaborateur_id},
+            "documents_expires",
+            f"{client.raison_sociale} : {len(stale)} document(s) permanent(s) expiré(s)",
+            "Documents à renouveler avant la clôture "
+            f"{body.exercice} : "
+            + "; ".join(f"{d.libelle} ({d.date_validite:%d/%m/%Y})" for d in stale),
+            lien=f"/portefeuille/{client.id}",
+        )
     db.commit()
-    return closing_out(closing)
+    return {
+        **closing_out(closing),
+        "documents_expires": [
+            {"id": str(d.id), "libelle": d.libelle, "date_validite": d.date_validite.isoformat()}
+            for d in stale
+        ],
+    }
 
 
 @router.get("/portfolio/staff")
