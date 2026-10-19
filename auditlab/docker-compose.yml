@@ -54,6 +54,7 @@ services:
 
   backend:
     build: ./backend
+    image: auditlab-backend  # sert aussi d'image au bac à sable des scripts (DAT-27)
     environment:
       AUDITLAB_DATABASE_URL: postgresql+psycopg://auditlab:${POSTGRES_PASSWORD:-auditlab}@db:5432/auditlab
       AUDITLAB_CORS_ORIGINS: '["http://localhost:8080"]'
@@ -83,7 +84,7 @@ services:
 
   # Exécute les imports et analyses longues ; partage le volume des tables Parquet.
   worker:
-    build: ./backend
+    image: auditlab-backend
     # --beat : planification des tâches quotidiennes (relances des plans d'action, CON-06).
     command: celery -A app.tasks worker --beat --schedule /tmp/celerybeat-schedule --loglevel=INFO --concurrency=2
     environment:
@@ -95,8 +96,19 @@ services:
       AUDITLAB_REDIS_URL: redis://redis:6379/0
       AUDITLAB_TASKS_EAGER: "false"
       AUDITLAB_DATA_DIR: /data/datasets
+      # DAT-27 : chaque script tourne dans un conteneur jetable sans réseau (2 Go, 10 min).
+      # Le répertoire de travail est un montage de l'hôte, vu au même chemin par le démon.
+      # L'accès au démon Docker est sensible : préférer Docker sans privilège (rootless) ou
+      # un mandataire de socket limité à « docker run/kill », et le runtime gVisor (runsc).
+      AUDITLAB_SCRIPTS_SANDBOX: docker
+      AUDITLAB_SCRIPTS_WORK_DIR: /data/scripts
+      AUDITLAB_SCRIPTS_WORK_HOST_DIR: ${AUDITLAB_SCRIPTS_HOST_DIR:-/var/lib/auditlab/scripts}
     volumes:
       - datasets:/data/datasets
+      - ${AUDITLAB_SCRIPTS_HOST_DIR:-/var/lib/auditlab/scripts}:/data/scripts
+      - /var/run/docker.sock:/var/run/docker.sock
+    group_add:
+      - ${DOCKER_GID:-999}  # groupe propriétaire du socket Docker de l'hôte
     depends_on:
       backend:
         condition: service_healthy

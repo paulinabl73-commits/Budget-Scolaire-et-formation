@@ -7,6 +7,9 @@ COPY pyproject.toml ./
 COPY app ./app
 RUN pip install --no-cache-dir .
 
+# Client Docker : le worker lance le bac à sable des scripts (DAT-27).
+COPY --from=docker:27.3.1-cli /usr/local/bin/docker /usr/local/bin/docker
+
 COPY alembic.ini ./
 COPY alembic ./alembic
 

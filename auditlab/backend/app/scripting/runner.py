@@ -2,8 +2,10 @@
 
 1. Préparation : répertoire de travail neuf contenant le code, les tables d'entrée exportées
    en Parquet et les fichiers déposés choisis, décrits par `manifest.json`.
-2. Exécution : `bootstrap.py` dans un processus séparé, environnement vidé (aucun secret de
-   l'application), durée bornée ; l'isolement (réseau, mémoire) est assuré par l'exécuteur.
+2. Exécution isolée (DAT-27) : `bootstrap.py` sans réseau, mémoire et durée bornées,
+   environnement vidé (aucun secret de l'application) ; dans un conteneur Docker jetable en
+   exploitation, dans un processus local isolé (espace de noms réseau vide, limites du
+   noyau) en développement.
 3. Reprise : chaque table enregistrée par `audit.save` devient une table de la mission, avec
    sa lignée (script, empreinte du code, entrées) ; indicateurs et sortie console conservés.
 """
@@ -11,7 +13,9 @@
 import datetime as dt
 import hashlib
 import json
+import os
 import shutil
+import signal
 import subprocess
 import sys
 import time
@@ -35,6 +39,10 @@ HERE = Path(__file__).resolve().parent
 
 class ScriptInputError(ValueError):
     """Entrée indisponible (table supprimée ou en erreur, fichier retiré)."""
+
+
+class SandboxUnavailable(RuntimeError):
+    """Bac à sable non disponible : le script n'est pas exécuté (jamais sans isolement)."""
 
 
 @dataclass
@@ -80,23 +88,92 @@ def prepare(db: Session, run: ScriptRun, work: Path) -> None:
     (work / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False), "utf-8")
 
 
-def execute_local(work: Path, timeout: int) -> Completed:
-    """Processus Python séparé, sans les variables d'environnement de l'application."""
-    env = {"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": str(work), "LANG": "C.UTF-8",
-           "PYTHONHASHSEED": "0", "PYTHONDONTWRITEBYTECODE": "1"}  # fmt: skip
+ENV = {"PATH": "/usr/local/bin:/usr/bin:/bin", "LANG": "C.UTF-8", "PYTHONHASHSEED": "0",
+       "PYTHONDONTWRITEBYTECODE": "1"}  # fmt: skip
+
+
+def work_root() -> Path:
+    s = get_settings()
+    return Path(s.scripts_work_dir) if s.scripts_work_dir else data_dir() / "_scripts"
+
+
+def _limits(memory_mb: int, cpu_s: int, max_file_mb: int):  # noqa: ANN202
+    """Limites du noyau appliquées au processus du script avant son lancement (mode local)."""
+
+    def apply() -> None:
+        import resource
+
+        mem = memory_mb * 1024 * 1024
+        resource.setrlimit(resource.RLIMIT_AS, (mem, mem))
+        resource.setrlimit(resource.RLIMIT_CPU, (cpu_s, cpu_s))
+        resource.setrlimit(resource.RLIMIT_FSIZE, (max_file_mb * 1024 * 1024,) * 2)
+        resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
+        os.setsid()  # groupe de processus propre : tout est arrêté à l'expiration
+
+    return apply
+
+
+def local_command(work: Path) -> list[str]:
+    """Espace de noms réseau vide (aucune interface) : le script n'a pas de réseau."""
+    unshare = shutil.which("unshare")
+    if unshare is None:
+        raise SandboxUnavailable("Bac à sable indisponible : commande unshare absente")
+    return [unshare, "--user", "--map-root-user", "--net", "--",
+            sys.executable, "-I", str(HERE / "bootstrap.py"), str(work)]  # fmt: skip
+
+
+def docker_command(work: Path, name: str) -> list[str]:
+    """Conteneur jetable : sans réseau, mémoire et processus bornés, racine en lecture seule,
+    utilisateur sans privilège ; seul `out/` est accessible en écriture."""
+    s = get_settings()
+    host = str(work)
+    if s.scripts_work_host_dir:
+        host = host.replace(str(work_root()), s.scripts_work_host_dir.rstrip("/"), 1)
+    cmd = ["docker", "run", "--rm", "--name", name, "--network", "none",
+           "--memory", f"{s.scripts_memory_mb}m", "--memory-swap", f"{s.scripts_memory_mb}m",
+           "--cpus", str(s.scripts_cpus), "--pids-limit", "256", "--read-only",
+           "--tmpfs", "/tmp:size=256m",  # noqa: S108 (tmpfs du conteneur)
+           "--user", "65534:65534", "--cap-drop", "ALL",
+           "--security-opt", "no-new-privileges", "--env", "HOME=/tmp",
+           "-v", f"{host}:/work:ro", "-v", f"{host}/out:/work/out:rw",
+           "--workdir", "/work"]  # fmt: skip
+    if s.scripts_docker_runtime:
+        cmd += ["--runtime", s.scripts_docker_runtime]
+    return [*cmd, s.scripts_docker_image, "python", "-I", s.scripts_bootstrap_path, "/work"]
+
+
+def _run(cmd: list[str], work: Path, timeout: int, **kw: Any) -> Completed:
+    proc = subprocess.Popen(  # noqa: S603 (commande construite ici, sans interpréteur)
+        cmd, cwd=work, env={**ENV, "HOME": str(work)}, stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT, **kw,
+    )  # fmt: skip
     try:
-        proc = subprocess.run(  # noqa: S603 (commande fixe)
-            [sys.executable, "-I", str(HERE / "bootstrap.py"), str(work)],
-            cwd=work, env=env, capture_output=True, timeout=timeout, check=False,
-        )  # fmt: skip
-    except subprocess.TimeoutExpired as exc:
-        out = (exc.stdout or b"") + (exc.stderr or b"")
+        out, _ = proc.communicate(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        if kw.get("preexec_fn"):
+            os.killpg(proc.pid, signal.SIGKILL)
+        else:
+            proc.kill()
+        out, _ = proc.communicate()
         return Completed(-1, out.decode("utf-8", errors="replace"), timed_out=True)
-    return Completed(proc.returncode, (proc.stdout + proc.stderr).decode("utf-8", "replace"))
+    return Completed(proc.returncode, out.decode("utf-8", errors="replace"))
 
 
 def execute(work: Path) -> Completed:
-    return execute_local(work, get_settings().scripts_timeout_s)
+    s = get_settings()
+    if s.scripts_sandbox == "docker":
+        (work / "out").mkdir(exist_ok=True)
+        os.chmod(work / "out", 0o777)  # noqa: S103 (écrit par l'utilisateur sans privilège)
+        name = f"auditlab-script-{work.name}"
+        done = _run(docker_command(work, name), work, s.scripts_timeout_s)
+        if done.timed_out:
+            kill = ["docker", "kill", name]
+            subprocess.run(kill, capture_output=True, check=False)  # noqa: S603, S607
+        return done
+    if s.scripts_sandbox != "local":
+        raise SandboxUnavailable(f"Bac à sable inconnu : {s.scripts_sandbox}")
+    limits = _limits(s.scripts_memory_mb, s.scripts_timeout_s + 5, s.max_import_mb)
+    return _run(local_command(work), work, s.scripts_timeout_s, preexec_fn=limits)
 
 
 def _truncate(text: str) -> str:
@@ -146,7 +223,7 @@ def _collect(db: Session, run: ScriptRun, work: Path, script_name: str) -> None:
 
 def run_script(db: Session, run: ScriptRun, script_name: str) -> None:
     """Exécute l'exécution « en cours » et enregistre son résultat ou son erreur."""
-    work = data_dir() / "_scripts" / str(run.id)
+    work = work_root() / str(run.id)
     run.debut = dt.datetime.now(dt.UTC)
     start = time.perf_counter()
     try:
@@ -160,13 +237,17 @@ def run_script(db: Session, run: ScriptRun, script_name: str) -> None:
             run.statut, run.erreur = "erreur", f"Durée maximale dépassée ({limit} s)"
         elif error_file.exists():
             run.statut, run.erreur = "erreur", error_file.read_text("utf-8")
+        elif done.returncode in (137, -signal.SIGKILL, -signal.SIGXCPU):
+            limit = get_settings().scripts_memory_mb
+            run.statut = "erreur"
+            run.erreur = f"Exécution arrêtée : mémoire ({limit} Mo) ou temps de calcul dépassé"
         elif done.returncode != 0 or not (work / "out" / "result.json").exists():
             run.statut = "erreur"
-            run.erreur = f"Exécution interrompue (code {done.returncode}) : mémoire ou ressources"
+            run.erreur = f"Exécution interrompue (code {done.returncode})"
         else:
             _collect(db, run, work, script_name)
             run.statut, run.erreur = "termine", None
-    except ScriptInputError as exc:
+    except (ScriptInputError, SandboxUnavailable) as exc:
         run.statut, run.erreur = "erreur", str(exc)
     except Exception as exc:  # noqa: BLE001
         run.statut, run.erreur = "erreur", f"Erreur inattendue : {exc}"

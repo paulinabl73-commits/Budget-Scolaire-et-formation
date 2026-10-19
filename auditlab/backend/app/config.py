@@ -78,6 +78,17 @@ class Settings(BaseSettings):
     # Scripts d'analyse (DAT-26, DAT-27) : durée maximale, sortie console conservée.
     scripts_timeout_s: int = 600
     scripts_output_kb: int = 100
+    # DAT-27 : bac à sable « docker » (exploitation : conteneur sans réseau, mémoire bornée,
+    # système de fichiers en lecture seule) ou « local » (développement : processus sans
+    # réseau ni variables d'environnement, mémoire bornée, mais qui voit le disque de l'hôte).
+    scripts_sandbox: str = "local"
+    scripts_memory_mb: int = 2048
+    scripts_cpus: float = 1.0
+    scripts_work_dir: str | None = None  # défaut : <data_dir>/_scripts
+    scripts_work_host_dir: str | None = None  # même répertoire vu par le démon Docker
+    scripts_docker_image: str = "auditlab-backend"
+    scripts_docker_runtime: str | None = None  # ex. « runsc » (gVisor)
+    scripts_bootstrap_path: str = "/app/app/scripting/bootstrap.py"
     # Envoi des e-mails : sans serveur SMTP, les messages restent en file (journalisés).
     smtp_host: str | None = None
     smtp_port: int = 587

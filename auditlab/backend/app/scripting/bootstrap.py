@@ -22,6 +22,9 @@ def main() -> int:
     try:
         code = compile(source, "script.py", "exec")
         exec(code, {"__name__": "__main__", "audit": audit})  # noqa: S102 (bac à sable)
+    except MemoryError:
+        (work / "out" / "erreur.txt").write_text("Mémoire maximale dépassée", "utf-8")
+        return 1
     except audit.AuditError as exc:
         (work / "out" / "erreur.txt").write_text(str(exc), "utf-8")
         return 1
