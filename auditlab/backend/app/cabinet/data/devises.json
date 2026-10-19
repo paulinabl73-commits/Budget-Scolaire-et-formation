@@ -1,0 +1,4 @@
+{
+  "_commentaire": "Comptes des écarts de conversion et de la provision pour perte de change (RCO-15), adaptables.",
+  "SYSCOHADA": {"ecart_actif": "478", "ecart_passif": "479", "provision": "194", "dotation": "697", "reprise": "797"}
+}

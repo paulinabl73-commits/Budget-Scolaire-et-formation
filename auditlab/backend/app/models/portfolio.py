@@ -265,3 +265,18 @@ class Provision(TrackedMixin, Base):
     compte_reprise: Mapped[str] = mapped_column(String(30))
     montant_requis: Mapped[Decimal] = mapped_column(Numeric(18, 2))
     commentaire: Mapped[str | None] = mapped_column(String(2000), nullable=True)
+
+
+class CurrencyPosition(TrackedMixin, Base):
+    """Créance ou dette en devises d'une clôture (RCO-15), réévaluée au cours de clôture."""
+
+    __tablename__ = "currency_positions"
+
+    client_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("clients.id"), index=True)
+    audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
+    compte: Mapped[str] = mapped_column(String(30))
+    libelle: Mapped[str] = mapped_column(String(300))
+    nature: Mapped[str] = mapped_column(String(10))  # creance, dette
+    devise: Mapped[str] = mapped_column(String(3))
+    montant_devise: Mapped[Decimal] = mapped_column(Numeric(18, 2))
+    valeur_comptable: Mapped[Decimal] = mapped_column(Numeric(18, 2))

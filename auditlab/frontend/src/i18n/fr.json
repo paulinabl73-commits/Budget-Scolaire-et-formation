@@ -2651,5 +2651,31 @@
       "montant_requis": "Montant requis à la clôture",
       "compte_provision": "Compte de provision (proposé si vide)"
     }
+  },
+  "devisesCloture": {
+    "titre": "Opérations en devises",
+    "coursManquants": "Cours de clôture à saisir dans Référentiels (devises et cours) : {{liste}} → {{devise}}.",
+    "synthese": "Pertes latentes {{pertes}} · gains latents {{gains}} · provision pour perte de change requise {{requise}}, comptabilisée {{comptabilisee}}.",
+    "ajouter": "Ajouter l'opération",
+    "natures": {
+      "creance": "créance",
+      "dette": "dette"
+    },
+    "col": {
+      "operation": "Opération",
+      "devise": "Montant en devise",
+      "comptable": "Valeur comptable",
+      "cours": "Cours de clôture",
+      "cloture": "Valeur à la clôture",
+      "ecart": "Écart"
+    },
+    "champs": {
+      "compte": "Compte de tiers",
+      "libelle": "Libellé",
+      "devise": "Devise",
+      "montant_devise": "Montant en devise",
+      "valeur_comptable": "Valeur comptable",
+      "nature": "Nature"
+    }
   }
 }
