@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { api, download } from "../../api/client";
-import { formatDecimal } from "../../lib/format";
+import { formatNombre } from "../../lib/format";
 import Alert from "../Alert";
 
 interface Indicator {
@@ -49,8 +49,9 @@ export default function ClosingIndicatorsPanel({
   const value = (v: string | null, unit = "montant") =>
     v === null
       ? t("indicateursCloture.ns")
-      : `${formatDecimal(v)}${unit === "pourcentage" ? " %" : ""}`;
-  const pct = (v: string | null) => (v === null ? "" : `${formatDecimal(v)} %`);
+      : `${formatNombre(Number(v))}${unit === "pourcentage" ? " %" : ""}`;
+  const pct = (v: string | null) =>
+    v === null ? "" : `${formatNombre(Number(v))} %`;
   const get = (fmt: string) =>
     void download(
       `${url}/export?format=${fmt}`,
