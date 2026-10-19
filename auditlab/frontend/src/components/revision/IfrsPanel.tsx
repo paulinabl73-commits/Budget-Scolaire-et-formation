@@ -57,7 +57,7 @@ export default function IfrsPanel({ file }: { file: AuditFile }) {
             <thead className="text-xs text-slate-600"><tr><th scope="col" className="py-1 pr-3 text-left">{t("ifrs.poste")}</th><th scope="col" className="py-1 pr-3 text-left">{t("ifrs.passage")}</th><th scope="col" className="py-1 pr-3 text-right">N</th><th scope="col" className="py-1 text-right">N-1</th></tr></thead>
             <tbody className="divide-y divide-slate-100">
               {(data.etats[etat] ?? []).map((l) => (
-                <tr key={l.code} className={l.total ? "bg-slate-50 font-semibold" : ""}><td className="py-1 pr-3">{l.libelle}</td><td className="py-1 pr-3 font-mono text-xs text-slate-500">{l.passage}</td><td className="py-1 pr-3 text-right font-mono">{n(l.N)}</td><td className="py-1 text-right font-mono">{n(l["N-1"])}</td></tr>
+                <tr key={l.code} className={l.total ? "bg-slate-50 font-semibold" : ""}><td className="py-1 pr-3">{l.libelle}</td><td className="py-1 pr-3 font-mono text-xs text-slate-600">{l.passage}</td><td className="py-1 pr-3 text-right font-mono">{n(l.N)}</td><td className="py-1 text-right font-mono">{n(l["N-1"])}</td></tr>
               ))}
             </tbody>
           </table>

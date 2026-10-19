@@ -94,7 +94,7 @@ export default function AnalyticalPanel({ file }: { file: AuditFile }) {
                         <button type="button" className="btn-secondaire" onClick={() => void save(l)}>{t("commun.enregistrer")}</button>
                       </div>
                     ) : <span>{l.justification ?? t("analytique.aJustifier")}</span>)}
-                    {l.justifie_le && <p className="text-xs text-slate-500">{t("analytique.justifieLe", { date: formatDateHeure(l.justifie_le) })}</p>}
+                    {l.justifie_le && <p className="text-xs text-slate-600">{t("analytique.justifieLe", { date: formatDateHeure(l.justifie_le) })}</p>}
                   </td>
                 </tr>
               );

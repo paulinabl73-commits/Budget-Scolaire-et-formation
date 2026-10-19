@@ -74,7 +74,7 @@ export default function FinancialStatementsPanel({ file }: { file: AuditFile }) 
           </tbody>
         </table>
       </div>
-      {etat === "flux_tresorerie" && <p className="text-xs text-slate-500">{t("etats.noteFlux")}</p>}
+      {etat === "flux_tresorerie" && <p className="text-xs text-slate-600">{t("etats.noteFlux")}</p>}
     </section>
   );
 }

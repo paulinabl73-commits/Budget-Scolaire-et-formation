@@ -55,7 +55,7 @@ export default function FixedAssetsPanel({ file }: { file: AuditFile }) {
             {data.immobilisations.map((r) => (
               <tr key={r.id}>
                 <th scope="row" className={`py-1 pr-3 font-normal ${r.composant_de ? "pl-4" : ""}`}>
-                  <span className="font-mono text-xs">{r.code}</span> {r.libelle} <span className="text-xs text-slate-500">{r.compte_immobilisation}</span>
+                  <span className="font-mono text-xs">{r.code}</span> {r.libelle} <span className="text-xs text-slate-600">{r.compte_immobilisation}</span>
                   {r.acquisition && <span className="ml-1 rounded bg-emerald-50 px-1 text-xs text-emerald-800">{t("immobilisations.acquisition")}</span>}
                   {r.cession && <span className="ml-1 rounded bg-amber-50 px-1 text-xs text-amber-800">{t("immobilisations.cede", { resultat: formatDecimal(r.resultat_cession ?? "0") })}</span>}
                 </th>

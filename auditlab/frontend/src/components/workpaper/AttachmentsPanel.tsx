@@ -66,10 +66,10 @@ export default function AttachmentsPanel({ workpaperId, attachments, editable, o
             <li key={a.id} className="flex items-center justify-between gap-3 py-2">
               <span>
                 <a href={a.url} target="_blank" rel="noreferrer" className="text-marque-700 underline">{a.nom_fichier}</a>{" "}
-                <span className="text-xs text-slate-500">
+                <span className="text-xs text-slate-600">
                   {t("pieces.version", { version: a.version })} · {formatTaille(a.taille)} · {formatDateHeure(a.created_at)}
                 </span>
-                <span className="block font-mono text-[11px] text-slate-500" title={t("pieces.empreinte")}>
+                <span className="block font-mono text-[11px] text-slate-600" title={t("pieces.empreinte")}>
                   SHA-256 {a.sha256.slice(0, 16)}…
                 </span>
               </span>

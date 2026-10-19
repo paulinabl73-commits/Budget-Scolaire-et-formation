@@ -94,7 +94,7 @@ export default function LeadSchedulesPanel({ file }: { file: AuditFile }) {
                 <label key={p.id} className="mr-4 inline-flex items-center gap-1">
                   <input type="checkbox" disabled={!file.peut_travailler} checked={!!linked?.rattache} onChange={(e) => void toggle(p.id, e.target.checked)} />
                   <Link className="underline" to={`/missions/${file.engagement_id}/papiers/${p.id}`}>{p.reference}</Link> {p.titre}
-                  {linked && !linked.rattache && <span className="text-xs text-slate-500">({t("feuilles.viaAjustement")})</span>}
+                  {linked && !linked.rattache && <span className="text-xs text-slate-600">({t("feuilles.viaAjustement")})</span>}
                 </label>
               );
             })}

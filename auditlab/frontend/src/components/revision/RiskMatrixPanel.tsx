@@ -96,7 +96,7 @@ export default function RiskMatrixPanel({ file }: { file: AuditFile }) {
               <tr key={c.code}>
                 <th scope="row" className="py-1 pr-3 text-left font-normal">
                   <span className="font-medium">{c.libelle}</span>
-                  <span className={`block text-xs ${c.significatif ? "text-red-700" : "text-slate-500"}`}>
+                  <span className={`block text-xs ${c.significatif ? "text-red-700" : "text-slate-600"}`}>
                     {formatNombre(Number(c.montant_n))}{c.significatif && ` · ${t("matrice.significatif")}`}
                   </span>
                 </th>
@@ -118,7 +118,7 @@ export default function RiskMatrixPanel({ file }: { file: AuditFile }) {
           </tbody>
         </table>
       </div>
-      <p className="text-xs text-slate-500">{t("matrice.legende")}</p>
+      <p className="text-xs text-slate-600">{t("matrice.legende")}</p>
       {sel && (
         <form onSubmit={save} className="grid gap-2 rounded border border-slate-200 p-3 md:grid-cols-4">
           <p className="font-medium md:col-span-4">{selCycle?.libelle} – {selAssertion?.libelle}</p>

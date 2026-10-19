@@ -84,7 +84,7 @@ export default function IfrsAssistantsPanel({ file, onCreated }: { file: AuditFi
             {p.type === "liste" ? (
               <>
                 <textarea id={`ifa-${p.nom}`} rows={3} className="champ font-mono" value={values[p.nom] ?? ""} onChange={(e) => setValues({ ...values, [p.nom]: e.target.value })} />
-                <p className="text-xs text-slate-500">{t("ifrsAssistants.format", { colonnes: LIST_FIELDS[p.nom]?.map((c) => t(`ifrsAssistants.params.${c}`, { defaultValue: c })).join(" ; ") })}</p>
+                <p className="text-xs text-slate-600">{t("ifrsAssistants.format", { colonnes: LIST_FIELDS[p.nom]?.map((c) => t(`ifrsAssistants.params.${c}`, { defaultValue: c })).join(" ; ") })}</p>
               </>
             ) : (
               <input id={`ifa-${p.nom}`} className="champ" inputMode={p.type === "texte" ? undefined : "decimal"} value={values[p.nom] ?? ""} onChange={(e) => setValues({ ...values, [p.nom]: e.target.value })} />

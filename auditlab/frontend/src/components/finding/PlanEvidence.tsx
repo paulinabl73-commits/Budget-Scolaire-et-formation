@@ -56,7 +56,7 @@ export default function PlanEvidence({ plan, canUpload, canReject, onChange }: {
           {items.map((e) => (
             <li key={e.id}>
               <a href={e.url} className="text-marque-700 underline">{e.nom_fichier}</a>
-              <span className="text-slate-500"> · {formatTaille(e.taille)} · {formatDateHeure(e.created_at)}{e.commentaire && ` · ${e.commentaire}`}</span>
+              <span className="text-slate-600"> · {formatTaille(e.taille)} · {formatDateHeure(e.created_at)}{e.commentaire && ` · ${e.commentaire}`}</span>
             </li>
           ))}
         </ul>

@@ -40,7 +40,7 @@ export default function ChecklistPanel({ closingId }: { closingId: string }) {
           <ul className="mt-2 divide-y divide-slate-100 text-sm">
             {c.points.map((p) => (
               <li key={p.code} className="flex flex-wrap items-center gap-2 py-1">
-                <span className="min-w-64 flex-1"><span className="font-mono text-xs text-slate-500">{p.code}</span> {p.libelle}</span>
+                <span className="min-w-64 flex-1"><span className="font-mono text-xs text-slate-600">{p.code}</span> {p.libelle}</span>
                 <select aria-label={t("checklistRevision.statutDe", { code: p.code })} className="rounded border px-1 py-0.5" value={p.statut ?? ""}
                   onChange={(e) => {
                     const statut = (e.target.value || null) as Point["statut"];
@@ -51,7 +51,7 @@ export default function ChecklistPanel({ closingId }: { closingId: string }) {
                   <option value="">—</option>
                   {STATUTS.map((s) => <option key={s} value={s}>{t(`checklistRevision.statuts.${s}`)}</option>)}
                 </select>
-                {p.commentaire && <span className={`w-full text-xs ${p.statut === "anomalie" ? "text-red-700" : "text-slate-500"}`}>{p.commentaire}</span>}
+                {p.commentaire && <span className={`w-full text-xs ${p.statut === "anomalie" ? "text-red-700" : "text-slate-600"}`}>{p.commentaire}</span>}
               </li>
             ))}
           </ul>

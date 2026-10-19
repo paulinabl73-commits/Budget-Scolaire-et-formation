@@ -66,7 +66,7 @@ function Node({
         >
           <span>
             {item.nom}
-            <span className={`ml-2 text-xs ${selected ? "text-marque-50" : "text-slate-500"}`}>
+            <span className={`ml-2 text-xs ${selected ? "text-marque-50" : "text-slate-600"}`}>
               {t(`univers.types.${item.type}`)}
             </span>
           </span>

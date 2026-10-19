@@ -112,7 +112,7 @@ export default function FrameworksPage() {
                 <td className="px-4 py-2 font-semibold">{f.code}</td>
                 <td className="px-4 py-2">
                   <button type="button" className="text-marque-700 underline" onClick={async () => setDetail(await api<Detail>(`/frameworks/${f.id}`))}>{f.version}</button>
-                  <div className="text-xs text-slate-500">{f.libelle}</div>
+                  <div className="text-xs text-slate-600">{f.libelle}</div>
                 </td>
                 <td className="px-4 py-2">{f.pays}</td>
                 <td className="px-4 py-2">{formatDate(f.date_effet)}</td>
@@ -149,7 +149,7 @@ export default function FrameworksPage() {
               <tbody className="divide-y divide-slate-100">
                 {tab === "postes" && detail.postes.map((p) => (
                   <tr key={p.code} className={p.niveau === 0 ? "font-semibold" : ""}>
-                    <td className="py-1 pr-2 text-slate-500">{t(`referentiels.etats.${p.etat}`, { defaultValue: p.etat })}</td>
+                    <td className="py-1 pr-2 text-slate-600">{t(`referentiels.etats.${p.etat}`, { defaultValue: p.etat })}</td>
                     <td className="py-1 pr-2 font-mono">{p.code}</td>
                     <td className="py-1 pr-2">{p.libelle}</td>
                     <td className="py-1 pr-2 font-mono">{p.racines.map((r) => r.racine + (r.sens ? ` (${t(`referentiels.sens.${r.sens}`)})` : "")).join(", ")}</td>

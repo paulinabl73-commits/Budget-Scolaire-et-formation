@@ -47,7 +47,7 @@ export default function ProcedureLine({ mission, procedure: p, editable, onRemov
       <div className="flex items-start justify-between gap-3 text-sm">
         <span>
           <span className="font-mono text-xs text-slate-600">{p.reference}</span> {p.description}{" "}
-          <span className="text-xs text-slate-500">— {t(`programme.typesTest.${p.type_test}`)}</span>
+          <span className="text-xs text-slate-600">— {t(`programme.typesTest.${p.type_test}`)}</span>
         </span>
         {editable && (
           <button type="button" className="text-xs text-red-800 underline" onClick={onRemove}>{t("commun.supprimer")}</button>

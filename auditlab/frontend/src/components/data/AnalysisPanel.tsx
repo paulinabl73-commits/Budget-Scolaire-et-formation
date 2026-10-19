@@ -79,7 +79,7 @@ export default function AnalysisPanel({ ds }: { ds: Dataset }) {
     const label = (
       <label htmlFor={id} className="etiquette">
         {t(`analyses.${code}.params.${p.nom}`, { defaultValue: p.nom })}
-        {!p.requis && <span className="font-normal text-slate-500"> ({t("analyses.facultatif")})</span>}
+        {!p.requis && <span className="font-normal text-slate-600"> ({t("analyses.facultatif")})</span>}
       </label>
     );
     const v = values[p.nom];

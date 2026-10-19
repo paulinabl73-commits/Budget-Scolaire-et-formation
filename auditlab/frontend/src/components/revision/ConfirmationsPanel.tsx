@@ -96,9 +96,9 @@ export default function ConfirmationsPanel({ file }: { file: AuditFile }) {
             {items.map((c) => (
               <tr key={c.id} className={c.ecart && Number(c.ecart) !== 0 && !c.explication ? "bg-amber-50" : ""}>
                 <td className="py-1 pr-3 font-mono text-xs">{c.reference}</td>
-                <td className="py-1 pr-3">{c.tiers}<span className="block text-xs text-slate-500">{t(`circularisation.types.${c.type}`)}{c.compte && ` · ${c.compte}`}</span></td>
+                <td className="py-1 pr-3">{c.tiers}<span className="block text-xs text-slate-600">{t(`circularisation.types.${c.type}`)}{c.compte && ` · ${c.compte}`}</span></td>
                 <td className="py-1 pr-3 text-right font-mono">{n(c.solde_comptable)}</td>
-                <td className="py-1 pr-3">{t(`circularisation.statuts.${c.statut}`)}{c.envoyee_le && <span className="block text-xs text-slate-500">{formatDate(c.envoyee_le)}</span>}</td>
+                <td className="py-1 pr-3">{t(`circularisation.statuts.${c.statut}`)}{c.envoyee_le && <span className="block text-xs text-slate-600">{formatDate(c.envoyee_le)}</span>}</td>
                 <td className="py-1 pr-3 text-right font-mono">{n(c.solde_confirme)}</td>
                 <td className="py-1 pr-3 text-right font-mono">{n(c.ecart)}{c.explication && <span className="block max-w-xs text-left font-sans text-xs text-slate-600">{c.explication}</span>}</td>
                 <td className="py-1 text-xs">

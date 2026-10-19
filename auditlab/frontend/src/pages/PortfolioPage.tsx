@@ -51,7 +51,7 @@ export default function PortfolioPage() {
                 <tr key={c.id}>
                   <th scope="row" className="px-4 py-2 font-medium">
                     <Link to={`/portefeuille/${c.id}`} className="text-marque-700 underline">{c.raison_sociale}</Link>
-                    {!c.actif && <span className="ml-1 text-xs text-slate-500">({t("portefeuille.inactif")})</span>}
+                    {!c.actif && <span className="ml-1 text-xs text-slate-600">({t("portefeuille.inactif")})</span>}
                   </th>
                   <td className="px-4">{t(`portefeuille.formes.${c.forme_juridique}`)}</td>
                   <td className="px-4">{t(`portefeuille.regimes.${c.regime_fiscal}`)}</td>

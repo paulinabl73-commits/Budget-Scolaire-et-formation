@@ -72,7 +72,7 @@ export default function BranchesPanel({ file }: { file: AuditFile }) {
       </section>
       <section className="carte space-y-2" aria-labelledby="branches-comptes">
         <h2 id="branches-comptes" className="text-base font-semibold">{t("branches.comptes")}</h2>
-        <p className="text-xs text-slate-500">{t("branches.aide")}</p>
+        <p className="text-xs text-slate-600">{t("branches.aide")}</p>
         <table className="w-full text-left text-sm">
           <thead className="text-xs text-slate-600">
             <tr><th scope="col" className="py-1 pr-3">{t("branches.compte")}</th><th scope="col" className="py-1 pr-3 text-right">{t("branches.solde")}</th><th scope="col" className="py-1 pr-3">{t("branches.branche")}</th><th scope="col" className="py-1 pr-3">{t("branches.origine")}</th></tr>

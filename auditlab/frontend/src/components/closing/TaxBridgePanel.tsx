@@ -53,7 +53,7 @@ export default function TaxBridgePanel({ file }: { file: AuditFile }) {
             <tr key={`${e.code}-${e.id}`}>
               <th scope="row" className="py-1 pr-3 text-left font-normal">
                 {e.sens === "reintegration" ? "+ " : "− "}{e.libelle}
-                {e.origine === "saisi" && <span className="ml-1 text-xs text-slate-500">({t("passageFiscal.calcule", { montant: formatDecimal(e.calcule ?? "0") })})</span>}
+                {e.origine === "saisi" && <span className="ml-1 text-xs text-slate-600">({t("passageFiscal.calcule", { montant: formatDecimal(e.calcule ?? "0") })})</span>}
                 {e.id && <button type="button" className="ml-2 text-xs underline" onClick={() => void del(`${url}/lines/${e.id}`).then(load)}>{t("immobilisations.retirer")}</button>}
               </th>
               <td className="py-1 text-right font-mono">{formatDecimal(e.montant)}</td>

@@ -175,7 +175,7 @@ function ControlBlock({ mission, control, editable, onRemove, onRemoveProcedure,
       <div className="flex items-start justify-between gap-3">
         <p className="text-sm font-medium">
           {control.libelle}{" "}
-          <span className="text-xs font-normal text-slate-500">
+          <span className="text-xs font-normal text-slate-600">
             ({t(`bibliotheque.types.${control.type_controle}`)}, {t(`bibliotheque.natures.${control.nature}`)},{" "}
             {t(`bibliotheque.frequences.${control.frequence}`)})
           </span>
@@ -185,7 +185,7 @@ function ControlBlock({ mission, control, editable, onRemove, onRemoveProcedure,
         )}
       </div>
       {control.procedures.length === 0 ? (
-        <p className="text-xs text-slate-500">{t("programme.aucuneProcedure")}</p>
+        <p className="text-xs text-slate-600">{t("programme.aucuneProcedure")}</p>
       ) : (
         <ul className="space-y-1">
           {control.procedures.map((p) => (

@@ -69,7 +69,7 @@ export default function JustificationsPanel({ file }: { file: AuditFile }) {
         <tbody className="divide-y divide-slate-100">
           {rows.map((r) => (
             <tr key={r.compte} className={r.signale ? "bg-amber-50/40" : ""}>
-              <th scope="row" className="py-1 pr-3 font-normal"><span className="font-mono">{r.compte}</span> {r.libelle}{r.commentaire && <span className="block text-xs text-slate-500">{r.commentaire}</span>}</th>
+              <th scope="row" className="py-1 pr-3 font-normal"><span className="font-mono">{r.compte}</span> {r.libelle}{r.commentaire && <span className="block text-xs text-slate-600">{r.commentaire}</span>}</th>
               <td className="py-1 pr-3 text-right font-mono">{formatDecimal(r.solde)}</td>
               <td className="py-1 pr-3 text-right font-mono">{r.montant_justifie ? formatDecimal(r.montant_justifie) : "—"}</td>
               <td className="py-1 pr-3 text-right font-mono">{r.ecart && r.ecart !== "0.00" ? formatDecimal(r.ecart) : "—"}</td>

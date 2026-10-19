@@ -26,7 +26,7 @@ export default function TeamEditor({ staff, value, onChange, disabled }: Props) 
         {staff.map((s) => (
           <tr key={s.user_id}>
             <td className="py-1.5">
-              {s.nom} <span className="text-xs text-slate-500">{s.email}</span>
+              {s.nom} <span className="text-xs text-slate-600">{s.email}</span>
             </td>
             <td>
               <select

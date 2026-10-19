@@ -62,7 +62,7 @@ export default function NotificationBell() {
                   <button type="button" className="w-full text-left" onClick={() => openItem(n)}>
                     <p className="font-medium">{n.titre}</p>
                     <p className="text-xs text-slate-700">{n.message}</p>
-                    <p className="mt-0.5 text-[11px] text-slate-500">{formatDateHeure(n.created_at)}</p>
+                    <p className="mt-0.5 text-[11px] text-slate-600">{formatDateHeure(n.created_at)}</p>
                   </button>
                 </li>
               ))}

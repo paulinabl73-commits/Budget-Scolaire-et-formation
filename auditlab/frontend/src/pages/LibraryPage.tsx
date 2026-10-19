@@ -141,14 +141,14 @@ export default function LibraryPage() {
                     {r.controles.map((c) => (
                       <li key={c.id}>
                         {c.libelle}{" "}
-                        <span className="text-xs text-slate-500">
+                        <span className="text-xs text-slate-600">
                           ({t(`bibliotheque.types.${c.type_controle}`)}, {t(`bibliotheque.natures.${c.nature}`)}, {t(`bibliotheque.frequences.${c.frequence}`)})
                         </span>
                       </li>
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-sm text-slate-500">{t("bibliotheque.aucunControle")}</p>
+                  <p className="text-sm text-slate-600">{t("bibliotheque.aucunControle")}</p>
                 )}
               </div>
             </li>

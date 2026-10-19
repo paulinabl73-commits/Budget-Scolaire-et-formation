@@ -35,7 +35,7 @@ export default function VersionsPanel({ workpaperId, current }: { workpaperId: s
         {versions.map((v) => (
           <li key={v.version} className="flex justify-between gap-2 py-0.5">
             <span>{t("versions.version", { version: v.version })}{v.auteur && ` — ${t("versions.par", { auteur: v.auteur })}`}</span>
-            <span className="text-xs text-slate-500">{formatDateHeure(v.created_at)}</span>
+            <span className="text-xs text-slate-600">{formatDateHeure(v.created_at)}</span>
           </li>
         ))}
       </ul>

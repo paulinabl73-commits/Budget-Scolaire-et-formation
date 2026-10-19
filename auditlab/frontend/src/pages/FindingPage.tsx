@@ -81,7 +81,7 @@ export default function FindingPage() {
         {VOLETS.map((k) => (
           <div key={k}>
             <label htmlFor={`f-${k}`} className="etiquette">{t(`constats.volets.${k}`)}</label>
-            <p id={`f-${k}-aide`} className="text-xs text-slate-500">{t(`constats.aides.${k}`)}</p>
+            <p id={`f-${k}-aide`} className="text-xs text-slate-600">{t(`constats.aides.${k}`)}</p>
             <textarea id={`f-${k}`} className="champ" rows={3} disabled={ro} aria-describedby={`f-${k}-aide`}
               value={(form[k] as string | null) ?? ""} onChange={(e) => set({ [k]: e.target.value })} />
           </div>

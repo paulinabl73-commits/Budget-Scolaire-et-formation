@@ -46,12 +46,12 @@ export default function SignoffsPanel({ wp, onSigned }: { wp: Workpaper; onSigne
                   <p className="text-xs text-slate-600">
                     {t("signatures.le", { date: formatDateHeure(s.signed_at) })} · v{s.version}
                   </p>
-                  <p className="font-mono text-[11px] text-slate-500" title={t("signatures.empreinte")}>{s.hash_contenu.slice(0, 16)}…</p>
+                  <p className="font-mono text-[11px] text-slate-600" title={t("signatures.empreinte")}>{s.hash_contenu.slice(0, 16)}…</p>
                 </>
               ) : canSign ? (
                 <button type="button" className="btn-primaire mt-1" onClick={() => sign(step)}>{t(`signatures.signer.${step}`)}</button>
               ) : (
-                <p className="text-sm text-slate-500" title={wp.motifs_refus[step]}>
+                <p className="text-sm text-slate-600" title={wp.motifs_refus[step]}>
                   {t("signatures.enAttente")}
                   {wp.motifs_refus[step] && <span className="block text-xs">{wp.motifs_refus[step]}</span>}
                 </p>

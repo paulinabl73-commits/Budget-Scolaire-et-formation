@@ -88,7 +88,7 @@ export default function LineageGraph({ ds, canEdit = false }: { ds: Dataset; can
         </Alert>
       )}
       <div className="overflow-x-auto">
-        <svg width={width} height={height} role="img" aria-label={t("lignee.graphe")}>
+        <svg width={width} height={height} role="group" aria-label={t("lignee.graphe")}>
           <defs>
             <marker id="fleche" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
               <path d="M0,0 L10,5 L0,10 z" fill="#64748b" />

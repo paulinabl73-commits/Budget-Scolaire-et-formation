@@ -183,7 +183,7 @@ export default function ImportWizard({ upload, initial, initialPreview, onImport
                 <tr>
                   {preview.colonnes.map((c) => (
                     <th key={c.nom} scope="col" className="whitespace-nowrap px-2 py-1 text-left">
-                      {c.nom} <span className="font-normal text-slate-500">({t(`assistant.types.${c.type}`)})</span>
+                      {c.nom} <span className="font-normal text-slate-600">({t(`assistant.types.${c.type}`)})</span>
                     </th>
                   ))}
                 </tr>

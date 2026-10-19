@@ -64,7 +64,7 @@ export default function DataTab({ mission }: { mission: Engagement }) {
                     {d.statut === "pret" ? (
                       <Link to={`/missions/${mission.id}/donnees/${d.id}`} className="text-marque-700 underline">{d.nom}</Link>
                     ) : d.nom}
-                    <span className="ml-2 text-xs text-slate-500">{t(`donnees.kinds.${d.kind}`)}</span>
+                    <span className="ml-2 text-xs text-slate-600">{t(`donnees.kinds.${d.kind}`)}</span>
                     {d.erreur && <span className="block text-xs text-red-800">{d.erreur}</span>}
                   </td>
                   <td className="px-4 text-xs">{d.source_nom}</td>

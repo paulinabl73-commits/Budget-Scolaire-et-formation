@@ -77,7 +77,7 @@ export default function TimeTab({ mission, onChange }: { mission: Engagement; on
                 taux: formatNombre(summary.taux_consommation),
               })}
             </p>
-            <p className="mt-1 text-xs text-slate-500">{t("temps.conversion", { heures: summary.heures_par_jour })}</p>
+            <p className="mt-1 text-xs text-slate-600">{t("temps.conversion", { heures: summary.heures_par_jour })}</p>
           </div>
           <Bars title={t("temps.parPersonne")} rows={summary.par_personne.map((p) => [p.libelle, p.jours])} max={max} />
           <Bars

@@ -38,7 +38,7 @@ export default function RatiosPanel({ file }: { file: AuditFile }) {
         </thead>
         {families.map((f) => (
           <tbody key={f} className="divide-y divide-slate-100">
-            <tr><th scope="rowgroup" colSpan={4} className="pt-3 text-left text-xs uppercase text-slate-500">{t(`ratios.familles.${f}`, { defaultValue: f })}</th></tr>
+            <tr><th scope="rowgroup" colSpan={4} className="pt-3 text-left text-xs uppercase text-slate-600">{t(`ratios.familles.${f}`, { defaultValue: f })}</th></tr>
             {data.ratios.filter((r) => (r.famille ?? "autres") === f).map((r) => (
               <tr key={r.code}>
                 <th scope="row" className="py-1 pr-3 font-normal">{r.libelle}</th>
@@ -51,7 +51,7 @@ export default function RatiosPanel({ file }: { file: AuditFile }) {
           </tbody>
         ))}
       </table>
-      <p className="text-xs text-slate-500">{t("ratios.note")}</p>
+      <p className="text-xs text-slate-600">{t("ratios.note")}</p>
     </section>
   );
 }

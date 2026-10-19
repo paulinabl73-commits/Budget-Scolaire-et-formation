@@ -101,7 +101,7 @@ export default function InspectionTab({ mission }: { mission: Engagement }) {
               {r.date_limite_reponse && ` · ${t("inspection.limite", { date: formatDate(r.date_limite_reponse) })}`}
               {r.destinataire && ` · ${r.destinataire}`}
             </p>
-            <p className="break-all font-mono text-xs text-slate-500">SHA-256 {r.sha256}</p>
+            <p className="break-all font-mono text-xs text-slate-600">SHA-256 {r.sha256}</p>
             <div className="mt-1 flex gap-3">
               {(["pdf", "docx"] as const).map((fmt) => (
                 <button key={fmt} type="button" className="underline" onClick={() => void run(() => download(`/inspection-reports/${r.id}/export?format=${fmt}`, undefined, `rapport.${fmt}`))}>
@@ -164,7 +164,7 @@ function FollowUp({ item, disabled, onSave }: { item: Previous; disabled: boolea
     <li className="space-y-1 py-2">
       <p>
         <span className="font-mono">{item.mission} · {item.reference}</span> {item.recommandation ?? item.titre}
-        <span className="text-slate-500"> · {t("inspection.suivi.plans", { liste: item.plans.map((p) => t(`plans.statuts.${p}`, { defaultValue: p })).join(", ") || "—" })}</span>
+        <span className="text-slate-600"> · {t("inspection.suivi.plans", { liste: item.plans.map((p) => t(`plans.statuts.${p}`, { defaultValue: p })).join(", ") || "—" })}</span>
       </p>
       <form className="flex flex-wrap items-end gap-2" onSubmit={(e) => { e.preventDefault(); void onSave({ statut, commentaire: comment || null }); }}>
         <div>

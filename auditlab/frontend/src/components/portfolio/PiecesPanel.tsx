@@ -72,11 +72,11 @@ export default function PiecesPanel({ closingId, exercice }: { closingId: string
           <tbody className="divide-y divide-slate-100">
             {data.pieces.map((p) => (
               <tr key={p.id}>
-                <th scope="row" className="py-1 pr-3 font-normal">{p.libelle}{p.commentaire && <span className="block text-xs text-slate-500">{p.commentaire}</span>}</th>
+                <th scope="row" className="py-1 pr-3 font-normal">{p.libelle}{p.commentaire && <span className="block text-xs text-slate-600">{p.commentaire}</span>}</th>
                 <td className="py-1 pr-3">{formatDate(p.date_limite)}</td>
                 <td className="py-1 pr-3">
                   <span className={`rounded px-2 py-0.5 text-xs ${PIECE_BADGE[p.statut]}`}>{t(`pieces.statuts.${p.statut}`)}</span>
-                  {p.relances.length > 0 && <span className="ml-1 text-xs text-slate-500">{t("pieces.relancee", { count: p.relances.length })}</span>}
+                  {p.relances.length > 0 && <span className="ml-1 text-xs text-slate-600">{t("pieces.relancee", { count: p.relances.length })}</span>}
                 </td>
                 <td className="py-1 pr-3"><PieceFiles piece={p} /></td>
                 <td className="py-1 text-right">

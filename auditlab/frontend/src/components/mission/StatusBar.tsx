@@ -39,7 +39,7 @@ export default function StatusBar({ mission, onChange }: Props) {
                 ? "bg-marque-100 text-marque-900"
                 : i === current
                   ? "bg-marque-600 text-white"
-                  : "bg-slate-100 text-slate-500"
+                  : "bg-slate-100 text-slate-600"
             }`}
           >
             {i + 1}. {t(`missions.statuts.${s}`)}

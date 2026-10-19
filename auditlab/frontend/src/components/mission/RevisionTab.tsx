@@ -88,7 +88,7 @@ export default function RevisionTab({ mission }: { mission: Engagement }) {
                 <tr key={f.id}>
                   <td className="px-4 py-2">
                     <Link to={`/missions/${mission.id}/revision/${f.id}`} className="font-semibold text-marque-700 underline">{f.exercice}</Link>
-                    <div className="text-xs text-slate-500">{formatDate(f.date_debut)} – {formatDate(f.date_fin)}</div>
+                    <div className="text-xs text-slate-600">{formatDate(f.date_debut)} – {formatDate(f.date_fin)}</div>
                   </td>
                   <td className="px-4 py-2">{f.entite}</td>
                   <td className="px-4 py-2">{f.referentiel}{f.referentiel_ifrs && ` + ${f.referentiel_ifrs}`}</td>

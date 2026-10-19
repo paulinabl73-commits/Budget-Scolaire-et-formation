@@ -47,7 +47,7 @@ export default function DataLinksPanel({ workpaperId, missionId, editable, refre
               <Link to={`/missions/${missionId}/donnees/${l.dataset_id}`} className="font-semibold text-marque-700 underline">{l.dataset_nom}</Link>
               <span className="text-slate-600"> · {t("table.lignes", { n: formatNombre(l.nb_lignes ?? 0) })} · {formatDateHeure(l.created_at)}</span>
               <p className="text-slate-600">{t("liens.historique")} : {l.lignee.noeuds.map(step).join(" → ")}</p>
-              <p className="font-mono text-xs text-slate-500">SHA-256 : {l.empreinte}</p>
+              <p className="font-mono text-xs text-slate-600">SHA-256 : {l.empreinte}</p>
               {l.commentaire && <p>{l.commentaire}</p>}
             </div>
             {editable && (

@@ -39,7 +39,7 @@ export default function DeadlinesPanel({ clientId, canWork }: { clientId: string
             {items.map((d) => (
               <tr key={`${d.rule_id}-${d.echeance}`}>
                 <td className="py-1 pr-3">{formatDate(d.echeance)}</td>
-                <th scope="row" className="py-1 pr-3 font-normal">{d.libelle} <span className="text-xs text-slate-500">({t(`calendrier.natures.${d.nature}`)})</span></th>
+                <th scope="row" className="py-1 pr-3 font-normal">{d.libelle} <span className="text-xs text-slate-600">({t(`calendrier.natures.${d.nature}`)})</span></th>
                 <td className="py-1 pr-3">{d.periode}</td>
                 <td className="py-1 pr-3"><span className={`rounded px-2 py-0.5 text-xs ${BADGE[d.statut]}`}>{t(`calendrier.statuts.${d.statut}`)}{d.fait_le && ` ${formatDate(d.fait_le)}`}</span></td>
                 <td className="py-1">{canWork && <button type="button" className="underline" onClick={() => void toggle(d)}>{d.statut === "fait" ? t("calendrier.rouvrir") : t("calendrier.marquerFait")}</button>}</td>

@@ -84,14 +84,14 @@ export default function ActionPlansPanel({ findingId, canCreate, extra }: {
             <div className="flex flex-wrap items-center gap-2">
               <PlanStatusBadge plan={p} />
               <span className="font-medium">{p.description}</span>
-              {p.propose_par_audite && <span className="text-xs text-slate-500">({t("plans.proposeAudite")})</span>}
+              {p.propose_par_audite && <span className="text-xs text-slate-600">({t("plans.proposeAudite")})</span>}
             </div>
             <p className="text-slate-600">
               {t("plans.responsable")} : {p.responsable ?? "—"} · {t("plans.echeance")} : {formatDate(p.echeance)}
               {p.commentaire && ` · ${p.commentaire}`}
             </p>
             {p.relances.length > 0 && (
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-600">
                 {t("plans.relances")} : {p.relances.map((r) => `${t(`plans.typesRelance.${r.type}`)} (${formatDate(r.date)})`).join(", ")}
               </p>
             )}

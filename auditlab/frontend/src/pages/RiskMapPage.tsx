@@ -18,7 +18,7 @@ function EntityList({ items }: { items: MapEntity[] }) {
         <li key={e.id} className="flex items-center justify-between py-2">
           <span>
             {e.nom}{" "}
-            <span className="text-xs text-slate-500">{t(`univers.types.${e.type}`)}</span>
+            <span className="text-xs text-slate-600">{t(`univers.types.${e.type}`)}</span>
           </span>
           <span className="flex items-center gap-3">
             {e.score_risque !== null && (

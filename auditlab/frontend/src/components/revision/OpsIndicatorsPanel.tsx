@@ -27,7 +27,7 @@ export interface Indicators {
 
 export function Verdict({ ok }: { ok: boolean | null }) {
   const { t } = useTranslation();
-  if (ok === null) return <span className="text-slate-500">{t("indicateursOps.nonEvaluable")}</span>;
+  if (ok === null) return <span className="text-slate-600">{t("indicateursOps.nonEvaluable")}</span>;
   return ok ? <span className="text-emerald-700">{t("indicateursOps.conforme")}</span> : <span className="font-medium text-red-700">{t("indicateursOps.depassement")}</span>;
 }
 
@@ -78,7 +78,7 @@ export default function OpsIndicatorsPanel({ file }: { file: AuditFile }) {
             </tbody>
           </table>
         )}
-        <p className="text-xs text-slate-500">{t("indicateursOps.frais.note")}</p>
+        <p className="text-xs text-slate-600">{t("indicateursOps.frais.note")}</p>
       </section>
       <section className="carte space-y-2" aria-labelledby="ops-reserves">
         <h2 id="ops-reserves" className="text-base font-semibold">{t("indicateursOps.reserves.titre")}</h2>
@@ -108,7 +108,7 @@ export default function OpsIndicatorsPanel({ file }: { file: AuditFile }) {
             </tbody>
           </table>
         )}
-        <p className="text-xs text-slate-500">{t("indicateursOps.reserves.note")}</p>
+        <p className="text-xs text-slate-600">{t("indicateursOps.reserves.note")}</p>
       </section>
       <section className="carte space-y-2" aria-labelledby="ops-placements">
         <h2 id="ops-placements" className="text-base font-semibold">{t("indicateursOps.placements.titre")}</h2>
@@ -128,7 +128,7 @@ export default function OpsIndicatorsPanel({ file }: { file: AuditFile }) {
               <tbody className="divide-y divide-slate-100">
                 {data.placements.categories.map((c) => (
                   <tr key={c.categorie}>
-                    <th scope="row" className="py-1 pr-3 font-normal">{c.libelle} <span className="font-mono text-xs text-slate-500">({c.categorie})</span></th>
+                    <th scope="row" className="py-1 pr-3 font-normal">{c.libelle} <span className="font-mono text-xs text-slate-600">({c.categorie})</span></th>
                     <td className="py-1 pr-3 text-right font-mono">{formatDecimal(c.montant)}</td>
                     <td className="py-1 pr-3 text-right font-mono">{pct(c.part)}</td>
                     <td className="py-1 pr-3 text-right font-mono">{pct(c.limite)}</td>
@@ -140,7 +140,7 @@ export default function OpsIndicatorsPanel({ file }: { file: AuditFile }) {
             <p className="text-sm">{t("indicateursOps.placements.rendement", { taux: pct(data.placements.rendement), produits: data.placements.produits ? formatDecimal(data.placements.produits) : "—" })}</p>
           </>
         )}
-        <p className="text-xs text-slate-500">{t("indicateursOps.placements.note")}</p>
+        <p className="text-xs text-slate-600">{t("indicateursOps.placements.note")}</p>
       </section>
     </div>
   );

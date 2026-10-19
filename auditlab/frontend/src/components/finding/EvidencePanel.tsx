@@ -76,9 +76,9 @@ export default function EvidencePanel({ findingId, missionId, papers, editable }
                 ) : e.workpaper_id ? (
                   <Link className="text-marque-700 underline" to={`/missions/${missionId}/papiers/${e.workpaper_id}`}>{e.libelle}</Link>
                 ) : e.libelle}
-                <span className="text-slate-500"> · {formatDateHeure(e.created_at)}</span>
+                <span className="text-slate-600"> · {formatDateHeure(e.created_at)}</span>
                 {e.commentaire && <p className="text-slate-700">{e.commentaire}</p>}
-                {e.empreinte && <p className="font-mono text-xs text-slate-500">SHA-256 : {e.empreinte}</p>}
+                {e.empreinte && <p className="font-mono text-xs text-slate-600">SHA-256 : {e.empreinte}</p>}
                 {e.empreinte && e.empreinte_actuelle && e.empreinte !== e.empreinte_actuelle && (
                   <p className="text-xs text-red-700">{t("preuves.modifiee")}</p>
                 )}

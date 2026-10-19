@@ -67,7 +67,7 @@ export default function BankReconciliationsPanel({ file }: { file: AuditFile }) 
         <tbody className="divide-y divide-slate-100 align-top">
           {data.rapprochements.map((r) => (
             <tr key={r.id} className={r.anomalies.length ? "bg-red-50" : ""}>
-              <td className="py-1 pr-3"><button type="button" className="font-mono underline" aria-expanded={open === r.id} onClick={() => setOpen(open === r.id ? null : r.id)}>{r.compte}</button><span className="block text-xs text-slate-500">{formatDate(r.date_releve)}</span></td>
+              <td className="py-1 pr-3"><button type="button" className="font-mono underline" aria-expanded={open === r.id} onClick={() => setOpen(open === r.id ? null : r.id)}>{r.compte}</button><span className="block text-xs text-slate-600">{formatDate(r.date_releve)}</span></td>
               <td className="py-1 pr-3 text-right font-mono">{n(r.solde_releve)}</td>
               <td className="py-1 pr-3 text-right font-mono">{n(r.solde_comptable)}</td>
               <td className="py-1 pr-3 text-right font-mono">{n(r.non_rapproche)}</td>

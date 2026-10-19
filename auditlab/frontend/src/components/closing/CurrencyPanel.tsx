@@ -51,7 +51,7 @@ export default function CurrencyPanel({ file }: { file: AuditFile }) {
           <tbody className="divide-y divide-slate-100">
             {data.positions.map((p) => (
               <tr key={p.id}>
-                <th scope="row" className="py-1 pr-3 font-normal"><span className="font-mono">{p.compte}</span> {p.libelle} <span className="text-xs text-slate-500">({t(`devisesCloture.natures.${p.nature}`)})</span></th>
+                <th scope="row" className="py-1 pr-3 font-normal"><span className="font-mono">{p.compte}</span> {p.libelle} <span className="text-xs text-slate-600">({t(`devisesCloture.natures.${p.nature}`)})</span></th>
                 <td className="py-1 pr-3 text-right font-mono">{formatDecimal(p.montant_devise)} {p.devise}</td>
                 <td className="py-1 pr-3 text-right font-mono">{formatDecimal(p.valeur_comptable)}</td>
                 <td className="py-1 pr-3 text-right font-mono">{p.cours ?? "—"}</td>

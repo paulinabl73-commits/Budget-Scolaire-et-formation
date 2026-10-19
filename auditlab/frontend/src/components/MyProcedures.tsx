@@ -27,7 +27,7 @@ export default function MyProcedures() {
                   {p.engagement_reference} · {p.reference}
                 </Link>{" "}
                 {p.description}
-                <span className="block text-xs text-slate-500">{p.controle}</span>
+                <span className="block text-xs text-slate-600">{p.controle}</span>
               </span>
               <span className={`whitespace-nowrap text-xs ${p.en_retard ? "font-semibold text-red-800" : "text-slate-600"}`}>
                 {p.echeance ? formatDate(p.echeance) : ""} · {t(`programme.statuts.${p.statut}`)}

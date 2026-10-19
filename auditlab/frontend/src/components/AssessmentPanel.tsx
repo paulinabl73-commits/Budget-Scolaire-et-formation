@@ -86,7 +86,7 @@ export default function AssessmentPanel({ entity, canManage, onSaved }: Props) {
             <div key={c.code} className="grid grid-cols-3 items-center gap-3">
               <label htmlFor={`note-${c.code}`} className="etiquette col-span-2">
                 {c.libelle}{" "}
-                <span className="text-xs font-normal text-slate-500">
+                <span className="text-xs font-normal text-slate-600">
                   ({t(`criteres.axes.${c.axe}`)} · {t("criteres.poids")} {c.poids})
                 </span>
               </label>

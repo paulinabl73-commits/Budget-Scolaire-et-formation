@@ -34,7 +34,7 @@ export default function PortalPieces() {
       <ul className="divide-y divide-slate-100 text-sm">
         {rows.map((p) => (
           <li key={p.id} className="flex flex-wrap items-center gap-3 py-2">
-            <span className="min-w-64 flex-1">{p.libelle} <span className="text-xs text-slate-500">({p.client}, {p.exercice})</span>
+            <span className="min-w-64 flex-1">{p.libelle} <span className="text-xs text-slate-600">({p.client}, {p.exercice})</span>
               {p.commentaire && p.statut !== "recue" && <span className="block text-xs text-red-700">{p.commentaire}</span>}
             </span>
             <span>{t("pieces.avant", { date: formatDate(p.date_limite) })}</span>
