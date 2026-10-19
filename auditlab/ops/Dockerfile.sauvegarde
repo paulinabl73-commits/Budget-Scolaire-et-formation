@@ -1,0 +1,6 @@
+# Sauvegarde quotidienne chiffrée (NF-12) : client PostgreSQL 16, age, tar.
+FROM postgres:16-alpine
+RUN apk add --no-cache age coreutils
+COPY sauvegarde.sh restauration.sh planificateur.sh /ops/
+RUN chmod 0755 /ops/*.sh
+ENTRYPOINT ["/ops/planificateur.sh"]

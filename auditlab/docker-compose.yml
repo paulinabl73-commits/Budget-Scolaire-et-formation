@@ -114,6 +114,53 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  # Sauvegarde quotidienne chiffrée de la base, des fichiers et des tables (NF-12).
+  # SAUVEGARDE_CLE_PUBLIQUE : clé publique age (age-keygen) ; la clé privée est gardée hors du
+  # serveur, elle ne sert qu'à la restauration (ops/restauration.sh).
+  sauvegarde:
+    build:
+      context: ./ops
+      dockerfile: Dockerfile.sauvegarde
+    environment:
+      PGHOST: db
+      PGUSER: auditlab
+      PGPASSWORD: ${POSTGRES_PASSWORD:-auditlab}
+      PGDATABASE: auditlab
+      SAUVEGARDE_DIR: /sauvegardes
+      SAUVEGARDE_CLE_PUBLIQUE: ${SAUVEGARDE_CLE_PUBLIQUE:?clé publique age de sauvegarde attendue}
+      SAUVEGARDE_SOURCES: /donnees/fichiers /donnees/tables
+      SAUVEGARDE_JOURS: ${SAUVEGARDE_JOURS:-30}
+      SAUVEGARDE_HEURE: ${SAUVEGARDE_HEURE:-02:00}
+    volumes:
+      - files:/donnees/fichiers:ro
+      - datasets:/donnees/tables:ro
+      - ${SAUVEGARDE_HOTE:-./sauvegardes}:/sauvegardes
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Restauration d'une sauvegarde (docs/exploitation.md) : service à la demande uniquement.
+  restauration:
+    profiles: ["restauration"]
+    build:
+      context: ./ops
+      dockerfile: Dockerfile.sauvegarde
+    entrypoint: ["/ops/restauration.sh", "/restaurer", "/cle.txt", "/donnees"]
+    environment:
+      PGHOST: db
+      PGUSER: auditlab
+      PGPASSWORD: ${POSTGRES_PASSWORD:-auditlab}
+      PGDATABASE: auditlab
+    volumes:
+      - files:/donnees/fichiers
+      - datasets:/donnees/tables
+      - ${RESTAURATION_SOURCE:-./restaurer}:/restaurer:ro
+      - ${RESTAURATION_CLE:-./cle-sauvegarde.txt}:/cle.txt:ro
+    depends_on:
+      db:
+        condition: service_healthy
+
   frontend:
     build: ./frontend
     ports:
