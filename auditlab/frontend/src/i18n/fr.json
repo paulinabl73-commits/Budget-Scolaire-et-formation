@@ -2727,6 +2727,14 @@
     "ecart": "Écart",
     "nonDeclare": "non déclaré",
     "ca": "CA",
-    "totalCa": "Total comptable {{comptable}}, déclaré {{declare}}, écart {{ecart}} (écart toléré {{tolerance}})."
+    "totalCa": "Total comptable {{comptable}}, déclaré {{declare}}, écart {{ecart}} (écart toléré {{tolerance}}).",
+    "tvaTitre": "TVA comptabilisée et déclarée",
+    "collectee": "TVA collectée",
+    "deductible": "TVA déductible",
+    "tva": "TVA",
+    "tauxManquant": "TVA théorique : taux normal de TVA à saisir dans les paramètres fiscaux du pays.",
+    "theorique": "TVA théorique au taux de {{taux}} % sur le chiffre d'affaires : {{theorique}} ; TVA collectée comptabilisée {{collectee}} ; écart {{ecart}} (opérations exonérées ou à taux réduit à expliquer).",
+    "creditSansDeclaration": "Crédit de TVA comptabilisé {{solde}} : aucune déclaration importée pour le justifier.",
+    "credit": "Crédit de TVA comptabilisé {{solde}}, crédit reporté sur la déclaration de {{mois}} : {{declare}} ; écart {{ecart}}."
   }
 }

@@ -24,6 +24,7 @@ import CurrencyPanel from "../components/closing/CurrencyPanel";
 import OpsClosingPanel from "../components/closing/OpsClosingPanel";
 import EntriesExportPanel from "../components/closing/EntriesExportPanel";
 import TaxReviewPanel from "../components/closing/TaxReviewPanel";
+import VatPanel from "../components/closing/VatPanel";
 import IfrsPanel from "../components/revision/IfrsPanel";
 import ImportsPanel from "../components/revision/ImportsPanel";
 import LeadSchedulesPanel from "../components/revision/LeadSchedulesPanel";
@@ -124,7 +125,7 @@ export default function AuditFilePage() {
       {view === "ifrs" && <IfrsPanel file={file} />}
       {view === "branches" && <BranchesPanel file={file} />}
       {view === "ops" && <><OpsIndicatorsPanel file={file} /><OpsControlsPanel file={file} /></>}
-      {view === "fiscal" && <TaxReviewPanel file={file} />}
+      {view === "fiscal" && <><TaxReviewPanel file={file} onImported={() => setVersion((v) => v + 1)} /><VatPanel file={file} version={version} /></>}
       {view === "inventaire" && <><EntriesExportPanel file={file} /><FixedAssetsPanel file={file} /><StockPanel file={file} /><AccrualsPanel file={file} /><ProvisionsPanel file={file} /><CurrencyPanel file={file} />{file.referentiel?.startsWith("CIPRES") && <OpsClosingPanel file={file} />}</>}
       {view === "rapprochements" && <ReconciliationsPanel file={file} />}
       {view === "justification" && <JustificationsPanel file={file} />}

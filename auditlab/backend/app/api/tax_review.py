@@ -1,5 +1,6 @@
 """Révision fiscale d'une clôture : chiffre d'affaires comptable et déclaré en TVA mois par
-mois (RCO-18), TVA collectée et déductible comptabilisée et déclarée, crédit de TVA (RCO-19).
+mois (RCO-18), TVA collectée et déductible comptabilisée et déclarée, crédit de TVA justifié
+par la dernière déclaration, TVA théorique au taux normal du pays (RCO-19).
 
 Montants comptables tirés du grand livre N : chiffre d'affaires = crédits − débits des
 comptes de ventes, TVA collectée = crédits − débits, TVA déductible = débits − crédits ;
@@ -190,3 +191,83 @@ async def upload_returns(
 def read_turnover(file_id: uuid.UUID, user: CurrentUser, db: DbSession) -> dict[str, Any]:
     file, _ = _context(db, file_id, user, False)
     return turnover(db, file)
+
+
+def _compare(
+    months: list[str], books: dict[str, Decimal], declared: dict[str, Decimal], tol: Decimal
+) -> list[dict[str, Any]]:
+    rows = []
+    for month in months:
+        b, d = books.get(month, ZERO), declared.get(month)
+        gap = b - d if d is not None else None
+        rows.append(
+            {
+                "mois": month,
+                "comptable": str(b),
+                "declare": str(d) if d is not None else None,
+                "ecart": str(gap) if gap is not None else None,
+                "concordant": gap is not None and abs(gap) <= tol,
+            }
+        )
+    return rows
+
+
+def vat(db: Session, file: AuditFile) -> dict[str, Any]:
+    from app.revision.mapping import assignments
+
+    frame = _ledger(db, file)
+    acc = accounts_of(db, file)
+    tr = returns_of(db, file)
+    lines = sorted(tr.tva if tr else [], key=lambda r: r["mois"])
+    tol = _tolerance(db, file)
+    months = _months(file)
+
+    def declared(field: str) -> dict[str, Decimal]:
+        return {r["mois"]: Decimal(r[field]) for r in lines if r.get(field) not in (None, "")}
+
+    collected = _compare(
+        months, monthly(frame, acc.get("tva_collectee", []), True), declared("tva_collectee"), tol
+    )
+    deductible = _compare(
+        months,
+        monthly(frame, acc.get("tva_deductible", []), False),
+        declared("tva_deductible"),
+        tol,
+    )
+    rate = resolve(db, file.pays or "", file.exercice, "taux_tva_normal")
+    turnover_total = sum(monthly(frame, acc.get("chiffre_affaires", []), True).values(), ZERO)
+    collected_total = sum((Decimal(r["comptable"]) for r in collected), ZERO)
+    theoretical = (turnover_total * rate.valeur / 100).quantize(Decimal("0.01")) if rate else None
+    books = {a.compte: a.soldes.get("N", ZERO) for a in assignments(db, file)}
+    credit = sum(
+        (v for c, v in books.items() if any(c.startswith(r) for r in acc.get("credit_tva", []))),
+        ZERO,
+    )
+    last = lines[-1] if lines else None
+    reported = (
+        Decimal(last["credit_reporte"])
+        if last and last.get("credit_reporte") not in (None, "")
+        else None
+    )
+    return {
+        "collectee": collected,
+        "deductible": deductible,
+        "tva_theorique": str(theoretical) if theoretical is not None else None,
+        "taux_tva": format(rate.valeur.normalize(), "f") if rate else None,
+        "tva_collectee_totale": str(collected_total),
+        "ecart_theorique": str(collected_total - theoretical) if theoretical is not None else None,
+        "credit_tva": {
+            "solde_comptable": str(credit),
+            "credit_declare": str(reported) if reported is not None else None,
+            "mois_declaration": last["mois"] if last else None,
+            "ecart": str(credit - reported) if reported is not None else None,
+            "justifie": reported is not None and abs(credit - reported) <= tol,
+        },
+        "tolerance": str(tol),
+    }
+
+
+@router.get("/audit-files/{file_id}/vat-reconciliation")
+def read_vat(file_id: uuid.UUID, user: CurrentUser, db: DbSession) -> dict[str, Any]:
+    file, _ = _context(db, file_id, user, False)
+    return vat(db, file)
