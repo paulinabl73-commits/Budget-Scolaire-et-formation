@@ -1688,7 +1688,8 @@
       "ifrs": "IFRS",
       "branches": "Branches",
       "ops": "Contrôles OPS",
-      "controles": "Contrôles comptables"
+      "controles": "Contrôles comptables",
+      "justification": "Justification des comptes"
     },
     "navigation": "Sections du dossier",
     "verrouille": "Rapport émis : dossier verrouillé et archivé, consultation uniquement."
@@ -2501,5 +2502,32 @@
     "depuis": "depuis le {{date}}",
     "tousLettres": "Tous les comptes de tiers sont lettrés.",
     "lancer": "Contrôler les pièces et les doublons (Module 2)"
+  },
+  "justifications": {
+    "titre": "Justification des comptes de bilan",
+    "synthese": "{{justifies}} / {{total}} comptes justifiés · {{signales}} signalé(s) jusqu'à la revue",
+    "seulementSignales": "Seulement les comptes signalés",
+    "montant": "Montant justifié",
+    "commentaire": "Commentaire (nature du justificatif)",
+    "commentaireRevue": "Commentaire de revue (obligatoire si le compte n'est pas justifié)",
+    "justifier": "Justifier",
+    "joindre": "Joindre",
+    "joindreA": "Joindre une pièce au compte {{compte}}",
+    "revoir": "Revue",
+    "revu": "revu",
+    "col": {
+      "compte": "Compte",
+      "solde": "Solde révisé",
+      "justifie": "Justifié",
+      "ecart": "Écart",
+      "statut": "Statut",
+      "pieces": "Pièces"
+    },
+    "statuts": {
+      "justifie": "Justifié",
+      "sans_piece": "Sans pièce",
+      "ecart": "Écart",
+      "non_justifie": "Non justifié"
+    }
   }
 }

@@ -2,9 +2,21 @@
 
 import datetime as dt
 import uuid
+from decimal import Decimal
 from typing import Any
 
-from sqlalchemy import Boolean, Date, Float, ForeignKey, Index, Integer, String, text
+from sqlalchemy import (
+    Boolean,
+    Date,
+    DateTime,
+    Float,
+    ForeignKey,
+    Index,
+    Integer,
+    Numeric,
+    String,
+    text,
+)
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -156,3 +168,24 @@ class ChecklistAnswer(TrackedMixin, Base):
     code: Mapped[str] = mapped_column(String(20))
     statut: Mapped[str] = mapped_column(String(20))  # fait, sans_objet, anomalie
     commentaire: Mapped[str | None] = mapped_column(String(4000), nullable=True)
+
+
+class AccountJustification(TrackedMixin, Base):
+    """Justification d'un compte de bilan d'une clôture (RCO-09) et sa revue."""
+
+    __tablename__ = "account_justifications"
+    __table_args__ = (
+        Index("uq_account_justifications", "audit_file_id", "compte", unique=True,
+              postgresql_where=text("deleted_at IS NULL")),
+    )  # fmt: skip
+
+    client_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("clients.id"), index=True)
+    audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
+    compte: Mapped[str] = mapped_column(String(30))
+    montant_justifie: Mapped[Decimal | None] = mapped_column(Numeric(18, 2), nullable=True)
+    commentaire: Mapped[str | None] = mapped_column(String(4000), nullable=True)
+    revue_le: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    revue_par: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    # Solde revu : un solde modifié après la revue rend le compte de nouveau signalé.
+    solde_revu: Mapped[Decimal | None] = mapped_column(Numeric(18, 2), nullable=True)
+    commentaire_revue: Mapped[str | None] = mapped_column(String(4000), nullable=True)
