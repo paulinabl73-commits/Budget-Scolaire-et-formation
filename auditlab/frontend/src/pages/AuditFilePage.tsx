@@ -23,6 +23,7 @@ import ProvisionsPanel from "../components/closing/ProvisionsPanel";
 import CurrencyPanel from "../components/closing/CurrencyPanel";
 import OpsClosingPanel from "../components/closing/OpsClosingPanel";
 import EntriesExportPanel from "../components/closing/EntriesExportPanel";
+import TaxReviewPanel from "../components/closing/TaxReviewPanel";
 import IfrsPanel from "../components/revision/IfrsPanel";
 import ImportsPanel from "../components/revision/ImportsPanel";
 import LeadSchedulesPanel from "../components/revision/LeadSchedulesPanel";
@@ -39,10 +40,10 @@ import ThirdPartiesPanel from "../components/revision/ThirdPartiesPanel";
 import UnadjustedPanel from "../components/revision/UnadjustedPanel";
 import { formatDate } from "../lib/format";
 
-const VIEWS = ["donnees", "affectation", "planification", "analytique", "ratios", "risques", "ajustements", "cycles", "etats", "tiers", "circularisation", "tresorerie", "synthese", "ifrs", "branches", "ops", "controles", "justification", "rapprochements", "inventaire", "rapport"] as const;
+const VIEWS = ["donnees", "affectation", "planification", "analytique", "ratios", "risques", "ajustements", "cycles", "etats", "tiers", "circularisation", "tresorerie", "synthese", "ifrs", "branches", "ops", "controles", "justification", "rapprochements", "inventaire", "fiscal", "rapport"] as const;
 type View = (typeof VIEWS)[number];
 // Module 6 : révision comptable sans seuil de signification ni opinion.
-const MODULE6: readonly string[] = ["controles", "justification", "rapprochements", "inventaire"];
+const MODULE6: readonly string[] = ["controles", "justification", "rapprochements", "inventaire", "fiscal"];
 const AUDIT_ONLY: readonly string[] = ["planification", "analytique", "risques", "synthese", "rapport", "tresorerie"];
 
 /** Dossier de révision (Module 5) : balances, affectation, seuils, revue analytique. */
@@ -123,6 +124,7 @@ export default function AuditFilePage() {
       {view === "ifrs" && <IfrsPanel file={file} />}
       {view === "branches" && <BranchesPanel file={file} />}
       {view === "ops" && <><OpsIndicatorsPanel file={file} /><OpsControlsPanel file={file} /></>}
+      {view === "fiscal" && <TaxReviewPanel file={file} />}
       {view === "inventaire" && <><EntriesExportPanel file={file} /><FixedAssetsPanel file={file} /><StockPanel file={file} /><AccrualsPanel file={file} /><ProvisionsPanel file={file} /><CurrencyPanel file={file} />{file.referentiel?.startsWith("CIPRES") && <OpsClosingPanel file={file} />}</>}
       {view === "rapprochements" && <ReconciliationsPanel file={file} />}
       {view === "justification" && <JustificationsPanel file={file} />}

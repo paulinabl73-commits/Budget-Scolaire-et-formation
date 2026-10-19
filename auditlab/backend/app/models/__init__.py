@@ -52,6 +52,7 @@ from app.models.portfolio import (
     PieceRequest,
     Provision,
     StockCount,
+    TaxReturns,
 )
 from app.models.program import (
     Control,
@@ -181,6 +182,7 @@ __all__ = [
     "PieceRequest",
     "Provision",
     "StockCount",
+    "TaxReturns",
     "Postponement",
     "ActionPlanStatus",
     "FindingEvidence",

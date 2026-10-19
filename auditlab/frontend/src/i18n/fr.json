@@ -1691,7 +1691,8 @@
       "controles": "Contrôles comptables",
       "justification": "Justification des comptes",
       "rapprochements": "Rapprochements",
-      "inventaire": "Travaux d'inventaire"
+      "inventaire": "Travaux d'inventaire",
+      "fiscal": "Révision fiscale"
     },
     "navigation": "Sections du dossier",
     "verrouille": "Rapport émis : dossier verrouillé et archivé, consultation uniquement."
@@ -2715,5 +2716,17 @@
     "ajouter": "Ajouter le paramètre",
     "aPartirDe": "à partir de {{exercice}}",
     "tousExercices": "tous exercices"
+  },
+  "fiscal": {
+    "caTitre": "Chiffre d'affaires comptable et déclaré",
+    "aide": "Déclarations de TVA de l'exercice en CSV ou Excel : période (mois), chiffre d'affaires déclaré, TVA collectée, TVA déductible, crédit reporté. Montants comptables tirés du grand livre N.",
+    "importer": "Importer les déclarations de TVA",
+    "mois": "Mois",
+    "comptable": "comptable",
+    "declare": "Déclaré",
+    "ecart": "Écart",
+    "nonDeclare": "non déclaré",
+    "ca": "CA",
+    "totalCa": "Total comptable {{comptable}}, déclaré {{declare}}, écart {{ecart}} (écart toléré {{tolerance}})."
   }
 }

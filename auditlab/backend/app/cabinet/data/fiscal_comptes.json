@@ -1,0 +1,13 @@
+{
+  "_commentaire": "Racines de comptes utilisées par la révision fiscale (RCO-18 à RCO-21). Structure du plan, adaptable.",
+  "SYSCOHADA": {
+    "chiffre_affaires": ["70"],
+    "tva_collectee": ["443"],
+    "tva_deductible": ["445"],
+    "credit_tva": ["4449"],
+    "salaires": ["661", "662", "663"],
+    "charges_sociales": ["664"],
+    "impots_salaires": ["641"],
+    "impot_resultat": ["891"]
+  }
+}

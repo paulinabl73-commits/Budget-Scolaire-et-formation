@@ -311,3 +311,18 @@ class FiscalParameter(TrackedMixin, Base):
     valeur: Mapped[Decimal] = mapped_column(Numeric(20, 6))
     unite: Mapped[str | None] = mapped_column(String(30), nullable=True)
     exercice: Mapped[int | None] = mapped_column(Integer, nullable=True)
+
+
+class TaxReturns(TrackedMixin, Base):
+    """Déclarations fiscales importées d'une clôture (RCO-18, RCO-19) : une ligne par mois."""
+
+    __tablename__ = "tax_returns"
+    __table_args__ = (
+        Index("uq_tax_returns_file", "audit_file_id", unique=True,
+              postgresql_where=text("deleted_at IS NULL")),
+    )  # fmt: skip
+
+    client_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("clients.id"), index=True)
+    audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
+    tva: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
+    fichier: Mapped[str | None] = mapped_column(String(255), nullable=True)
