@@ -35,6 +35,8 @@ from app.models.data import Dataset, DatasetKind, DatasetStatus, ScriptRun, Uplo
 from app.storage import copy_to, get_storage
 
 HERE = Path(__file__).resolve().parent
+MAX_TABLES = 20  # comme audit.save, revérifié à la reprise
+MAX_METRICS = 100
 
 
 class ScriptInputError(ValueError):
@@ -183,41 +185,75 @@ def _truncate(text: str) -> str:
     return text[:limit] + "\n… sortie tronquée"
 
 
+class ScriptOutputError(ValueError):
+    """Sortie du script non conforme : rien n'est repris dans la mission."""
+
+
+def _output_file(work: Path, name: Any) -> Path:
+    """Fichier produit par le script : régulier, dans out/, sans lien symbolique. Le script
+    écrit lui-même le manifeste de ses sorties ; sans ce contrôle, il pourrait désigner le
+    Parquet d'une autre mission et l'importer dans la sienne."""
+    out = (work / "out").resolve()
+    candidate = work / str(name)
+    if candidate.is_symlink() or not candidate.is_file():
+        raise ScriptOutputError("Sortie refusée : fichier introuvable ou lien symbolique")
+    resolved = candidate.resolve()
+    if resolved.parent != out:
+        raise ScriptOutputError("Sortie refusée : fichier hors du répertoire de sortie")
+    return resolved
+
+
+def _metrics(raw: Any) -> dict[str, float]:
+    if not isinstance(raw, dict) or len(raw) > MAX_METRICS:
+        raise ScriptOutputError(f"Au plus {MAX_METRICS} indicateurs")
+    out = {}
+    for key, value in raw.items():
+        if isinstance(value, bool) or not isinstance(value, int | float):
+            raise ScriptOutputError(f"Indicateur « {str(key)[:50]} » non numérique")
+        out[str(key)[:100]] = float(value)
+    return out
+
+
 def _collect(db: Session, run: ScriptRun, work: Path, script_name: str) -> None:
     result = json.loads((work / "out" / "result.json").read_text("utf-8"))
-    run.indicateurs = result.get("indicateurs", {})
+    tables = result.get("tables", [])
+    if not isinstance(tables, list) or len(tables) > MAX_TABLES:
+        raise ScriptOutputError(f"Au plus {MAX_TABLES} tables par exécution")
+    files = [(_output_file(work, t.get("fichier")), str(t.get("nom") or "Table")) for t in tables]
+    run.indicateurs = _metrics(result.get("indicateurs", {}))
     inputs = [e["id"] for e in run.entrees if e["type"] == "table"]
     created = []
-    for out in result.get("tables", []):
-        df = pl.read_parquet(work / out["fichier"])
-        written = write_table(df, run.engagement_id)
-        ds = Dataset(
-            engagement_id=run.engagement_id,
-            nom=str(out["nom"])[:200],
-            description=f"Produite par le script « {script_name} »",
-            kind=DatasetKind.SCRIPT.value,
-            statut=DatasetStatus.PRET.value,
-            operation="script",
-            chemin_parquet=written.chemin,
-            nb_lignes=written.nb_lignes,
-            nb_colonnes=written.nb_colonnes,
-            schema=written.schema,
-            totaux_controle=control_totals(written.chemin, written.schema),
-            parquet_sha256=file_sha256(written.chemin),
-            definition={
-                "script_id": str(run.script_id),
-                "execution_id": str(run.id),
-                "code_sha256": run.code_sha256,
-                "entrees": inputs,
-            },  # fmt: skip
-            created_by=run.created_by,
-        )
-        db.add(ds)
-        db.flush()
-        params = {"script": str(run.script_id), "execution": str(run.id),
-                  "code_sha256": run.code_sha256}  # fmt: skip
-        record_operation(db, ds, "script", params, inputs, run.duree_ms)
-        created.append(str(ds.id))
+    with db.begin_nested():  # tout ou rien : aucune table si une sortie est illisible
+        for path, name in files:
+            df = pl.read_parquet(path)
+            written = write_table(df, run.engagement_id)
+            ds = Dataset(
+                engagement_id=run.engagement_id,
+                nom=name[:200],
+                description=f"Produite par le script « {script_name} »",
+                kind=DatasetKind.SCRIPT.value,
+                statut=DatasetStatus.PRET.value,
+                operation="script",
+                chemin_parquet=written.chemin,
+                nb_lignes=written.nb_lignes,
+                nb_colonnes=written.nb_colonnes,
+                schema=written.schema,
+                totaux_controle=control_totals(written.chemin, written.schema),
+                parquet_sha256=file_sha256(written.chemin),
+                definition={
+                    "script_id": str(run.script_id),
+                    "execution_id": str(run.id),
+                    "code_sha256": run.code_sha256,
+                    "entrees": inputs,
+                },  # fmt: skip
+                created_by=run.created_by,
+            )
+            db.add(ds)
+            db.flush()
+            params = {"script": str(run.script_id), "execution": str(run.id),
+                      "code_sha256": run.code_sha256}  # fmt: skip
+            record_operation(db, ds, "script", params, inputs, run.duree_ms)
+            created.append(str(ds.id))
     run.tables = created
 
 
@@ -247,7 +283,7 @@ def run_script(db: Session, run: ScriptRun, script_name: str) -> None:
         else:
             _collect(db, run, work, script_name)
             run.statut, run.erreur = "termine", None
-    except (ScriptInputError, SandboxUnavailable) as exc:
+    except (ScriptInputError, SandboxUnavailable, ScriptOutputError) as exc:
         run.statut, run.erreur = "erreur", str(exc)
     except Exception as exc:  # noqa: BLE001
         run.statut, run.erreur = "erreur", f"Erreur inattendue : {exc}"
