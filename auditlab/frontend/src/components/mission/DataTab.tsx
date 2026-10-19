@@ -17,6 +17,7 @@ export const DS_BADGE: Record<string, string> = {
   en_cours: "bg-sky-100 text-sky-900",
   pret: "bg-green-100 text-green-900",
   erreur: "bg-red-100 text-red-900",
+  purge: "bg-slate-200 text-slate-800",
 };
 
 export default function DataTab({ mission }: { mission: Engagement }) {

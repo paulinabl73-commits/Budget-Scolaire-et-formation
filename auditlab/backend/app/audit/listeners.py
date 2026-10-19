@@ -144,16 +144,30 @@ def _audit_before_flush(session: Session, flush_context: Any, instances: Any) ->
     seal_pending(session, pending)
 
 
+# NF-08 : seule exception au verrou des missions clôturées, la purge des données après leur
+# durée de conservation ne touche que ces colonnes (le contenu purgé est hors base).
+PURGE_COLUMNS = {"statut", "purge_le", "sortie", "updated_at", "updated_by"}
+
+
+def _purge_only(obj: TrackedMixin) -> bool:
+    state = inspect(obj)
+    changed = {a.key for a in state.mapper.column_attrs if state.attrs[a.key].history.has_changes()}
+    return not state.pending and changed <= PURGE_COLUMNS
+
+
 def _refuse_closed_engagements(session: Session) -> None:
     """AUD-22 : aucune écriture sur un objet rattaché à une mission clôturée.
 
     Filet de sécurité commun à toutes les routes : la mission elle-même peut changer de statut
     (c'est la clôture), mais rien de ce qui lui est rattaché ne peut plus être créé ou modifié.
     """
+    purge = session.info.get("purge_conservation", False)
     ids = {
         getattr(obj, "engagement_id", None)
         for obj in list(session.new) + list(session.dirty)
-        if isinstance(obj, TrackedMixin) and session.is_modified(obj)
+        if isinstance(obj, TrackedMixin)
+        and session.is_modified(obj)
+        and not (purge and _purge_only(obj))
     }
     ids.discard(None)
     if not ids:

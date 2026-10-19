@@ -727,7 +727,8 @@
     "statuts": {
       "en_cours": "En cours",
       "pret": "Prête",
-      "erreur": "Erreur"
+      "erreur": "Erreur",
+      "purge": "Purgée (conservation échue)"
     },
     "kinds": {
       "import": "Import",

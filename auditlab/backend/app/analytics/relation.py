@@ -57,6 +57,11 @@ def describe(rel: Relation) -> list[dict[str, Any]]:
 
 
 def relation(db: Session, ds: Dataset, depth: int = 0) -> Relation:
+    if ds.statut == DatasetStatus.PURGE.value:
+        raise RelationError(
+            f"Lignes purgées le {ds.purge_le:%d/%m/%Y} (durée de conservation des données) : "
+            "empreinte et totaux de contrôle restent consultables"
+        )
     if ds.statut != DatasetStatus.PRET.value:
         raise RelationError("La table n'est pas prête")
     if depth > MAX_DEPTH:

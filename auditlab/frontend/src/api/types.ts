@@ -418,7 +418,8 @@ export interface Dataset {
   nom: string;
   description: string | null;
   kind: "import" | "vue" | "analyse" | "script";
-  statut: "en_cours" | "pret" | "erreur";
+  statut: "en_cours" | "pret" | "erreur" | "purge";
+  purge_le?: string | null;
   erreur: string | null;
   parent_dataset_id: string | null;
   source_nom: string | null;

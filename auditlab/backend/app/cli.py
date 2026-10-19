@@ -80,6 +80,19 @@ def cmd_send_reminders(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_purge(args: argparse.Namespace) -> int:
+    from app.analytics.retention import purge
+
+    with SessionLocal() as db:
+        report = purge(db, simulation=args.simulation)
+    verb = "à purger" if args.simulation else "purgée(s)"
+    for r in report:
+        print(f"{r['mission']} (clôturée le {r['cloturee_le'][:10]}) : {r['tables']} table(s), "
+              f"{r['fichiers']} fichier(s) {verb}")  # fmt: skip
+    print(f"{len(report)} mission(s) {verb}.")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="auditlab")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -91,12 +104,17 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser(
         "send-reminders", help="Relances des plans d'action et alertes d'échéances, chaque jour"
     )
+    p = sub.add_parser(
+        "purge-donnees", help="Purge les données après leur durée de conservation (NF-08)"
+    )
+    p.add_argument("--simulation", action="store_true", help="Recense sans rien supprimer")
     args = parser.parse_args(argv)
     commands = {
         "verify-audit-chain": cmd_verify,
         "create-admin": cmd_create_admin,
         "send-emails": cmd_send_emails,
         "send-reminders": cmd_send_reminders,
+        "purge-donnees": cmd_purge,
     }
     return commands[args.cmd](args)
 

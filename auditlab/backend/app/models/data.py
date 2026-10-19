@@ -23,6 +23,7 @@ class DatasetStatus(StrEnum):
     EN_COURS = "en_cours"
     PRET = "pret"
     ERREUR = "erreur"
+    PURGE = "purge"  # lignes supprimées après la durée de conservation (NF-08)
 
 
 class Dataset(TrackedMixin, Base):
@@ -58,6 +59,9 @@ class Dataset(TrackedMixin, Base):
     # Analyse (lot 6) : opération appliquée et résultat de synthèse (tests, graphiques).
     operation: Mapped[str | None] = mapped_column(String(40), nullable=True)
     resultat: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict, server_default="{}")
+    # NF-08 : purge des lignes après la durée de conservation ; métadonnées, empreinte et
+    # totaux de contrôle restent comme trace de la preuve.
+    purge_le: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
 class Upload(TrackedMixin, Base):
@@ -71,6 +75,7 @@ class Upload(TrackedMixin, Base):
     taille: Mapped[int] = mapped_column(BigInteger)
     sha256: Mapped[str] = mapped_column(String(64))
     storage_key: Mapped[str] = mapped_column(String(300), unique=True)
+    purge_le: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
 class DataSource(TrackedMixin, Base):

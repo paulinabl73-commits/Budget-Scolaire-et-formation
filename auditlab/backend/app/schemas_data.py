@@ -36,6 +36,7 @@ class DatasetOut(BaseModel):
     resultat: dict[str, Any] = {}
     created_at: datetime | None = None
     lecture_seule: bool = True
+    purge_le: datetime | None = None  # NF-08
 
 
 class ColumnSpecIn(BaseModel):

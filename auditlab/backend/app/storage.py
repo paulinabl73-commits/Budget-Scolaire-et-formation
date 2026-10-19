@@ -35,6 +35,8 @@ class Storage(Protocol):
 
     def exists(self, key: str) -> bool: ...
 
+    def delete(self, key: str) -> None: ...
+
 
 def _copy_hashing(src: BinaryIO, dst: BinaryIO, max_bytes: int | None) -> tuple[int, str]:
     digest = hashlib.sha256()
@@ -82,6 +84,13 @@ class LocalStorage:
     def exists(self, key: str) -> bool:
         return self._path(key).exists()
 
+    def delete(self, key: str) -> None:
+        """Suppression définitive (purge après la durée de conservation, NF-08)."""
+        path = self._path(key)
+        if path.exists():
+            path.chmod(0o640)
+            path.unlink()
+
 
 class S3Storage:
     def __init__(self, client, bucket: str) -> None:  # noqa: ANN001
@@ -114,6 +123,9 @@ class S3Storage:
         except Exception:  # noqa: BLE001
             return False
         return True
+
+    def delete(self, key: str) -> None:
+        self.client.delete_object(Bucket=self.bucket, Key=key)
 
 
 @lru_cache

@@ -28,7 +28,8 @@ celery.autodiscover_tasks(["app.analytics"], related_name="jobs")
 def daily_followup() -> int:
     """Relances des plans d'action (CON-06), alertes du calendrier fiscal et social (RCO-03),
     relances des pièces demandées aux clients (RCO-04),
-    puis envoi des e-mails en file."""
+    puis envoi des e-mails en file et purge des données expirées (NF-08)."""
+    from app.analytics.retention import purge
     from app.cabinet.calendar import send_calendar_alerts
     from app.cabinet.pieces import send_piece_reminders
     from app.db import SessionLocal
@@ -38,6 +39,7 @@ def daily_followup() -> int:
     with SessionLocal() as db:
         count = send_reminders(db) + send_calendar_alerts(db) + send_piece_reminders(db)
         send_pending(db)
+        purge(db)  # NF-08 : données dont la durée de conservation a expiré
     return count
 
 

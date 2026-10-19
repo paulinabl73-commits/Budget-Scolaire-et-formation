@@ -79,6 +79,8 @@ class Settings(BaseSettings):
     tasks_eager: bool = True
     duckdb_memory_limit: str = "2GB"
     duckdb_threads: int = 4
+    # NF-08 : lignes des tables et fichiers sources purgés N mois après la clôture de la mission.
+    conservation_donnees_mois: int = 60
     # NF-11 : au-delà de ce rang, un bloc trié de la grille est lu dans une copie triée (cache).
     grille_cache_rang: int = 50_000
     grille_cache_heures: int = 2
