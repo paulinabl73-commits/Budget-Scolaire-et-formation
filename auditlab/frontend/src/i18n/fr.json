@@ -2791,5 +2791,24 @@
     "attente": "en attente",
     "viser": "Viser le dossier",
     "retirer": "Retirer le visa"
+  },
+  "documentsCloture": {
+    "titre": "Documents de la clôture",
+    "lieu": "Lieu de signature",
+    "honoraires": "Honoraires (lettre de mission)",
+    "observations": "Observations de l'attestation",
+    "recommandations": "Recommandations au client",
+    "constat": "Constat",
+    "recommandation": "Recommandation",
+    "ajouter": "Ajouter une recommandation",
+    "retirer": "Retirer",
+    "enregistrer": "Enregistrer les paramètres",
+    "enregistre": "Paramètres enregistrés.",
+    "signee": "Attestation de présentation signée par {{par}} le {{le}}",
+    "nonSignee": "Attestation de présentation non signée (les documents portent la mention « PROJET »)",
+    "nonConforme": "Le dossier a été modifié depuis la signature : annulez puis signez à nouveau l'attestation.",
+    "visaAttendu": "Le visa de revue de l'expert-comptable est requis avant la signature.",
+    "signer": "Signer l'attestation",
+    "annuler": "Annuler la signature"
   }
 }

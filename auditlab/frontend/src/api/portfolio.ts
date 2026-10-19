@@ -7,6 +7,7 @@ export interface ClosingSummary {
   etape: string;
   etapes: Record<string, string>;
   date_depot: string | null;
+  revues?: Record<string, unknown>;
 }
 
 export interface PortfolioClient {
@@ -45,6 +46,23 @@ export interface PortfolioStaff {
   contacts: { id: string; nom: string }[];
 }
 
-export const FORMES = ["SA", "SARL", "SAS", "SNC", "SCS", "GIE", "EI", "association", "OPS", "autre"] as const;
-export const REGIMES = ["reel_normal", "reel_simplifie", "entreprenant", "exonere", "autre"] as const;
+export const FORMES = [
+  "SA",
+  "SARL",
+  "SAS",
+  "SNC",
+  "SCS",
+  "GIE",
+  "EI",
+  "association",
+  "OPS",
+  "autre",
+] as const;
+export const REGIMES = [
+  "reel_normal",
+  "reel_simplifie",
+  "entreprenant",
+  "exonere",
+  "autre",
+] as const;
 export const TAILLES = ["tpe", "pme", "grande"] as const;

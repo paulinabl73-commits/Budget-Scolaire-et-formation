@@ -17,7 +17,8 @@ def text_of(resp) -> str:
 def test_rev27_modeles_et_rapports(client, rev, account):  # noqa: F811
     aud, chef, admin = rev["aud"].headers, rev["chef"].headers, account(Role.ADMIN).headers
     templates = client.get("/api/report-templates", headers=aud).json()
-    assert [t["code"] for t in templates] == ["affirmation", "conventions", "opinion"]
+    codes = [t["code"] for t in templates]
+    assert {"affirmation", "conventions", "opinion", "presentation"} <= set(codes)  # RCO-25
     # Modèle modifiable par l'administrateur seulement, versionné.
     sections = next(t for t in templates if t["code"] == "affirmation")["sections"]
     assert (

@@ -27,10 +27,14 @@ class _Values(dict):
 
 
 def seed(db: Any) -> None:
-    """Installe les modèles livrés (tests ; en exploitation, migration 0048)."""
-    doc = json.loads((Path(__file__).parent / "data" / "rapports.json").read_text("utf-8"))
-    for m in doc["modeles"]:
-        db.add(ReportTemplate(code=m["code"], nom=m["nom"], sections=m["sections"]))
+    """Installe les modèles livrés (tests ; en exploitation, migrations 0048 et 0072)."""
+    root = Path(__file__).parents[1]
+    for path in (
+        root / "revision/data/rapports.json",
+        root / "cabinet/data/documents_cloture.json",
+    ):
+        for m in json.loads(path.read_text("utf-8"))["modeles"]:
+            db.add(ReportTemplate(code=m["code"], nom=m["nom"], sections=m["sections"]))
 
 
 def amount(value: Decimal | None) -> str:

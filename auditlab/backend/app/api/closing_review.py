@@ -167,6 +167,10 @@ def withdraw_review(
         )
     if closing.date_depot is not None:
         raise HTTPException(status.HTTP_409_CONFLICT, "Comptes déjà déposés")
+    if (closing.documents or {}).get("signature"):
+        raise HTTPException(  # RCO-25 : l'attestation repose sur le visa de l'expert.
+            status.HTTP_409_CONFLICT, "Attestation de présentation signée : annulez-la d'abord"
+        )
     drop = {"superviseur", "expert"} if niveau == "superviseur" else {niveau}
     closing.revues = {k: v for k, v in closing.revues.items() if k not in drop}
     db.commit()

@@ -1,0 +1,44 @@
+{
+  "_commentaire": "Modèles de documents de la clôture (RCO-25), livrés selon la norme ISRS 4410 (missions de compilation, dite « présentation des comptes ») et les usages de la profession comptable libérale ; modifiables par l'administrateur comme les rapports du Module 5. Variables : {entite}, {forme_juridique}, {rccm}, {identifiant_fiscal}, {exercice}, {date_cloture}, {referentiel}, {total_bilan}, {capitaux_propres}, {resultat}, {chiffre_affaires}, {devise}, {cabinet}, {expert}, {collaborateur}, {lieu}, {date}, {honoraires}, {observations}, {recommandations}, {ecritures}, {points_suspens}, {visas}. La condition « observations » omet la section quand aucune observation n'est saisie.",
+  "modeles": [
+    {
+      "code": "presentation", "nom": "Attestation de l'expert-comptable – mission de présentation des comptes",
+      "sections": [
+        {"titre": "Destinataire", "texte": "À la direction de {entite} ({forme_juridique}, RCCM {rccm}, identifiant fiscal {identifiant_fiscal})."},
+        {"titre": "Mission", "texte": "En exécution de la mission de présentation des comptes qui nous a été confiée, nous avons compilé les états financiers de {entite} relatifs à l'exercice clos le {date_cloture}, établis selon le {referentiel}. Ces états font apparaître un total de bilan de {total_bilan} {devise}, un chiffre d'affaires de {chiffre_affaires} {devise} et un résultat de {resultat} {devise}."},
+        {"titre": "Responsabilités", "texte": "La direction est responsable de l'exactitude et de l'exhaustivité des informations fournies. Notre mission, conduite selon la norme internationale ISRS 4410 relative aux missions de compilation, n'est ni un audit ni un examen limité : nous n'avons pas vérifié les informations communiquées et n'exprimons donc aucune opinion ni conclusion d'assurance sur ces états financiers."},
+        {"titre": "Observations", "si": "observations", "texte": "{observations}"},
+        {"titre": "Signature", "texte": "Fait à {lieu}, le {date}.\n{expert}, expert-comptable – {cabinet}"}
+      ]
+    },
+    {
+      "code": "lettre_mission_cloture", "nom": "Lettre de mission – présentation des comptes annuels",
+      "sections": [
+        {"titre": "Objet", "texte": "Madame, Monsieur, nous avons le plaisir de vous confirmer les termes de la mission de présentation des comptes annuels de {entite} pour l'exercice clos le {date_cloture}, conduite selon la norme ISRS 4410 et le {referentiel}."},
+        {"titre": "Nature et limites de la mission", "texte": "Nous établirons le bilan, le compte de résultat et les notes annexes à partir des pièces et informations que vous nous communiquerez. Cette mission ne constitue ni un audit ni un examen limité et ne vise pas à détecter les fraudes ou irrégularités."},
+        {"titre": "Vos obligations", "texte": "Vous vous engagez à mettre à notre disposition, dans les délais convenus, l'ensemble des documents comptables, pièces justificatives et informations nécessaires, et à nous signaler tout événement significatif survenu après la clôture. Une lettre d'affirmation vous sera demandée en fin de mission."},
+        {"titre": "Équipe et honoraires", "texte": "La mission sera dirigée par {expert}, expert-comptable, assisté(e) de {collaborateur}. Honoraires convenus : {honoraires}."},
+        {"titre": "Acceptation", "texte": "Fait à {lieu}, le {date}. Nous vous remercions de nous retourner un exemplaire de la présente lettre revêtu de votre signature précédée de la mention « bon pour accord ».\nPour {cabinet} : {expert}\nPour {entite} : la direction"}
+      ]
+    },
+    {
+      "code": "recommandations", "nom": "Lettre de recommandations au client",
+      "sections": [
+        {"titre": "Objet", "texte": "Madame, Monsieur, à l'occasion de la clôture de l'exercice {exercice} de {entite}, nous avons relevé les points ci-après, que nous portons à votre attention afin d'améliorer la tenue de la comptabilité et le contrôle interne."},
+        {"titre": "Recommandations", "texte": "{recommandations}"},
+        {"titre": "Conclusion", "texte": "Ces observations ne remettent pas en cause les comptes présentés. Nous restons à votre disposition pour vous accompagner dans leur mise en œuvre.\nFait à {lieu}, le {date}. {expert}, expert-comptable – {cabinet}"}
+      ]
+    },
+    {
+      "code": "note_cloture", "nom": "Note de synthèse de clôture",
+      "sections": [
+        {"titre": "Dossier", "texte": "{entite} – exercice clos le {date_cloture} ({referentiel}). Expert-comptable : {expert} ; collaborateur : {collaborateur}."},
+        {"titre": "Chiffres clés", "texte": "Total du bilan : {total_bilan} {devise}. Chiffre d'affaires : {chiffre_affaires} {devise}. Capitaux propres : {capitaux_propres} {devise}. Résultat : {resultat} {devise}."},
+        {"titre": "Travaux d'inventaire", "texte": "Écritures d'inventaire acceptées : {ecritures}."},
+        {"titre": "Points en suspens", "texte": "{points_suspens}"},
+        {"titre": "Observations", "si": "observations", "texte": "{observations}"},
+        {"titre": "Revue", "texte": "{visas}"}
+      ]
+    }
+  ]
+}

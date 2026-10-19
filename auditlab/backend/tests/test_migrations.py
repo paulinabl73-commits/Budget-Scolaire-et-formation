@@ -36,7 +36,7 @@ def test_migrations_aller_retour_et_donnees_de_depart():
         "currencies": 6,
         "program_steps": 50,
         "dsf_models": 1,
-        "report_templates": 3,
+        "report_templates": 7,  # 3 rapports (REV-27) et 4 documents de clôture (RCO-25)
     }
     # Les valeurs JSONB des référentiels sont des tableaux, pas des chaînes ré-encodées.
     with engine.connect() as conn:

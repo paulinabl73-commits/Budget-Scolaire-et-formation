@@ -71,6 +71,8 @@ class Closing(TrackedMixin, Base):
     date_depot: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
     # Visas de revue du dossier (RCO-23) : superviseur puis expert-comptable.
     revues: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict, server_default="{}")
+    # Paramètres des documents et signature de l'attestation de présentation (RCO-25).
+    documents: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict, server_default="{}")
 
 
 class CalendarRule(TrackedMixin, Base):
