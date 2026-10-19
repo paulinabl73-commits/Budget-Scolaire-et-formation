@@ -2589,5 +2589,29 @@
       "date_cession": "Date de cession",
       "prix_cession": "Prix de cession"
     }
+  },
+  "stocks": {
+    "titre": "Stocks",
+    "aide": "Inventaire physique (référence, compte, quantité, coût unitaire et valeur nette de réalisation facultatifs) et entrées de l'exercice (référence, date, nature « Initial » pour le stock d'ouverture, quantité, prix unitaire), en CSV ou Excel.",
+    "importer": {
+      "inventory": "Importer l'inventaire physique",
+      "movements": "Importer les entrées de l'exercice"
+    },
+    "methode": "Méthode de valorisation",
+    "methodes": {
+      "cmp": "Coût moyen pondéré",
+      "peps": "Premier entré, premier sorti"
+    },
+    "nonValorises": "Articles sans coût connu : {{liste}}.",
+    "variation": "Compte {{compte}} : stock final {{final}}, solde comptable {{comptable}}, variation {{variation}}.",
+    "depreciationLigne": "Dépréciation {{compte}} : requise {{requise}}, comptabilisée {{comptabilisee}}.",
+    "col": {
+      "article": "Article",
+      "compte": "Compte",
+      "quantite": "Quantité",
+      "cout": "Coût unitaire",
+      "valeur": "Valeur",
+      "depreciation": "Dépréciation"
+    }
   }
 }

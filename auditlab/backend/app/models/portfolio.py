@@ -213,3 +213,20 @@ class FixedAsset(TrackedMixin, Base):
     coefficient: Mapped[Decimal | None] = mapped_column(Numeric(5, 2), nullable=True)
     date_cession: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
     prix_cession: Mapped[Decimal | None] = mapped_column(Numeric(18, 2), nullable=True)
+
+
+class StockCount(TrackedMixin, Base):
+    """Inventaire physique et entrées de stock d'une clôture (RCO-12)."""
+
+    __tablename__ = "stock_counts"
+    __table_args__ = (
+        Index("uq_stock_counts_file", "audit_file_id", unique=True,
+              postgresql_where=text("deleted_at IS NULL")),
+    )  # fmt: skip
+
+    client_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("clients.id"), index=True)
+    audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
+    methode: Mapped[str] = mapped_column(String(10), default="cmp")  # cmp, peps
+    inventaire: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
+    mouvements: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
+    fichiers: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)

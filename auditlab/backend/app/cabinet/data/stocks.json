@@ -1,0 +1,12 @@
+{
+  "_commentaire": "Comptes associés à chaque racine de stock (RCO-12) : variation, dépréciation, dotation et reprise. Structure du plan, adaptable.",
+  "SYSCOHADA": {
+    "31": {"variation": "6031", "depreciation": "391", "dotation": "6593", "reprise": "7593"},
+    "32": {"variation": "6032", "depreciation": "392", "dotation": "6593", "reprise": "7593"},
+    "33": {"variation": "6033", "depreciation": "393", "dotation": "6593", "reprise": "7593"},
+    "34": {"variation": "7341", "depreciation": "394", "dotation": "6593", "reprise": "7593"},
+    "35": {"variation": "7351", "depreciation": "395", "dotation": "6593", "reprise": "7593"},
+    "36": {"variation": "736", "depreciation": "396", "dotation": "6593", "reprise": "7593"},
+    "37": {"variation": "737", "depreciation": "397", "dotation": "6593", "reprise": "7593"}
+  }
+}

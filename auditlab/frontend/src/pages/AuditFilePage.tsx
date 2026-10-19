@@ -17,6 +17,7 @@ import DsfPanel from "../components/revision/DsfPanel";
 import FinancialStatementsPanel from "../components/revision/FinancialStatementsPanel";
 import JustificationsPanel from "../components/revision/JustificationsPanel";
 import FixedAssetsPanel from "../components/closing/FixedAssetsPanel";
+import StockPanel from "../components/closing/StockPanel";
 import IfrsPanel from "../components/revision/IfrsPanel";
 import ImportsPanel from "../components/revision/ImportsPanel";
 import LeadSchedulesPanel from "../components/revision/LeadSchedulesPanel";
@@ -117,7 +118,7 @@ export default function AuditFilePage() {
       {view === "ifrs" && <IfrsPanel file={file} />}
       {view === "branches" && <BranchesPanel file={file} />}
       {view === "ops" && <><OpsIndicatorsPanel file={file} /><OpsControlsPanel file={file} /></>}
-      {view === "inventaire" && <FixedAssetsPanel file={file} />}
+      {view === "inventaire" && <><FixedAssetsPanel file={file} /><StockPanel file={file} /></>}
       {view === "rapprochements" && <ReconciliationsPanel file={file} />}
       {view === "justification" && <JustificationsPanel file={file} />}
       {view === "controles" && <AccountingControlsPanel file={file} />}

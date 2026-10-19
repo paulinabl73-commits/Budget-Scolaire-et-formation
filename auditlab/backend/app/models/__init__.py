@@ -46,6 +46,7 @@ from app.models.portfolio import (
     FixedAsset,
     PermanentDocument,
     PieceRequest,
+    StockCount,
 )
 from app.models.program import (
     Control,
@@ -169,6 +170,7 @@ __all__ = [
     "PlanEvidence",
     "PermanentDocument",
     "PieceRequest",
+    "StockCount",
     "Postponement",
     "ActionPlanStatus",
     "FindingEvidence",
