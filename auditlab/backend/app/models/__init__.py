@@ -35,7 +35,14 @@ from app.models.finding import (
 )
 from app.models.notification import EmailMessage, Notification
 from app.models.plan import AuditPlan, PlanItem, PlanStatus
-from app.models.portfolio import CalendarRule, Client, ClientDeadline, Closing
+from app.models.portfolio import (
+    CalendarRule,
+    Client,
+    ClientDeadline,
+    ClientFile,
+    Closing,
+    PieceRequest,
+)
 from app.models.program import (
     Control,
     ControlNature,
@@ -138,6 +145,7 @@ __all__ = [
     "CalendarRule",
     "Client",
     "ClientDeadline",
+    "ClientFile",
     "Closing",
     "Finding",
     "FollowUpStatus",
@@ -152,6 +160,7 @@ __all__ = [
     "RegulatoryParameter",
     "StatementLine",
     "PlanEvidence",
+    "PieceRequest",
     "Postponement",
     "ActionPlanStatus",
     "FindingEvidence",

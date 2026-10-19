@@ -95,3 +95,35 @@ class ClientDeadline(TrackedMixin, Base):
     echeance: Mapped[dt.date] = mapped_column(Date)
     fait_le: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
     alertes: Mapped[list[int]] = mapped_column(JSONB, default=list)
+
+
+class ClientFile(TrackedMixin, Base):
+    """Fichier d'un dossier client (pièce déposée, document permanent, justificatif de
+    compte), conservé avec son empreinte."""
+
+    __tablename__ = "client_files"
+
+    client_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("clients.id"), index=True)
+    objet: Mapped[str] = mapped_column(String(20))  # piece, permanent, justification
+    objet_id: Mapped[uuid.UUID] = mapped_column(index=True)
+    nom_fichier: Mapped[str] = mapped_column(String(255))
+    content_type: Mapped[str] = mapped_column(String(120))
+    taille: Mapped[int] = mapped_column()
+    sha256: Mapped[str] = mapped_column(String(64))
+    storage_key: Mapped[str] = mapped_column(String(300), unique=True)
+
+
+class PieceRequest(TrackedMixin, Base):
+    """Pièce demandée au client pour une clôture (RCO-04), envoyée par le portail."""
+
+    __tablename__ = "piece_requests"
+
+    closing_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("closings.id"), index=True)
+    client_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("clients.id"), index=True)
+    libelle: Mapped[str] = mapped_column(String(300))
+    categorie: Mapped[str] = mapped_column(String(40))
+    date_limite: Mapped[dt.date] = mapped_column(Date)
+    envoyee_le: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
+    recue_le: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
+    commentaire: Mapped[str | None] = mapped_column(String(2000), nullable=True)
+    relances: Mapped[list[str]] = mapped_column(JSONB, default=list)

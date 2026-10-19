@@ -564,16 +564,31 @@
     "modifie": "Dernière modification"
   },
   "pieces": {
-    "titre": "Pièces jointes",
-    "deposer": "Déposer un fichier",
-    "aide": "PDF, Excel, Word, CSV, texte ou image, 100 Mo au plus.",
-    "aucune": "Aucune pièce jointe.",
-    "deposee": "Pièce jointe déposée.",
-    "supprimee": "Pièce jointe supprimée.",
-    "envoi": "Envoi en cours…",
-    "empreinte": "Empreinte SHA-256",
-    "version": "v{{version}}",
-    "confirmerSuppression": "Retirer « {{nom}} » du papier ? Le fichier reste conservé dans l'historique."
+    "titre": "Pièces demandées au client — clôture {{exercice}}",
+    "piece": "Pièce",
+    "limite": "Date limite",
+    "statut": "Statut",
+    "fichiers": "Fichiers",
+    "statuts": {
+      "a_envoyer": "À envoyer",
+      "demandee": "Demandée",
+      "manquante": "Manquante",
+      "recue": "Reçue"
+    },
+    "relancee_one": "relancée {{count}} fois",
+    "relancee_other": "relancée {{count}} fois",
+    "motif": "Motif (pièce incomplète, illisible…)",
+    "rouvrir": "Rouvrir",
+    "recueHorsPortail": "Reçue hors portail",
+    "retirer": "Retirer",
+    "ajouter": "Ajouter la pièce",
+    "listeType": "Reprendre la liste type",
+    "envoyer": "Envoyer au client",
+    "relancer": "Relancer le client",
+    "portail": "Pièces demandées par votre cabinet",
+    "avant": "avant le {{date}}",
+    "deposer": "Déposer",
+    "deposerPour": "Déposer un fichier pour « {{piece}} »"
   },
   "editeur": {
     "barre": "Mise en forme des travaux",

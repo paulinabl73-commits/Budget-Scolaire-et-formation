@@ -52,6 +52,8 @@ class Settings(BaseSettings):
     anciennete_suspens_jours: int = 90
     # Alertes avant les échéances du calendrier fiscal et social (RCO-03), en jours.
     alertes_echeances_jours: list[int] = [15, 5]
+    # Relance du client pour une pièce non reçue après sa date limite (RCO-04), en jours.
+    relance_pieces_jours: int = 7
     # Classes exclues des états financiers (comptabilité analytique, engagements hors bilan).
     classes_hors_etats: str = "9"
     cors_origins: list[str] = ["http://localhost:5173"]

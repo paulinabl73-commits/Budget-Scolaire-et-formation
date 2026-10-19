@@ -70,11 +70,13 @@ def cmd_send_emails(_: argparse.Namespace) -> int:
 
 def cmd_send_reminders(_: argparse.Namespace) -> int:
     from app.cabinet.calendar import send_calendar_alerts
+    from app.cabinet.pieces import send_piece_reminders
     from app.followup import send_reminders
 
     with SessionLocal() as db:
         print(f"{send_reminders(db)} relance(s) de plans d'action.")
         print(f"{send_calendar_alerts(db)} alerte(s) d'échéances fiscales et sociales.")
+        print(f"{send_piece_reminders(db)} relance(s) de pièces demandées aux clients.")
     return 0
 
 

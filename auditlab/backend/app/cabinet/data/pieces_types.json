@@ -1,0 +1,20 @@
+{
+  "_commentaire": "Pièces demandées au client à chaque clôture (RCO-04), selon la taille du dossier ; liste adaptable dossier par dossier.",
+  "pieces": [
+    {"libelle": "Relevés bancaires de tous les comptes au dernier jour de l'exercice", "categorie": "tresorerie", "tailles": ["tpe", "pme", "grande"]},
+    {"libelle": "Attestations de solde bancaire à la clôture", "categorie": "tresorerie", "tailles": ["pme", "grande"]},
+    {"libelle": "Procès-verbal de caisse à la clôture", "categorie": "tresorerie", "tailles": ["tpe", "pme", "grande"]},
+    {"libelle": "Factures de ventes et d'achats non encore transmises", "categorie": "ventes_achats", "tailles": ["tpe", "pme", "grande"]},
+    {"libelle": "Liste des clients et fournisseurs restant dus à la clôture", "categorie": "ventes_achats", "tailles": ["pme", "grande"]},
+    {"libelle": "Inventaire physique des stocks valorisé", "categorie": "stocks", "tailles": ["tpe", "pme", "grande"]},
+    {"libelle": "Factures d'acquisition et actes de cession d'immobilisations", "categorie": "immobilisations", "tailles": ["tpe", "pme", "grande"]},
+    {"libelle": "Tableaux d'amortissement des emprunts et contrats de crédit-bail", "categorie": "financement", "tailles": ["pme", "grande"]},
+    {"libelle": "Livre de paie et états de salaires de l'exercice", "categorie": "personnel", "tailles": ["tpe", "pme", "grande"]},
+    {"libelle": "Déclarations sociales de l'exercice et justificatifs de paiement", "categorie": "personnel", "tailles": ["tpe", "pme", "grande"]},
+    {"libelle": "Déclarations de TVA et d'impôts de l'exercice", "categorie": "fiscalite", "tailles": ["tpe", "pme", "grande"]},
+    {"libelle": "Avis d'imposition et notifications de redressement reçus", "categorie": "fiscalite", "tailles": ["pme", "grande"]},
+    {"libelle": "Contrats importants signés ou modifiés pendant l'exercice", "categorie": "juridique", "tailles": ["pme", "grande"]},
+    {"libelle": "Procès-verbaux des organes sociaux de l'exercice", "categorie": "juridique", "tailles": ["pme", "grande"]},
+    {"libelle": "Litiges en cours et estimation de leur coût", "categorie": "juridique", "tailles": ["pme", "grande"]}
+  ]
+}

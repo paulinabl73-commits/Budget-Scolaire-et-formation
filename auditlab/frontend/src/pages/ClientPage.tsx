@@ -7,6 +7,7 @@ import { api, post, put } from "../api/client";
 import type { PortfolioClient } from "../api/portfolio";
 import Alert from "../components/Alert";
 import DeadlinesPanel from "../components/portfolio/DeadlinesPanel";
+import PiecesPanel from "../components/portfolio/PiecesPanel";
 import { STAGES } from "../components/portfolio/PortfolioDashboard";
 
 /** Dossier client permanent et ses clôtures (Module 6). */
@@ -66,6 +67,7 @@ export default function ClientPage() {
           ))}
         </dl>
       </section>
+      {c.clotures[0] && <PiecesPanel key={c.clotures[0].id} closingId={c.clotures[0].id} exercice={c.clotures[0].exercice} />}
       <DeadlinesPanel clientId={c.id} canWork />
       <section className="carte space-y-3" aria-labelledby="cl-clotures">
         <h2 id="cl-clotures" className="text-base font-semibold">{t("portefeuille.clotures")}</h2>

@@ -7,6 +7,7 @@ import type { Criticality } from "../../api/types";
 import Alert from "../../components/Alert";
 import CriticalityBadge from "../../components/finding/CriticalityBadge";
 import { formatDate } from "../../lib/format";
+import PortalPieces from "./PortalPieces";
 
 export interface PortalFinding {
   id: string;
@@ -41,6 +42,7 @@ export default function PortalHome({ nom }: { nom: string }) {
       {toAnswer.length > 0 && (
         <Alert kind="info">{t("portail.aRepondre", { n: toAnswer.length })}</Alert>
       )}
+      <PortalPieces />
       <section className="carte overflow-x-auto p-0" aria-labelledby="portail-liste">
         <h2 id="portail-liste" className="px-4 pt-4 text-lg font-semibold">{t("portail.mesConstats")}</h2>
         {rows && rows.length === 0 ? (
