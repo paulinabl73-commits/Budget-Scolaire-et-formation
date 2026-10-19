@@ -11,6 +11,7 @@ import { useAuth } from "../auth/AuthContext";
 import Alert from "../components/Alert";
 import CalendarRulesPanel from "../components/portfolio/CalendarRulesPanel";
 import FiscalParametersPanel from "../components/portfolio/FiscalParametersPanel";
+import FiscalRulesPanel from "../components/portfolio/FiscalRulesPanel";
 import PortfolioDashboard from "../components/portfolio/PortfolioDashboard";
 import { can, PERM } from "../lib/permissions";
 
@@ -67,6 +68,7 @@ export default function PortfolioPage() {
       ))}
       {manager && <CalendarRulesPanel />}
       {manager && <FiscalParametersPanel />}
+      {manager && <FiscalRulesPanel />}
     </div>
   );
 }

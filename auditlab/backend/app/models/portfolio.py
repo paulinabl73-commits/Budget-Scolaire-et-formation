@@ -326,3 +326,33 @@ class TaxReturns(TrackedMixin, Base):
     audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
     tva: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
     fichier: Mapped[str | None] = mapped_column(String(255), nullable=True)
+
+
+class FiscalAdjustmentRule(TrackedMixin, Base):
+    """Réintégration ou déduction fiscale d'un pays (RCO-20) : montant tiré des soldes des
+    comptes désignés, au pourcentage indiqué ; saisie par le cabinet, jamais dans le code."""
+
+    __tablename__ = "fiscal_adjustment_rules"
+
+    pays: Mapped[str] = mapped_column(String(40), index=True)
+    code: Mapped[str] = mapped_column(String(40))
+    libelle: Mapped[str] = mapped_column(String(300))
+    sens: Mapped[str] = mapped_column(String(20))  # reintegration, deduction
+    racines: Mapped[list[str]] = mapped_column(JSONB, default=list)
+    pourcentage: Mapped[Decimal] = mapped_column(Numeric(7, 3), default=Decimal(100))
+    exercice: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    actif: Mapped[bool] = mapped_column(Boolean, default=True)
+
+
+class TaxBridgeLine(TrackedMixin, Base):
+    """Ligne saisie du tableau de passage d'une clôture (RCO-20), ou montant retenu à la place
+    du montant calculé par une règle (`rule_code`)."""
+
+    __tablename__ = "tax_bridge_lines"
+
+    audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
+    rule_code: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    libelle: Mapped[str] = mapped_column(String(300))
+    sens: Mapped[str] = mapped_column(String(20))
+    montant: Mapped[Decimal] = mapped_column(Numeric(18, 2))
+    commentaire: Mapped[str | None] = mapped_column(String(2000), nullable=True)

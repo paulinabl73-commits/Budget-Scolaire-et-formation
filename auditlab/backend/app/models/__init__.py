@@ -45,6 +45,7 @@ from app.models.portfolio import (
     ClientFile,
     Closing,
     CurrencyPosition,
+    FiscalAdjustmentRule,
     FiscalParameter,
     FixedAsset,
     OpsClosingItem,
@@ -52,6 +53,7 @@ from app.models.portfolio import (
     PieceRequest,
     Provision,
     StockCount,
+    TaxBridgeLine,
     TaxReturns,
 )
 from app.models.program import (
@@ -162,6 +164,7 @@ __all__ = [
     "ClientFile",
     "Closing",
     "CurrencyPosition",
+    "FiscalAdjustmentRule",
     "FiscalParameter",
     "Finding",
     "OpsClosingItem",
@@ -182,6 +185,7 @@ __all__ = [
     "PieceRequest",
     "Provision",
     "StockCount",
+    "TaxBridgeLine",
     "TaxReturns",
     "Postponement",
     "ActionPlanStatus",

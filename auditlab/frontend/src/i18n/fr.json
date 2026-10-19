@@ -2736,5 +2736,37 @@
     "theorique": "TVA théorique au taux de {{taux}} % sur le chiffre d'affaires : {{theorique}} ; TVA collectée comptabilisée {{collectee}} ; écart {{ecart}} (opérations exonérées ou à taux réduit à expliquer).",
     "creditSansDeclaration": "Crédit de TVA comptabilisé {{solde}} : aucune déclaration importée pour le justifier.",
     "credit": "Crédit de TVA comptabilisé {{solde}}, crédit reporté sur la déclaration de {{mois}} : {{declare}} ; écart {{ecart}}."
+  },
+  "passageFiscal": {
+    "titre": "Passage du résultat comptable au résultat fiscal",
+    "resultatNet": "Résultat net révisé",
+    "impotComptabilise": "+ Impôt sur le résultat comptabilisé",
+    "avantImpot": "Résultat comptable avant impôt",
+    "resultatFiscal": "Résultat fiscal",
+    "calcule": "calculé {{montant}}",
+    "impot": "Impôt sur les sociétés {{is}} ; impôt minimum {{minimum}} ; impôt dû {{du}} ({{regime}}) ; écart avec l'impôt comptabilisé {{ecart}}.",
+    "regimes": {
+      "impot_societes": "impôt sur les sociétés",
+      "impot_minimum": "impôt minimum"
+    },
+    "parametres": "Paramètres fiscaux à saisir pour calculer l'impôt : {{liste}}.",
+    "ajouter": "Ajouter la ligne",
+    "libelle": "Libellé",
+    "sens": "Sens",
+    "montant": "Montant",
+    "sensValeurs": {
+      "reintegration": "Réintégration",
+      "deduction": "Déduction"
+    },
+    "reglesTitre": "Réintégrations et déductions fiscales par pays",
+    "reglesAide": "Règles du pays (aucune n'est livrée) : le montant est tiré du solde des comptes désignés, au pourcentage indiqué ; il peut être remplacé dossier par dossier.",
+    "ajouterRegle": "Ajouter la règle",
+    "champs": {
+      "pays": "Pays",
+      "code": "Code",
+      "libelle": "Libellé",
+      "racines": "Racines de comptes (séparées par des virgules)",
+      "pourcentage": "Pourcentage"
+    }
   }
 }
