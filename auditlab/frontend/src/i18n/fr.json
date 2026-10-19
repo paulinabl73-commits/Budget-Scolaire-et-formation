@@ -3005,7 +3005,8 @@
   "tableauxDeBord": {
     "titre": "Tableaux de bord",
     "vues": {
-      "direction": "Direction"
+      "direction": "Direction",
+      "recommandations": "Recommandations"
     },
     "filtres": "Filtres",
     "debut": "Du",
@@ -3032,6 +3033,27 @@
       "ecart": "Jours restants",
       "parStatut": "Missions par statut",
       "budget": "Jours consommés et budget par mission"
+    },
+    "reco": {
+      "recommandations": "Recommandations (constats validés)",
+      "plans": "{{n}} plan(s) d'action",
+      "taux": "Taux de mise en œuvre",
+      "tauxEchus": "Mise en œuvre des plans échus",
+      "retards": "Plans d'action en retard",
+      "matrice": "Recommandations par criticité et statut des plans d'action",
+      "constats": "Constats",
+      "parDirection": "Plans d'action en retard par direction",
+      "aucunRetard": "Aucun plan d'action en retard.",
+      "liste": "Plans d'action en retard",
+      "col": {
+        "constat": "Constat",
+        "direction": "Direction",
+        "plan": "Plan d'action",
+        "responsable": "Responsable",
+        "echeance": "Échéance",
+        "retard": "Retard"
+      },
+      "jours": "{{n}} j"
     }
   }
 }

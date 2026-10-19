@@ -1,7 +1,11 @@
 """REP-04 à REP-06 : tableaux de bord Direction, Recommandations et Mission."""
 
+import uuid
+
 from app.security.roles import Role
 from tests import helpers
+from tests.finding_helpers import team  # noqa: F401
+from tests.report_helpers import validated_finding
 
 
 def _log(client, acc, url, heures, date="2026-01-10"):
@@ -55,3 +59,42 @@ def test_rep04_direction(client, account, db):
         client.get(f"{url}?debut=2026-05-01&fin=2026-01-01", headers=directeur.headers).status_code
         == 422
     )
+
+
+def test_rep05_recommandations(client, team, db):  # noqa: F811
+    import datetime as dt
+
+    from sqlalchemy import select
+
+    from app.models import ActionPlan, AuditableEntity, Engagement
+
+    directeur = team["directeur"].headers
+    dg = AuditableEntity(nom="Direction des achats", type="direction")
+    db.add(dg)
+    db.flush()
+    achats = AuditableEntity(nom="Approvisionnements", type="processus", parent_id=dg.id)
+    db.add(achats)
+    db.flush()
+    db.get(Engagement, team["mission"]["id"]).entity_id = achats.id
+    db.commit()
+    f1 = validated_finding(client, team, "critique", "Paiements sans pièce")
+    f2 = validated_finding(client, team, "moyenne", "Retards de facturation")
+    plans = {p.finding_id: p for p in db.scalars(select(ActionPlan))}
+    late = plans[uuid.UUID(f1["id"])]
+    late.echeance = dt.date.today() - dt.timedelta(days=30)
+    done = plans[uuid.UUID(f2["id"])]
+    done.statut, done.echeance = "verifie", dt.date.today() - dt.timedelta(days=5)
+    db.commit()
+    url = "/api/dashboards/recommendations"
+    data = client.get(url, headers=directeur).json()
+    assert data["constats_par_criticite"] == {"critique": 1, "elevee": 0, "moyenne": 1, "faible": 0}
+    assert data["plans_par_criticite_et_statut"]["critique"]["a_lancer"] == 1
+    assert data["plans_par_criticite_et_statut"]["moyenne"]["verifie"] == 1
+    assert data["taux_mise_en_oeuvre"] == 50.0 and data["taux_mise_en_oeuvre_echus"] == 50.0
+    assert data["retards_par_direction"] == [{"direction": "Direction des achats", "plans_en_retard": 1,
+                                              "plus_ancienne_echeance": late.echeance.isoformat()}]  # fmt: skip
+    row = data["plans_en_retard"][0]
+    assert row["constat"] == f1["reference"] and row["jours_de_retard"] == 30
+    only_moyenne = client.get(f"{url}?criticite=moyenne", headers=directeur).json()
+    assert only_moyenne["plans_en_retard"] == [] and only_moyenne["taux_mise_en_oeuvre"] == 100.0
+    assert client.get(f"{url}?criticite=urgente", headers=directeur).status_code == 422

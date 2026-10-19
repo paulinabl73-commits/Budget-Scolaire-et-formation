@@ -33,3 +33,8 @@ Filtered = Annotated[Filters, Depends(filters)]
 @router.get("/direction")
 def direction(user: Direction, db: DbSession, f: Filtered) -> dict[str, Any]:
     return dashboards.direction(db, user, f)
+
+
+@router.get("/recommendations")
+def recommendations(user: Direction, db: DbSession, f: Filtered) -> dict[str, Any]:
+    return dashboards.recommendations(db, user, f)

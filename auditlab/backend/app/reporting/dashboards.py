@@ -1,5 +1,11 @@
 """Tableaux de bord (REP-04 à REP-06, REP-08) : calculs à partir des données de gestion.
 
+Recommandations (REP-05) : une recommandation est un constat validé ; son avancement est celui
+de ses plans d'action. Taux de mise en œuvre = plans vérifiés par l'audit / plans retenus
+(hors risque accepté) ; sur les plans échus, même rapport limité aux échéances passées. Un
+plan est en retard quand son échéance est passée et qu'il n'est ni réalisé ni clos ; il est
+rattaché à la direction de l'entité auditée (premier ancêtre de type « direction »).
+
 Filtres communs : période (missions dont les dates recoupent la période), entité (l'entité et
 ses descendants dans l'univers d'audit), criticité (constats). Seules les missions d'audit
 visibles par l'utilisateur sont comptées.
@@ -16,6 +22,13 @@ from sqlalchemy.orm import Session
 from app.api.mission_access import visible_engagements
 from app.api.timesheets import consumed_days
 from app.models.engagement import STATUS_ORDER, Engagement
+from app.models.finding import (
+    CRITICALITY_ORDER,
+    ActionPlan,
+    ActionPlanStatus,
+    Finding,
+    FindingStatus,
+)
 from app.models.plan import AuditPlan, PlanItem, PlanStatus
 from app.models.universe import AuditableEntity
 from app.models.user import User
@@ -118,4 +131,109 @@ def direction(db: Session, user: User, f: Filters) -> dict[str, Any]:
             }
             for e in rows
         ],  # fmt: skip
+    }
+
+
+def _direction_of(
+    entity: AuditableEntity | None, entities: dict[uuid.UUID, AuditableEntity]
+) -> str:
+    """Direction de rattachement : premier ancêtre de type « direction », sinon l'entité."""
+    current = entity
+    while current is not None:
+        if current.type == "direction":
+            return current.nom
+        current = entities.get(current.parent_id) if current.parent_id else None
+    return entity.nom if entity else "Sans entité"
+
+
+def recommendations(db: Session, user: User, f: Filters) -> dict[str, Any]:
+    """REP-05 : recommandations par criticité et par statut de leurs plans, taux de mise en
+    œuvre, plans d'action en retard par direction."""
+    scope = missions(db, user, f).with_only_columns(Engagement.id)
+    query = select(Finding).where(
+        Finding.engagement_id.in_(scope),
+        Finding.deleted_at.is_(None),
+        Finding.statut == FindingStatus.VALIDE.value,
+    )
+    if f.criticite:
+        query = query.where(Finding.criticite == f.criticite)
+    findings = {x.id: x for x in db.scalars(query)}
+    plans: list[ActionPlan] = []
+    engagements: dict[uuid.UUID, Engagement] = {}
+    if findings:
+        plans = list(
+            db.scalars(
+                select(ActionPlan).where(
+                    ActionPlan.finding_id.in_(list(findings)), ActionPlan.deleted_at.is_(None)
+                )
+            )
+        )
+        ids = {x.engagement_id for x in findings.values()}
+        engagements = {
+            e.id: e for e in db.scalars(select(Engagement).where(Engagement.id.in_(ids)))
+        }
+    entities = {e.id: e for e in db.scalars(select(AuditableEntity))}
+
+    def direction_of(p: ActionPlan) -> str:
+        engagement = engagements[findings[p.finding_id].engagement_id]
+        return _direction_of(entities.get(engagement.entity_id), entities)
+
+    levels = [c.value for c in reversed(CRITICALITY_ORDER)]
+    matrix = {c: {s.value: 0 for s in ActionPlanStatus} for c in levels}
+    for p in plans:
+        matrix[findings[p.finding_id].criticite][p.statut] += 1
+    today = dt.date.today()
+    verified, accepted = ActionPlanStatus.VERIFIE.value, ActionPlanStatus.RISQUE_ACCEPTE.value
+    still_open = (ActionPlanStatus.A_LANCER.value, ActionPlanStatus.EN_COURS.value)
+    late = sorted(
+        (p for p in plans if p.statut in still_open and p.echeance < today),
+        key=lambda p: p.echeance,
+    )
+    retained = [p for p in plans if p.statut != accepted]
+    due = [p for p in retained if p.echeance < today]
+
+    def rate(group: list[ActionPlan]) -> float:
+        done = sum(1 for p in group if p.statut == verified)
+        return round(done / len(group) * 100, 1) if group else 0.0
+
+    by_direction: dict[str, list[ActionPlan]] = {}
+    for p in late:
+        by_direction.setdefault(direction_of(p), []).append(p)
+
+    def responsable(p: ActionPlan) -> str | None:
+        if p.responsable_nom:
+            return p.responsable_nom
+        return db.get(User, p.responsable_id).nom if p.responsable_id else None
+
+    return {
+        "filtres": f.describe(),
+        "constats_par_criticite": {
+            c: sum(1 for x in findings.values() if x.criticite == c) for c in levels
+        },
+        "plans_par_criticite_et_statut": matrix,
+        "plans": len(plans),
+        "taux_mise_en_oeuvre": rate(retained),
+        "taux_mise_en_oeuvre_echus": rate(due),
+        "retards_par_direction": [
+            {
+                "direction": name,
+                "plans_en_retard": len(group),
+                "plus_ancienne_echeance": min(p.echeance for p in group).isoformat(),
+            }
+            for name, group in sorted(by_direction.items(), key=lambda kv: (-len(kv[1]), kv[0]))
+        ],
+        "plans_en_retard": [
+            {
+                "id": str(p.id),
+                "constat": findings[p.finding_id].reference,
+                "mission": engagements[findings[p.finding_id].engagement_id].reference,
+                "criticite": findings[p.finding_id].criticite,
+                "description": p.description,
+                "responsable": responsable(p),
+                "echeance": p.echeance.isoformat(),
+                "jours_de_retard": (today - p.echeance).days,
+                "direction": direction_of(p),
+            }
+            for p in late
+        ],
     }
