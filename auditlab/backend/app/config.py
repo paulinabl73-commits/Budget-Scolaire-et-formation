@@ -79,6 +79,9 @@ class Settings(BaseSettings):
     tasks_eager: bool = True
     duckdb_memory_limit: str = "2GB"
     duckdb_threads: int = 4
+    # NF-11 : au-delà de ce rang, un bloc trié de la grille est lu dans une copie triée (cache).
+    grille_cache_rang: int = 50_000
+    grille_cache_heures: int = 2
     # Scripts d'analyse (DAT-26, DAT-27) : durée maximale, sortie console conservée.
     scripts_timeout_s: int = 600
     scripts_output_kb: int = 100

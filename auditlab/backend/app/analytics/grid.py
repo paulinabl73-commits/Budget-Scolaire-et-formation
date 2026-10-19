@@ -2,14 +2,30 @@
 
 Le modèle de filtres est celui d'AG Grid ; il est traduit en SQL paramétré. Seules les
 colonnes du schéma sont acceptées, et toujours citées.
+
+NF-11 : un bloc trié loin du début oblige DuckDB à trier tous les blocs précédents (plus d'une
+seconde sur 10 millions de lignes). Au-delà d'un rang paramétré, la table filtrée et triée est
+donc écrite une fois en Parquet (cache, clé = requête, filtres et tri) ; les blocs suivants
+sont de simples lectures par position, et l'ordre des lignes à valeurs égales reste le même
+d'un bloc à l'autre. Les tables sont immuables : la clé suffit à invalider le cache, purgé par
+ancienneté.
 """
 
 import datetime as dt
+import hashlib
+import json
+import logging
+import threading
+import time
+import uuid
 from decimal import Decimal
 from typing import Any
 
 from app.analytics.relation import Relation, evaluate
-from app.analytics.store import quote_ident
+from app.analytics.store import connect, data_dir, parquet_ref, quote_ident
+from app.config import get_settings
+
+CACHE_DIR = "_grille"
 
 
 class GridError(ValueError):
@@ -122,6 +138,47 @@ def jsonable(value: Any) -> Any:
     return value
 
 
+def sorted_copy(rel: Relation, where: str, params: list[Any], order: str) -> Relation:
+    """Table filtrée et triée, écrite une fois (NF-11)."""
+    spec = [rel.sql, [str(p) for p in rel.params], where, [str(p) for p in params], order]
+    key = hashlib.sha256(json.dumps(spec, ensure_ascii=False).encode()).hexdigest()
+    relative = f"{CACHE_DIR}/{key}.parquet"
+    path = data_dir() / relative
+    if not path.exists():
+        path.parent.mkdir(exist_ok=True)
+        _purge(path.parent)
+        tmp = path.with_name(f"{key}.{uuid.uuid4().hex}.tmp")  # écritures concurrentes
+        target = str(tmp).replace("'", "''")
+        query = f"SELECT * FROM ({rel.sql}) AS t{where} ORDER BY {order}"  # noqa: S608
+        with connect() as con:
+            con.execute(f"COPY ({query}) TO '{target}' (FORMAT parquet)", rel.params + params)
+        tmp.replace(path)
+    return Relation(f"SELECT * FROM {parquet_ref(relative)}", [], rel.schema)  # noqa: S608
+
+
+def prefetch(rel: Relation, where: str, params: list[Any], order: str) -> None:
+    """Prépare la copie triée en arrière-plan dès le premier bloc d'une grande table triée :
+    le premier saut loin dans la grille la trouve prête."""
+
+    def build() -> None:
+        try:
+            sorted_copy(rel, where, params, order)
+        except Exception:  # noqa: BLE001 (le bloc demandé sera alors calculé à la demande)
+            logging.getLogger(__name__).exception("Copie triée de la grille non préparée")
+
+    threading.Thread(target=build, daemon=True).start()
+
+
+def _purge(folder: Any) -> None:
+    limit = time.time() - get_settings().grille_cache_heures * 3600
+    for f in folder.iterdir():
+        try:
+            if f.stat().st_mtime < limit:
+                f.unlink()
+        except FileNotFoundError:
+            pass
+
+
 def read_page(
     rel: Relation,
     *,
@@ -144,14 +201,21 @@ def read_page(
         for s in sort
     )
     cols = ", ".join(quote_ident(c) for c in selected)
-    sql = f"SELECT {cols} FROM t{where}"  # noqa: S608 - colonnes vérifiées, valeurs en paramètres
-    if order:
-        sql += f" ORDER BY {order}"
-    sql += f" LIMIT {int(limit)} OFFSET {int(offset)}"
-    df = evaluate(rel, sql, params)
+    if order and offset >= get_settings().grille_cache_rang:
+        source = sorted_copy(rel, where, params, order)
+        sql = f"SELECT {cols} FROM t LIMIT {int(limit)} OFFSET {int(offset)}"  # noqa: S608
+        df = evaluate(source, sql)
+    else:
+        sql = f"SELECT {cols} FROM t{where}"  # noqa: S608 - colonnes vérifiées, valeurs en paramètres
+        if order:
+            sql += f" ORDER BY {order}"
+        sql += f" LIMIT {int(limit)} OFFSET {int(offset)}"
+        df = evaluate(rel, sql, params)
     total = None
     if with_total:
         total = evaluate(rel, f"SELECT count(*) FROM t{where}", params).item()  # noqa: S608
+        if order and offset < get_settings().grille_cache_rang < total:
+            prefetch(rel, where, params, order)
     return {
         "colonnes": selected,
         "lignes": [[jsonable(v) for v in row] for row in df.iter_rows()],

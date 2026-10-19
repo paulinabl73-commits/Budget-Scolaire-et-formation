@@ -182,3 +182,32 @@ def test_dat08_statistiques_de_champ(client, ctx, db):  # noqa: F811
     assert vide["lignes"] == 0 and vide["total"] == "0" and vide["moyenne"] is None
     bad = client.post(url, json={"colonne": "x"}, headers=ctx["aud"].headers)
     assert bad.status_code == 422
+
+
+def test_nf11_copie_triee_en_cache(client, ctx, ecritures, monkeypatch):  # noqa: F811
+    """Au-delà du rang paramétré, les blocs triés sont lus dans une copie triée (même résultat)."""
+    from app.analytics import grid
+    from app.analytics.store import data_dir
+    from app.config import get_settings
+
+    body = {"offset": 9_000, "limit": 5, "total": False,
+            "tri": [{"colonne": "montant", "sens": "desc"}, {"colonne": "piece"}],
+            "filtres": {"compte": {"filterType": "text", "type": "equals", "filter": "601000"}}}  # fmt: skip
+    expected = q(client, ctx, ecritures, **body)["lignes"]  # sans cache (rang par défaut 50 000)
+    monkeypatch.setattr(get_settings(), "grille_cache_rang", 1_000)
+    cache = data_dir() / grid.CACHE_DIR
+    before = set(cache.glob("*.parquet")) if cache.exists() else set()
+    assert q(client, ctx, ecritures, **body)["lignes"] == expected
+    created = set(cache.glob("*.parquet")) - before
+    assert len(created) == 1
+    assert q(client, ctx, ecritures, **{**body, "offset": 9_005})["lignes"] != expected
+    assert set(cache.glob("*.parquet")) - before == created  # copie réutilisée
+    # Premier bloc d'une grande table triée : la copie est préparée d'avance.
+    monkeypatch.setattr(
+        grid.threading,
+        "Thread",
+        lambda target, daemon: type("T", (), {"start": staticmethod(target)})(),
+    )
+    sort = [{"colonne": "date", "sens": "desc"}]
+    first = q(client, ctx, ecritures, offset=0, limit=5, total=True, tri=sort)
+    assert first["total"] == 50_000 and len(set(cache.glob("*.parquet")) - before) == 2

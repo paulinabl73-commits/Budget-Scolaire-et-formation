@@ -49,7 +49,7 @@ python perf/nf09_charge.py --url http://127.0.0.1:8000 --utilisateurs 50 --duree
 ## NF-10 — import d'un million de lignes en moins de 30 s, doublons en moins de 10 s
 
 Script : `perf/nf10_import.py`. Fichier généré de façon déterministe : 1 000 000 de lignes,
-4 colonnes (pièce, fournisseur, date jj/mm/aaaa, montant à virgule décimale), 39 Mo. L'import
+4 colonnes (pièce, fournisseur, date jj/mm/aaaa, montant à virgule décimale), 46 Mo. L'import
 suit la chaîne de la tâche d'import : lecture (Polars), typage des dates et des montants,
 écriture Parquet en lecture seule, totaux de contrôle et empreinte SHA-256 (DAT-04).
 
@@ -64,4 +64,36 @@ destinée aux tables de tiers, pas au million de lignes d'écritures.
 
 ```
 AUDITLAB_DATA_DIR=/tmp/perf python perf/nf10_import.py --dossier /tmp/perf --lignes 1000000
+```
+
+## NF-11 — grille fluide sur 10 millions de lignes
+
+La grille (AG Grid, modèle « infinite ») demande des blocs de 100 lignes ; chaque bloc est une
+requête DuckDB sur le Parquet (LIMIT/OFFSET, tri et filtres traduits en SQL paramétré). Script :
+`perf/nf11_grille.py` (table de 10 millions de lignes, 3 colonnes).
+
+Premier constat : sans tri, tout bloc est servi en moins de 0,1 s ; avec un tri, un bloc loin
+du début coûtait 1,1 à 1,5 s, car DuckDB doit trier tout ce qui le précède. D'où l'optimisation
+de l'exigence : au-delà du rang 50 000 (`grille_cache_rang`), la table filtrée et triée est
+écrite une fois en Parquet (cache par requête, filtres et tri ; purgé après 2 heures) et les
+blocs sont lus par position. Cette copie est préparée en arrière-plan dès le premier bloc trié
+d'une grande table, pendant que l'utilisateur lit l'écran. Effet secondaire utile : l'ordre des
+lignes à valeurs égales est le même d'un bloc à l'autre.
+
+| Bloc demandé (100 lignes) | Durée |
+|---|---|
+| Début, avec le total | 0,100 s |
+| Milieu / fin, sans tri | 0,042 s / 0,058 s |
+| Tri, premier bloc (prépare la copie triée) | 0,194 s |
+| Tri, saut au milieu 3 s plus tard | 0,058 s |
+| Tri, bloc suivant / fin / saut au quart | 0,046 s / 0,055 s / 0,048 s |
+| Filtre « égal », avec total | 0,109 s |
+| Recherche plein texte | 0,093 s |
+
+**Objectif atteint** : tous les blocs en moins de 0,2 s, défilement sans attente perceptible.
+Sans la préparation (saut immédiat, avant la fin de l'écriture de la copie), le premier bloc
+profond attend la copie, soit 2,5 s une fois par tri et par filtre.
+
+```
+AUDITLAB_DATA_DIR=/tmp/perf python perf/nf11_grille.py --lignes 10000000
 ```
