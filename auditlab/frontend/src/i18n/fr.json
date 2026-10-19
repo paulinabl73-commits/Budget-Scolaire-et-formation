@@ -1547,7 +1547,13 @@
     "retour": "← Dossiers de révision",
     "titreDossier": "{{entite}} — exercice {{exercice}}",
     "restitution": "restitution",
-    "precedent": "exercice précédent {{exercice}}"
+    "precedent": "exercice précédent {{exercice}}",
+    "transmis": {
+      "titre": "Dossiers de clôture transmis",
+      "aide": "L'expert-comptable de l'entité a transmis son dossier à cette mission : la balance révisée, la balance N-1, les affectations de comptes et les justificatifs sont repris sans ressaisie dans un nouveau dossier d'audit, distinct du dossier de clôture.",
+      "ligne": "{{client}} – exercice {{exercice}} (transmis le {{le}})",
+      "reprendre": "Créer le dossier d'audit par reprise"
+    }
   },
   "devises": {
     "titre": "Devises et cours de conversion",
@@ -2821,5 +2827,16 @@
     "variation": "Variation",
     "comparatif": "Comparatif des états révisés (montants en {{devise}})",
     "poste": "Poste"
+  },
+  "transmissionCloture": {
+    "titre": "Transmission à la mission d'audit",
+    "aide": "Si l'entité est aussi auditée, saisissez la référence de la mission d'audit qu'elle vous a communiquée : son chef de mission pourra reprendre la balance révisée, les affectations et les justificatifs sans ressaisie.",
+    "mission": "Référence de la mission d'audit",
+    "transmettre": "Transmettre le dossier",
+    "transmis": "Transmis à la mission {{mission}} par {{par}} le {{le}}",
+    "repris": "Dossier repris par la mission {{mission}}.",
+    "retirer": "Retirer la transmission",
+    "visaAttendu": "Le visa de revue de l'expert-comptable est requis avant la transmission.",
+    "nonTransmis": "Dossier non transmis."
   }
 }

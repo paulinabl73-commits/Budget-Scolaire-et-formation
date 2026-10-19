@@ -166,6 +166,10 @@ class AuditFile(TrackedMixin, Base):
     pays: Mapped[str | None] = mapped_column(String(40), nullable=True)
     # REV-26 : conclusion de la note de synthèse, rédigée par le chef de mission.
     conclusion_synthese: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # RCO-27 : dossier de clôture (Module 6) dont ce dossier d'audit a repris les données.
+    source_file_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("audit_files.id"), nullable=True
+    )
 
 
 class TrialBalance(TrackedMixin, Base):

@@ -61,6 +61,7 @@ class AuditFileOut(BaseModel):
     devise: str
     pays: str | None = None
     precedent_id: uuid.UUID | None
+    source_file_id: uuid.UUID | None = None  # RCO-27 : dossier de clôture repris
     statut: str
     base_seuil: str | None
     montant_base: Decimal | None

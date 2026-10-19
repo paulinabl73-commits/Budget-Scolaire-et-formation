@@ -9,6 +9,7 @@ import Alert from "../components/Alert";
 import ClosingDocumentsPanel from "../components/portfolio/ClosingDocumentsPanel";
 import ClosingIndicatorsPanel from "../components/portfolio/ClosingIndicatorsPanel";
 import ClosingReviewPanel from "../components/portfolio/ClosingReviewPanel";
+import ClosingTransmissionPanel from "../components/portfolio/ClosingTransmissionPanel";
 import ChecklistPanel from "../components/portfolio/ChecklistPanel";
 import DeadlinesPanel from "../components/portfolio/DeadlinesPanel";
 import PermanentPanel from "../components/portfolio/PermanentPanel";
@@ -110,6 +111,14 @@ export default function ClientPage() {
           key={`doc-${c.clotures[0].id}-${Object.keys(c.clotures[0].revues ?? {}).join()}`}
           closingId={c.clotures[0].id}
           exercice={c.clotures[0].exercice}
+        />
+      )}
+      {c.clotures[0] && (
+        <ClosingTransmissionPanel
+          key={`tr-${c.clotures[0].id}-${Object.keys(c.clotures[0].revues ?? {}).join()}`}
+          closingId={c.clotures[0].id}
+          canManage={c.peut_gerer}
+          visaExpert={"expert" in (c.clotures[0].revues ?? {})}
         />
       )}
       {c.clotures[0] && (

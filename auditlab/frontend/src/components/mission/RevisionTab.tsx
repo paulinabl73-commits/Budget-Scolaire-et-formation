@@ -16,6 +16,14 @@ interface Normative {
 
 const DEVISES = ["XOF", "XAF", "EUR", "USD", "GNF", "CDF"];
 
+interface Transmitted {
+  id: string;
+  client: string;
+  exercice: number;
+  transmis_le: string;
+  repris: boolean;
+}
+
 /** Dossiers de révision de la mission (Module 5, REV-02 à REV-04). */
 export default function RevisionTab({ mission }: { mission: Engagement }) {
   const { t } = useTranslation();
@@ -33,6 +41,20 @@ export default function RevisionTab({ mission }: { mission: Engagement }) {
     api<Normative[]>("/normative-frameworks").then((n) => setNormatives(n.filter((x) => x.actif))).catch(() => setNormatives([]));
   }, [load]);
   const canCreate = mission.peut_gerer && mission.statut !== "cloturee";
+  // RCO-27 : dossiers de clôture transmis à la mission par l'expert-comptable de l'entité.
+  const [transmitted, setTransmitted] = useState<Transmitted[]>([]);
+  useEffect(() => {
+    if (canCreate && mission.mode === "audit")
+      api<Transmitted[]>(`/engagements/${mission.id}/transmitted-closings`).then(setTransmitted).catch(() => setTransmitted([]));
+  }, [canCreate, mission.id, mission.mode]);
+  const takeOver = async (closingId: string) => {
+    try {
+      const f = await post<AuditFile>(`/engagements/${mission.id}/audit-files/from-closing`, { closing_id: closingId });
+      navigate(`/missions/${mission.id}/revision/${f.id}`);
+    } catch (err) {
+      setError((err as Error).message);
+    }
+  };
 
   const create = async (e: FormEvent) => {
     e.preventDefault();
@@ -79,6 +101,20 @@ export default function RevisionTab({ mission }: { mission: Engagement }) {
           </table>
         )}
       </section>
+      {transmitted.some((c) => !c.repris) && (
+        <section className="carte space-y-2" aria-labelledby="clotures-transmises">
+          <h2 id="clotures-transmises" className="text-base font-semibold">{t("revision.transmis.titre")}</h2>
+          <p className="text-sm text-slate-700">{t("revision.transmis.aide")}</p>
+          <ul className="space-y-1 text-sm">
+            {transmitted.filter((c) => !c.repris).map((c) => (
+              <li key={c.id} className="flex flex-wrap items-center gap-2">
+                <span>{t("revision.transmis.ligne", { client: c.client, exercice: c.exercice, le: formatDate(c.transmis_le) })}</span>
+                <button type="button" className="btn-secondaire" onClick={() => void takeOver(c.id)}>{t("revision.transmis.reprendre")}</button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       {canCreate && (
         <form onSubmit={create} className="carte space-y-3" aria-labelledby="nouveau-dossier">
           <h2 id="nouveau-dossier" className="text-base font-semibold">{t("revision.nouveau")}</h2>

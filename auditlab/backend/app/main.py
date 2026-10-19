@@ -25,6 +25,7 @@ from app.api import (
     closing_documents,
     closing_indicators,
     closing_review,
+    closing_transfer,
     confirmations,
     contradictory,
     currencies,
@@ -210,6 +211,7 @@ for router in (
     closing_documents.router,
     closing_indicators.router,
     closing_review.router,
+    closing_transfer.router,
     ops_closing.router,
     ops_controls.router,
 ):

@@ -73,6 +73,12 @@ class Closing(TrackedMixin, Base):
     revues: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict, server_default="{}")
     # Paramètres des documents et signature de l'attestation de présentation (RCO-25).
     documents: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict, server_default="{}")
+    # Transmission au Module 5 (RCO-27) : mission d'audit destinataire désignée par l'expert.
+    transmis_le: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    transmis_par: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    transmis_a: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("engagements.id"), nullable=True
+    )
 
 
 class CalendarRule(TrackedMixin, Base):
