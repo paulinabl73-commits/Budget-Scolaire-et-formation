@@ -28,6 +28,7 @@ export interface ScriptInfo {
   description: string | null;
   code: string;
   entrees: ScriptEntry[];
+  modele: { id: string; version: number; reference: string } | null;
   derniere_execution: ScriptRunInfo | null;
 }
 
@@ -35,4 +36,19 @@ export interface SdkFunction {
   nom: string;
   signature: string;
   doc: string;
+}
+
+export interface ScriptTemplateInfo {
+  id: string;
+  reference: string;
+  cycle: string;
+  nom: string;
+  objectif: string | null;
+  code: string;
+  colonnes: string[];
+  indicateur: string | null;
+  statut: "brouillon" | "publie" | "remplace" | "retire";
+  version: number;
+  publie_le: string | null;
+  publie_par: string | null;
 }

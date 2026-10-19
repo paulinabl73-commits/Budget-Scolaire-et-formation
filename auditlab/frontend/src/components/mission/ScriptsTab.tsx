@@ -10,6 +10,7 @@ import { useAuth } from "../../auth/AuthContext";
 import { formatDateHeure } from "../../lib/format";
 import { can } from "../../lib/permissions";
 import Alert from "../Alert";
+import ScriptLibraryPanel from "../scripts/ScriptLibraryPanel";
 
 export const RUN_BADGE: Record<string, string> = {
   en_cours: "bg-sky-100 text-sky-900",
@@ -105,6 +106,7 @@ export default function ScriptsTab({ mission }: { mission: Engagement }) {
           </table>
         )}
       </section>
+      <ScriptLibraryPanel missionId={mission.id} canUse={canEdit} />
       {canEdit && (
         <form
           onSubmit={create}

@@ -49,7 +49,7 @@ addopts = "-q --cov=app --cov-report=term-missing --cov-fail-under=80"
 [tool.ruff]
 line-length = 100
 target-version = "py312"
-extend-exclude = ["alembic/versions", "app/revision/data"]
+extend-exclude = ["alembic/versions", "app/revision/data", "app/scripting/library"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "S"]

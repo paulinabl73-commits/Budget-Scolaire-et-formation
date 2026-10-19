@@ -10,6 +10,7 @@ from app.models.data import (
     SampleEvaluation,
     Script,
     ScriptRun,
+    ScriptTemplate,
     Upload,
 )
 from app.models.engagement import (
@@ -218,6 +219,7 @@ __all__ = [
     "RiskCriterion",
     "Script",
     "ScriptRun",
+    "ScriptTemplate",
     "Team",
     "TestType",
     "Tickmark",

@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from app.api.datasets import require_analyst, require_read
 from app.api.deps import CurrentUser, DbSession
 from app.api.mission_access import get_engagement
-from app.models.data import Dataset, Script, ScriptRun, Upload
+from app.models.data import Dataset, Script, ScriptRun, ScriptTemplate, Upload
 from app.models.engagement import Engagement
 from app.models.user import User
 from app.scripting.runner import inputs_out, sha256_text
@@ -66,6 +66,13 @@ def script_out(db: Session, s: Script) -> dict[str, Any]:
         "description": s.description,
         "code": s.code,
         "entrees": inputs_out(db, s.entrees),
+        "modele": None
+        if s.modele_id is None
+        else {
+            "id": str(s.modele_id),
+            "version": s.modele_version,
+            "reference": db.get(ScriptTemplate, s.modele_id).reference,
+        },
         "derniere_execution": run_out(db, last) if last else None,
     }
 

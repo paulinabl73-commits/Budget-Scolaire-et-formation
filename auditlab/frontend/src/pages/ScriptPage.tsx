@@ -19,6 +19,7 @@ import type {
 } from "../api/scripts";
 import Alert from "../components/Alert";
 import { RUN_BADGE } from "../components/mission/ScriptsTab";
+import ProposeToLibrary from "../components/scripts/ProposeToLibrary";
 import { useAuth } from "../auth/AuthContext";
 import { formatDateHeure, formatNombre } from "../lib/format";
 import { can } from "../lib/permissions";
@@ -127,6 +128,14 @@ export default function ScriptPage() {
         ← {t("scripts.retour")}
       </Link>
       <h1 className="text-xl font-semibold">{script.nom}</h1>
+      {script.modele && (
+        <p className="text-sm text-slate-600">
+          {t("scripts.modele", {
+            reference: script.modele.reference,
+            version: script.modele.version,
+          })}
+        </p>
+      )}
       {error && <Alert kind="erreur">{error}</Alert>}
       {info && <Alert kind="succes">{info}</Alert>}
       <section className="carte space-y-3" aria-labelledby="script-code">
@@ -231,6 +240,9 @@ export default function ScriptPage() {
           </div>
         )}
       </section>
+      {can(user?.permissions, "data:publish_library") && (
+        <ProposeToLibrary script={script} code={form.code} />
+      )}
       <details className="carte">
         <summary className="cursor-pointer text-base font-semibold">
           {t("scripts.aide")}

@@ -2875,6 +2875,32 @@
     "aucuneExecution": "Aucune exécution.",
     "empreinte": "Code exécuté : empreinte {{sha}}… · durée {{duree}} ms",
     "lignes": "lignes",
-    "sortie": "Sortie console"
+    "sortie": "Sortie console",
+    "modele": "Issu du test {{reference}} (version {{version}}) de la bibliothèque."
+  },
+  "bibliothequeScripts": {
+    "titre": "Bibliothèque de tests par cycle",
+    "cycle": "Cycle",
+    "tous": "Tous les cycles",
+    "statuts": {
+      "brouillon": "Brouillon",
+      "publie": "Publié",
+      "remplace": "Remplacé",
+      "retire": "Retiré"
+    },
+    "colonnes": "Colonnes attendues : {{colonnes}}",
+    "publie": "publié le {{le}} par {{par}}",
+    "livre": "AuditLab (test livré)",
+    "utiliser": "Utiliser dans la mission",
+    "publier": "Publier",
+    "retirer": "Retirer",
+    "proposer": "Proposer ce script à la bibliothèque",
+    "nouvelleVersion": "Proposer comme nouvelle version de {{reference}}",
+    "reference": "Référence (ex. ACH-03)",
+    "objectif": "Objectif du test (assertion, risque)",
+    "colonnesSaisie": "Colonnes attendues (séparées par des virgules)",
+    "indicateur": "Indicateur produit (audit.metric)",
+    "envoyer": "Créer le brouillon",
+    "propose": "Brouillon créé : un data analyst le publie depuis la bibliothèque."
   }
 }

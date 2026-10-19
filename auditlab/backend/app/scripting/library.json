@@ -1,0 +1,16 @@
+{
+  "_commentaire": "Tests livrés de la bibliothèque de scripts (DAT-28), par cycle ; code dans library/<code>.py. Les colonnes attendues sont des noms indicatifs, à adapter en tête du script.",
+  "cycles": {"achats": "Achats", "ventes": "Ventes", "paie": "Paie", "tresorerie": "Trésorerie", "notes_frais": "Notes de frais"},
+  "modeles": [
+    {"code": "ACH-01", "cycle": "achats", "nom": "Factures fournisseurs en double", "objectif": "Existence et exactitude des charges : paiements multiples d'une même facture.", "colonnes": ["fournisseur", "numero_facture", "montant", "date_facture"], "indicateur": "doublons"},
+    {"code": "ACH-02", "cycle": "achats", "nom": "Loi de Benford sur les achats", "objectif": "Montants anormalement fréquents (fraude, saisie manuelle).", "colonnes": ["montant"], "indicateur": "ecart_moyen_benford"},
+    {"code": "VEN-01", "cycle": "ventes", "nom": "Ruptures de séquence des factures de vente", "objectif": "Exhaustivité du chiffre d'affaires.", "colonnes": ["numero_facture"], "indicateur": "factures_manquantes"},
+    {"code": "VEN-02", "cycle": "ventes", "nom": "Factures de vente en double", "objectif": "Réalité du chiffre d'affaires.", "colonnes": ["client", "montant", "date_facture"], "indicateur": "doublons"},
+    {"code": "PAI-01", "cycle": "paie", "nom": "Compte bancaire partagé entre salariés", "objectif": "Salariés fictifs.", "colonnes": ["matricule", "compte_bancaire"], "indicateur": "matricules_concernes"},
+    {"code": "PAI-02", "cycle": "paie", "nom": "Salaires versés après la sortie", "objectif": "Réalité des charges de personnel.", "colonnes": ["matricule", "date_paiement", "date_sortie"], "indicateur": "paiements_apres_sortie"},
+    {"code": "TRE-01", "cycle": "tresorerie", "nom": "Paiements en double", "objectif": "Sorties de trésorerie injustifiées.", "colonnes": ["beneficiaire", "montant", "date_paiement"], "indicateur": "doublons"},
+    {"code": "TRE-02", "cycle": "tresorerie", "nom": "Paiements en fin de semaine", "objectif": "Opérations hors des circuits habituels.", "colonnes": ["date_paiement"], "indicateur": "paiements_fin_semaine"},
+    {"code": "NDF-01", "cycle": "notes_frais", "nom": "Notes de frais en double", "objectif": "Remboursements multiples d'une même dépense.", "colonnes": ["salarie", "date_depense", "montant"], "indicateur": "doublons"},
+    {"code": "NDF-02", "cycle": "notes_frais", "nom": "Dépenses juste sous le seuil d'approbation", "objectif": "Fractionnement pour éviter l'approbation.", "colonnes": ["montant"], "indicateur": "depenses_sous_seuil"}
+  ]
+}

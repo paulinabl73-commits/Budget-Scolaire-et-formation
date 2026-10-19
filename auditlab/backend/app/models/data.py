@@ -148,6 +148,30 @@ class Script(TrackedMixin, Base):
     code: Mapped[str] = mapped_column(Text)
     # [{"type": "table" | "fichier", "id": …}] : seules entrées accessibles au script.
     entrees: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
+    # DAT-28 : test de la bibliothèque dont le script est issu, et sa version.
+    modele_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("script_templates.id"), nullable=True
+    )
+    modele_version: Mapped[int | None] = mapped_column(Integer, nullable=True)
+
+
+class ScriptTemplate(TrackedMixin, Base):
+    """Test prêt à l'emploi de la bibliothèque (DAT-28), par cycle ; publié par un data
+    analyst. Une modification d'un test publié crée une nouvelle version en brouillon."""
+
+    __tablename__ = "script_templates"
+
+    reference: Mapped[str] = mapped_column(String(20))
+    cycle: Mapped[str] = mapped_column(String(30))
+    nom: Mapped[str] = mapped_column(String(200))
+    objectif: Mapped[str | None] = mapped_column(Text, nullable=True)
+    code: Mapped[str] = mapped_column(Text)
+    colonnes: Mapped[list[str]] = mapped_column(JSONB, default=list)  # colonnes attendues
+    indicateur: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    statut: Mapped[str] = mapped_column(String(20), default="brouillon")  # publie, retire
+    version: Mapped[int] = mapped_column(Integer, default=1)
+    publie_le: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    publie_par: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
 
 
 class ScriptRun(TrackedMixin, Base):
