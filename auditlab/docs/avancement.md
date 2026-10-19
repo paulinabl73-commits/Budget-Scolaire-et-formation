@@ -55,7 +55,7 @@
   des données (AUD-22) ; l'inactivité de session est mesurée à une minute près (NF-07) ;
   copie triée en cache pour la grille (DAT-07) ; moteur de documents étendu (logo, page de
   garde, pied de page, REV-27).
-- Tests : suite backend complète (pytest, PostgreSQL réelle), Vitest, mesures de performance dans `backend/perf/`.
+- Tests : 518 tests backend (couverture 96 %), dont la recette de bout en bout et les tests de sécurité ; 21 tests Vitest ; mesures de performance dans `backend/perf/`.
 
 ## Lot 9 — détail
 
