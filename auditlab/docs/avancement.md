@@ -12,10 +12,39 @@
 | 8 | Liaison audit et analyse, constats : DAT-30 à DAT-32, CON-01 à CON-09 | **Livré** |
 | 8a | Référentiels et balance : REV-01 à REV-14 | **Livré** |
 | 8b | Révision et états : REV-15 à REV-28, CIP-01 à CIP-09, IFR-01 à IFR-04 | **Livré** |
-| 8c | Portefeuille et contrôles : RCO-01 à RCO-10 | À faire |
+| 8c | Portefeuille et contrôles : RCO-01 à RCO-10 | **Livré** |
 | 8d | Inventaire, fiscalité et livrables : RCO-11 à RCO-27 | À faire |
 | 9 | Scripts et automatisation : DAT-26 à DAT-29 | À faire |
 | 10 | Reporting et finitions : REP-01 à REP-08, NF-09 à NF-11 | À faire |
+
+## Lot 8c — détail
+
+**Livré** (un commit par exigence ; Module 6, révision comptable)
+- **RCO-01** : portefeuille de dossiers clients (forme juridique, régime fiscal,
+  référentiel, clôture, taille, expert, collaborateur, superviseur, contact) ; clôture d'un
+  exercice = mission « revision_comptable » + dossier de révision du Module 5 ; rôles
+  Expert-comptable et Collaborateur comptable.
+- **RCO-02** : étapes de la clôture (pièces → terminé) et tableau de bord du portefeuille
+  (avancement, échéances à 30 jours, dossiers en retard).
+- **RCO-03** : calendrier fiscal et social par pays (aucune échéance livrée), échéances par
+  client, alertes à J-15 et J-5.
+- **RCO-04** : pièces demandées par le portail (liste type selon la taille), dépôt par le
+  client, suivi, relances manuelles et automatiques.
+- **RCO-05 / RCO-06** : dossier permanent repris d'un exercice à l'autre ; documents
+  expirés signalés à l'ouverture de l'exercice.
+- **RCO-07** : check-lists de révision par cycle (49 points) selon taille et référentiel.
+- **RCO-08** : soldes anormaux, tiers non lettrés, écritures sans pièce, ruptures de
+  numérotation par journal et doublons (Module 2).
+- **RCO-09** : justification de chaque compte de bilan, signalé jusqu'à la revue.
+- **RCO-10** : rapprochement des balances auxiliaires avec les comptes collectifs et des
+  banques avec les relevés (REV-20).
+- Changements signalés d'exigences livrées : type d'entité « client » hors univers
+  (AUD-01) ; clôtures hors de la liste des missions (AUD-06) ; deux rôles ajoutés ;
+  séquence groupée et valeurs distinctes (DAT-11) ; écart auxiliaire non bloquant pour une
+  clôture (REV-06) ; vues d'audit légal masquées pour une clôture.
+- Tests : 456 tests backend, couverture 98 %. Parcours navigateur : portefeuille et tableau
+  de bord, dossier client (check-list, pièces, échéances, dossier permanent, étapes),
+  contrôles comptables, justification, rapprochements, portail du client.
 
 ## Lot 8b — détail
 

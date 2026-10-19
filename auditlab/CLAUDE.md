@@ -26,7 +26,10 @@ auditlab/
                       adjustments.py, lead_schedules.py, statements.py, programs.py,
                       third_parties.py, confirmations.py, bank_reconciliations.py, dsf.py,
                       synthesis.py, opinion.py, ifrs.py, branches.py, ops_controls.py,
-                      inspection.py = lot 8b
+                      inspection.py = lot 8b ;
+                      portfolio.py, portfolio_dashboard.py, calendar.py, pieces.py,
+                      permanent.py, closing_checklist.py, accounting_controls.py,
+                      justifications.py, reconciliations.py = lot 8c (Module 6)
       analytics/      Module 2 : store.py (Parquet, DuckDB), formats.py, detect.py, pdf.py,
                       sql_source.py, jobs.py (tâches Celery), expr.py (expressions),
                       relation.py (relation SQL d'une table ou d'une vue), grid.py,
@@ -41,6 +44,9 @@ auditlab/
                       (PDF/Word), ifrs.py, ifrs_assistants.py, parameters.py (CIP-09),
                       ops.py (contrôles OPS), ops_indicators.py (CIP-06/07) ;
                       data/ = référentiels, synonymes, devises, cycles (JSON)
+      cabinet/        Module 6 : dates.py, calendar.py (RCO-03), pieces.py (RCO-04), files.py
+                      (fichiers des dossiers clients) ; data/ = pièces types, check-lists,
+                      soldes anormaux (JSON)
       audit/          chain.py (chaînage par hash), listeners.py (journalisation automatique)
       models/         modèles SQLAlchemy ; base.py = TrackedMixin
       security/       passwords (Argon2), totp, sessions, roles (matrice des droits)
@@ -345,3 +351,17 @@ docker compose up -d --build
   de la mission en mode inspection.
 - **Tests** : `tests/cipres_helpers.py` (fixtures `ops` et `ops_detail`, `set_params`,
   `launch_ops`, `detail_file`), `tests/data_helpers.make_dataset` pour les tables du Module 2.
+
+### Lot 8c — portefeuille et contrôles (Module 6)
+
+- **Clôture** = `Closing` (client, exercice, étape) + mission `mode="revision_comptable"` +
+  dossier de révision (`portfolio.open_closing`). Les écrans du dossier filtrent leurs vues
+  selon `AuditFileOut.mode`.
+- **Accès** : `portfolio.visible_clients`, `get_client`, `can_manage_client` ; rôles
+  réservés à un mode dans `engagements.MODE_ROLES`.
+- **Fichiers clients** : `cabinet/files.save_upload` → `ClientFile(objet, objet_id)` ;
+  téléchargement `/client-files/{id}/content`.
+- **Tâche quotidienne** (`tasks.daily_followup`, commande `send-reminders`) : relances des
+  plans, alertes d'échéances, relances de pièces.
+- **Tests** : `tests/portfolio_helpers.py` (fixture `cabinet`, `new_client`, `open_closing`),
+  `tests/test_controles_comptables.files()` (balance et grand livre cohérents).

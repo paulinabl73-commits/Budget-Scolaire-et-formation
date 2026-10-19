@@ -16,6 +16,40 @@ Le document de synthèse partageable reprend ce fichier.
 - Fichiers stockés hors base, dans un stockage compatible S3 (SeaweedFS ; MinIO n'étant plus distribué en image publique) chiffré au repos.
   Téléchargements journalisés ; liens signés valides une heure pour l'affichage des images.
 
+## Module 6 — révision comptable
+
+### Lot 8c
+- Outil de révision branché sur le logiciel du client, sans saisie comptable complète
+  (hypothèse du cahier des charges) : balances et grand livre importés comme au Module 5.
+- Une clôture = une mission en mode « revision_comptable » portant un dossier de révision :
+  import, affectation, états et contrôles d'accès du Module 5 réutilisés ; pas de seuil de
+  signification ni d'opinion (vues correspondantes masquées). Mission du jour de clôture à
+  six mois après (délai d'approbation des comptes OHADA).
+- Clients enregistrés comme entités de type « client », hors de l'univers d'audit.
+- Expert-comptable : droits du Directeur limités à son portefeuille, double authentification ;
+  il est chef de mission de ses clôtures. Collaborateur : droits de l'Auditeur sur ses
+  dossiers. Ces deux rôles n'interviennent que sur les dossiers clients.
+- Étapes de clôture franchies une à une ; dépôt et fin réservés à l'expert ou au
+  superviseur. Dossier en retard : échéance non faite dépassée, ou échéance liée à la clôture
+  passée sans dépôt.
+- Calendrier : aucune échéance livrée (valeurs propres à chaque pays) ; périodicités
+  mensuelle, trimestrielle, annuelle ou relative à la clôture ; alertes à J-15 et J-5
+  (paramétrables), une par échéance et par délai.
+- Pièces : liste type de 15 pièces selon la taille (TPE, PME, grande entreprise) ; une pièce
+  déposée par le client est reçue, le collaborateur peut la rouvrir avec un motif ; relance
+  automatique tous les 7 jours après la date limite.
+- Dossier permanent rattaché au client ; document expiré = date de validité antérieure à
+  l'ouverture de la clôture ou à la fin de l'exercice clos.
+- Check-lists : 49 points sur les onze cycles, dont 4 propres aux OPS ; anomalie =
+  commentaire obligatoire.
+- Soldes anormaux : sens normal par racine SYSCOHADA (données adaptables) ; aucune règle
+  livrée pour le plan CIPRES. Numérotation des pièces contrôlée journal par journal ; doublon
+  d'écriture = même date, journal, pièce, compte, libellé et montants.
+- Justification : compte justifié = montant égal au solde révisé et pièce jointe ; revue par
+  l'expert ou le superviseur, valable pour le solde revu.
+- Écart entre balance auxiliaire et compte collectif : avertissement à rapprocher pour une
+  clôture (il reste bloquant en audit légal, où les données doivent être cohérentes).
+
 ## Module 5 — révision des comptes
 
 ### Lot 8b
