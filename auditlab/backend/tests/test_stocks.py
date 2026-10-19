@@ -28,11 +28,15 @@ def test_rco12_stocks(client, cabinet):  # noqa: F811
     )
     url = f"/api/audit-files/{fid}/stock"
     data = client.post(
-        f"{url}/files/inventory", files={"file": ("inv.csv", INVENTORY.encode())}, headers=collab.headers
+        f"{url}/files/inventory",
+        files={"file": ("inv.csv", INVENTORY.encode())},
+        headers=collab.headers,
     ).json()
     assert data["non_valorises"] == ["A1", "A2"]  # entrées pas encore importées
     data = client.post(
-        f"{url}/files/movements", files={"file": ("e.csv", MOVEMENTS.encode())}, headers=collab.headers
+        f"{url}/files/movements",
+        files={"file": ("e.csv", MOVEMENTS.encode())},
+        headers=collab.headers,
     ).json()
     arts = {a["article"]: a for a in data["articles"]}
     assert (arts["A1"]["valeur"], arts["A1"]["depreciation"]) == ("186667", "6667")
@@ -59,7 +63,9 @@ def test_rco12_stocks(client, cabinet):  # noqa: F811
     assert client.post(f"{url}/entry", headers=collab.headers).status_code == 409
     assert (
         client.post(
-            f"{url}/files/inventory", files={"file": ("i.csv", b"x;y\n1;2\n")}, headers=collab.headers
+            f"{url}/files/inventory",
+            files={"file": ("i.csv", b"x;y\n1;2\n")},
+            headers=collab.headers,
         ).status_code
         == 422
     )
