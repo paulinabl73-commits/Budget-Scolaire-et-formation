@@ -60,5 +60,7 @@ known-third-party = ["alembic"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S105", "S106", "S608", "E501"]
+# Mesures de performance (NF-09 à NF-11) : tirages pseudo-aléatoires de simulation.
+"perf/*" = ["S311", "T201"]
 # Analyses : SQL composé d'identifiants cités (quote_ident) ; les valeurs passent en paramètres.
 "app/analytics/operations/*" = ["S608"]

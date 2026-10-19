@@ -1,0 +1,47 @@
+# Performance (NF-09 à NF-11)
+
+Mesures reproductibles avec les scripts de `backend/perf/`. Environnement de mesure : un
+conteneur de développement à 4 vCPU et 16 Go partagés entre PostgreSQL 16, l'API, le
+générateur de charge et le serveur de développement du frontend. C'est une configuration
+défavorable : en exploitation, PostgreSQL et l'API ont chacun leurs processeurs et le
+générateur de charge tourne sur un autre poste.
+
+## NF-09 — pages métier en moins d'une seconde pour 50 utilisateurs simultanés
+
+Script : `perf/nf09_charge.py`. Chaque utilisateur virtuel ouvre en boucle une page métier
+(accueil, mission, constats, temps, données, grille) ; une page = les appels que l'écran lance
+en parallèle ; durée mesurée du premier appel à la dernière réponse ; 15 s d'échauffement non
+mesurées ; temps de lecture d'un écran tiré entre 0,5 et 1,5 fois la valeur `--pause`.
+
+API : 4 processus (`--workers 4`), keep-alive 75 s, journal JSON au niveau INFO.
+
+| Temps de lecture moyen | Débit | Médiane | 95e centile | Maximum | Erreurs |
+|---|---|---|---|---|---|
+| 5 s (usage réaliste) | 9,9 pages/s | 0,059 s | 0,129 s | 0,293 s | 0 |
+| 2 s | 23,8 pages/s | 0,067 s | 0,160 s | 0,354 s | 0 |
+| 1 s (charge extrême) | 39,6 pages/s | 0,204 s | 0,657 s | 1,485 s | 0 |
+
+**Objectif atteint** dans les trois régimes (95e centile < 1 s).
+
+Optimisations apportées par l'exigence :
+
+- **Session** : l'activité n'est réécrite en base qu'une fois par minute
+  (`session_touch_seconds`) au lieu d'une écriture et d'un `commit` à chaque requête ;
+  l'utilisateur est chargé avec la session (une requête au lieu de deux). Coût d'une requête
+  authentifiée : 16,7 ms → 6,3 ms.
+- **Pool de connexions** : 15 connexions par processus (+5 de débordement) au lieu de 5 ; sous
+  charge, les connexions excédentaires étaient ouvertes et fermées à chaque requête.
+  Dimensionnement : (pool + débordement) × processus < `max_connections` de PostgreSQL (100).
+- **Exploitation** : 4 processus uvicorn (`WEB_CONCURRENCY`), keep-alive 75 s ; nginx garde des
+  connexions persistantes vers l'API, compresse les réponses JSON et met en cache les
+  ressources versionnées.
+
+Avant ces réglages (1 écriture de session par requête, pool de 5, keep-alive 5 s), le 95e
+centile à 1 s de lecture était de 2,2 s.
+
+Commande :
+
+```
+python perf/nf09_charge.py --url http://127.0.0.1:8000 --utilisateurs 50 --duree 60 \
+    --pause 5 --compte <adresse>:<mot de passe> --mission <id> --table <id de table>
+```

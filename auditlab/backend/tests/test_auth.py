@@ -65,6 +65,25 @@ def test_session_expiree_apres_inactivite(client, make_user, db):
     assert client.get("/api/auth/me", headers=headers).status_code == 401
 
 
+def test_nf09_activite_enregistree_par_intervalle(client, make_user, db):
+    """L'activité n'est réécrite qu'au-delà de l'intervalle (une écriture évitée par requête)."""
+    from sqlalchemy import select
+
+    headers = login(client, make_user())
+    recent = datetime.now(UTC) - timedelta(seconds=20)
+    db.execute(update(UserSession).values(last_seen_at=recent))
+    db.commit()
+    assert client.get("/api/auth/me", headers=headers).status_code == 200
+    db.expire_all()
+    assert db.scalar(select(UserSession.last_seen_at)) == recent
+    older = datetime.now(UTC) - timedelta(minutes=5)
+    db.execute(update(UserSession).values(last_seen_at=older))
+    db.commit()
+    assert client.get("/api/auth/me", headers=headers).status_code == 200
+    db.expire_all()
+    assert db.scalar(select(UserSession.last_seen_at)) > older + timedelta(minutes=4)
+
+
 def test_jeton_absent_ou_invalide(client):
     assert client.get("/api/auth/me").status_code == 401
     assert client.get("/api/auth/me", headers={"Authorization": "Bearer faux"}).status_code == 401

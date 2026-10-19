@@ -18,4 +18,6 @@ USER auditlab
 
 EXPOSE 8000
 # Les migrations sont appliquées à chaque démarrage (idempotent).
-CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers"]
+# NF-09 : plusieurs processus (WEB_CONCURRENCY, 4 par défaut ; (pool + débordement) × processus
+# reste sous max_connections de PostgreSQL) ; keep-alive plus long que celui de nginx.
+CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers --workers ${WEB_CONCURRENCY:-4} --timeout-keep-alive 75"]

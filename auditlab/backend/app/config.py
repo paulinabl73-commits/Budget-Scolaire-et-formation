@@ -9,8 +9,12 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="AUDITLAB_", env_file=".env", extra="ignore")
 
     database_url: str = "postgresql+psycopg://auditlab:auditlab@localhost:5432/auditlab"
+    # Connexions par processus : (pool + débordement) × processus < max_connections de PostgreSQL.
+    db_pool_size: int = 15
+    db_max_overflow: int = 5
     # NF-07 : expiration après 30 minutes d'inactivité, verrouillage après 5 échecs.
     session_idle_minutes: int = 30
+    session_touch_seconds: int = 60  # NF-09 : fréquence d'enregistrement de l'activité
     max_failed_logins: int = 5
     # Paramètres Argon2 (abaissés uniquement dans les tests).
     argon2_time_cost: int = 3
