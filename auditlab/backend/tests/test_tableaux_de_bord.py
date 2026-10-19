@@ -98,3 +98,35 @@ def test_rep05_recommandations(client, team, db):  # noqa: F811
     only_moyenne = client.get(f"{url}?criticite=moyenne", headers=directeur).json()
     assert only_moyenne["plans_en_retard"] == [] and only_moyenne["taux_mise_en_oeuvre"] == 100.0
     assert client.get(f"{url}?criticite=urgente", headers=directeur).status_code == 422
+
+
+def test_rep06_mission(client, team, account):  # noqa: F811
+    from app.richtext import from_plain_text
+
+    chef, aud = team["chef"], team["aud"]
+    wp2 = client.post(f"{team['url']}/workpapers", headers=aud.headers, json={
+        "reference": "A-2", "titre": "Factures", "travaux": from_plain_text("Tests"),
+        "conclusion": "Satisfaisant", "evaluation": "efficace"}).json()  # fmt: skip
+    for acc, kind in ((aud, "prepare"), (chef, "revu"), (chef, "approuve")):
+        resp = client.post(
+            f"/api/workpapers/{wp2['id']}/signoffs", json={"type": kind}, headers=acc.headers
+        )
+        assert resp.status_code == 201, resp.text
+    client.post(f"/api/workpapers/{team['wp']['id']}/review-notes", headers=chef.headers,
+                json={"texte": "Compléter", "ancre": {"champ": "travaux", "citation": "x"}})  # fmt: skip
+    _log(client, aud, team["url"], 8, "2026-09-01")
+    _log(client, chef, team["url"], 4, "2026-09-02")
+    url = f"/api/dashboards/missions/{team['mission']['id']}"
+    data = client.get(url, headers=aud.headers).json()
+    assert data["papiers"]["par_etat"] == {"brouillon": 1, "prepare": 0, "revu": 0, "approuve": 1}
+    assert data["papiers"]["taux_approbation"] == 50.0 and data["notes_ouvertes"] == 1
+    assert (
+        next(w for w in data["papiers"]["liste"] if w["reference"] == "A-1")["notes_ouvertes"] == 1
+    )
+    assert data["temps"]["jours_consommes"] == 1.5
+    assert {p["nom"]: p["jours"] for p in data["temps"]["par_personne"]} == {
+        aud.user.nom: 1.0,
+        chef.user.nom: 0.5,
+    }
+    assert data["temps"]["par_activite"] == [{"activite": "terrain", "jours": 1.5}]
+    assert client.get(url, headers=account(Role.AUDITEUR).headers).status_code == 404

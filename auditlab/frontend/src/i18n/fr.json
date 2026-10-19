@@ -3054,6 +3054,24 @@
         "retard": "Retard"
       },
       "jours": "{{n}} j"
+    },
+    "mission": {
+      "titre": "Tableau de bord de la mission",
+      "papiers": "Papiers de travail approuvés",
+      "papiersDetail": "{{approuves}} sur {{total}}",
+      "notes": "Notes de revue ouvertes",
+      "temps": "Temps passé / budget",
+      "constats": "Constats",
+      "valides": "dont {{n}} validé(s)",
+      "etats": "Avancement des papiers de travail",
+      "etatsPapier": {
+        "brouillon": "Brouillon",
+        "prepare": "Préparé",
+        "revu": "Revu",
+        "approuve": "Approuvé"
+      },
+      "notesPapier": "{{n}} note(s) ouverte(s)",
+      "parPersonne": "Temps passé par personne (jours)"
     }
   }
 }

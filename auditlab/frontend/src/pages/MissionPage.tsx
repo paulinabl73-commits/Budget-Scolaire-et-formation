@@ -6,6 +6,7 @@ import { api } from "../api/client";
 import type { Engagement } from "../api/types";
 import Alert from "../components/Alert";
 import DataTab from "../components/mission/DataTab";
+import MissionDashboard from "../components/dashboards/MissionDashboard";
 import InspectionTab from "../components/mission/InspectionTab";
 import FindingsTab from "../components/mission/FindingsTab";
 import RevisionTab from "../components/mission/RevisionTab";
@@ -87,6 +88,7 @@ export default function MissionPage() {
       </nav>
       {tab === "synthese" && (
         <>
+          <MissionDashboard missionId={mission.id} />
           <SynthesisTab mission={mission} onChange={setMission} />
           <StatusHistory missionId={mission.id} statut={mission.statut} />
         </>

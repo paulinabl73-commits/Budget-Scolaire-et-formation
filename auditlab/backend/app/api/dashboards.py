@@ -6,7 +6,8 @@ from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
-from app.api.deps import DbSession, require
+from app.api.deps import CurrentUser, DbSession, require
+from app.api.mission_access import get_engagement
 from app.models.user import User
 from app.reporting import dashboards
 from app.reporting.dashboards import Filters
@@ -38,3 +39,9 @@ def direction(user: Direction, db: DbSession, f: Filtered) -> dict[str, Any]:
 @router.get("/recommendations")
 def recommendations(user: Direction, db: DbSession, f: Filtered) -> dict[str, Any]:
     return dashboards.recommendations(db, user, f)
+
+
+@router.get("/missions/{engagement_id}")
+def mission(engagement_id: uuid.UUID, user: CurrentUser, db: DbSession) -> dict[str, Any]:
+    """Tableau de bord d'une mission : son équipe et la Direction (missions visibles)."""
+    return dashboards.mission(db, get_engagement(db, engagement_id, user))

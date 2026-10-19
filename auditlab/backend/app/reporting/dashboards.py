@@ -16,12 +16,12 @@ import uuid
 from dataclasses import dataclass
 from typing import Any
 
-from sqlalchemy import Select, select
+from sqlalchemy import Select, func, select
 from sqlalchemy.orm import Session
 
 from app.api.mission_access import visible_engagements
 from app.api.timesheets import consumed_days
-from app.models.engagement import STATUS_ORDER, Engagement
+from app.models.engagement import STATUS_ORDER, Engagement, TimeEntry
 from app.models.finding import (
     CRITICALITY_ORDER,
     ActionPlan,
@@ -32,6 +32,7 @@ from app.models.finding import (
 from app.models.plan import AuditPlan, PlanItem, PlanStatus
 from app.models.universe import AuditableEntity
 from app.models.user import User
+from app.models.workpaper import ReviewNote, ReviewNoteStatus, Workpaper
 
 
 @dataclass
@@ -236,4 +237,92 @@ def recommendations(db: Session, user: User, f: Filters) -> dict[str, Any]:
             }
             for p in late
         ],
+    }
+
+
+def mission(db: Session, engagement: Engagement) -> dict[str, Any]:
+    """REP-06 : avancement des papiers de travail, notes de revue ouvertes, temps passé."""
+    from app.api.signoffs import signoffs_by_workpaper, status_of
+    from app.config import get_settings
+
+    papers = list(
+        db.scalars(
+            select(Workpaper)
+            .where(Workpaper.engagement_id == engagement.id, Workpaper.deleted_at.is_(None))
+            .order_by(Workpaper.reference)
+        )
+    )
+    signoffs = signoffs_by_workpaper(db, [w.id for w in papers])
+    open_notes = dict(
+        db.execute(
+            select(ReviewNote.workpaper_id, func.count())
+            .where(
+                ReviewNote.engagement_id == engagement.id,
+                ReviewNote.deleted_at.is_(None),
+                ReviewNote.statut != ReviewNoteStatus.CLOTUREE.value,
+            )
+            .group_by(ReviewNote.workpaper_id)
+        ).all()
+    )
+    states = {w.id: status_of(signoffs[w.id]) for w in papers}
+    by_state = {s: 0 for s in ("brouillon", "prepare", "revu", "approuve")}
+    for state in states.values():
+        by_state[state] += 1
+    per_day = get_settings().heures_par_jour
+    active = (TimeEntry.engagement_id == engagement.id, TimeEntry.deleted_at.is_(None))
+    by_person = db.execute(
+        select(User.nom, func.sum(TimeEntry.heures))
+        .join(User, User.id == TimeEntry.user_id)
+        .where(*active)
+        .group_by(User.nom)
+        .order_by(User.nom)
+    ).all()
+    by_activity = db.execute(
+        select(TimeEntry.activite, func.sum(TimeEntry.heures)).where(*active).group_by(
+            TimeEntry.activite)).all()  # fmt: skip
+    consumed = round(sum(h for _, h in by_person) / per_day, 2)
+    findings = dict(
+        db.execute(
+            select(Finding.statut, func.count())
+            .where(Finding.engagement_id == engagement.id, Finding.deleted_at.is_(None))
+            .group_by(Finding.statut)
+        ).all()
+    )
+    return {
+        "mission": {
+            "id": str(engagement.id),
+            "reference": engagement.reference,
+            "titre": engagement.titre,
+            "statut": engagement.statut,
+        },  # fmt: skip
+        "papiers": {
+            "total": len(papers),
+            "par_etat": by_state,
+            "taux_approbation": round(by_state["approuve"] / len(papers) * 100, 1)
+            if papers
+            else 0.0,
+            "liste": [
+                {
+                    "id": str(w.id),
+                    "reference": w.reference,
+                    "titre": w.titre,
+                    "etat": states[w.id],
+                    "notes_ouvertes": open_notes.get(w.id, 0),
+                }
+                for w in papers
+            ],  # fmt: skip
+        },
+        "notes_ouvertes": sum(open_notes.values()),
+        "temps": {
+            "budget_jours": engagement.budget_jours,
+            "jours_consommes": consumed,
+            "taux_consommation": round(consumed / engagement.budget_jours * 100, 1)
+            if engagement.budget_jours
+            else 0.0,
+            "par_personne": [{"nom": n, "jours": round(h / per_day, 2)} for n, h in by_person],
+            "par_activite": [
+                {"activite": a, "jours": round(h / per_day, 2)} for a, h in by_activity
+            ],
+        },
+        "constats_par_statut": {s.value: findings.get(s.value, 0) for s in FindingStatus},
     }
