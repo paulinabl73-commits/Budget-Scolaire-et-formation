@@ -4,8 +4,11 @@ Plateforme web qui réunit la **gestion des missions d'audit** (à la manière d
 **l'analyse de données d'audit** (à la manière d'IDEA), avec la révision des comptes
 SYSCOHADA / IFRS / CIPRES. Cahier des charges : [`docs/cahier-des-charges.pdf`](docs/cahier-des-charges.pdf).
 
-> **État : lot 1 (Socle) livré.** Les lots suivants sont listés dans
-> [`docs/avancement.md`](docs/avancement.md).
+> **État : lots 1 à 10 livrés** (détail dans [`docs/avancement.md`](docs/avancement.md),
+> hypothèses retenues dans [`docs/hypotheses.md`](docs/hypotheses.md)).
+>
+> Installation en production (TLS, sauvegardes, paramétrage) :
+> [`docs/installation.md`](docs/installation.md).
 
 ## Démarrage rapide (Docker)
 
