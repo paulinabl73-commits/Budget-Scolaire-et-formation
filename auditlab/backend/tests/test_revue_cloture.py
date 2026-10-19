@@ -3,6 +3,11 @@
 from app.richtext import from_plain_text
 from app.security.roles import Role
 from tests.portfolio_helpers import cabinet, new_client, open_closing  # noqa: F401
+from tests.test_balances import upload
+
+BALANCE = (
+    "Compte;Intitulé;Solde débit;Solde crédit\n101000;Capital;;1000000\n521000;Banque;1000000;\n"
+)
 
 
 def test_rco23_revue(client, cabinet, account):  # noqa: F811
@@ -44,6 +49,17 @@ def test_rco23_revue(client, cabinet, account):  # noqa: F811
     )
     client.post(f"/api/review-notes/{note['id']}/close", headers=expert.headers)
     sign(expert, "approuve")
+    # RCO-24 : états produits ; comptes de bilan revus par l'expert.
+    resp = client.post(url, json={"niveau": "expert"}, headers=expert.headers)
+    assert "États financiers non produits" in resp.json()["detail"]["message"]
+    fid = closing["audit_file_id"]
+    assert (
+        upload(client, {"aud": collab}, fid, "b.csv", BALANCE.encode()).json()["statut"]
+        == "accepte"
+    )
+    for compte in ("101000", "521000"):
+        client.post(f"/api/audit-files/{fid}/justifications/{compte}/review", json={"commentaire": "Vu"},
+                    headers=expert.headers)  # fmt: skip
     data = client.post(url, json={"niveau": "expert"}, headers=expert.headers).json()
     assert (
         set(data["revues"]) == {"superviseur", "expert"}
@@ -52,3 +68,22 @@ def test_rco23_revue(client, cabinet, account):  # noqa: F811
     # Retrait du visa du superviseur : celui de l'expert tombe aussi.
     data = client.request("DELETE", f"{url}/superviseur", headers=sup.headers).json()
     assert data["revues"] == {}
+
+
+def test_rco24_etats_cloture(client, cabinet):  # noqa: F811
+    expert, collab = cabinet["expert"], cabinet["collab"]
+    fid = open_closing(client, cabinet, new_client(client, cabinet))["audit_file_id"]
+    assert (
+        upload(client, {"aud": collab}, fid, "b.csv", BALANCE.encode()).json()["statut"]
+        == "accepte"
+    )
+    entry = client.post(f"/api/audit-files/{fid}/provisions", json={
+        "nature": "risque", "libelle": "Garantie", "montant_requis": "1000"}, headers=collab.headers)  # fmt: skip
+    entry = client.post(f"/api/audit-files/{fid}/provisions/entry", headers=collab.headers).json()
+    decided = client.post(f"/api/adjustments/{entry['id']}/decision", json={"statut": "acceptee"},
+                          headers=expert.headers)  # fmt: skip
+    assert decided.status_code == 200, decided.text
+    states = client.get(f"/api/audit-files/{fid}/statements", headers=collab.headers)
+    assert states.status_code == 200, states.text
+    lines = [ln for s in states.json()["etats"].values() for ln in s if ln["ajustements"] != "0"]
+    assert lines  # l'écriture d'inventaire acceptée figure dans les états révisés

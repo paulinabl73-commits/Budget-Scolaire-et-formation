@@ -4,7 +4,8 @@ AUD-20). Le dépôt (RCO-02) exige le visa de l'expert-comptable.
 
 Points bloquants : papiers non revus (superviseur) ou non approuvés (expert), notes de revue
 ouvertes, comptes de bilan signalés (RCO-09), écritures d'inventaire en attente, anomalies
-des check-lists (RCO-07) sans commentaire de levée."""
+des check-lists (RCO-07) ; pour l'expert, états du référentiel non produits ou incohérents
+(RCO-24)."""
 
 import datetime as dt
 import uuid
@@ -87,6 +88,19 @@ def blockers(db: Session, closing: Closing, client: Client, level: str) -> list[
     ]
     if anomalies:
         out.append("Anomalies de check-list à lever : " + ", ".join(anomalies))
+    if level == "expert":
+        # RCO-24 : états du référentiel produits et cohérents (REV-23, REV-24).
+        from app.revision import statements
+        from app.revision.mapping import UnmappedError
+
+        try:
+            states = statements.build(db, file)
+        except UnmappedError:
+            out.append("États financiers non produits : balance N absente ou comptes non affectés")
+        else:
+            gaps = [c["libelle"] for c in states.get("controles", []) if not c["ok"]]
+            if gaps:
+                out.append("Contrôles des états en écart : " + ", ".join(gaps))
     if level == "expert" and client.superviseur_id and "superviseur" not in closing.revues:
         out.append("Visa du superviseur attendu")
     return out
