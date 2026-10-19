@@ -127,3 +127,17 @@ class PieceRequest(TrackedMixin, Base):
     recue_le: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
     commentaire: Mapped[str | None] = mapped_column(String(2000), nullable=True)
     relances: Mapped[list[str]] = mapped_column(JSONB, default=list)
+
+
+class PermanentDocument(TrackedMixin, Base):
+    """Document du dossier permanent d'un client (RCO-05), repris d'un exercice à l'autre ;
+    sa date de validité permet de signaler les documents expirés (RCO-06)."""
+
+    __tablename__ = "permanent_documents"
+
+    client_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("clients.id"), index=True)
+    categorie: Mapped[str] = mapped_column(String(30))
+    libelle: Mapped[str] = mapped_column(String(300))
+    date_document: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
+    date_validite: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
+    commentaire: Mapped[str | None] = mapped_column(String(2000), nullable=True)

@@ -41,6 +41,7 @@ from app.models.portfolio import (
     ClientDeadline,
     ClientFile,
     Closing,
+    PermanentDocument,
     PieceRequest,
 )
 from app.models.program import (
@@ -160,6 +161,7 @@ __all__ = [
     "RegulatoryParameter",
     "StatementLine",
     "PlanEvidence",
+    "PermanentDocument",
     "PieceRequest",
     "Postponement",
     "ActionPlanStatus",

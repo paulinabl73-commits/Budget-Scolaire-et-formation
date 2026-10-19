@@ -7,6 +7,7 @@ import { api, post, put } from "../api/client";
 import type { PortfolioClient } from "../api/portfolio";
 import Alert from "../components/Alert";
 import DeadlinesPanel from "../components/portfolio/DeadlinesPanel";
+import PermanentPanel from "../components/portfolio/PermanentPanel";
 import PiecesPanel from "../components/portfolio/PiecesPanel";
 import { STAGES } from "../components/portfolio/PortfolioDashboard";
 
@@ -69,6 +70,7 @@ export default function ClientPage() {
       </section>
       {c.clotures[0] && <PiecesPanel key={c.clotures[0].id} closingId={c.clotures[0].id} exercice={c.clotures[0].exercice} />}
       <DeadlinesPanel clientId={c.id} canWork />
+      <PermanentPanel clientId={c.id} />
       <section className="carte space-y-3" aria-labelledby="cl-clotures">
         <h2 id="cl-clotures" className="text-base font-semibold">{t("portefeuille.clotures")}</h2>
         <ul className="divide-y divide-slate-100 text-sm">

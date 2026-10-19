@@ -2442,5 +2442,29 @@
     "changerEtape": "Étape",
     "passerA": "Passer à « {{etape}} »",
     "revenirA": "Revenir à « {{etape}} »"
+  },
+  "permanent": {
+    "titre": "Dossier permanent",
+    "document": "Document",
+    "date": "Date du document",
+    "validite": "Valide jusqu'au",
+    "fichiers": "Fichiers",
+    "fichier": "Fichier (facultatif)",
+    "categorie": "Catégorie",
+    "ajouter": "Ajouter au dossier permanent",
+    "retirer": "Retirer",
+    "expire": "expiré",
+    "categories": {
+      "statuts": "Statuts",
+      "rccm": "Registre du commerce",
+      "identifiant_fiscal": "Identifiant fiscal",
+      "organigramme": "Organigramme",
+      "contrat": "Contrat important",
+      "bail": "Bail",
+      "emprunt": "Emprunt et tableau d'amortissement",
+      "credit_bail": "Crédit-bail",
+      "caution": "Acte de caution",
+      "autre": "Autre"
+    }
   }
 }
