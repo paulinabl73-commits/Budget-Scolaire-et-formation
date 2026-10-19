@@ -2677,5 +2677,25 @@
       "valeur_comptable": "Valeur comptable",
       "nature": "Nature"
     }
+  },
+  "clotureOps": {
+    "titre": "Clôture d'un organisme de prévoyance sociale",
+    "manquants": "Paramètres ou postes du référentiel manquants : {{liste}}.",
+    "reserve": "Branche {{branche}} : provision technique requise {{requise}}, constituée {{constituee}}, écart {{ecart}}.",
+    "ajouter": "Ajouter l'élément",
+    "natures": {
+      "cotisations_a_recevoir": "Cotisations à recevoir",
+      "prestations_a_payer": "Prestations à payer",
+      "provision_technique": "Provision technique (calculée)"
+    },
+    "champs": {
+      "nature": "Nature",
+      "branche": "Branche",
+      "libelle": "Libellé",
+      "compte_debit": "Compte débité (dotation pour une provision)",
+      "compte_credit": "Compte crédité (provision)",
+      "compte_reprise": "Compte de reprise",
+      "montant": "Montant"
+    }
   }
 }

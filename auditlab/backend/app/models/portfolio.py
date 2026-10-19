@@ -280,3 +280,20 @@ class CurrencyPosition(TrackedMixin, Base):
     devise: Mapped[str] = mapped_column(String(3))
     montant_devise: Mapped[Decimal] = mapped_column(Numeric(18, 2))
     valeur_comptable: Mapped[Decimal] = mapped_column(Numeric(18, 2))
+
+
+class OpsClosingItem(TrackedMixin, Base):
+    """Écriture de clôture propre à un OPS (RCO-16) : cotisations à recevoir, prestations à
+    payer (montant saisi) ou provision technique d'une branche (montant calculé)."""
+
+    __tablename__ = "ops_closing_items"
+
+    client_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("clients.id"), index=True)
+    audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
+    nature: Mapped[str] = mapped_column(String(30))
+    branche: Mapped[str] = mapped_column(String(20))
+    libelle: Mapped[str] = mapped_column(String(300))
+    compte_debit: Mapped[str] = mapped_column(String(30))
+    compte_credit: Mapped[str] = mapped_column(String(30))
+    compte_reprise: Mapped[str | None] = mapped_column(String(30), nullable=True)
+    montant: Mapped[Decimal | None] = mapped_column(Numeric(18, 2), nullable=True)

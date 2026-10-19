@@ -47,6 +47,7 @@ from app.api import (
     meta,
     notifications,
     opinion,
+    ops_closing,
     ops_controls,
     permanent,
     pieces,
@@ -193,6 +194,7 @@ for router in (
     branches.router,
     calendar.router,
     closing_checklist.router,
+    ops_closing.router,
     ops_controls.router,
 ):
     app.include_router(router, prefix="/api")
