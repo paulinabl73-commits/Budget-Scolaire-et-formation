@@ -153,6 +153,12 @@ class Script(TrackedMixin, Base):
         ForeignKey("script_templates.id"), nullable=True
     )
     modele_version: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    # DAT-29 : {"frequence": "quotidienne"|"mensuelle", "jour": 1-28, "heure": 0-23,
+    # "alerte": {"indicateur", "operateur", "seuil"}} ; prochaine exécution planifiée (UTC).
+    planification: Mapped[dict[str, Any] | None] = mapped_column(JSONB, nullable=True)
+    prochaine_execution: Mapped[dt.datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True, index=True
+    )
 
 
 class ScriptTemplate(TrackedMixin, Base):
@@ -192,3 +198,4 @@ class ScriptRun(TrackedMixin, Base):
     erreur: Mapped[str | None] = mapped_column(Text, nullable=True)
     indicateurs: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
     tables: Mapped[list[str]] = mapped_column(JSONB, default=list)  # ids des tables produites
+    alerte: Mapped[str | None] = mapped_column(Text, nullable=True)  # seuil dépassé (DAT-29)

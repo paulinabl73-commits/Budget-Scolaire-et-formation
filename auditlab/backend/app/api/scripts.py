@@ -26,6 +26,19 @@ class Entry(BaseModel):
     id: uuid.UUID
 
 
+class AlertIn(BaseModel):
+    indicateur: str = Field(min_length=1, max_length=100)
+    operateur: Literal[">", ">=", "<", "<=", "!="]
+    seuil: float
+
+
+class ScheduleIn(BaseModel):
+    frequence: Literal["quotidienne", "mensuelle"]
+    jour: int = Field(default=1, ge=1, le=28)  # mensuelle : jour du mois
+    heure: int = Field(default=6, ge=0, le=23)  # UTC
+    alerte: AlertIn | None = None
+
+
 class ScriptIn(BaseModel):
     nom: str = Field(min_length=2, max_length=200)
     description: str | None = Field(default=None, max_length=4000)
@@ -73,6 +86,8 @@ def script_out(db: Session, s: Script) -> dict[str, Any]:
             "version": s.modele_version,
             "reference": db.get(ScriptTemplate, s.modele_id).reference,
         },
+        "planification": s.planification,
+        "prochaine_execution": s.prochaine_execution.isoformat() if s.prochaine_execution else None,
         "derniere_execution": run_out(db, last) if last else None,
     }
 
@@ -92,6 +107,7 @@ def run_out(db: Session, r: ScriptRun) -> dict[str, Any]:
         "sortie": r.sortie,
         "erreur": r.erreur,
         "indicateurs": r.indicateurs,
+        "alerte": r.alerte,
         "tables": [{"id": str(t.id), "nom": t.nom, "nb_lignes": t.nb_lignes} for t in tables if t],
         "par": db.get(User, r.created_by).nom if r.created_by else None,
     }
@@ -213,3 +229,29 @@ def read_run(run_id: uuid.UUID, user: CurrentUser, db: DbSession) -> dict[str, A
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Exécution introuvable")
     get_script(db, r.script_id, user)
     return run_out(db, r)
+
+
+@router.put("/scripts/{script_id}/schedule")
+def schedule(
+    script_id: uuid.UUID, body: ScheduleIn, user: CurrentUser, db: DbSession
+) -> dict[str, Any]:
+    """Planifie le script (DAT-29) ; la première exécution a lieu à la prochaine échéance."""
+    import datetime as dt
+
+    from app.scripting.schedule import next_run
+
+    s, engagement = get_script(db, script_id, user)
+    require_analyst(engagement, user)
+    s.planification = body.model_dump()
+    s.prochaine_execution = next_run(s.planification, dt.datetime.now(dt.UTC))
+    db.commit()
+    return script_out(db, s)
+
+
+@router.delete("/scripts/{script_id}/schedule")
+def unschedule(script_id: uuid.UUID, user: CurrentUser, db: DbSession) -> dict[str, Any]:
+    s, engagement = get_script(db, script_id, user)
+    require_analyst(engagement, user)
+    s.planification = s.prochaine_execution = None
+    db.commit()
+    return script_out(db, s)

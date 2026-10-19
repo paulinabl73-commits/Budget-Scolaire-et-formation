@@ -41,10 +41,28 @@ def daily_followup() -> int:
     return count
 
 
-# Planification (celery beat) : chaque jour à 6 h UTC.
+@celery.task(name="auditlab.scheduled_scripts")
+def scheduled_scripts() -> int:
+    """Scripts planifiés arrivés à échéance (DAT-29), puis envoi des alertes en file."""
+    from app.db import SessionLocal
+    from app.notify import send_pending
+    from app.scripting.schedule import run_due
+
+    with SessionLocal() as db:
+        count = run_due(db)
+        db.commit()
+        send_pending(db)
+    return count
+
+
+# Planification (celery beat) : relances chaque jour à 6 h UTC ; scripts planifiés chaque heure.
 celery.conf.beat_schedule = {
     "relances-plans-d-action": {
         "task": "auditlab.daily_followup",
         "schedule": crontab(hour=6, minute=0),
+    },
+    "scripts-planifies": {
+        "task": "auditlab.scheduled_scripts",
+        "schedule": crontab(minute=5),
     },
 }

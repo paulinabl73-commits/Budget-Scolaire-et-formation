@@ -17,6 +17,7 @@ export interface ScriptRunInfo {
   sortie: string;
   erreur: string | null;
   indicateurs: Record<string, number>;
+  alerte: string | null;
   tables: { id: string; nom: string; nb_lignes: number | null }[];
   par: string | null;
 }
@@ -29,6 +30,8 @@ export interface ScriptInfo {
   code: string;
   entrees: ScriptEntry[];
   modele: { id: string; version: number; reference: string } | null;
+  planification: Schedule | null;
+  prochaine_execution: string | null;
   derniere_execution: ScriptRunInfo | null;
 }
 
@@ -51,4 +54,15 @@ export interface ScriptTemplateInfo {
   version: number;
   publie_le: string | null;
   publie_par: string | null;
+}
+
+export interface Schedule {
+  frequence: "quotidienne" | "mensuelle";
+  jour: number;
+  heure: number;
+  alerte: {
+    indicateur: string;
+    operateur: ">" | ">=" | "<" | "<=" | "!=";
+    seuil: number;
+  } | null;
 }

@@ -151,5 +151,8 @@ def run_script(run_id: str) -> str:
         run = db.get(ScriptRun, uuid.UUID(run_id))
         set_actor(db, run.created_by)
         execute(db, run, db.get(Script, run.script_id).nom)
+        from app.scripting.schedule import after_run
+
+        after_run(db, run)  # DAT-29 : alerte d'une exécution planifiée
         db.commit()
         return run.statut

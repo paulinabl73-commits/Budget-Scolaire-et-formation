@@ -20,6 +20,7 @@ import type {
 import Alert from "../components/Alert";
 import { RUN_BADGE } from "../components/mission/ScriptsTab";
 import ProposeToLibrary from "../components/scripts/ProposeToLibrary";
+import SchedulePanel from "../components/scripts/SchedulePanel";
 import { useAuth } from "../auth/AuthContext";
 import { formatDateHeure, formatNombre } from "../lib/format";
 import { can } from "../lib/permissions";
@@ -240,6 +241,7 @@ export default function ScriptPage() {
           </div>
         )}
       </section>
+      <SchedulePanel script={script} canEdit={canEdit} onChange={setScript} />
       {can(user?.permissions, "data:publish_library") && (
         <ProposeToLibrary script={script} code={form.code} />
       )}
@@ -274,13 +276,19 @@ export default function ScriptPage() {
                   onClick={() => setShown(r.id)}
                 >
                   {formatDateHeure(r.cree_le)} ·{" "}
-                  {r.par ?? t(`scripts.declenchements.${r.declenchement}`)}
+                  {t(`scripts.declenchements.${r.declenchement}`)}
+                  {r.par && ` · ${r.par}`}
                 </button>{" "}
                 <span
                   className={`rounded px-2 py-0.5 text-xs ${RUN_BADGE[r.statut]}`}
                 >
                   {t(`scripts.statuts.${r.statut}`)}
                 </span>
+                {r.alerte && (
+                  <span className="ml-1 rounded bg-amber-100 px-2 py-0.5 text-xs text-amber-900">
+                    {t("scripts.alerte")}
+                  </span>
+                )}
               </li>
             ))}
           </ul>
@@ -296,6 +304,11 @@ export default function ScriptPage() {
                     : formatNombre(current.duree_ms),
               })}
             </p>
+            {current.alerte && (
+              <Alert kind="info">
+                {t("scripts.alerte")} : {current.alerte}
+              </Alert>
+            )}
             {current.erreur && (
               <pre className="whitespace-pre-wrap rounded bg-red-50 p-2 text-red-900">
                 {current.erreur}
