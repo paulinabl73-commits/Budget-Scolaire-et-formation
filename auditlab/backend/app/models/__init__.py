@@ -43,6 +43,7 @@ from app.models.portfolio import (
     ClientDeadline,
     ClientFile,
     Closing,
+    FixedAsset,
     PermanentDocument,
     PieceRequest,
 )
@@ -153,6 +154,7 @@ __all__ = [
     "ClientFile",
     "Closing",
     "Finding",
+    "FixedAsset",
     "FollowUpStatus",
     "InspectionReport",
     "RecommendationFollowUp",

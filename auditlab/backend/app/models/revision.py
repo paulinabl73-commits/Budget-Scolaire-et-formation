@@ -304,7 +304,10 @@ class Adjustment(TrackedMixin, Base):
     engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
     audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
     numero: Mapped[int] = mapped_column(Integer)
-    type: Mapped[str] = mapped_column(String(20))  # correction, reclassement, retraitement_ifrs
+    # correction, reclassement, retraitement_ifrs ; inventaire (écriture de clôture, Module 6)
+    type: Mapped[str] = mapped_column(String(20))
+    # Assistant qui a généré l'écriture (ex. « RCO-11 ») : une régénération la remplace.
+    origine: Mapped[str | None] = mapped_column(String(40), nullable=True)
     libelle: Mapped[str] = mapped_column(String(300))
     # IFR-01 : un retraitement IFRS est daté et rattaché à la norme qui le fonde.
     norme: Mapped[str | None] = mapped_column(String(30), nullable=True)

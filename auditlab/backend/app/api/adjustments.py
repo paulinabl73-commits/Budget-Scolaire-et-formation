@@ -39,13 +39,14 @@ class LineIn(BaseModel):
 
 
 class AdjustmentIn(BaseModel):
-    type: str = Field(pattern="^(correction|reclassement|retraitement_ifrs)$")
+    type: str = Field(pattern="^(correction|reclassement|retraitement_ifrs|inventaire)$")
     libelle: str = Field(min_length=3, max_length=300)
     justification: str = Field(min_length=10, max_length=5000)
     workpaper_id: uuid.UUID | None = None
     lignes: list[LineIn] = Field(min_length=2, max_length=200)
     norme: str | None = Field(default=None, max_length=30)
     date_ecriture: dt.date | None = None
+    origine: str | None = Field(default=None, max_length=40)
 
     @model_validator(mode="after")
     def _ifrs(self) -> "AdjustmentIn":
@@ -85,7 +86,7 @@ def adjustment_out(adj: Adjustment, lines: list[AdjustmentLine], db: Session) ->
         "date_ecriture": adj.date_ecriture.isoformat() if adj.date_ecriture else None,
         "justification": adj.justification,
         "workpaper_id": str(adj.workpaper_id) if adj.workpaper_id else None,
-        "statut": adj.statut, "motif_decision": adj.motif_decision,
+        "statut": adj.statut, "motif_decision": adj.motif_decision, "origine": adj.origine,
         "decision_le": adj.decision_le.isoformat() if adj.decision_le else None,
         "decision_par": decider.nom if decider else None,
         "lignes": [{"compte": ln.compte, "libelle": ln.libelle, "debit": str(ln.debit),

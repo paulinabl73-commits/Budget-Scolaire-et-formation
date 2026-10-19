@@ -1690,7 +1690,8 @@
       "ops": "Contrôles OPS",
       "controles": "Contrôles comptables",
       "justification": "Justification des comptes",
-      "rapprochements": "Rapprochements"
+      "rapprochements": "Rapprochements",
+      "inventaire": "Travaux d'inventaire"
     },
     "navigation": "Sections du dossier",
     "verrouille": "Rapport émis : dossier verrouillé et archivé, consultation uniquement."
@@ -2544,6 +2545,49 @@
       "aux_fournisseurs": "Fournisseurs",
       "aux_cotisants": "Cotisants",
       "aux_allocataires": "Allocataires"
+    }
+  },
+  "inventaire": {
+    "generer": "Générer l'écriture d'inventaire",
+    "ecritureProposee": "Écriture proposée (AJE {{numero}}) : à valider dans « Ajustements », puis à exporter vers le logiciel du client."
+  },
+  "immobilisations": {
+    "titre": "Tableau des immobilisations",
+    "acquisition": "acquis",
+    "cede": "cédé ({{resultat}})",
+    "ans": "ans",
+    "retirer": "Retirer",
+    "total": "Total",
+    "rapprochement": "Écart avec la balance :",
+    "ajouter": "Ajouter l'immobilisation",
+    "col": {
+      "bien": "Immobilisation",
+      "service": "Mise en service",
+      "mode": "Mode",
+      "valeur": "Valeur d'origine",
+      "debut": "Cumul début",
+      "dotation": "Dotation",
+      "fin": "Cumul fin",
+      "vnc": "VNC"
+    },
+    "modes": {
+      "lineaire": "Linéaire",
+      "degressif": "Dégressif"
+    },
+    "champs": {
+      "code": "Code",
+      "libelle": "Libellé",
+      "compte_immobilisation": "Compte d'immobilisation",
+      "compte_amortissement": "Compte d'amortissement",
+      "compte_dotation": "Compte de dotation",
+      "date_mise_en_service": "Mise en service",
+      "valeur_origine": "Valeur d'origine",
+      "mode": "Mode",
+      "duree_annees": "Durée (années)",
+      "coefficient": "Coefficient dégressif",
+      "composant_de": "Composant de",
+      "date_cession": "Date de cession",
+      "prix_cession": "Prix de cession"
     }
   }
 }

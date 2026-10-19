@@ -189,3 +189,27 @@ class AccountJustification(TrackedMixin, Base):
     # Solde revu : un solde modifié après la revue rend le compte de nouveau signalé.
     solde_revu: Mapped[Decimal | None] = mapped_column(Numeric(18, 2), nullable=True)
     commentaire_revue: Mapped[str | None] = mapped_column(String(4000), nullable=True)
+
+
+class FixedAsset(TrackedMixin, Base):
+    """Immobilisation du tableau d'un client (RCO-11), reprise d'un exercice à l'autre ; un
+    composant est rattaché à son ensemble (`composant_de`)."""
+
+    __tablename__ = "fixed_assets"
+
+    client_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("clients.id"), index=True)
+    code: Mapped[str] = mapped_column(String(40))
+    libelle: Mapped[str] = mapped_column(String(300))
+    composant_de: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("fixed_assets.id"), nullable=True
+    )
+    compte_immobilisation: Mapped[str] = mapped_column(String(30))
+    compte_amortissement: Mapped[str] = mapped_column(String(30))
+    compte_dotation: Mapped[str] = mapped_column(String(30))
+    date_mise_en_service: Mapped[dt.date] = mapped_column(Date)
+    valeur_origine: Mapped[Decimal] = mapped_column(Numeric(18, 2))
+    mode: Mapped[str] = mapped_column(String(20))  # lineaire, degressif
+    duree_annees: Mapped[int] = mapped_column(Integer)
+    coefficient: Mapped[Decimal | None] = mapped_column(Numeric(5, 2), nullable=True)
+    date_cession: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
+    prix_cession: Mapped[Decimal | None] = mapped_column(Numeric(18, 2), nullable=True)
