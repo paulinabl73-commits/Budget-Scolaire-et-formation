@@ -75,6 +75,9 @@ class Settings(BaseSettings):
     tasks_eager: bool = True
     duckdb_memory_limit: str = "2GB"
     duckdb_threads: int = 4
+    # Scripts d'analyse (DAT-26, DAT-27) : durée maximale, sortie console conservée.
+    scripts_timeout_s: int = 600
+    scripts_output_kb: int = 100
     # Envoi des e-mails : sans serveur SMTP, les messages restent en file (journalisés).
     smtp_host: str | None = None
     smtp_port: int = 587

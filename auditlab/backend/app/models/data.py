@@ -1,10 +1,11 @@
 """Données analysées (Module 2) : seules les métadonnées sont en base, les lignes en Parquet."""
 
+import datetime as dt
 import uuid
 from enum import StrEnum
 from typing import Any
 
-from sqlalchemy import BigInteger, Boolean, ForeignKey, Integer, String, Text
+from sqlalchemy import BigInteger, Boolean, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -15,6 +16,7 @@ class DatasetKind(StrEnum):
     IMPORT = "import"  # table importée, jamais modifiée (DAT-05)
     VUE = "vue"  # champs calculés sur une table, sans copie (DAT-06)
     ANALYSE = "analyse"  # table produite par une analyse (lot 6)
+    SCRIPT = "script"  # table produite par un script Python (DAT-26)
 
 
 class DatasetStatus(StrEnum):
@@ -133,3 +135,36 @@ class Macro(TrackedMixin, Base):
     origine_dataset_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("datasets.id"), nullable=True
     )
+
+
+class Script(TrackedMixin, Base):
+    """Script Python d'analyse d'une mission (DAT-26) : code, tables et fichiers d'entrée."""
+
+    __tablename__ = "scripts"
+
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    nom: Mapped[str] = mapped_column(String(200))
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    code: Mapped[str] = mapped_column(Text)
+    # [{"type": "table" | "fichier", "id": …}] : seules entrées accessibles au script.
+    entrees: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
+
+
+class ScriptRun(TrackedMixin, Base):
+    """Exécution d'un script : code exécuté (empreinte), sortie, indicateurs, tables produites."""
+
+    __tablename__ = "script_runs"
+
+    script_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("scripts.id"), index=True)
+    engagement_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("engagements.id"), index=True)
+    statut: Mapped[str] = mapped_column(String(20), default="en_cours")  # termine, erreur
+    declenchement: Mapped[str] = mapped_column(String(20), default="manuel")
+    code: Mapped[str] = mapped_column(Text)
+    code_sha256: Mapped[str] = mapped_column(String(64))
+    entrees: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
+    debut: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    duree_ms: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    sortie: Mapped[str] = mapped_column(Text, default="")
+    erreur: Mapped[str | None] = mapped_column(Text, nullable=True)
+    indicateurs: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
+    tables: Mapped[list[str]] = mapped_column(JSONB, default=list)  # ids des tables produites

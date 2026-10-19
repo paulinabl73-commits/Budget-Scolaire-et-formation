@@ -71,6 +71,7 @@ from app.api import (
     risk,
     risk_matrix,
     sampling,
+    scripts,
     signoffs,
     statements,
     stock,
@@ -212,6 +213,7 @@ for router in (
     closing_indicators.router,
     closing_review.router,
     closing_transfer.router,
+    scripts.router,
     ops_closing.router,
     ops_controls.router,
 ):

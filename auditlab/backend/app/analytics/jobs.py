@@ -139,3 +139,17 @@ def run_macro(dataset_ids: list[str]) -> list[str]:
             db.commit()
             statuses.append(ds.statut)
     return statuses
+
+
+@celery.task(name="auditlab.run_script")
+def run_script(run_id: str) -> str:
+    """Exécute un script d'analyse (DAT-26) et reprend ses tables et indicateurs."""
+    from app.models.data import Script, ScriptRun
+    from app.scripting.runner import run_script as execute
+
+    with SessionLocal() as db:
+        run = db.get(ScriptRun, uuid.UUID(run_id))
+        set_actor(db, run.created_by)
+        execute(db, run, db.get(Script, run.script_id).nom)
+        db.commit()
+        return run.statut

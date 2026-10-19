@@ -138,6 +138,10 @@ def _rebuild(db: Session, ds: Dataset, replay: Replay) -> Relation:
         parent = db.get(Dataset, ds.parent_dataset_id)
         rel = extend(_rebuild(db, parent, replay), ds.definition.get("champs", []))
         sha = None
+    elif ds.kind == DatasetKind.SCRIPT.value:
+        # Script (DAT-26) : non rejoué ici ; la table conservée sert aux étapes suivantes.
+        rel = Relation(f"SELECT * FROM {parquet_ref(ds.chemin_parquet)}", [], ds.schema)  # noqa: S608
+        sha = None
     else:
         inputs = [_rebuild(db, db.get(Dataset, uuid.UUID(i)), replay) for i in inputs_of(db, ds)]
         result = REGISTRY[ds.operation].run(inputs, ds.definition["parametres"])

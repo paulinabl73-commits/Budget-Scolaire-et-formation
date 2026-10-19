@@ -31,6 +31,22 @@ Admin = Annotated[User, Depends(require(Perm.SETTINGS_MANAGE))]
 Analyst = Annotated[User, Depends(require(Perm.DATA_ANALYZE))]
 
 
+@router.get("/engagements/{engagement_id}/uploads", response_model=list[UploadOut])
+def list_uploads(engagement_id: uuid.UUID, user: CurrentUser, db: DbSession) -> list[Upload]:
+    """Fichiers déposés dans la mission (entrées possibles d'un script, DAT-26)."""
+    from app.api.datasets import require_read
+
+    engagement = get_engagement(db, engagement_id, user)
+    require_read(engagement, user)
+    return list(
+        db.scalars(
+            select(Upload)
+            .where(Upload.engagement_id == engagement.id, Upload.deleted_at.is_(None))
+            .order_by(Upload.created_at.desc())
+        )
+    )
+
+
 @router.post("/engagements/{engagement_id}/uploads", response_model=UploadOut, status_code=201)
 def upload_source(
     engagement_id: uuid.UUID, file: UploadFile, user: CurrentUser, db: DbSession

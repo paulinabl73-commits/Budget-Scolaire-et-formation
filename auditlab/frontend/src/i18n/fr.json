@@ -354,7 +354,8 @@
       "constats": "Constats",
       "rapport": "Rapport",
       "revision": "Révision des comptes",
-      "inspection": "Inspection CIPRES"
+      "inspection": "Inspection CIPRES",
+      "scripts": "Scripts"
     },
     "statuts": {
       "planifiee": "Planifiée",
@@ -729,7 +730,8 @@
     "kinds": {
       "import": "Import",
       "vue": "Vue",
-      "analyse": "Analyse"
+      "analyse": "Analyse",
+      "script": "Script"
     },
     "depuisSource": "Depuis une base de données",
     "source": "Source déclarée",
@@ -2838,5 +2840,41 @@
     "retirer": "Retirer la transmission",
     "visaAttendu": "Le visa de revue de l'expert-comptable est requis avant la transmission.",
     "nonTransmis": "Dossier non transmis."
+  },
+  "scripts": {
+    "aucun": "Aucun script dans cette mission.",
+    "nouveau": "Nouveau script",
+    "creer": "Créer le script",
+    "col": {
+      "nom": "Nom",
+      "entrees": "Entrées",
+      "derniere": "Dernière exécution"
+    },
+    "statuts": {
+      "en_cours": "En cours",
+      "termine": "Terminé",
+      "erreur": "Erreur"
+    },
+    "declenchements": {
+      "manuel": "Manuelle",
+      "planifie": "Planifiée"
+    },
+    "retour": "Scripts de la mission",
+    "code": "Code Python",
+    "description": "Description",
+    "chargement": "Chargement de l'éditeur…",
+    "entrees": "Entrées du script (seules données accessibles)",
+    "tables": "Tables de la mission",
+    "fichiers": "Fichiers déposés",
+    "enregistrer": "Enregistrer",
+    "enregistre": "Script enregistré.",
+    "executer": "Enregistrer et exécuter",
+    "supprimer": "Supprimer le script",
+    "aide": "API « audit » disponible dans le script",
+    "executions": "Exécutions",
+    "aucuneExecution": "Aucune exécution.",
+    "empreinte": "Code exécuté : empreinte {{sha}}… · durée {{duree}} ms",
+    "lignes": "lignes",
+    "sortie": "Sortie console"
   }
 }

@@ -23,6 +23,7 @@ const LibraryPage = lazy(() => import("./pages/LibraryPage"));
 const WorkpaperPage = lazy(() => import("./pages/WorkpaperPage"));
 const TickmarksPage = lazy(() => import("./pages/TickmarksPage"));
 const DatasetPage = lazy(() => import("./pages/DatasetPage"));
+const ScriptPage = lazy(() => import("./pages/ScriptPage"));
 const FrameworksPage = lazy(() => import("./pages/FrameworksPage"));
 const AuditFilePage = lazy(() => import("./pages/AuditFilePage"));
 const PortfolioPage = lazy(() => import("./pages/PortfolioPage"));
@@ -145,6 +146,14 @@ export default function App() {
           element={
             <RequireAuth permission="findings:read">
               <FindingPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="missions/:id/scripts/:sid"
+          element={
+            <RequireAuth permission="data:read">
+              <ScriptPage />
             </RequireAuth>
           }
         />

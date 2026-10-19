@@ -36,6 +36,10 @@ def build_macro(db: Session, ds: Dataset, nom: str, description: str | None) -> 
                 }
             )
             continue
+        if current.kind == DatasetKind.SCRIPT.value:
+            raise MacroError(
+                f"« {current.nom} » est produite par un script : réexécutez le script (DAT-26)"
+            )
         parents = inputs_of(db, current)
         step: dict[str, Any] = {
             "nom": current.nom,

@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@monaco-editor/react": "4.7.0",
     "@tiptap/core": "2.27.3",
     "@tiptap/extension-image": "2.27.3",
     "@tiptap/extension-link": "2.27.3",
@@ -25,6 +26,7 @@
     "ag-grid-community": "32.3.3",
     "ag-grid-react": "32.3.3",
     "i18next": "23.16.8",
+    "monaco-editor": "0.52.2",
     "qrcode.react": "4.1.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",

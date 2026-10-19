@@ -417,7 +417,7 @@ export interface Dataset {
   engagement_id: string;
   nom: string;
   description: string | null;
-  kind: "import" | "vue" | "analyse";
+  kind: "import" | "vue" | "analyse" | "script";
   statut: "en_cours" | "pret" | "erreur";
   erreur: string | null;
   parent_dataset_id: string | null;

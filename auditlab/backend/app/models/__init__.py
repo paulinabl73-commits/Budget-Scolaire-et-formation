@@ -8,6 +8,8 @@ from app.models.data import (
     DataSource,
     Macro,
     SampleEvaluation,
+    Script,
+    ScriptRun,
     Upload,
 )
 from app.models.engagement import (
@@ -214,6 +216,8 @@ __all__ = [
     "RiskCategory",
     "RiskControl",
     "RiskCriterion",
+    "Script",
+    "ScriptRun",
     "Team",
     "TestType",
     "Tickmark",
