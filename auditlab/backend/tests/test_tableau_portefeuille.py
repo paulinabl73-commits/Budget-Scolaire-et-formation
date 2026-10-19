@@ -18,6 +18,12 @@ def test_rco02_tableau_de_bord(client, cabinet, db):  # noqa: F811
             client.put(url, json={"etape": stage}, headers=collab.headers).json()["etape"] == stage
         )
     assert client.put(url, json={"etape": "depot"}, headers=collab.headers).status_code == 403
+    # RCO-23 : le dépôt suit le visa de revue de l'expert-comptable.
+    assert client.put(url, json={"etape": "depot"}, headers=expert.headers).status_code == 409
+    review = client.post(
+        f"/api/closings/{closing['id']}/review", json={"niveau": "expert"}, headers=expert.headers
+    )
+    assert review.status_code == 200, review.text
     deposit = (today - dt.timedelta(days=1)).isoformat()
     done = client.put(url, json={"etape": "depot", "date": deposit}, headers=expert.headers).json()
     assert done["date_depot"] == deposit and set(done["etapes"]) == {

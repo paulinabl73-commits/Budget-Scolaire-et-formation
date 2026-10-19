@@ -69,6 +69,8 @@ class Closing(TrackedMixin, Base):
     # Date de franchissement de chaque étape (RCO-02).
     etapes: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
     date_depot: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
+    # Visas de revue du dossier (RCO-23) : superviseur puis expert-comptable.
+    revues: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict, server_default="{}")
 
 
 class CalendarRule(TrackedMixin, Base):

@@ -2780,5 +2780,16 @@
     },
     "tauxManquant": "{{part}} théoriques : taux à saisir dans les paramètres fiscaux du pays.",
     "theorique": "{{part}} théoriques au taux de {{taux}} % : {{theorique}} ; comptabilisées {{comptabilise}} ; écart {{ecart}}."
+  },
+  "revueCloture": {
+    "titre": "Revue du dossier",
+    "niveaux": {
+      "superviseur": "Visa du superviseur",
+      "expert": "Visa de l'expert-comptable"
+    },
+    "vise": "donné par {{par}} le {{le}}",
+    "attente": "en attente",
+    "viser": "Viser le dossier",
+    "retirer": "Retirer le visa"
   }
 }

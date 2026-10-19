@@ -181,6 +181,7 @@ def closing_out(c: Closing) -> dict[str, Any]:
         "etape": c.etape,
         "etapes": c.etapes,
         "date_depot": c.date_depot.isoformat() if c.date_depot else None,
+        "revues": c.revues or {},
     }
 
 

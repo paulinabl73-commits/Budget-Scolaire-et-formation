@@ -22,6 +22,7 @@ from app.api import (
     branches,
     calendar,
     closing_checklist,
+    closing_review,
     confirmations,
     contradictory,
     currencies,
@@ -204,6 +205,7 @@ for router in (
     branches.router,
     calendar.router,
     closing_checklist.router,
+    closing_review.router,
     ops_closing.router,
     ops_controls.router,
 ):

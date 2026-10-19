@@ -55,6 +55,10 @@ def set_stage(
         raise HTTPException(
             status.HTTP_403_FORBIDDEN, "Dépôt et fin de clôture : expert-comptable ou superviseur"
         )
+    if body.etape == "depot" and "expert" not in (closing.revues or {}):
+        raise HTTPException(
+            status.HTTP_409_CONFLICT, "Dépôt après le visa de revue de l'expert-comptable (RCO-23)"
+        )
     current, wanted = STAGES.index(closing.etape), STAGES.index(body.etape)
     if wanted > current + 1:
         raise HTTPException(status.HTTP_409_CONFLICT, "Les étapes se franchissent une à une")
