@@ -15,6 +15,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.config import get_settings
+from app.models.engagement import Engagement
 from app.models.revision import FrameworkAccount
 from app.revision.balances import BalanceLine
 from app.revision.imports import CONTROLS, Parsed, active_balance, balance_lines
@@ -231,7 +232,12 @@ def auxiliaire(db: Session, parsed: Parsed) -> None:
             f"Balance auxiliaire {_fmt(aux)} ≠ solde des comptes {root} "
             f"de la balance générale {_fmt(control)}"
         )
-        _report(parsed, "auxiliaire", [(None, message)])
+        # Clôture d'un client (Module 6) : l'écart est à rapprocher (RCO-10), pas un rejet.
+        mode = db.get(Engagement, parsed.file.engagement_id).mode
+        if mode == "revision_comptable":
+            _warn(parsed, "auxiliaire_ecart", message + " : écart à rapprocher")
+        else:
+            _report(parsed, "auxiliaire", [(None, message)])
 
 
 CONTROLS.extend([equilibre, hors_plan, a_nouveaux, grand_livre, auxiliaire])

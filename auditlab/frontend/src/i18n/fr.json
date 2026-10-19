@@ -1689,7 +1689,8 @@
       "branches": "Branches",
       "ops": "Contrôles OPS",
       "controles": "Contrôles comptables",
-      "justification": "Justification des comptes"
+      "justification": "Justification des comptes",
+      "rapprochements": "Rapprochements"
     },
     "navigation": "Sections du dossier",
     "verrouille": "Rapport émis : dossier verrouillé et archivé, consultation uniquement."
@@ -2528,6 +2529,21 @@
       "sans_piece": "Sans pièce",
       "ecart": "Écart",
       "non_justifie": "Non justifié"
+    }
+  },
+  "rapprochementsCloture": {
+    "auxiliaires": "Comptes de tiers et balances auxiliaires",
+    "aucuneAuxiliaire": "Importez les balances auxiliaires (données comptables) pour les rapprocher des comptes collectifs.",
+    "collectif": "compte collectif {{compte}}",
+    "rapproche": "rapproché",
+    "ecart": "écart de {{montant}} à expliquer",
+    "tiers": "Tiers",
+    "solde": "Solde",
+    "types": {
+      "aux_clients": "Clients",
+      "aux_fournisseurs": "Fournisseurs",
+      "aux_cotisants": "Cotisants",
+      "aux_allocataires": "Allocataires"
     }
   }
 }
