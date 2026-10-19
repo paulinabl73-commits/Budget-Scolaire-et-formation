@@ -2697,5 +2697,13 @@
       "compte_reprise": "Compte de reprise",
       "montant": "Montant"
     }
+  },
+  "exportEcritures": {
+    "titre": "Export des écritures vers le logiciel du client",
+    "aide": "Écritures d'inventaire acceptées (onglet « Ajustements »), au format d'import du logiciel du client : l'outil ne tient pas la comptabilité.",
+    "format": "Format",
+    "journal": "Journal",
+    "toutes": "Inclure les corrections et reclassements acceptés",
+    "exporter": "Exporter"
   }
 }

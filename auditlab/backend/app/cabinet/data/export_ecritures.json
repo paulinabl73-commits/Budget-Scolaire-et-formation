@@ -1,0 +1,9 @@
+{
+  "_commentaire": "Formats d'import des écritures dans le logiciel du client (RCO-17) ; adaptables. Champs : journal, date, piece, compte, libelle, debit, credit. « entete_premiere_ligne » : journal, date et pièce sur la première ligne de chaque écriture seulement (Odoo).",
+  "sage": {"libelle": "Sage (import paramétrable)", "extension": "txt", "separateur": ";", "decimale": ",", "date": "%d%m%y", "encodage": "cp1252", "entete": false,
+           "colonnes": [["journal", "Code journal"], ["date", "Date"], ["piece", "N° pièce"], ["compte", "N° compte général"], ["libelle", "Libellé écriture"], ["debit", "Débit"], ["credit", "Crédit"]]},
+  "odoo": {"libelle": "Odoo (pièces comptables)", "extension": "csv", "separateur": ",", "decimale": ".", "date": "%Y-%m-%d", "encodage": "utf-8", "entete": true, "entete_premiere_ligne": true,
+           "colonnes": [["journal", "Journal"], ["date", "Date"], ["piece", "Reference"], ["compte", "Journal Items/Account"], ["libelle", "Journal Items/Label"], ["debit", "Journal Items/Debit"], ["credit", "Journal Items/Credit"]]},
+  "generique": {"libelle": "Format générique (CSV)", "extension": "csv", "separateur": ";", "decimale": ",", "date": "%d/%m/%Y", "encodage": "utf-8", "entete": true,
+                "colonnes": [["journal", "Journal"], ["date", "Date"], ["piece", "Pièce"], ["compte", "Compte"], ["libelle", "Libellé"], ["debit", "Débit"], ["credit", "Crédit"]]}
+}
