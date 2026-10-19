@@ -10,6 +10,7 @@ import type { FrameworkSummary } from "../api/types";
 import { useAuth } from "../auth/AuthContext";
 import Alert from "../components/Alert";
 import CalendarRulesPanel from "../components/portfolio/CalendarRulesPanel";
+import FiscalParametersPanel from "../components/portfolio/FiscalParametersPanel";
 import PortfolioDashboard from "../components/portfolio/PortfolioDashboard";
 import { can, PERM } from "../lib/permissions";
 
@@ -65,6 +66,7 @@ export default function PortfolioPage() {
         </div>
       ))}
       {manager && <CalendarRulesPanel />}
+      {manager && <FiscalParametersPanel />}
     </div>
   );
 }

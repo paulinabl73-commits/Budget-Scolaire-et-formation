@@ -1,0 +1,13 @@
+{
+  "_commentaire": "Paramètres fiscaux attendus par la révision fiscale du Module 6 (RCO-18 à RCO-21). Aucune valeur n'est livrée : chaque paramètre est saisi par pays et par exercice (RCO-22).",
+  "parametres": [
+    {"code": "taux_tva_normal", "libelle": "Taux normal de TVA", "unite": "%", "controle": "RCO-19"},
+    {"code": "taux_is", "libelle": "Taux de l'impôt sur les sociétés", "unite": "%", "controle": "RCO-20"},
+    {"code": "taux_impot_minimum", "libelle": "Impôt minimum : taux appliqué au chiffre d'affaires", "unite": "%", "controle": "RCO-20"},
+    {"code": "impot_minimum_plancher", "libelle": "Impôt minimum : montant minimal", "unite": "montant", "controle": "RCO-20"},
+    {"code": "impot_minimum_plafond", "libelle": "Impôt minimum : montant maximal (0 = sans plafond)", "unite": "montant", "controle": "RCO-20"},
+    {"code": "taux_impots_salaires", "libelle": "Impôts et taxes sur salaires à la charge de l'employeur", "unite": "%", "controle": "RCO-21"},
+    {"code": "taux_cotisations_patronales", "libelle": "Cotisations sociales patronales (taux global)", "unite": "%", "controle": "RCO-21"},
+    {"code": "tolerance_rapprochement", "libelle": "Écart toléré dans les rapprochements fiscaux et sociaux", "unite": "montant", "controle": "RCO-18 à RCO-21"}
+  ]
+}

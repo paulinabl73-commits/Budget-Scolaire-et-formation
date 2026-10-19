@@ -297,3 +297,17 @@ class OpsClosingItem(TrackedMixin, Base):
     compte_credit: Mapped[str] = mapped_column(String(30))
     compte_reprise: Mapped[str | None] = mapped_column(String(30), nullable=True)
     montant: Mapped[Decimal | None] = mapped_column(Numeric(18, 2), nullable=True)
+
+
+class FiscalParameter(TrackedMixin, Base):
+    """Taux, barème ou règle fiscale d'un pays (RCO-22), valable à partir d'un exercice
+    jusqu'à son remplacement ; jamais écrit dans le programme."""
+
+    __tablename__ = "fiscal_parameters"
+
+    pays: Mapped[str] = mapped_column(String(40), index=True)
+    code: Mapped[str] = mapped_column(String(80))
+    libelle: Mapped[str] = mapped_column(String(300))
+    valeur: Mapped[Decimal] = mapped_column(Numeric(20, 6))
+    unite: Mapped[str | None] = mapped_column(String(30), nullable=True)
+    exercice: Mapped[int | None] = mapped_column(Integer, nullable=True)

@@ -2705,5 +2705,15 @@
     "journal": "Journal",
     "toutes": "Inclure les corrections et reclassements acceptés",
     "exporter": "Exporter"
+  },
+  "parametresFiscaux": {
+    "titre": "Paramètres fiscaux par pays",
+    "aide": "Taux et barèmes utilisés par la révision fiscale ; aucune valeur n'est livrée. Un paramètre vaut à partir de son exercice jusqu'à son remplacement.",
+    "parametre": "Paramètre",
+    "valeur": "Valeur",
+    "exercice": "À partir de l'exercice (vide : tous)",
+    "ajouter": "Ajouter le paramètre",
+    "aPartirDe": "à partir de {{exercice}}",
+    "tousExercices": "tous exercices"
   }
 }
