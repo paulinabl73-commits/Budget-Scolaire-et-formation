@@ -130,3 +130,42 @@ def test_rep06_mission(client, team, account):  # noqa: F811
     }
     assert data["temps"]["par_activite"] == [{"activite": "terrain", "jours": 1.5}]
     assert client.get(url, headers=account(Role.AUDITEUR).headers).status_code == 404
+
+
+def test_rep07_comite(client, team, db):  # noqa: F811
+    import datetime as dt
+    import io
+
+    from docx import Document
+
+    from app.models import Engagement
+
+    f = validated_finding(client, team, "critique", "Paiements sans pièce")
+    engagement = db.get(Engagement, team["mission"]["id"])
+    engagement.statut, engagement.cloturee_le = "cloturee", dt.datetime.now(dt.UTC)
+    db.commit()
+    quarter = (dt.date.today().month - 1) // 3 + 1
+    url = f"/api/dashboards/committee?annee={dt.date.today().year}&trimestre={quarter}"
+    assert client.get(url, headers=team["chef"].headers).status_code == 403
+    assert client.get(f"{url[:-1]}5", headers=team["directeur"].headers).status_code == 422
+    pdf = client.get(url, headers=team["directeur"].headers)
+    assert pdf.status_code == 200 and pdf.content[:4] == b"%PDF"
+    docx = client.get(f"{url}&format=docx", headers=team["directeur"].headers)
+    doc = Document(io.BytesIO(docx.content))
+    text = "\n".join(
+        [p.text for p in doc.paragraphs]
+        + [c.text for t in doc.tables for r in t.rows for c in r.cells]
+    )
+    for expected in ("Rapport au comité d'audit", f"T{quarter}", "1 mission(s) clôturée(s)",
+                     "1 constat(s) validé(s), dont 1 de criticité élevée", f"{f['reference']} – Paiements sans pièce",
+                     "Taux de mise en œuvre", "6. Ressources"):  # fmt: skip
+        assert expected in text, expected
+
+
+def test_rep07_trimestres():
+    import datetime as dt
+
+    from app.reporting.committee import bounds
+
+    assert bounds(2026, 1) == (dt.date(2026, 1, 1), dt.date(2026, 3, 31))
+    assert bounds(2026, 4) == (dt.date(2026, 10, 1), dt.date(2026, 12, 31))

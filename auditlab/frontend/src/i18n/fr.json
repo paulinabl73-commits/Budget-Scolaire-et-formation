@@ -3006,7 +3006,8 @@
     "titre": "Tableaux de bord",
     "vues": {
       "direction": "Direction",
-      "recommandations": "Recommandations"
+      "recommandations": "Recommandations",
+      "comite": "Comité d'audit"
     },
     "filtres": "Filtres",
     "debut": "Du",
@@ -3072,6 +3073,14 @@
       },
       "notesPapier": "{{n}} note(s) ouverte(s)",
       "parPersonne": "Temps passé par personne (jours)"
+    },
+    "comite": {
+      "titre": "Rapport trimestriel au comité d'audit",
+      "aide": "Faits marquants, avancement du plan, missions clôturées et rapports diffusés, constats du trimestre, suivi des recommandations et ressources.",
+      "annee": "Année",
+      "trimestre": "Trimestre",
+      "pdf": "Exporter en PDF",
+      "word": "Exporter en Word"
     }
   }
 }

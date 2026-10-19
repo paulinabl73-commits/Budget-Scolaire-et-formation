@@ -5,9 +5,11 @@ import uuid
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi.responses import Response
 
 from app.api.deps import CurrentUser, DbSession, require
 from app.api.mission_access import get_engagement
+from app.audit.listeners import record_event
 from app.models.user import User
 from app.reporting import dashboards
 from app.reporting.dashboards import Filters
@@ -45,3 +47,34 @@ def recommendations(user: Direction, db: DbSession, f: Filtered) -> dict[str, An
 def mission(engagement_id: uuid.UUID, user: CurrentUser, db: DbSession) -> dict[str, Any]:
     """Tableau de bord d'une mission : son équipe et la Direction (missions visibles)."""
     return dashboards.mission(db, get_engagement(db, engagement_id, user))
+
+
+@router.get("/committee")
+def committee(
+    user: Direction,
+    db: DbSession,
+    annee: int = Query(ge=2000, le=2100),
+    trimestre: int = Query(ge=1, le=4),
+    format: str = Query("pdf", pattern="^(pdf|docx)$"),
+) -> Response:  # noqa: A002
+    """REP-07 : synthèse trimestrielle pour le comité d'audit."""
+    from app.api.opinion import MEDIA
+    from app.api.report_templates import default_template
+    from app.reporting.committee import build
+    from app.revision import documents
+
+    template = default_template(db)
+    organisation = (template.page_garde or {}).get("organisation") if template else None
+    title, blocks = build(
+        db, user, annee, trimestre, organisation or "Direction de l'audit interne"
+    )
+    footer = f"{title} – document confidentiel destiné au comité d'audit"
+    content = documents.render(format, "", blocks, footer)
+    record_event(db, "export", object_type="Dashboard", details={"comite": f"T{trimestre} {annee}"})
+    db.commit()
+    name = f"comite_audit_{annee}_T{trimestre}.{format}"
+    return Response(
+        content,
+        media_type=MEDIA[format],
+        headers={"Content-Disposition": f'attachment; filename="{name}"'},
+    )

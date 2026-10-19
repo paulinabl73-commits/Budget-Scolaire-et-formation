@@ -6,10 +6,11 @@ import DashboardFilters, {
   EMPTY_FILTER,
 } from "../components/dashboards/DashboardFilters";
 import type { DashboardFilter } from "../components/dashboards/DashboardFilters";
+import CommitteeExport from "../components/dashboards/CommitteeExport";
 import DirectionDashboard from "../components/dashboards/DirectionDashboard";
 import RecommendationsDashboard from "../components/dashboards/RecommendationsDashboard";
 
-const TABS = ["direction", "recommandations"] as const;
+const TABS = ["direction", "recommandations", "comite"] as const;
 
 /** Tableaux de bord de la Direction de l'audit (REP-04, REP-05, REP-08). */
 export default function DashboardsPage() {
@@ -38,15 +39,18 @@ export default function DashboardsPage() {
           </button>
         ))}
       </nav>
-      <DashboardFilters
-        value={filter}
-        onChange={setFilter}
-        criticite={tab === "recommandations"}
-      />
+      {tab !== "comite" && (
+        <DashboardFilters
+          value={filter}
+          onChange={setFilter}
+          criticite={tab === "recommandations"}
+        />
+      )}
       {tab === "direction" && <DirectionDashboard filter={filter} />}
       {tab === "recommandations" && (
         <RecommendationsDashboard filter={filter} />
       )}
+      {tab === "comite" && <CommitteeExport />}
     </div>
   );
 }
