@@ -565,6 +565,7 @@ export interface AuditFile {
   peut_travailler: boolean;
   peut_gerer: boolean;
   peut_signer: boolean;
+  mode: "audit" | "inspection_cipres" | "revision_comptable";
 }
 
 export interface FrameworkSummary {

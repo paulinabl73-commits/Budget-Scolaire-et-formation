@@ -1,0 +1,21 @@
+{
+  "_commentaire": "Sens normal des soldes par racine (RCO-08) ; la racine la plus longue s'applique, les exclusions désignent des sous-comptes au sens contraire. attendu : debit, credit ou nul (compte à solder à la clôture). Adaptable ; aucune règle livrée pour le plan CIPRES, à saisir avec le plan de l'organisme.",
+  "SYSCOHADA": [
+    {"racine": "10", "attendu": "credit", "libelle": "Capital débiteur"},
+    {"racine": "28", "attendu": "credit", "libelle": "Amortissements débiteurs"},
+    {"racine": "29", "attendu": "credit", "libelle": "Dépréciations d'immobilisations débitrices"},
+    {"racine": "39", "attendu": "credit", "libelle": "Dépréciations de stocks débitrices"},
+    {"racine": "40", "attendu": "credit", "exclusions": ["409"], "libelle": "Fournisseur débiteur"},
+    {"racine": "409", "attendu": "debit", "libelle": "Avance à fournisseur créditrice"},
+    {"racine": "41", "attendu": "debit", "exclusions": ["419"], "libelle": "Client créditeur"},
+    {"racine": "419", "attendu": "credit", "libelle": "Avance de client débitrice"},
+    {"racine": "471", "attendu": "nul", "libelle": "Compte d'attente non soldé"},
+    {"racine": "472", "attendu": "nul", "libelle": "Compte d'attente non soldé"},
+    {"racine": "475", "attendu": "nul", "libelle": "Compte transitoire non soldé"},
+    {"racine": "49", "attendu": "credit", "libelle": "Dépréciations de comptes de tiers débitrices"},
+    {"racine": "52", "attendu": "debit", "libelle": "Banque créditrice (à présenter en trésorerie-passif)"},
+    {"racine": "57", "attendu": "debit", "libelle": "Caisse créditrice"},
+    {"racine": "58", "attendu": "nul", "libelle": "Virement interne non soldé"},
+    {"racine": "59", "attendu": "credit", "libelle": "Dépréciations de trésorerie débitrices"}
+  ]
+}

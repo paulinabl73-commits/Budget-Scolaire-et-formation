@@ -894,7 +894,9 @@
       "stratifie": "Stratifié",
       "mus": "Unités monétaires (MUS)",
       "mensuelle": "Mensuelle",
-      "trimestrielle": "Trimestrielle"
+      "trimestrielle": "Trimestrielle",
+      "oui": "Oui",
+      "non": "Non"
     },
     "extraction": {
       "titre": "Extraction par critère",
@@ -917,7 +919,9 @@
       "description": "Numéros manquants et numéros en double dans une série (factures, chèques, pièces).",
       "params": {
         "champ": "Champ numéroté",
-        "pas": "Pas attendu"
+        "pas": "Pas attendu",
+        "groupe": "Numérotation propre à chaque valeur de (ex. journal)",
+        "distinctes": "Numéros répétés admis (lignes d'une même pièce)"
       }
     },
     "stratification": {
@@ -1683,7 +1687,8 @@
       "rapport": "Opinion et rapport",
       "ifrs": "IFRS",
       "branches": "Branches",
-      "ops": "Contrôles OPS"
+      "ops": "Contrôles OPS",
+      "controles": "Contrôles comptables"
     },
     "navigation": "Sections du dossier",
     "verrouille": "Rapport émis : dossier verrouillé et archivé, consultation uniquement."
@@ -2480,5 +2485,21 @@
       "sans_objet": "Sans objet",
       "anomalie": "Anomalie"
     }
+  },
+  "controlesComptables": {
+    "soldes": "Comptes à solde anormal",
+    "sansRegles": "Aucune règle de sens des soldes pour ce référentiel.",
+    "aucunSolde": "Aucun compte à solde anormal.",
+    "compte": "Compte",
+    "solde": "Solde N",
+    "anomalie": "Anomalie",
+    "grandLivre": "Contrôles du grand livre",
+    "sansGrandLivre": "Importez le grand livre N pour contrôler les tiers non lettrés, les pièces et les doublons.",
+    "tiers": "Comptes de tiers non lettrés",
+    "lignes_one": "{{count}} ligne non lettrée",
+    "lignes_other": "{{count}} lignes non lettrées",
+    "depuis": "depuis le {{date}}",
+    "tousLettres": "Tous les comptes de tiers sont lettrés.",
+    "lancer": "Contrôler les pièces et les doublons (Module 2)"
   }
 }

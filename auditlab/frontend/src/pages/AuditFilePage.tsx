@@ -9,6 +9,7 @@ import AdjustmentsPanel from "../components/revision/AdjustmentsPanel";
 import BranchesPanel from "../components/revision/BranchesPanel";
 import OpsControlsPanel from "../components/revision/OpsControlsPanel";
 import OpsIndicatorsPanel from "../components/revision/OpsIndicatorsPanel";
+import AccountingControlsPanel from "../components/revision/AccountingControlsPanel";
 import AnalyticalPanel from "../components/revision/AnalyticalPanel";
 import BankReconciliationsPanel from "../components/revision/BankReconciliationsPanel";
 import ConfirmationsPanel from "../components/revision/ConfirmationsPanel";
@@ -29,8 +30,10 @@ import ThirdPartiesPanel from "../components/revision/ThirdPartiesPanel";
 import UnadjustedPanel from "../components/revision/UnadjustedPanel";
 import { formatDate } from "../lib/format";
 
-const VIEWS = ["donnees", "affectation", "planification", "analytique", "ratios", "risques", "ajustements", "cycles", "etats", "tiers", "circularisation", "tresorerie", "synthese", "ifrs", "branches", "ops", "rapport"] as const;
+const VIEWS = ["donnees", "affectation", "planification", "analytique", "ratios", "risques", "ajustements", "cycles", "etats", "tiers", "circularisation", "tresorerie", "synthese", "ifrs", "branches", "ops", "controles", "rapport"] as const;
 type View = (typeof VIEWS)[number];
+// Module 6 : révision comptable sans seuil de signification ni opinion.
+const AUDIT_ONLY: readonly string[] = ["planification", "analytique", "risques", "synthese", "rapport"];
 
 /** Dossier de révision (Module 5) : balances, affectation, seuils, revue analytique. */
 export default function AuditFilePage() {
@@ -78,7 +81,7 @@ export default function AuditFilePage() {
         </div>
       )}
       <nav aria-label={t("dossier.navigation")} className="flex flex-wrap gap-1 border-b border-slate-200">
-        {VIEWS.filter((k) => !["branches", "ops"].includes(k) || file.referentiel?.startsWith("CIPRES")).map((k) => (
+        {VIEWS.filter((k) => (!["branches", "ops"].includes(k) || file.referentiel?.startsWith("CIPRES")) && (k !== "controles" || file.mode === "revision_comptable") && !(file.mode === "revision_comptable" && AUDIT_ONLY.includes(k))).map((k) => (
           <button key={k} type="button" aria-current={k === view ? "page" : undefined} onClick={() => setParams({ vue: k })}
             className={`-mb-px border-b-2 px-4 py-2 text-sm font-medium ${k === view ? "border-marque-600 text-marque-700" : "border-transparent text-slate-600 hover:text-slate-900"}`}>
             {t(`dossier.vues.${k}`)}
@@ -110,6 +113,7 @@ export default function AuditFilePage() {
       {view === "ifrs" && <IfrsPanel file={file} />}
       {view === "branches" && <BranchesPanel file={file} />}
       {view === "ops" && <><OpsIndicatorsPanel file={file} /><OpsControlsPanel file={file} /></>}
+      {view === "controles" && <AccountingControlsPanel file={file} />}
       {view === "rapport" && <OpinionPanel file={file} onLocked={() => void load()} />}
       {view === "etats" && (unmapped > 0 ? <Alert kind="info">{t("affectation.bloque")}</Alert> : <><FinancialStatementsPanel file={file} /><DsfPanel file={file} /></>)}
     </div>

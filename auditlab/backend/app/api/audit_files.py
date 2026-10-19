@@ -81,6 +81,7 @@ class AuditFileOut(BaseModel):
     peut_travailler: bool = False
     peut_gerer: bool = False
     peut_signer: bool = False
+    mode: str = "audit"  # mode de la mission (révision comptable pour le Module 6)
 
 
 def can_work(engagement: Engagement, user: User) -> bool:
@@ -125,6 +126,7 @@ def require_direct(file: AuditFile, engagement: Engagement, user: User) -> None:
 def file_out(db: Session, f: AuditFile, engagement: Engagement, user: User) -> AuditFileOut:
     out = AuditFileOut.model_validate(f)
     out.entite = db.get(AuditableEntity, f.entity_id).nom
+    out.mode = engagement.mode
     fw = db.get(AccountingFramework, f.framework_id)
     out.referentiel = f"{fw.code} {fw.version} ({fw.pays})"
     if f.ifrs_framework_id:
