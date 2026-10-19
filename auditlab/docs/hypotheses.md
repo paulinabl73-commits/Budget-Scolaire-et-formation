@@ -219,6 +219,31 @@ Le document de synthèse partageable reprend ce fichier.
 
 ## Module 2 — analyse de données
 
+### Lot 9
+- Le script ne voit que les entrées choisies sur sa page (tables et fichiers de la mission),
+  déposées dans son répertoire de travail : ni base de données, ni réseau, ni variables
+  d'environnement de l'application. Ses résultats passent uniquement par `audit.save`
+  (20 tables au plus) et `audit.metric`.
+- Traçabilité : le code exécuté est figé avec son empreinte SHA-256 à chaque exécution ; les
+  tables produites portent la lignée (script, exécution, entrées). Elles ne sont pas
+  recalculées par le rejeu de la lignée : on réexécute le script.
+- Isolement en exploitation : conteneur Docker jetable par exécution (réseau « none »,
+  mémoire et swap 2 Go, 1 processeur, 256 processus, racine en lecture seule, utilisateur
+  nobody, capacités retirées), runtime gVisor recommandé. L'accès du worker au démon Docker
+  est sensible : Docker sans privilège ou mandataire de socket limité. Le mode local (espace
+  de noms réseau vide, limites mémoire, temps de calcul et taille de fichier) est réservé au
+  développement : il ne cloisonne pas le disque.
+- Durée maximale mesurée en temps réel (10 minutes) ; sortie console conservée jusqu'à
+  100 Ko.
+- Bibliothèque : publication par le droit « data:publish_library » (data analysts) ; un test
+  publié n'est jamais modifié, une nouvelle version le remplace ; la mission garde la
+  référence et la version du test repris. Colonnes attendues indicatives, à adapter en tête du
+  script ; seuil de fractionnement des notes de frais = règle interne de l'entité.
+- Audit en continu : échéances à l'heure choisie en UTC, vérifiées chaque heure ; une
+  exécution en erreur ou sans l'indicateur surveillé alerte aussi (un contrôle silencieux ne
+  vaut pas contrôle satisfaisant) ; destinataires : chef de mission et auteur du script ;
+  missions clôturées non exécutées.
+
 ### Lot 5
 - Les données analysées restent hors de la base de gestion : fichiers Parquet compressés,
   écrits une seule fois puis en lecture seule. La base ne garde que les métadonnées.

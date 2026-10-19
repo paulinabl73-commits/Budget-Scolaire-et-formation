@@ -14,8 +14,29 @@
 | 8b | Révision et états : REV-15 à REV-28, CIP-01 à CIP-09, IFR-01 à IFR-04 | **Livré** |
 | 8c | Portefeuille et contrôles : RCO-01 à RCO-10 | **Livré** |
 | 8d | Inventaire, fiscalité et livrables : RCO-11 à RCO-27 | **Livré** |
-| 9 | Scripts et automatisation : DAT-26 à DAT-29 | À faire |
+| 9 | Scripts et automatisation : DAT-26 à DAT-29 | **Livré** |
 | 10 | Reporting et finitions : REP-01 à REP-08, NF-09 à NF-11 | À faire |
+
+## Lot 9 — détail
+
+**Livré** (un commit par exigence ; Module 2, scripts et audit en continu)
+- **DAT-26** : scripts Python d'une mission, éditeur Monaco (servi par l'application), API
+  `audit` (table, tables, files, import_csv, duplicates, benford, gaps, save, metric) ;
+  entrées choisies explicitement ; exécutions conservées (empreinte du code, sortie,
+  indicateurs, tables produites avec leur lignée).
+- **DAT-27** : exécution isolée : conteneur Docker jetable sans réseau, 2 Go, 10 minutes,
+  racine en lecture seule, utilisateur sans privilège ; en développement, processus local
+  sans réseau (espace de noms vide) avec limites du noyau. Jamais d'exécution sans bac à sable.
+- **DAT-28** : bibliothèque de 10 tests livrés sur 5 cycles (achats, ventes, paie,
+  trésorerie, notes de frais), publiée et versionnée par les data analysts ; reprise dans une
+  mission.
+- **DAT-29** : planification quotidienne ou mensuelle, tâche horaire, alerte (notification et
+  e-mail) quand l'indicateur franchit le seuil, n'est pas produit ou que l'exécution échoue.
+- Changements signalés d'exigences livrées : une table produite par un script n'est pas
+  rejouée par la lignée (DAT-24) ni convertible en macro (DAT-25) ; liste des fichiers
+  déposés d'une mission (DAT-01).
+- Tests : 488 tests backend, couverture 96 %. Parcours navigateur : onglet Scripts et
+  bibliothèque, création, édition dans Monaco, exécution, planification.
 
 ## Lot 8d — détail
 

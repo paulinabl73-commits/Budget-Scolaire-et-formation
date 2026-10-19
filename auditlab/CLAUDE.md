@@ -18,6 +18,7 @@ auditlab/
                       review_notes.py, notifications.py = lot 4
                       datasets.py, imports.py, views.py = lot 5 ; analyses.py = lot 6 ;
                       sampling.py, macros.py = lot 7 ;
+                      scripts.py, script_library.py = lot 9 ;
                       data_links.py, findings.py, evidence.py, contradictory.py,
                       action_plans.py, portal.py = lot 8 ;
                       frameworks.py, audit_files.py, trial_balances.py, currencies.py,
@@ -40,6 +41,9 @@ auditlab/
                       relation.py (relation SQL d'une table ou d'une vue), grid.py,
                       statistics.py, operations/ (une analyse par module, lot 6),
                       sampling.py, lineage.py, macros.py (lot 7)
+      scripting/      lot 9 : sdk/audit.py (API des scripts, polars seul), bootstrap.py
+                      (lanceur du bac à sable), runner.py (préparation, exécution isolée,
+                      reprise), catalog.py + library/ (tests livrés), schedule.py (DAT-29)
       revision/       Module 5 : formula.py (formules fermées), frameworks.py (chargement,
                       Excel), balances.py (lecture des fichiers), imports.py (import et
                       reprise N-1), controls.py (REV-06), currency.py (REV-07),
@@ -311,6 +315,27 @@ docker compose up -d --build
   est destinataire ou responsable.
 - **Tests** : `tests/finding_helpers.py` (fixture `team` avec risque, contrôle, papier et
   audité ; `create_finding`).
+
+### Lot 9 — scripts et automatisation (Module 2)
+
+- **Scripts** : `Script` (code, `entrees` = tables et fichiers de la mission) et `ScriptRun`
+  (code figé, empreinte, sortie, indicateurs, tables). `api.scripts.start_run` crée
+  l'exécution et lance la tâche `auditlab.run_script` (`scripting/runner.run_script`).
+- **SDK** : `scripting/sdk/audit.py` ne dépend que de polars et de la bibliothèque standard
+  (il tourne dans le bac à sable). Toute fonction ajoutée va dans `__all__` (aide de l'éditeur
+  par `/api/scripts/api`).
+- **Bac à sable** : `runner.execute` ; `scripts_sandbox = "docker"` en exploitation,
+  `"local"` en développement et en tests (`unshare` requis) ; jamais d'exécution sans
+  isolement. Paramètres `scripts_*` dans `config.py`.
+- **Tables produites** : `DatasetKind.SCRIPT`, `record_operation(type "script")` ; la lignée
+  ne les rejoue pas, les macros les refusent.
+- **Bibliothèque** : `ScriptTemplate` (référence, version, statut brouillon / publie /
+  remplace / retire) ; tests livrés dans `scripting/library.json` + `library/*.py` (exclus de
+  ruff), installés par la migration 0075 (tests : `catalog.seed`).
+- **Planification** : `Script.planification`, `prochaine_execution` ; tâche horaire
+  `auditlab.scheduled_scripts` → `schedule.run_due` ; alerte par `schedule.after_run`.
+- **Front** : onglet `scripts` de la mission, page `missions/:id/scripts/:sid` ; Monaco chargé
+  à la demande avec son worker local (`components/scripts/CodeEditor.tsx`).
 
 ### Lot 8a — référentiels et balance (Module 5)
 
