@@ -1,0 +1,8 @@
+{
+  "_commentaire": "Comptes proposés pour les provisions de la clôture (RCO-14), modifiables à la saisie.",
+  "SYSCOHADA": {
+    "litige": {"provision": "191", "dotation": "691", "reprise": "791"},
+    "risque": {"provision": "198", "dotation": "691", "reprise": "791"},
+    "autre": {"provision": "199", "dotation": "691", "reprise": "791"}
+  }
+}

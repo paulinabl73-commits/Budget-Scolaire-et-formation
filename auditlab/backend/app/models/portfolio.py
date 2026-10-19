@@ -249,3 +249,19 @@ class Accrual(TrackedMixin, Base):
     montant_total: Mapped[Decimal | None] = mapped_column(Numeric(18, 2), nullable=True)
     periode_debut: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
     periode_fin: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
+
+
+class Provision(TrackedMixin, Base):
+    """Provision pour litige ou risque d'une clôture (RCO-14) : montant requis à la clôture."""
+
+    __tablename__ = "provisions"
+
+    client_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("clients.id"), index=True)
+    audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
+    nature: Mapped[str] = mapped_column(String(20))  # litige, risque, autre
+    libelle: Mapped[str] = mapped_column(String(300))
+    compte_provision: Mapped[str] = mapped_column(String(30))
+    compte_dotation: Mapped[str] = mapped_column(String(30))
+    compte_reprise: Mapped[str] = mapped_column(String(30))
+    montant_requis: Mapped[Decimal] = mapped_column(Numeric(18, 2))
+    commentaire: Mapped[str | None] = mapped_column(String(2000), nullable=True)

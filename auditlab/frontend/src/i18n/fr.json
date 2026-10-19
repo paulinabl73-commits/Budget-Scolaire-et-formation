@@ -2633,5 +2633,23 @@
       "periode_debut": "Période couverte : du",
       "periode_fin": "au"
     }
+  },
+  "provisions": {
+    "titre": "Provisions et dépréciations",
+    "creances": "Créances douteuses (balance âgée et grille du dossier) : dépréciation requise {{requise}}, comptabilisée {{comptabilisee}}, écart {{ecart}}.",
+    "sansGrandLivre": "Créances douteuses : importez le grand livre N pour établir la balance âgée.",
+    "compte": "Compte {{compte}} : requis {{requis}}, comptabilisé {{comptabilise}}, écart {{ecart}}.",
+    "ajouter": "Ajouter la provision",
+    "nature": "Nature",
+    "natures": {
+      "litige": "Litige",
+      "risque": "Risque",
+      "autre": "Autre"
+    },
+    "champs": {
+      "libelle": "Libellé",
+      "montant_requis": "Montant requis à la clôture",
+      "compte_provision": "Compte de provision (proposé si vide)"
+    }
   }
 }
