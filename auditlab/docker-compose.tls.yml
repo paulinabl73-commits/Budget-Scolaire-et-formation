@@ -1,0 +1,19 @@
+# NF-06 : exposition en HTTPS. Lancement :
+#   docker compose -f docker-compose.yml -f docker-compose.tls.yml up -d
+# Certificats (fullchain.pem, privkey.pem) dans AUDITLAB_CERTS (./certs par défaut), par
+# exemple délivrés par Let's Encrypt ou par l'autorité de certification de l'organisme.
+services:
+  frontend:
+    ports: !override
+      - "${AUDITLAB_PORT_HTTPS:-443}:443"
+      - "${AUDITLAB_PORT_HTTP:-80}:80"
+    volumes:
+      - ./frontend/nginx-tls.conf:/etc/nginx/conf.d/default.conf:ro
+      - ${AUDITLAB_CERTS:-./certs}:/etc/nginx/certs:ro
+  backend:
+    environment:
+      AUDITLAB_PUBLIC_URL: ${AUDITLAB_PUBLIC_URL:-https://localhost}
+      AUDITLAB_CORS_ORIGINS: '["${AUDITLAB_PUBLIC_URL:-https://localhost}"]'
+  worker:
+    environment:
+      AUDITLAB_PUBLIC_URL: ${AUDITLAB_PUBLIC_URL:-https://localhost}  # liens des e-mails
