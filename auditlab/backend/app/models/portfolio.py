@@ -230,3 +230,22 @@ class StockCount(TrackedMixin, Base):
     inventaire: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
     mouvements: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
     fichiers: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
+
+
+class Accrual(TrackedMixin, Base):
+    """Élément de rattachement à l'exercice d'une clôture (RCO-13) : charge à payer, produit à
+    recevoir, charge ou produit constaté d'avance."""
+
+    __tablename__ = "accruals"
+
+    client_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("clients.id"), index=True)
+    audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
+    type: Mapped[str] = mapped_column(String(30))
+    libelle: Mapped[str] = mapped_column(String(300))
+    compte_gestion: Mapped[str] = mapped_column(String(30))
+    compte_tiers: Mapped[str] = mapped_column(String(30))
+    montant: Mapped[Decimal] = mapped_column(Numeric(18, 2))
+    # Assistant constaté d'avance : montant total et période couverte.
+    montant_total: Mapped[Decimal | None] = mapped_column(Numeric(18, 2), nullable=True)
+    periode_debut: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
+    periode_fin: Mapped[dt.date | None] = mapped_column(Date, nullable=True)

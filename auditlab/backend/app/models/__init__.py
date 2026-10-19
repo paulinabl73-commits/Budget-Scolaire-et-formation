@@ -37,6 +37,7 @@ from app.models.notification import EmailMessage, Notification
 from app.models.plan import AuditPlan, PlanItem, PlanStatus
 from app.models.portfolio import (
     AccountJustification,
+    Accrual,
     CalendarRule,
     ChecklistAnswer,
     Client,
@@ -107,6 +108,7 @@ from app.models.workpaper import (
 
 __all__ = [
     "AccountJustification",
+    "Accrual",
     "AccountBranch",
     "AccountingFramework",
     "AccountMapping",

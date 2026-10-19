@@ -1,0 +1,9 @@
+{
+  "_commentaire": "Comptes de tiers proposés pour les écritures de rattachement (RCO-13), modifiables à la saisie.",
+  "SYSCOHADA": {
+    "charge_a_payer": "408",
+    "produit_a_recevoir": "418",
+    "charge_constatee_avance": "476",
+    "produit_constate_avance": "477"
+  }
+}

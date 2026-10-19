@@ -2613,5 +2613,25 @@
       "valeur": "Valeur",
       "depreciation": "Dépréciation"
     }
+  },
+  "rattachements": {
+    "titre": "Rattachement des charges et produits à l'exercice",
+    "ajouter": "Ajouter l'élément",
+    "types": {
+      "charge_a_payer": "Charge à payer",
+      "produit_a_recevoir": "Produit à recevoir",
+      "charge_constatee_avance": "Charge constatée d'avance",
+      "produit_constate_avance": "Produit constaté d'avance"
+    },
+    "champs": {
+      "type": "Nature",
+      "libelle": "Libellé",
+      "compte_gestion": "Compte de charge ou de produit",
+      "compte_tiers": "Compte de régularisation",
+      "montant": "Montant",
+      "montant_total": "Montant total de la pièce",
+      "periode_debut": "Période couverte : du",
+      "periode_fin": "au"
+    }
   }
 }
