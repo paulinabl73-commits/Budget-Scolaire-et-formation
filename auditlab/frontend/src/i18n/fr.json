@@ -2469,5 +2469,16 @@
       "autre": "Autre"
     },
     "expiresOuverture": "Documents du dossier permanent expirés à l'ouverture de cet exercice : {{liste}}."
+  },
+  "checklistRevision": {
+    "titre": "Check-lists de révision par cycle",
+    "avancement": "{{traites}} / {{total}} points traités · {{anomalies}} anomalie(s)",
+    "statutDe": "Statut du point {{code}}",
+    "commentaire": "Commentaire de l'anomalie (obligatoire)",
+    "statuts": {
+      "fait": "Fait",
+      "sans_objet": "Sans objet",
+      "anomalie": "Anomalie"
+    }
   }
 }

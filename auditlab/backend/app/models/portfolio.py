@@ -141,3 +141,18 @@ class PermanentDocument(TrackedMixin, Base):
     date_document: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
     date_validite: Mapped[dt.date | None] = mapped_column(Date, nullable=True)
     commentaire: Mapped[str | None] = mapped_column(String(2000), nullable=True)
+
+
+class ChecklistAnswer(TrackedMixin, Base):
+    """Réponse à un point de la check-list de révision d'une clôture (RCO-07)."""
+
+    __tablename__ = "closing_checklist_answers"
+    __table_args__ = (
+        Index("uq_closing_checklist_point", "closing_id", "code", unique=True,
+              postgresql_where=text("deleted_at IS NULL")),
+    )  # fmt: skip
+
+    closing_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("closings.id"), index=True)
+    code: Mapped[str] = mapped_column(String(20))
+    statut: Mapped[str] = mapped_column(String(20))  # fait, sans_objet, anomalie
+    commentaire: Mapped[str | None] = mapped_column(String(4000), nullable=True)

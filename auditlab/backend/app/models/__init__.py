@@ -37,6 +37,7 @@ from app.models.notification import EmailMessage, Notification
 from app.models.plan import AuditPlan, PlanItem, PlanStatus
 from app.models.portfolio import (
     CalendarRule,
+    ChecklistAnswer,
     Client,
     ClientDeadline,
     ClientFile,
@@ -144,6 +145,7 @@ __all__ = [
     "Engagement",
     "EvidenceType",
     "CalendarRule",
+    "ChecklistAnswer",
     "Client",
     "ClientDeadline",
     "ClientFile",

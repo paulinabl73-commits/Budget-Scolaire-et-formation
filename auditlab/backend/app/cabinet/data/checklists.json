@@ -1,0 +1,487 @@
+{
+ "_commentaire": "Check-lists de révision par cycle (RCO-07) : points préremplis selon la taille du dossier et le référentiel (sans « referentiels » : tous). Bibliothèque adaptable par le cabinet.",
+ "points": [
+  {
+   "code": "TRE-01",
+   "cycle": "tresorerie",
+   "libelle": "Rapprochements bancaires établis à la clôture pour chaque compte et suspens analysés",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "TRE-02",
+   "cycle": "tresorerie",
+   "libelle": "Procès-verbal de caisse à la clôture concordant avec le solde comptable",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "TRE-03",
+   "cycle": "tresorerie",
+   "libelle": "Absence de solde créditeur de caisse",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "TRE-04",
+   "cycle": "tresorerie",
+   "libelle": "Virements internes soldés à la clôture",
+   "tailles": [
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "TRE-05",
+   "cycle": "tresorerie",
+   "libelle": "Attestations bancaires rapprochées des soldes et des engagements hors bilan",
+   "tailles": [
+    "grande"
+   ]
+  },
+  {
+   "code": "CLI-01",
+   "cycle": "clients",
+   "libelle": "Balance auxiliaire clients rapprochée du compte collectif",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "CLI-02",
+   "cycle": "clients",
+   "libelle": "Comptes clients créditeurs analysés et reclassés si nécessaire",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "CLI-03",
+   "cycle": "clients",
+   "libelle": "Créances douteuses identifiées et dépréciées selon leur ancienneté",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "CLI-04",
+   "cycle": "clients",
+   "libelle": "Factures à établir et avoirs à émettre recensés",
+   "tailles": [
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "CLI-05",
+   "cycle": "clients",
+   "libelle": "Séparation des exercices des ventes vérifiée sur les dernières livraisons",
+   "tailles": [
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "FOU-01",
+   "cycle": "fournisseurs",
+   "libelle": "Balance auxiliaire fournisseurs rapprochée du compte collectif",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "FOU-02",
+   "cycle": "fournisseurs",
+   "libelle": "Comptes fournisseurs débiteurs analysés et reclassés si nécessaire",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "FOU-03",
+   "cycle": "fournisseurs",
+   "libelle": "Factures non parvenues recensées sur les réceptions de fin d'exercice",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "FOU-04",
+   "cycle": "fournisseurs",
+   "libelle": "Relevés des principaux fournisseurs rapprochés des soldes",
+   "tailles": [
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "STO-01",
+   "cycle": "stocks",
+   "libelle": "Inventaire physique obtenu et rapproché du solde comptable",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "STO-02",
+   "cycle": "stocks",
+   "libelle": "Méthode de valorisation des stocks permanente et conforme",
+   "tailles": [
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "STO-03",
+   "cycle": "stocks",
+   "libelle": "Stocks à rotation lente ou obsolètes dépréciés",
+   "tailles": [
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "STO-04",
+   "cycle": "stocks",
+   "libelle": "Variation des stocks comptabilisée",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "IMM-01",
+   "cycle": "immobilisations",
+   "libelle": "Tableau des immobilisations rapproché de la balance",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "IMM-02",
+   "cycle": "immobilisations",
+   "libelle": "Acquisitions de l'exercice justifiées par des factures",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "IMM-03",
+   "cycle": "immobilisations",
+   "libelle": "Cessions et mises au rebut sorties de l'actif avec leur résultat de cession",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "IMM-04",
+   "cycle": "immobilisations",
+   "libelle": "Dotations aux amortissements recalculées",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "IMM-05",
+   "cycle": "immobilisations",
+   "libelle": "Dépenses d'entretien activées à tort recherchées dans les charges",
+   "tailles": [
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "CAP-01",
+   "cycle": "capitaux_propres",
+   "libelle": "Affectation du résultat de l'exercice précédent conforme au procès-verbal",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "CAP-02",
+   "cycle": "capitaux_propres",
+   "libelle": "Capital social conforme aux statuts et au registre du commerce",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "CAP-03",
+   "cycle": "capitaux_propres",
+   "libelle": "Subventions d'investissement reprises au rythme des amortissements",
+   "tailles": [
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "PRO-01",
+   "cycle": "provisions",
+   "libelle": "Litiges et risques recensés et provisionnés",
+   "tailles": [
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "PRO-02",
+   "cycle": "provisions",
+   "libelle": "Provision pour indemnités de fin de carrière évaluée",
+   "tailles": [
+    "grande"
+   ]
+  },
+  {
+   "code": "PRO-03",
+   "cycle": "provisions",
+   "libelle": "Provisions sans objet reprises",
+   "tailles": [
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "FIN-01",
+   "cycle": "financements",
+   "libelle": "Emprunts rapprochés des tableaux d'amortissement",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "FIN-02",
+   "cycle": "financements",
+   "libelle": "Intérêts courus comptabilisés",
+   "tailles": [
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "FIN-03",
+   "cycle": "financements",
+   "libelle": "Comptes courants d'associés justifiés",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "FIN-04",
+   "cycle": "financements",
+   "libelle": "Comptes d'attente soldés à la clôture",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "PER-01",
+   "cycle": "personnel",
+   "libelle": "Salaires comptabilisés rapprochés du livre de paie",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "PER-02",
+   "cycle": "personnel",
+   "libelle": "Charges sociales rapprochées des déclarations",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "PER-03",
+   "cycle": "personnel",
+   "libelle": "Congés payés et primes à payer provisionnés",
+   "tailles": [
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "PER-04",
+   "cycle": "personnel",
+   "libelle": "Dettes sociales de fin d'exercice justifiées",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "FIS-01",
+   "cycle": "fiscalite",
+   "libelle": "TVA collectée et déductible rapprochée des déclarations",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "FIS-02",
+   "cycle": "fiscalite",
+   "libelle": "Impôts et taxes de l'exercice rapprochés des avis",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "FIS-03",
+   "cycle": "fiscalite",
+   "libelle": "Impôt sur le résultat et acomptes rapprochés",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "FIS-04",
+   "cycle": "fiscalite",
+   "libelle": "Tableau de passage du résultat comptable au résultat fiscal établi",
+   "tailles": [
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "RES-01",
+   "cycle": "produits_charges",
+   "libelle": "Charges constatées d'avance et produits constatés d'avance calculés",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "RES-02",
+   "cycle": "produits_charges",
+   "libelle": "Charges à payer et produits à recevoir recensés",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "RES-03",
+   "cycle": "produits_charges",
+   "libelle": "Revue analytique des charges et produits par rapport à N-1",
+   "tailles": [
+    "pme",
+    "grande"
+   ]
+  },
+  {
+   "code": "RES-04",
+   "cycle": "produits_charges",
+   "libelle": "Opérations avec les dirigeants et parties liées recensées",
+   "tailles": [
+    "grande"
+   ]
+  },
+  {
+   "code": "OPS-01",
+   "cycle": "clients",
+   "libelle": "Cotisations émises rapprochées des déclarations des employeurs",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ],
+   "referentiels": [
+    "CIPRES"
+   ]
+  },
+  {
+   "code": "OPS-02",
+   "cycle": "clients",
+   "libelle": "Cotisations à recevoir de l'exercice estimées",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ],
+   "referentiels": [
+    "CIPRES"
+   ]
+  },
+  {
+   "code": "OPS-03",
+   "cycle": "fournisseurs",
+   "libelle": "Prestations liquidées non payées recensées",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ],
+   "referentiels": [
+    "CIPRES"
+   ]
+  },
+  {
+   "code": "OPS-04",
+   "cycle": "provisions",
+   "libelle": "Réserves techniques par branche conformes au minimum réglementaire",
+   "tailles": [
+    "tpe",
+    "pme",
+    "grande"
+   ],
+   "referentiels": [
+    "CIPRES"
+   ]
+  }
+ ]
+}

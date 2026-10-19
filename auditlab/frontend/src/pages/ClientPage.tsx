@@ -6,6 +6,7 @@ import { Link, useParams } from "react-router-dom";
 import { api, post, put } from "../api/client";
 import type { PortfolioClient } from "../api/portfolio";
 import Alert from "../components/Alert";
+import ChecklistPanel from "../components/portfolio/ChecklistPanel";
 import DeadlinesPanel from "../components/portfolio/DeadlinesPanel";
 import PermanentPanel from "../components/portfolio/PermanentPanel";
 import PiecesPanel from "../components/portfolio/PiecesPanel";
@@ -71,6 +72,7 @@ export default function ClientPage() {
           ))}
         </dl>
       </section>
+      {c.clotures[0] && <ChecklistPanel key={`ck-${c.clotures[0].id}`} closingId={c.clotures[0].id} />}
       {c.clotures[0] && <PiecesPanel key={c.clotures[0].id} closingId={c.clotures[0].id} exercice={c.clotures[0].exercice} />}
       <DeadlinesPanel clientId={c.id} canWork />
       <PermanentPanel clientId={c.id} />
