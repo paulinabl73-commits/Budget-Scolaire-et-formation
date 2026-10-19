@@ -314,7 +314,7 @@ class FiscalParameter(TrackedMixin, Base):
 
 
 class TaxReturns(TrackedMixin, Base):
-    """Déclarations fiscales importées d'une clôture (RCO-18, RCO-19) : une ligne par mois."""
+    """Déclarations importées d'une clôture (RCO-18, RCO-19, RCO-21) : une ligne par mois."""
 
     __tablename__ = "tax_returns"
     __table_args__ = (
@@ -326,6 +326,9 @@ class TaxReturns(TrackedMixin, Base):
     audit_file_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audit_files.id"), index=True)
     tva: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list)
     fichier: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    # Déclarations sociales et fiscales sur salaires (RCO-21).
+    social: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, default=list, server_default="[]")
+    fichier_social: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
 
 class FiscalAdjustmentRule(TrackedMixin, Base):

@@ -104,3 +104,60 @@ def test_rco19_tva(client, cabinet):  # noqa: F811
                 headers=expert.headers)  # fmt: skip
     data = client.get(url, headers=collab.headers).json()
     assert (data["tva_theorique"], data["ecart_theorique"]) == ("54000.00", "0.00")
+
+
+PAY_ENTRIES = [
+    ("01/01/2026", "BQ", "B1", [("521000", 5_000_000, 0), ("101000", 0, 5_000_000)]),
+    ("31/01/2026", "PA", "P1", [("661100", 1_000_000, 0), ("664100", 160_000, 0), ("641300", 30_000, 0),
+                                ("422000", 0, 1_000_000), ("431000", 0, 160_000), ("447000", 0, 30_000)]),
+    ("28/02/2026", "PA", "P2", [("661100", 1_100_000, 0), ("664100", 176_000, 0), ("422000", 0, 1_100_000),
+                                ("431000", 0, 176_000)]),
+]  # fmt: skip
+
+
+def test_rco21_salaires(client, cabinet):  # noqa: F811
+    from collections import defaultdict
+
+    collab, expert = cabinet["collab"], cabinet["expert"]
+    fid = open_closing(client, cabinet, new_client(client, cabinet))["audit_file_id"]
+    gl, net = ["Date;Journal;Pièce;Compte;Libellé;Débit;Crédit"], defaultdict(int)
+    for date, journal, piece, lines in PAY_ENTRIES:
+        for compte, d, c in lines:
+            gl.append(f"{date};{journal};{piece};{compte};{piece};{d or ''};{c or ''}")
+            net[compte] += d - c
+    bal = ["Compte;Intitulé;Solde débit;Solde crédit"] + [
+        f"{c};Compte {c};{max(v, 0) or ''};{max(-v, 0) or ''}" for c, v in sorted(net.items())]  # fmt: skip
+    for name, content, kind in (("b.csv", bal, "balance"), ("gl.csv", gl, "grand_livre")):
+        tb = upload(
+            client, {"aud": collab}, fid, name, ("\n".join(content) + "\n").encode(), type=kind
+        ).json()
+        assert tb["statut"] == "accepte", tb["anomalies"]
+    decl = "Période;Masse salariale;Cotisations sociales;Impôts sur salaires\n01/2026;1 000 000;160 000;30 000\n02/2026;1 050 000;168 000;31 500\n"
+    url = f"/api/audit-files/{fid}"
+    assert (
+        client.post(
+            f"{url}/payroll-returns",
+            files={"file": ("p.csv", decl.encode())},
+            headers=collab.headers,
+        ).json()["lignes"]
+        == 2
+    )
+    data = client.get(f"{url}/payroll-reconciliation", headers=collab.headers).json()
+    feb = {
+        k: next(m for m in data[k] if m["mois"] == "2026-02")
+        for k in ("masse_salariale", "cotisations", "impots_salaires")
+    }
+    assert (feb["masse_salariale"]["ecart"], feb["cotisations"]["ecart"], feb["impots_salaires"]["ecart"]) == (
+        "50000.00", "8000.00", "-31500")  # fmt: skip
+    assert next(m for m in data["masse_salariale"] if m["mois"] == "2026-01")["concordant"]
+    assert data["theorique"]["cotisations"]["theorique"] is None
+    client.post("/api/fiscal-parameters", json={"pays": "CI", "code": "taux_cotisations_patronales", "valeur": "16"},
+                headers=expert.headers)  # fmt: skip
+    theory = client.get(f"{url}/payroll-reconciliation", headers=collab.headers).json()[
+        "theorique"
+    ]["cotisations"]
+    assert (theory["theorique"], theory["comptabilise"], theory["ecart"]) == (
+        "336000.00",
+        "336000.00",
+        "0.00",
+    )

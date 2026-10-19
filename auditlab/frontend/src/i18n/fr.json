@@ -2768,5 +2768,17 @@
       "racines": "Racines de comptes (séparées par des virgules)",
       "pourcentage": "Pourcentage"
     }
+  },
+  "salaires": {
+    "titre": "Salaires et déclarations sociales et fiscales",
+    "aide": "Déclarations de l'exercice en CSV ou Excel : période (mois), masse salariale, cotisations sociales, impôts sur salaires.",
+    "importer": "Importer les déclarations sociales",
+    "parts": {
+      "masse_salariale": "Masse salariale",
+      "cotisations": "Cotisations sociales",
+      "impots_salaires": "Impôts sur salaires"
+    },
+    "tauxManquant": "{{part}} théoriques : taux à saisir dans les paramètres fiscaux du pays.",
+    "theorique": "{{part}} théoriques au taux de {{taux}} % : {{theorique}} ; comptabilisées {{comptabilise}} ; écart {{ecart}}."
   }
 }
