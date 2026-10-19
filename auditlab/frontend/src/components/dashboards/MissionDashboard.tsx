@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 import { api } from "../../api/client";
 import { formatNombre } from "../../lib/format";
+import ExcelExport from "./ExcelExport";
 import Kpi, { Bar } from "./Kpi";
 
 interface MissionBoard {
@@ -46,6 +47,12 @@ export default function MissionDashboard({ missionId }: { missionId: string }) {
       <h2 id="tb-mission" className="text-base font-semibold">
         {t("tableauxDeBord.mission.titre")}
       </h2>
+      <div className="flex justify-end">
+        <ExcelExport
+          path={`/dashboards/missions/${missionId}/export`}
+          filename={"tableau_mission.xlsx"}
+        />
+      </div>
       <div className="grid gap-3 md:grid-cols-4">
         <Kpi
           label={t("tableauxDeBord.mission.papiers")}

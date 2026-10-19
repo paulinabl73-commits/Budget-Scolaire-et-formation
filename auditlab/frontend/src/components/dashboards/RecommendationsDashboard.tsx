@@ -6,6 +6,7 @@ import { formatDate } from "../../lib/format";
 import Alert from "../Alert";
 import type { DashboardFilter } from "./DashboardFilters";
 import { toQuery } from "./DashboardFilters";
+import ExcelExport from "./ExcelExport";
 import Kpi, { Bar } from "./Kpi";
 
 interface Recommendations {
@@ -66,6 +67,12 @@ export default function RecommendationsDashboard({
   );
   return (
     <div className="space-y-4">
+      <div className="flex justify-end">
+        <ExcelExport
+          path={`/dashboards/recommendations/export${toQuery(filter)}`}
+          filename={"tableau_recommandations.xlsx"}
+        />
+      </div>
       <div className="grid gap-3 md:grid-cols-4">
         <Kpi
           label={t("tableauxDeBord.reco.recommandations")}

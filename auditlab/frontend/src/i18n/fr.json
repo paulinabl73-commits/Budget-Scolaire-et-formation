@@ -3081,6 +3081,7 @@
       "trimestre": "Trimestre",
       "pdf": "Exporter en PDF",
       "word": "Exporter en Word"
-    }
+    },
+    "excel": "Exporter en Excel"
   }
 }

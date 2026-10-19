@@ -78,3 +78,44 @@ def committee(
         media_type=MEDIA[format],
         headers={"Content-Disposition": f'attachment; filename="{name}"'},
     )
+
+
+XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+
+
+def _xlsx(db: DbSession, name: str, described: dict[str, Any], sheets: list) -> Response:
+    from app.reporting.excel import filter_rows, to_xlsx
+
+    content = to_xlsx(filter_rows(db, described), sheets)
+    record_event(db, "export", object_type="Dashboard", details={"tableau": name})
+    db.commit()
+    return Response(
+        content, media_type=XLSX,
+        headers={"Content-Disposition": f'attachment; filename="tableau_{name}.xlsx"'},
+    )  # fmt: skip
+
+
+@router.get("/direction/export")
+def export_direction(user: Direction, db: DbSession, f: Filtered) -> Response:
+    """REP-08 : tableau de bord Direction au format Excel, avec les filtres appliqués."""
+    from app.reporting.excel import direction_sheets
+
+    data = dashboards.direction(db, user, f)
+    return _xlsx(db, "direction", data["filtres"], direction_sheets(data))
+
+
+@router.get("/recommendations/export")
+def export_recommendations(user: Direction, db: DbSession, f: Filtered) -> Response:
+    from app.reporting.excel import recommendations_sheets
+
+    data = dashboards.recommendations(db, user, f)
+    return _xlsx(db, "recommandations", data["filtres"], recommendations_sheets(data))
+
+
+@router.get("/missions/{engagement_id}/export")
+def export_mission(engagement_id: uuid.UUID, user: CurrentUser, db: DbSession) -> Response:
+    from app.reporting.excel import mission_sheets
+
+    engagement = get_engagement(db, engagement_id, user)
+    data = dashboards.mission(db, engagement)
+    return _xlsx(db, f"mission_{engagement.reference}", {}, mission_sheets(data))

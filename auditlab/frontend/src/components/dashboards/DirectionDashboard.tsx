@@ -7,6 +7,7 @@ import { formatNombre } from "../../lib/format";
 import Alert from "../Alert";
 import type { DashboardFilter } from "./DashboardFilters";
 import { toQuery } from "./DashboardFilters";
+import ExcelExport from "./ExcelExport";
 import Kpi, { Bar } from "./Kpi";
 
 interface Direction {
@@ -54,6 +55,12 @@ export default function DirectionDashboard({
   const max = Math.max(...Object.values(data.missions_par_statut), 1);
   return (
     <div className="space-y-4">
+      <div className="flex justify-end">
+        <ExcelExport
+          path={`/dashboards/direction/export${toQuery(filter)}`}
+          filename={"tableau_direction.xlsx"}
+        />
+      </div>
       <div className="grid gap-3 md:grid-cols-4">
         <Kpi
           label={t("tableauxDeBord.direction.plan")}

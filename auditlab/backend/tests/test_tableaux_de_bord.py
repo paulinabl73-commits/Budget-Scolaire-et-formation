@@ -169,3 +169,32 @@ def test_rep07_trimestres():
 
     assert bounds(2026, 1) == (dt.date(2026, 1, 1), dt.date(2026, 3, 31))
     assert bounds(2026, 4) == (dt.date(2026, 10, 1), dt.date(2026, 12, 31))
+
+
+def test_rep08_exports_excel(client, team, db):  # noqa: F811
+    import io
+
+    from openpyxl import load_workbook
+
+    validated_finding(client, team, "critique", "Paiements sans pièce")
+    directeur = team["directeur"].headers
+    for path, sheets in (
+        ("direction/export?debut=2026-01-01", ["Filtres", "Synthèse", "Missions par statut", "Missions"]),
+        ("recommendations/export?criticite=critique",
+         ["Filtres", "Synthèse", "Criticité et statut", "Retards par direction", "Plans en retard"]),
+        (f"missions/{team['mission']['id']}/export",
+         ["Filtres", "Synthèse", "Papiers de travail", "Temps par personne", "Temps par activité"]),
+    ):  # fmt: skip
+        resp = client.get(f"/api/dashboards/{path}", headers=directeur)
+        assert resp.status_code == 200, path
+        wb = load_workbook(io.BytesIO(resp.content))
+        assert wb.sheetnames == sheets
+    wb = load_workbook(io.BytesIO(client.get("/api/dashboards/recommendations/export?criticite=critique",
+                                             headers=directeur).content))  # fmt: skip
+    assert ["Criticité", "critique"] in [[c.value for c in r] for r in wb["Filtres"].iter_rows()]
+    rows = [[c.value for c in r] for r in wb["Criticité et statut"].iter_rows()]
+    assert rows[1][:3] == ["critique", 1, 1]  # constat critique, un plan « à lancer »
+    assert (
+        client.get("/api/dashboards/direction/export", headers=team["chef"].headers).status_code
+        == 403
+    )
